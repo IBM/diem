@@ -1,0 +1,10 @@
+aot-fixer-pug:
+  - packages/aot-fixer-pugl/**/*
+diem-angular-util:
+  - packages/diem-angular-util/**/*
+diem-common:
+  - packages/diem-common/**/*
+diem-util:
+  - packages/diem-util/**/*
+diem-forms:
+  - packages/diem-forms/**/*
