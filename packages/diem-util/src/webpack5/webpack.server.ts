@@ -14,7 +14,7 @@ module.exports = {
 
     devtool: false,
 
-    entry: './node_modules/@sets/diem-common/lib/server/app.js',
+    entry: './node_modules/@mydiem/diem-common/lib/server/app.js',
 
     target: 'node',
 

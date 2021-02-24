@@ -1,7 +1,7 @@
 {
     "name": "@mydiem/diem-util",
     "description": "ETL Utilities",
-    "version": "2.4.0",
+    "version": "2.4.1",
     "author": "guy_huinen@be.ibm.com",
     "bugs": "https://github.ibm.com/CIO-SETS/etl-manager/issues",
     "devDependencies": {
@@ -19,7 +19,7 @@
         "cssnano": "^4.1.10",
         "duplicate-package-checker-webpack-plugin": "^3.0.0",
         "eslint": "^7.20.0",
-        "eslint-config-prettier": "^8.0.0",
+        "eslint-config-prettier": "^8.1.0",
         "eslint-plugin-angular": "^4.0.1",
         "eslint-plugin-import": "^2.22.1",
         "eslint-plugin-jsdoc": "^32.2.0",
