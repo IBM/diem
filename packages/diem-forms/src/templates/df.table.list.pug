@@ -1,0 +1,14 @@
+df-list(
+    *ngIf="loaded && ! error && ! locals.fieldset",
+    [locals]='locals',
+    [params]='params',
+    [values]='values',
+    [formSpecs]='formSpecs',
+    [tableSpecs]='tableSpecs',
+    [class] = "tableSpecs.class",
+    )
+
+ex-app-error(
+    *ngIf="error",
+    [error]="errormsg"
+    )

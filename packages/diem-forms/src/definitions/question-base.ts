@@ -1,0 +1,128 @@
+/* eslint-disable @typescript-eslint/ban-types */
+
+import { IQuestionBase, IItem } from './interfaces';
+
+export class QuestionBase<T> implements IQuestionBase {
+    public action?: any;
+    public class?: string;
+    public compute: string;
+    public computeWhenComposed: string;
+    public disabled: boolean;
+    public disabledWhen: string;
+    public editMode?: string;
+    public editOnly?: boolean;
+    public hidden?: boolean | string;
+    public iconClass?: string;
+    public iconStyle?: string;
+    public invalid?: string | boolean;
+    public items: IItem[];
+    public key?: string;
+    public label?: string;
+    public labelStyle?: any;
+    public maxLength?: number;
+    public minLength?: number;
+    public model?: any;
+    public order?: number;
+    public placeHolder: string;
+    public readMode?: string;
+    public readOnly?: boolean | string;
+    public readTypeClass?: string;
+    public required?: boolean;
+    public requiredWhen?: string;
+    public subClass?: string;
+    public subStyle?: string;
+    public style?: any;
+    public type!: string;
+    public typeClass?: string;
+    public typeStyle?: string;
+    public value?: T;
+    public visible?: boolean | string;
+    public dependency?: {
+        type: string;
+        key: string;
+        condition: string;
+        watch: string[] | string;
+        disable: boolean;
+        keepValue: boolean;
+    }[];
+
+    public constructor(options: {
+        invalid?: string | boolean;
+        items: IItem[];
+        dependency?: {
+            type: string;
+            key: string;
+            condition: string;
+            watch: any[] | string;
+            disable: boolean;
+            keepValue: boolean;
+        }[];
+        action?: any;
+        cache: boolean;
+        class?: string;
+        controlType?: string;
+        compute: string;
+        computeWhenComposed: string;
+        disabled: boolean;
+        disabledWhen: string;
+        displayName?: string;
+        editMode?: string;
+        fromEnv?: any;
+        hidden?: boolean | string;
+        iconClass?: string;
+        iconStyle?: string;
+        key?: string;
+        label?: string;
+        labelStyle?: any;
+        max?: number;
+        maxLength?: number;
+        minLength?: number;
+        order?: number;
+        placeHolder: string;
+        invalidText: string;
+        readMode?: string;
+        readOnly?: boolean | string;
+        readTypeClass?: string;
+        required?: boolean;
+        requiredWhen?: string;
+        separator: string;
+        size?: number;
+        style?: any;
+        tags: boolean;
+        subClass?: string;
+        text?: string;
+        typeClass?: string;
+        typeStyle?: string;
+        value?: any;
+        visible?: boolean | string;
+    }) {
+        this.action = options.action;
+        this.class = options.class;
+        this.dependency = options.dependency;
+        this.compute = options.compute;
+        this.computeWhenComposed = options.computeWhenComposed;
+        this.disabled = options.disabled || false;
+        this.disabledWhen = options.disabledWhen;
+        this.requiredWhen = options.requiredWhen;
+        this.editMode = options.editMode;
+        this.hidden = options.hidden || false;
+        this.iconClass = options.iconClass;
+        this.invalid = options.invalid;
+        this.items = options.items;
+        this.key = options.key;
+        this.label = options.label;
+        this.labelStyle = options.labelStyle || undefined;
+        this.order = options.order === undefined ? 1 : options.order;
+        this.placeHolder = options.placeHolder || 'Enter your text';
+        this.readMode = options.readMode;
+        this.readOnly = options.readOnly || false;
+        this.readTypeClass = options.readTypeClass;
+        this.required = !!options.required;
+        this.subClass = options.subClass || '';
+        this.typeClass = options.typeClass;
+        this.typeStyle = options.typeStyle;
+        this.style = options.style;
+        this.value = options.value;
+        this.visible = options.visible;
+    }
+}

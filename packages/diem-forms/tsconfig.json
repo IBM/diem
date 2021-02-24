@@ -1,0 +1,23 @@
+{
+    "extends": "./node_modules/@mydiem/diem-util/tsconfig.base.json",
+    "compilerOptions": {
+        "skipLibCheck": true,
+        "declaration": true,
+        "outDir": "./lib",
+        "pretty": true,
+        "rootDir": "./src/",
+        "stripInternal": true,
+        "paths": {
+            "@interfaces": ["./node_modules/@mydiem/diem-common/lib/interfaces/index"]
+        },
+        "lib": ["es2020", "dom"]
+    },
+    "include": ["./src/**/*"],
+    "exclude": ["node_modules"],
+    "angularCompilerOptions": {
+        "skipTemplateCodegen": true,
+        "disableTypeScriptVersionCheck": true,
+        "fullTemplateTypeCheck": false,
+        "enableIvy": false
+    }
+}

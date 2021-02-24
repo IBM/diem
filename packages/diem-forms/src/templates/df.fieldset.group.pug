@@ -1,0 +1,92 @@
+p-fieldset(
+    *ngIf="formSpecs.style.type === 'fieldsetgroup'",
+    [legend]='formSpecs.fieldset?.header',
+    [toggleable]='formSpecs.fieldset?.toggleable',
+    [collapsed] = 'formSpecs.fieldset?.collapsed',
+    [styleClass]='formSpecs.style.fieldsetClass',
+    [style]='formSpecs.style.fieldsetStyle',
+    )
+    div(
+        *ngFor='let questionGroup of questionGroups',
+        trackBy= "trackByFn",
+        [ngClass]='questionGroup.style?.divClass',
+        )
+        df-group-body(
+            [form]='form',
+            [formSpecs]='formSpecs',
+            [TimeCheck]='TimeCheck',
+            [questionGroup]='questionGroup'
+            )
+        df-buttons(
+            *ngIf='questionGroup.buttons.length > 0',
+            [formSpecs]='formSpecs',
+            [questionGroup]='questionGroup',
+            [form]='form'
+            )
+
+div(
+    *ngIf="formSpecs.style.type === 'boxgroup'",
+    [ngClass]='formSpecs.style.fieldsetClass',
+    [ngStyle]='formSpecs.style.fieldsetStyle',
+    )
+    ng-template(
+        ngFor='',
+        let-questionGroup='',
+        [ngForOf]="questionGroups",
+        [ngForTrackBy]="trackByFn",
+        let i="index",
+        )
+            div(
+                [ngClass]="questionGroup.header.class",
+                [ngStyle]="questionGroup.header.style",
+            )
+                df-group-body(
+                    [form]='form',
+                    [formSpecs]='formSpecs',
+                    [TimeCheck]='TimeCheck',
+                    [questionGroup]='questionGroup'
+                    )
+                df-buttons(
+                    *ngIf='questionGroup.buttons.length > 0',
+                    [formSpecs]='formSpecs',
+                    [questionGroup]='questionGroup',
+                    [form]='form'
+                    )
+
+div(
+    *ngIf="formSpecs.style.type === 'basicgroup'",
+    [ngClass]='formSpecs.style.fieldsetClass',
+    [ngStyle]='formSpecs.style.fieldsetStyle',
+    )
+    ng-template(
+        ngFor='',
+        let-questionGroup='',
+        [ngForOf]="questionGroups",
+        [ngForTrackBy]="trackByFn",
+        let i="index",
+        )
+        ng-container(*ngIf="visibleSection(questionGroup)")
+            div(
+                *ngIf="questionGroup.header.label",
+                [ngClass]="questionGroup.header.class",
+                [ngStyle]="questionGroup.header.style",
+                [innerHTML]="questionGroup.header.label",
+            )
+            df-group-body(
+                [form]='form',
+                [formSpecs]='formSpecs',
+                [TimeCheck]='TimeCheck',
+                [questionGroup]='questionGroup'
+                )
+            df-buttons(
+                *ngIf='questionGroup.buttons.length > 0',
+                [formSpecs]='formSpecs',
+                [questionGroup]='questionGroup',
+                [form]='form'
+                )
+
+df-buttons(
+    *ngIf='formSpecs.buttons',
+    [formSpecs]='formSpecs',
+    [form]='form',
+    )

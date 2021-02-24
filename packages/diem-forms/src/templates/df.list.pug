@@ -1,0 +1,255 @@
+ibm-table-header(*ngIf="tableSpecs.header")
+    h4(ibmTableHeaderTitle="") {{tableSpecs.header.title}}
+    p(
+        ibmTableHeaderDescription="",
+        *ngIf="tableSpecs.header.description",
+        [innerHTML]="tableSpecs.header.description",
+    )
+
+ibm-table-toolbar(*ngIf="tableSpecs.toolbar && evalStr(tableSpecs.toolbar.visible)")
+    ibm-table-toolbar-content(*ngIf="tableSpecs.toolbar.buttons")
+
+        ng-container(*ngIf="tableSpecs.toolbar.form")
+
+            df-standard-form(
+                [locals]='tableSpecs.toolbar.form.locals',
+                [values]='tableSpecs.toolbar.form.values',
+                )
+
+        ng-container(*ngFor="let button of tableSpecs.toolbar.buttons")
+
+            button(
+                *ngIf="button.action && evalStr(button.visible)",
+                (click)="onAction(button.action)",
+                [ibmButton]="button.type" ,
+                [size]="button.size",
+                [ngStyle]='button.style',
+                [ngClass]='button.typeClass',
+                [disabled]='button.disabled && evalStr(button.disabled)',
+                [attr.modal-primary-focus]="button.focus",
+            )  {{button.label}}
+                i(
+                    *ngIf='button.iconClass',
+                    [ngClass]='button.iconClass',
+                    [ngStyle]='button.iconStyle',
+                )
+
+table(
+    ibmTable='',
+    [size]="tableSpecs.size",
+    [ngClass]="tableSpecs.tableClass",
+    [ngStyle]="tableSpecs.tableStyle",
+    [noBorder] = 'tableSpecs.noBorder || false',
+    [sortable]='tableSpecs.sortable || false',
+    [striped]="tableSpecs.striped || false")
+
+    thead(ibmTableHead='')
+        tr
+            th.ex--table-header-expand(
+                role='columnheader',
+                *ngIf='tableSpecs.expandable'
+                style="width: 2.25em"
+                )
+
+            ng-container(*ngFor='let col of tableSpecs.columns; let index = index')
+
+                ng-container(*ngIf="col.specs && col.specs.checkbox; then colCheckbox else colStandard")
+
+                ng-template(#colCheckbox="")
+                    th(
+                        ibmTableHeadCheckbox="",
+                        [skeleton]= 'loading',
+                        ariaLabel="Select All Rows",
+                        [checked]="allchecked",
+                        size="sm",
+                        style="width: 2.25em",
+                        (change)="onHeaderCheckboxToggle()"
+                    )
+
+                ng-template(#colStandard="")
+                    th(
+                        ibmTableHeadCell='',
+                        [skeleton]= 'loading',
+                        [sortable]="col.sortable",
+                        (sort)="sort(col)",
+                        [style.width]="col.width",
+                        [column]="getColumn(col)")
+
+    tbody(ibmTableBody='')
+
+        ng-container(
+            *ngFor='let row of storeData.records',
+        )
+
+            tr(ibmTableRow='')
+
+                td(
+                    *ngIf="tableSpecs.expandable",
+                    ibmTableExpandButton="",
+                    class="bx--table-expand-v2",
+                    [expanded]="false",
+                    [expandable]="true",
+                    style="width: 2.25em",
+                    [attr.data-previous-value]="row.expanded ? 'collapsed' : null",
+                    (click)="row.expanded = !row.expanded",
+                    ariaLabel="expandable",
+                )
+
+                td(
+                    *ngFor='let col of tableSpecs.columns; let t = index',
+                    ibmTableData='',
+                    [item]='{template: colcell, data:{row: row , col: col}}',
+                    [class]="col.class || ''",
+                    [style.width]="col.width",
+                    [ngStyle]='col.style')
+
+            tr(
+                ibmTableRow='',
+                *ngIf="row.expanded && tableSpecs.template",
+                [ngClass]="{'ex--table-row-expanded' : row.expanded }",
+                )
+
+                td([attr.colspan]="tableSpecs.columns.length + 1")
+
+                    df-standard-form(
+                        [locals]='tableSpecs.template.locals',
+                        [values]='row',
+                        )
+
+        tr(
+            ibmTableRow='',
+            *ngIf="storeData.records && storeData.records.length === 0",
+            )
+
+            td([attr.colspan]="tableSpecs.columns.length + (tableSpecs.expandable ? 1 : 0)") {{tableSpecs.emptyMessage || 'No Data'}}
+
+ibm-pagination(
+    *ngIf="tableSpecs.paginator",
+    [itemsPerPageOptions]= "tableSpecs?.rowsPerPage || [10, 20, 50, 100, 150, 200]",
+    [model]="paginatorModel",
+    (selectPage)="loadIt($event)")
+
+ng-template(let-col="data", #colheader="")
+    span(*ngIf="! col.specs || ! col.specs.checkbox", [innerHTML]='col.header')
+
+ng-template(let-col="data.col", let-row="data.row", #colcell="", let-i="index")
+
+
+    ng-container(*ngIf="! col.specs && row[col.field]")
+        div([innerHTML]='row[col.field]')
+
+    ng-container(*ngIf='col.specs')
+
+        ng-container(*ngIf='col.specs.radio')
+            ibm-radio(
+                [attr.aria-label]="row.id",
+                ariaLabel="Select Row",
+                [checked]="row.selected",
+                name="tableradio",
+                (change)="onRowSelect(row, $event)",
+            )
+
+        ng-container(*ngIf='col.specs.checkbox')
+            ibm-checkbox(
+                inline="true",
+                aria-label="Select Row",
+                size="sm",
+                [checked]="row.selected",
+                [disabled]="row.disabled",
+                (change)="onRowSelect(row, $event)",
+            )
+
+        ng-container(*ngIf='col.specs.rowIndex')
+            span(
+                [innerText]='i + (col.specs.startValue ? col.specs.startValue : 0)',
+                [ngStyle]="col.style",
+            )
+
+        ng-container(*ngIf="col.specs.format && row[col.field]")
+            span([innerText]="row[col.field] | date: col.specs.format")
+
+        ng-container(*ngIf="col.specs.number && row[col.field]")
+            span([innerText]="row[col.field] | number")
+
+        ng-container(*ngIf="col.specs.link && row[col.field]")
+            a.bx--link(
+                [routerLink]="row.href",
+                [innerText] = "row[col.field]",
+                [target]='col.specs.target',
+            )
+
+        ng-container(*ngIf="col.specs.externallink && row[col.field]")
+            a.bx--link(
+                role='button',
+                target='_blank',
+                [href]="row.href",
+                rel="noopener",
+                [innerText] = "row[col.field]",
+            )
+
+
+        ng-container(*ngIf="col.specs.button && evalStr(col.specs.visible)" )
+            button(
+                (click)="onAction(col.specs.action,{values: row, index : i})",
+                [ibmButton]="col.specs.type" ,
+                [size]="col.specs.size",
+                [ngStyle]='col.specs.style',
+                [disabled]='row[col.specs.disabledField]',
+                [ngClass]='col.specs.typeClass',
+                [attr.modal-primary-focus]="col.specs.focus",
+                )
+                i(
+                    *ngIf='col.specs.iconClass',
+                    [ngClass]='col.specs.iconClass',
+                    [ngStyle]='col.specs.iconStyle',
+                )
+                | &nbsp;&nbsp;{{col.specs.label}}
+
+        ng-container(*ngIf="col.specs.icon && row[col.field] && col.specs.action && evalStr(col.specs.visible)")
+            i(
+                (click)="onAction(col.specs.action,{values: row, index : i})",
+                [ngClass]='row[col.field] || col.specs.icon'
+            )
+
+        ng-container(*ngIf="col.specs.icon && row[col.field] && !col.specs.action && evalStr(col.specs.visible)")
+            i(
+                [ngClass]='row[col.field] ? row[col.field] :  col.specs.icon === true ? "" : col.specs.icon'
+            )
+
+        ng-container(*ngIf="col.specs.image")
+            i(
+                [ngClass]='col.specs.imageClass',
+                [ngStyle]="DSF.OAA(col.specs.imageStyle,{'color':getValue(row,col.field,col.specs.subfield)})"
+            )
+
+        ng-container(*ngIf="col.specs.server")
+            button(
+                (click)="onAction({action: col.specs.action,values: row, index : i,params: col.specs.params || undefined})",
+                *ngIf='row[col.specs.server] && col.specs.isButton',
+                [ibmButton]="col.specs.type" ,
+                [size]="col.specs.size",
+                [ngStyle]='col.specs.style',
+                [disabled]='row[col.specs.disabledField]',
+                [ngClass]='col.specs.typeClass',
+                [attr.modal-primary-focus]="col.specs.focus",
+                )
+                i(
+                    *ngIf='row[col.specs.server] && col.specs.isIcon',
+                    [ngClass]='row[col.server]',
+                    [ngStyle]='col.specs.iconStyle',
+                )
+                | &nbsp;&nbsp;{{col.specs.label}}
+
+        ng-container(*ngIf="col.specs.special && row[col.field]")
+
+                df-mermaid(
+                    *ngIf="row.special && row.special ==='mermaid'",
+                    [id]='guid()',
+                    [value]="row[col.field]",
+                )
+
+                div(
+                    *ngIf="! row.special",
+                    [innerHTML]='row[col.field]')
+
+

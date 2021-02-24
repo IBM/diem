@@ -1,0 +1,38 @@
+**/public/index.html
+**/public/main.html
+**/public/css/
+**/public/js/
+**/public/fonts/
+**/public/assets/
+**/public/skins/
+**/server
+!**/src/server
+*.pug.ts
+*.tmpl.ts
+!applications/dashboard/server
+node_modules/
+/site
+local/
+build/
+certs/
+/local
+# Ignore Mac DS_Store files
+**/.DS_Store
+keys.txt
+
+# Ignore Python Virtual Environment
+envs
+__pycache__/
+
+.npmrc
+.pypirc
+**/target/
+**/.project
+/local_bkp/
+**/.classpath
+**/.settings/*
+**/server/assets.json
+**/server/config/assets.json
+
+# all lib
+lib/

@@ -1,0 +1,81 @@
+ng-container(*ngIf="formSpecs && formSpecs.sidebar && formSpecs.buttons && formSpecs.buttons.length>0")
+    ibm-panel([expanded]="sidebar")
+        df-buttons(
+            *ngIf='formSpecs.buttons && formSpecs.buttons.length>0',
+            [formSpecs]='formSpecs',
+            [form]='form'
+        )
+        .etl-action-panel-close((click)="sidebar = false",)
+            svg(ibmIconClose='', size='20')
+
+    button(
+        *ngIf="! sidebar",
+        [ngClass] = "formSpecs.sidebar.class",
+        [ngStyle] = "formSpecs.sidebar.style",
+        type="button",
+        value="",
+        (click)="sidebar = true",
+        )
+        svg(ibmIconOpenPanelFilledRight="", size='20')
+
+df-buttons(
+    *ngIf='formSpecs.buttons && formSpecs.buttons.length>0 && formSpecs.buttonsattop && ! formSpecs.sidebar',
+    [formSpecs]='formSpecs',
+    [form]='form'
+    )
+
+ng-template(
+    ngFor='',
+    let-questionGroup='',
+    [ngForOf]="questionGroups",
+    let i="index",
+    [ngForTrackBy]="trackByFn",
+    )
+    ng-template(
+        [ngTemplateOutlet]="groupTmpl",
+        [ngTemplateOutletContext]="{questionGroup: questionGroup}",
+    )
+
+ng-template(#basic="", let-questionGroup='questionGroup')
+    ng-container([formGroup]="form")
+        df-group-body(
+            [form]='form',
+            [formSpecs]='formSpecs',
+            [TimeCheck]='TimeCheck',
+            [questionGroup]='questionGroup'
+            )
+        df-buttons(
+            *ngIf='questionGroup.buttons.length > 0',
+            [formSpecs]='formSpecs',
+            [questionGroup]='questionGroup',
+            [form]='form'
+            )
+
+ng-template(#fieldset="", let-questionGroup='questionGroup')
+    ng-container([formGroup]="form")
+        p-fieldset(
+            [collapsed] = 'questionGroup.header.collapsed',
+            [legend]='questionGroup.header.label',
+            [styleClass]='questionGroup.header.class',
+            [style]='questionGroup.header.style',
+            [toggleable]='questionGroup.header.toggleable',
+            *ngIf="visibleSection(questionGroup)"
+            )
+            df-group-body(
+                [form]='form',
+                [formSpecs]='formSpecs',
+                [TimeCheck]='TimeCheck',
+                [questionGroup]='questionGroup'
+                )
+            df-buttons(
+                *ngIf='questionGroup.buttons.length > 0',
+                [formSpecs]='formSpecs',
+                [questionGroup]='questionGroup',
+                [form]='form'
+            )
+
+df-buttons(
+    *ngIf='formSpecs.buttons && formSpecs.buttons.length>0 && ! formSpecs.buttonsattop && ! formSpecs.sidebar',
+    [formSpecs]='formSpecs',
+    [form]='form'
+    )

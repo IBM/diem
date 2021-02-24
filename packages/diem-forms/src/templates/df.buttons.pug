@@ -1,0 +1,43 @@
+div([ngClass]='formSpecs.style.buttonClass')
+    ng-template(
+        ngFor='',
+        [ngForOf]='buttons',
+        let-button='',
+        let-i='index',
+    )
+
+        button(
+            *ngIf='button.action && evalStr(button.visible) && ! (button.isIcon || button.isText)',
+            [ibmButton]="button.type" ,
+            [size]="button.size",
+            [disabled]='button.disabled && evalStr(button.disabled)',
+            [attr.modal-primary-focus]="button.focus || null",
+            [class]='button.class',
+            [ngStyle]='button.style',
+            (click)='onAction(button.action)'
+        )
+            | {{button.label}}
+            i(
+                *ngIf='button.iconClass',
+                [ngClass]='button.iconClass',
+                [ngStyle]='button.iconStyle',
+            )
+
+        i(
+            *ngIf='evalStr(button.visible) && button.action && button.isIcon',
+            ngClass="{{button.class}} {{evalStr(button.disabled) ? 'disabled' : ''}}",
+            [ngStyle]='button.style',
+            (click)='onAction(button.action)',
+        )
+
+        div(
+            *ngIf='evalStr(button.visible) && button.action && button.isText',
+            ngClass="{{button.class}} {{evalStr(button.disabled) ? 'disabled' : ''}}",
+            [ngStyle]='button.style',
+            (click)='onAction(button.action)'
+            )
+            i(
+                [ngClass]='button.iconClass',
+                [ngStyle]='button.iconStyle',
+            )
+            span([innerHTML]='button.label')

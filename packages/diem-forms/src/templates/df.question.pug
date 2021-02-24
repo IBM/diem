@@ -1,0 +1,529 @@
+div(
+    [formGroup]='form',
+    *ngIf='isVisible && question',
+    [ngClass]='question.subClass',
+    [ngStyle]='question.subStyle',
+    )
+    ng-template([ngTemplateOutlet]="questionTmpl")
+
+ng-template(#edittextbox="")
+    ng-container([formGroup]="form")
+        ibm-label(
+            [helperText]="question.helperText",
+            [invalid]="question.invalid",
+            [invalidText]="question.invalidText",
+        ) {{question.label}}
+            input(
+                ibmText="",
+                [formControlName]='question.key',
+                [type]='question.type',
+                [invalid]="question.invalid",
+                [readonly]='question.readOnly && evalStr(question.readOnly)',
+                [theme]="question.theme",
+                [placeholder]="question.placeHolder",
+                [autocomplete]="false"
+            )
+
+ng-template(#readtextbox="")
+    label.bx--label(
+        *ngIf='question.label',
+        [ngStyle]='question.labelStyle',
+        [attr.for]='question.key'
+        ) {{question.label}}
+    div(
+        [class]="question.typeClass",
+        [ngStyle]='question.style',
+    )
+        div([innerHTML]="getOptionLabel(question, question.value)")
+
+ng-template(#editdropdown="")
+    ng-container([formGroup]="form")
+        ibm-dropdown(
+            [formControlName]='question.key',
+            [label]="question.label",
+            [helperText]="question.helperText",
+            [invalid]="question.invalid",
+            [invalidText]="question.invalidText",
+            [theme]="question.theme",
+            [itemValueKey]="question.itemValueKey",
+            [placeholder]="question.placeHolder",
+            [dropUp] = "question.dropUp",
+            (selected)="onAction(question.action,$event)",
+        )
+            ibm-dropdown-list([items]="question.items")
+
+ng-template(#editchips="")
+    ng-container([formGroup]="form")
+        label.bx--label(
+            *ngIf='question.label',
+            [ngStyle]='question.labelStyle',
+            [attr.for]='question.key'
+            ) {{question.label}}
+        p-chips(
+           [formControlName]='question.key',
+           [styleClass]='question.typeClass',
+           [style]='question.style',
+           [separator]='question.separator',
+           )
+
+ng-template(#readchips="")
+    label.bx--label(
+        *ngIf='question.label',
+        [ngStyle]='question.labelStyle',
+        [attr.for]='question.key'
+        ) {{question.label}}
+    div(
+        [class]="question.typeClass",
+        [ngStyle]='question.style',
+        *ngIf="question.key"
+    )
+        ibm-tag(
+            *ngFor="let tag of form.controls[question.key].value",
+            type="warm-gray"
+            ) {{tag}}
+
+
+ng-template(#editnumber="")
+    ng-container([formGroup]="form")
+        ibm-number(
+            [formControlName]='question.key',
+            [label]="question.label",
+            [helperText]="question.helperText",
+            [theme]="question.theme",
+            [min]="question.min",
+            [max]="question.max",
+            [invalid]="question.invalid",
+            [invalidText]="question.invalidText",
+            [attr.readonly]='question.readOnly && evalStr(question.readOnly)'
+        )
+
+ng-template(#readnumber="")
+    label.bx--label(
+        *ngIf='question.label',
+        [ngStyle]='question.labelStyle',
+        [attr.for]='question.key'
+        ) {{question.label}}
+    div(
+        [ngClass]='question.typeClass',
+        [ngStyle]='question.style',
+    )
+        div([innerHTML]='question.value | number')
+
+ng-template(#edittextarea="")
+    ng-container([formGroup]="form")
+        textarea(
+            ibmTextArea='',
+            [formControlName]='question.key',
+            [placeholder]="question.placeHolder",
+            [invalid]="question.invalid",
+            [theme]="question.theme",
+            [rows]="question.rows",
+            [cols]="question.cols",
+            aria-label="textarea",
+            [readonly]='question.readOnly && evalStr(question.readOnly)',
+            [ngStyle]='question.style',
+            )
+
+ng-template(#radio="")
+    ng-container([formGroup]="form")
+        label.bx--label(
+            *ngIf='question.label',
+            [ngStyle]='question.labelStyle',
+            [attr.for]='question.key'
+            ) {{question.label}}
+
+        .ex--radiogroup.bx--form-item(
+            [ngClass]="question.typeClass",
+            [ngStyle]="question.style"
+            )
+            ng-template(ngFor="",[ngForOf]="question.items",let-radio="")
+                p-radioButton(
+                    [name]= 'question.key',
+                    [value]='radio.value',
+                    [label]='radio.label',
+                    [inputId]='question.key + "-" + radio.value',
+                    [ngStyle]='question.style',
+                    [styleClass] = 'question.typeClass',
+                    [formControlName]='question.key')
+
+ng-template(#editcheckbox="")
+    ng-container([formGroup]="form")
+        label.bx--label(
+            *ngIf='question.label',
+            [ngStyle]='question.labelStyle',
+            [attr.for]='question.key'
+            ) {{question.label}}
+            ng-template(ngFor="", [ngForOf]="question.items", let-opt="", [ngIf]="! question.binary")
+                ibm-checkbox(
+                    [name]='opt.label',
+                    [formControlName]="question.key",
+                    [value]='opt.value',
+                    (change)='onAction(question.action,$event,{option:opt})',
+                ) {{opt.label}}
+            ng-template(let-opt="", [ngIf]="question.binary")
+                ibm-checkbox(
+                    [name]='question.key',
+                    [formControlName]="question.key",
+                    (change)='onAction(question.action,$event,{option:opt})',
+                ) {{question.label}}
+
+ng-template(#readcheckbox="")
+    label.bx--label(
+        *ngIf='question.label',
+        [ngStyle]='question.labelStyle',
+        [attr.for]='question.key'
+        ) {{question.label}}
+    ng-container(*ngIf="question.key && ! question.binary")
+        ng-template(ngFor="", [ngForOf]="question.items", let-opt="")
+            ibm-checkbox(
+                [name]='opt.label',
+                [ngModel]="form.controls[question.key].value",
+                [disabled]='true',
+                [value]='opt.value',
+            ) {{opt.label}}
+    ng-container(*ngIf="question.key && question.binary")
+        ibm-checkbox(
+            [name]='question.key',
+            [ngModel]="form.controls[question.key].value",
+            [disabled]='true',
+        ) {{question.label}}
+
+ng-template(#editbutton="")
+    ng-container([formGroup]="form")
+        button(
+            (click)="onAction(question.action)",
+            *ngIf='! question.hidden',
+            [ibmButton]="question.type" ,
+            [size]="question.size",
+            [ngStyle]='question.style',
+            [ngClass]='question.typeClass',
+            [attr.modal-primary-focus]="question.focus",
+            )
+            span {{question.label}}
+            i(
+                *ngIf='question.iconClass',
+                [ngClass]='question.iconClass',
+                [ngStyle]='question.iconStyle',
+            )
+
+ng-template(#editicon="")
+    span(
+        (onAction)="onAction(question.action)",
+        [ngStyle]='question.style',
+        [class]='question.typeClass'
+        )
+
+ng-template(#toggle="")
+    ng-container([formGroup]="form")
+        ibm-toggle(
+            [formControlName]='question.key',
+            [label]="question.label",
+            [onText]="question.onText",
+            [offText]="question.offText",
+            [disabled]="question.disabled && evalStr(question.disabled)",
+            [name]="question.key",
+            [size]="question.size",
+        )
+
+ng-template(#editautocomplete="")
+    ng-container([formGroup]="form")
+        ibm-combo-box(
+            [formControlName]='question.key',
+            [invalid]="question.invalid",
+            [invalidText]="question.invalidText",
+            [label]="question.label",
+            [helperText]="question.helperText",
+            [items]="question.items",
+            [type]="question.type",
+            [itemValueKey]="question.itemValueKey",
+            (selected)="onSelect($event)",
+            (search)="search($event)",
+        )
+            ibm-dropdown-list
+        div(*ngIf="question.tags && question.key")
+            ng-template(ngFor="", [ngForOf]="getTags(question.key)", let-tag="")
+                ibm-tag(
+                    type="warm-gray",
+                    [innerHTML]= "question.itemValueKey ? tag : tag.content"
+                    )
+
+ng-template(#readautocomplete="")
+    label.bx--label(
+        *ngIf='question.label',
+        [ngStyle]='question.labelStyle',
+        [attr.for]='question.key'
+        ) {{question.label}}
+    div(
+        [ngClass]="[question.typeClass,formSpecs?.style.readClass].join(' ')",
+        )
+        ng-container(*ngIf="question.key && question.displayName && question.multiple")
+            span(
+                *ngFor="let val of form.controls[question.key].value",
+                [innerHTML]= "val[question.displayName] + ' '"
+                )
+        div(
+            *ngIf="question.displayName && ! question.multiple",
+            [innerHTML]= "objectValue(question.value,question.displayName) + ' '")
+
+        div(
+            *ngIf="question.value && ! question.displayName",
+            [ngStyle]= "question.style",
+            [innerHTML]="question.value")
+
+ng-template(#editcalendar="")
+    ng-container([formGroup]="form")
+        ibm-date-picker(
+            [formControlName]='question.key',
+            [label]="question.label",
+            [placeholder]="question.placeHolder",
+            language="en",
+            theme="dark",
+            [invalid]="question.invalid",
+            [invalidText]="question.invalidText",
+            [dateFormat]="question.dateFormat",
+        )
+
+ng-template(#readcalendar="")
+    label.bx--label(
+        *ngIf='question.label',
+        [ngStyle]='question.labelStyle',
+        [attr.for]='question.key'
+        ) {{question.label}}
+    div(
+        [ngClass]="[question.typeClass,formSpecs?.style.readClass].join(' ')",
+        ) {{question.value | number}}
+
+ng-template(#editeditor="")
+    ng-container([formGroup]="form")
+        .fileList(*ngIf="oldFiles && oldFiles.length")
+            .fileUpload(*ngFor="let file of oldFiles")
+                i.fa.fa-file-o(aria-hidden="true")
+                span([innerHTML]="file.name")
+                i.fa.fa-times(
+                    aria-hidden="true",
+                    (onAction)="removeOldFile(file)")
+        .fileList(*ngIf="uploadedFiles && uploadedFiles.length")
+            .fileUpload(*ngFor="let file of uploadedFiles")
+                i.fa.fa-file-o(aria-hidden="true")
+                span([innerHTML]="file.name")
+                i.fa.fa-times(
+                    aria-hidden="true",
+                    (onAction)="removeFile(file)")
+        df-tiny-editor(
+            [formControlName]='question.key',
+            (uploadClick)="onFileUploadClick()",
+            (drop)="drop($event)",
+            (dragenter)="dragenter($event)",
+            (dragover)="dragover($event)",
+            (dragleave)="dragleave($event)",
+            [theme]="question.theme",
+            [baseurl]="question.baseurl",
+            [height]="question.height",
+            [elementId]="'my-editor'",
+            (tinyDrop)="drop($event)"
+        )
+
+ng-template(#readeditor="")
+    label.bx--label(
+        *ngIf='question.label',
+        [ngStyle]='question.labelStyle',
+        [attr.for]='question.key'
+        ) {{question.label}}
+    div(
+        [class]="question.typeClass",
+        [ngStyle]='question.style',
+    )
+        div([innerHTML]="html(question.value)")
+
+ng-template(#editupload="")
+    ng-container([formGroup]="form")
+        input(
+            [formControlName]='question.key',
+            [attr.id]='question.key',
+            [multiple] = 'question.multiple',
+            hidden=true,
+            type='files',
+        )
+        div(
+            [class]='question.typeClass',
+            [ngStyle]="question.style",
+            (dragover)="dragover($event)",
+            (drop)="drop($event)",
+            (click)="onFileUploadClick()"
+        )
+            div
+                i.fas.fa-cloud-upload-alt.fa-3x
+                span(style="margin-left: 10px") Drop Files here
+        .fileList
+            ng-container(*ngIf="oldFiles && oldFiles.length > 0")
+                .bx--tag.bx--tag--warm-gray(*ngFor="let file of oldFiles")
+                    i(aria-hidden="true", [ngClass]="question.iconClass")
+                    span.mgr-10([innerHTML]="file.name")
+                    i.fa.fa-times.pointer(
+                        aria-hidden="true",
+                        (click)="removeOldFile(file)")
+            ng-container(*ngIf="uploadedFiles && uploadedFiles.length > 0")
+                .bx--tag.bx--tag--warm-gray(*ngFor="let file of uploadedFiles")
+                    i(aria-hidden="true", [ngClass]="question.iconClass")
+                    span.mgr-10([innerHTML]="file.name")
+                    i.fa.fa-times.pointer(
+                        aria-hidden="true",
+                        (click)="removeFile(file)")
+
+ng-template(#fileViewer="")
+    ul.fileList(*ngIf="oldFiles && oldFiles.length > 0")
+        li.fileUpload(
+            *ngFor="let file of oldFiles",
+            (click)="onAction(question.action,{value: file})",
+            [class]="question.typeClass",
+            )
+            i.fa.fa-file(aria-hidden="true", [ngClass]="question.iconClass")
+            span([innerHTML]="file.name")
+
+ng-template(#text="")
+    label.bx--label(
+        *ngIf='question.label',
+        [ngStyle]='question.labelStyle',
+        [attr.for]='question.key'
+        ) {{question.label}}
+    div(
+        *ngIf='question.ngDateFormat || question.dateFormat',
+        [ngClass]='question.typeClass',
+        [ngStyle]='question.style',
+    )
+        div {{question.value | date: (question.ngDateFormat || question.dateFormat)}}
+    div(
+        *ngIf="question.type ==='number'",
+        [ngClass]='question.typeClass',
+        [ngStyle]='question.style',
+    )
+        div {{question.value | number}}
+    div(
+        *ngIf="question.type ==='text' && ! (question.ngDateFormat || question.dateFormat)",
+        [ngClass]='question.typeClass',
+        [ngStyle]='question.style',
+    )
+        div([innerHTML]="question.value ? html(question.value) : html(question.text)",)
+    div(
+        *ngIf="question.visible &&  evalStr(question.visible)",
+        [ngClass]='question.typeClass',
+        [ngStyle]='question.style',
+    )
+        div(
+            [attr.label]="question.type",
+            [innerHTML]="question.value ? html(question.value) : html(question.text)",)
+
+
+
+ng-template(#readrepeater="")
+    label.bx--label(
+        *ngIf='question.label',
+        [ngStyle]='question.labelStyle',
+        [attr.for]='question.key'
+        ) {{question.label}}
+    ng-template(
+        ngFor="",
+        [ngForOf]="question.value",
+        let-obj="")
+        div(
+            [ngClass]= 'question.typeClass',
+            (click)="clickAction(obj)"
+        )
+            div(
+                *ngFor="let option of question.items",
+                [ngClass]="question.class"
+                )
+                span {{option.label}}
+                span(
+                    [ngStyle]='option.style',
+                    [innerHTML]="obj[option.value]",
+                )
+
+ng-template(#table="")
+    df-table-list(
+        [locals]='question.locals',
+        [formSpecs]='formSpecs',
+        [params]='question.params'
+        )
+
+ng-template(#codeeditor="")
+    label.bx--label(
+        *ngIf='question.label',
+        [ngStyle]='question.labelStyle',
+        [attr.for]='question.key'
+        ) {{question.label}}
+    ng-container([formGroup]="form")
+        df-ace-editor(
+            [formControlName]='question.key',
+            *ngIf='question.visible ? evalStr(question.visible) : true',
+            [key]='question.key',
+            [mode]='question.mode',
+            [theme]='question.codetheme',
+            [style]='question.style',
+            [codeoptions]='question.codeoptions',
+            [readOnly] = "evalStr(this.formSpecs.readmode || question.readOnly)",
+            )
+
+ng-template(#mermaid="")
+    label.bx--label(
+        *ngIf='question.label',
+        [ngStyle]='question.labelStyle',
+        [attr.for]='question.key'
+        ) {{question.label}}
+    ng-container([formGroup]="form")
+        df-mermaid(
+           [id]='question.key',
+           [mmClass]="question.typeClass",
+           [mmStyle]="question.style",
+           [formControlName]='question.key',
+        )
+
+ng-template(#tooltip="")
+
+    ng-template(#tooltiptemplate="", let-tooltip="tooltip")
+        div(
+            *ngIf="tooltip.data",
+            [ngClass]="tooltip.data.typeClass",
+            [innerHTML]="tooltip.data.value",
+        )
+        button.bx--btn.bx--btn--primary((click)="tooltip.doClose()")
+            | Close
+
+    .bx--tooltip__label(
+        [ngClass]="question.class",
+        [ngStyle]="question.style",
+        )
+        span([innerHTML]= "question.text")
+        span(
+            [ibmTooltip]="tooltiptemplate",
+            [offset]="question.offset",
+            [isOpen]="question.isOpen",
+            [data]="question",
+            trigger="click",
+            [placement]="question.placement",
+        )
+            div(role="button")
+                ibm-icon-information-filled([size]="question.size")
+    ibm-placeholder
+
+
+ng-template(#overflow="")
+    ibm-overflow-menu(
+        [flip]="question.flip",
+        [open]="question.open",
+        [offset]="question.offset",
+        [placement]="question.placement",
+    )
+        ng-container(*ngFor="let button of question.buttons")
+            li.bx--overflow-menu-options__option(*ngIf="evalStr(button.visible)")
+                button.bx--overflow-menu-options__btn(
+                    (click)="onAction(button.action)",
+                    [ngClass]='button.typeClass',
+                    )
+                    span {{button.label}}
+                    i(
+                        *ngIf='button.iconClass',
+                        [ngClass]='button.iconClass',
+                        [ngStyle]='button.iconStyle',
+                    )
+    ibm-placeholder

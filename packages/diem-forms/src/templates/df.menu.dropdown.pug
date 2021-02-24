@@ -1,0 +1,21 @@
+div([ngClass]="formSpecs.class", (mouseover)="hover('block')", (mouseout)="hover('none')")
+    a(
+        [ngClass]="formSpecs.buttonClass",
+        aria-hidden="true") {{formSpecs.header}}
+    ul(role='menu', [ngStyle]="hoverStyle")
+        li(
+            role='presentation',
+            *ngFor="let item of formSpecs.items",
+            )
+            a(
+                role='itemitem',
+                *ngIf='item.routerLink && ! item.hidden',
+                [routerLink]="item.routerLink",
+                [innerHtml]="item.label"
+                )
+            a(
+                role='itemitem',
+                *ngIf='item.action && ! item.hidden',
+                (click) = "onAction(item.action)",
+                [innerHtml]="item.label"
+                )
