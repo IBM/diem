@@ -221,7 +221,7 @@ module.exports = {
 
     resolve: {
         alias: {
-            '@util': `${(global as any).__basedir}/node_modules/@sets/diem-util/lib`,
+            '@util': `${(global as any).__basedir}/node_modules/@mydiem/diem-util/lib`,
         },
         extensions: ['.ts', '.js'],
     },

@@ -117,9 +117,9 @@ module.exports = {
 
     resolve: {
         alias: {
-            '@common': `${(global as any).__basedir}/node_modules/@sets/diem-common/lib/common`,
-            '@interfaces': `${(global as any).__basedir}/node_modules/@sets/diem-common/lib/interfaces/index`,
-            '@util': `${(global as any).__basedir}/node_modules/@sets/diem-util/lib`,
+            '@common': `${(global as any).__basedir}/node_modules/@mydiem/diem-common/lib/common`,
+            '@interfaces': `${(global as any).__basedir}/node_modules/@mydiem/diem-common/lib/interfaces/index`,
+            '@util': `${(global as any).__basedir}/node_modules/@mydiem/diem-util/lib`,
         },
         extensions: ['.ts', '.js'],
         modules: [path.join(__dirname, 'src/server'), 'node_modules'],
