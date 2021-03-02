@@ -1,0 +1,78 @@
+.bx--content.ex--content.h-100(*ngIf="fatal")
+    ex-app-error([error]="errormsg")
+
+.bx--content.ex--content.h-100(@fadeInAnimation="", *ngIf="! loaded && ! fatal")
+        span.bx--loading--title
+            .bx--loading.bx--loading--small
+                svg.bx--loading__svg(viewBox="-75 -75 150 150")
+                    title Loading...
+                    circle.bx--loading__stroke(cx="0", cy="0", r="37.5")
+            span Loading...
+
+ng-container(*ngIf="loaded && ! fatal")
+
+        div(@fadeInAnimation="")
+
+            .ex--panel(*ngIf="data && data.modules")
+                .ex--panel-nav
+                    nav.bx--side-nav__navigation(role="navigation")
+                        .ex--menu-panel-title
+                            i([ngClass]="this.data.titleicon")
+                            div([innerHTML]="this.data.title")
+                        ul.bx--side-nav__items
+                            ng-template(
+                                ngFor='',
+                                let-module='',
+                                [ngForOf]="data.modules",
+                                let-i="index",
+                                [ngForTrackBy]="trackByFn",
+                                )
+                                a.ex--menu-panel-button(
+                                    [ngClass]="{'ex--menu-panel-button-active': module.component === component}",
+                                    (click)="setActive(module.component)"
+                                    )
+                                    i([ngClass]="module.iconclass")
+                                    span([innerHTML]='module.title')
+                            .ex--panel-close((click)="navClass = 'ex--panel-min'")
+                                svg(ibmIconChevronLeft='', size='20')
+                        .ex--panel-icon-slide-right((click)="navClass = ''")
+                                svg(ibmIconChevronRight='', size='20')
+
+                .bx--content.ex--panel-form
+                    ng-container
+                        ng-template(
+                            [ngTemplateOutlet]="contentTmpl",
+                            [ngTemplateOutletContext]="{ $implicit: config}"
+                        )
+
+
+                .ex--panel-form(*ngIf="error")
+                    ex-app-error([error]="errormsg")
+
+        ng-template(#modalViewChild="", let-config="")
+            df-standard-form(
+                [locals]='config.locals',
+                [values]='config.values'
+                )
+
+ng-template(#contentTemplate="")
+
+    .ex--page-detail-header.productive-heading-04(*ngIf="config.header && config.header.title") {{config.header.title}}
+
+    df-standard-form(
+        *ngIf="config.filter",
+        [locals]='config.filter',
+        [values]='config.values'
+        )
+    df-table-list(
+        *ngIf="config.locals",
+        [locals]='config.locals',
+        [params]='config.params'
+        )
+
+ng-template(#noAccessTemplate="")
+    .bx--content.h-100
+        <h3>
+            <i class="fas fa-3x fa-ban" style="color: #8d8d8d;"></i>
+            <span style="margin: 1rem;">You don't have enough access rights to view this content.</span>
+        </h3>

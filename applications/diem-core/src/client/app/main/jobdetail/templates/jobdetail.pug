@@ -1,0 +1,60 @@
+ng-container(*ngIf="loaded; else elseBlock")
+    ng-container(*ngIf="! error; else errorBlock")
+
+        .ex--band.bx--content([ngClass]="config.header.headerColor",*ngIf="config")
+            .bx--row
+                ng-template(
+                    [ngTemplateOutlet]="headerTmpl",
+                    [ngTemplateOutletContext]="{ $implicit: config}"
+                )
+
+        .ex--content.h-100(@fadeInAnimation="",*ngIf="config")
+
+            df-standard-form(
+                [locals]='config.locals',
+                )
+
+        button.ex--help-button(
+            *ngIf="config && config.help",
+            (click)="handleActions(config.help.action)",
+            )
+            i([ngClass]="config.help.icon")
+
+
+        //- we will pass locals and values
+        ng-template(#modalViewChild="", let-config="")
+            df-standard-form(
+                [locals]='config.locals',
+                [values]='config.values'
+                )
+
+    ng-template(#errorBlock="")
+        .bx--content.ex--content.h-100(@fadeInAnimation="")
+            ex-app-error(
+                [error]="error"
+                )
+
+ng-template(#elseBlock="")
+    span.bx--loading--title
+        .bx--loading.bx--loading--small
+            svg.bx--loading__svg(viewBox="-75 -75 150 150")
+                title Loading...
+                circle.bx--loading__stroke(cx="0", cy="0", r="37.5")
+        span Loading...
+
+ng-template(#header="")
+    .bx--col-lg-11(*ngIf="config && config.header")
+        i([ngClass]="config.header.headerIcon")
+        .productive-heading-04.ex--header Job Name: {{records.name}}
+            .productive-heading-01
+                span Job Id - {{records.id}}
+                ng-container(*ngIf='records.schedule__nextExecutionTime')
+                    i.far.fa-clock([ngStyle]="{'margin-left':'3rem','margin-right':'0.625rem'}")
+                    span Next Run: {{records.schedule__nextExecutionTime | date:'yyyy-MM-dd HH:mm'}}
+    .bx--col-lg-5
+        .productive-heading-03
+            div.statfa
+                span([ngClass]="records.statusicon || 'fa fa-question c-gray'")
+            span(style='margin-left:10px') Status: {{records.status || 'New'}}
+
+
