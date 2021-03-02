@@ -1,0 +1,14 @@
+{
+    "extends": "../../node_modules/@mydiem/diem-util/tsconfig.base.json",
+    "compilerOptions": {
+        "outDir": "../../server",
+        "resolveJsonModule": true,
+        "typeRoots": ["../../node_modules/@types"],
+        "baseUrl": "./",
+        "paths": {
+            "@common/*": ["../../node_modules/@mydiem/diem-common/lib/common/*"],
+            "@interfaces": ["../../node_modules/@mydiem/diem-common/lib/interfaces/index"]
+        }
+    },
+    "filesGlob": ["../../node_modules/@types/***/**.d.ts", "**/**.ts"]
+}

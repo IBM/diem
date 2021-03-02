@@ -1,0 +1,27 @@
+{
+    "name": "Home Module for Leap",
+    "short_name": "etl-mgr",
+    "icons": [
+        {
+            "src": "images/diem_l.png",
+            "sizes": "1024x1024",
+            "type": "image/png"
+        },
+        {
+            "src": "images/diem_m.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "images/diem_s.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#b92b27",
+    "background_color": "#ffffff",
+    "description": "Home Module for Leap",
+    "display": "standalone",
+    "orientation": "portrait",
+    "start_url": "/etl-mgr/"
+}

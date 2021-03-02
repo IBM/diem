@@ -1,0 +1,33 @@
+ibm-notification.ex--toast(
+    *ngIf="isOpen",
+    [@messageState]="isOpen ? 'visible' : undefined",
+    [notificationObj]="{\
+        type: msg.severity,\
+        caption: 'caption',\
+        template: customNotificationContent,\
+        title: msg.summary,\
+        locals: locals,\
+        showClose: true,\
+        closeLabel: 'CloseLabel',\
+        lowContrast: lowContrast\
+    }",
+    (close)= "onClose()",
+    [ngClass]="{\
+        'toast-br' : msg.key === 'br',\
+        'toast-tr' : msg.key === 'tr',\
+        'toast-bl' : msg.key === 'bl',\
+        'toast-tl' : msg.key === 'tl'\
+    }",
+)
+
+ng-template(#customNotificationContent="", let-data="")
+    h3(ibmToastTitle="",*ngIf="data.title") {{data.title}}
+    p(ibmToastSubtitle="", *ngIf="data.locals && data.locals.subtitle") {{data.locals.subtitle}}
+    p(ibmToastCaption="",*ngIf="data.caption") {{data.summary}}
+    .ex--toast-content(*ngIf="msg.detail", [innerHTML]='msg.detail')
+
+ng-template(let-message="", #message="")
+    div(style="text-align: center")
+        i.fas.fa-spinner.fa-3x
+        h3 {{message.detail}}
+        p {{progressMsg | async}}

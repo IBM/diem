@@ -1,0 +1,21 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: diem-ingress
+  namespace: default
+  labels:
+    app: diem-ingress
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30027
+  selector:
+    app: diem-ingress
+  type: NodePort
+  sessionAffinity: None
+  externalTrafficPolicy: Cluster
+status:
+  loadBalancer: {}

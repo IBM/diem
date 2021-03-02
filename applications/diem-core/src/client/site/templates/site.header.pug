@@ -1,0 +1,93 @@
+ibm-header(
+    name="Diem",
+    *ngIf="env.user.authorized",
+    [route]="['home']",
+    )
+    a.bx--header__name(role='menuitem', routerLink="home")
+        img(src="./etl-mgr/public/images/diem_logo.svg", alt="Diem Logo", height="25", width="100")
+    ibm-header-navigation(role="menu")
+        ng-container(*ngFor="let menu of menus")
+            li.h-100(*ngIf="evalStr(menu.visible)",)
+                a.bx--header__menu-item(role='menuitem', routerLink="{{menu.value}}") {{menu.name}}
+    ibm-header-global
+        ibm-header-navigation.disabled
+            a.bx--header__menu-item
+                svg.socketfa(ibmIconDataConnected='', size='20')
+
+            li.bx--header__submenu(style="height: 100%", #orgmenu="")
+                a.bx--header__menu-item.bx--header__menu-title(
+                    role="menuitem",
+                    tabindex="0",
+                    aria-haspopup="true",
+                    [attr.aria-expanded]="mexpanded",
+                    (click)="mexpanded = !mexpanded"
+                )
+                    | {{userorg}}
+                    <svg class="bx--header__menu-arrow" width="12" height="7" aria-hidden="true">
+                        <path d="M6.002 5.55L11.27 0l.726.685L6.003 7 0 .685.726 0z" />
+                    </svg>
+                ul.bx--header__menu(role="menu",[attr.aria-label]="userorg")
+                    ibm-header-item(
+                        *ngFor="let org of orgs",
+                        (click)="setOrg(org)",
+                        ) {{org}}
+        ibm-header-action(
+            title='open infoPanel',
+            [active]='infoPanel',
+            (selected)="openPanel('infoPanel',$event)"
+            )
+            svg(ibmIconNotification='', size='20')
+        ibm-header-action(
+            title='open userPanel',
+            [active]='userPanel',
+            (selected)="openPanel('userPanel',$event)"
+            )
+            svg(ibmIconUserAvatar='', size='20')
+        ibm-header-action(
+            title='open appPanel',
+            [active]='appPanel',
+            (selected)="openPanel('appPanel',$event)"
+            )
+            svg(ibmIconAppSwitcher='', size='20')
+
+
+ibm-panel(id="infoPanel", [expanded]="infoPanel")
+    ibm-switcher-list
+        div You don't have any notifications
+    .ex--panel-close((click)="openPanel('infoPanel',false)",)
+        span Close
+        svg(ibmIconClose='', size='20')
+
+
+
+ibm-panel(id="userPanel", role="menu", [expanded]="userPanel")
+    div.pd-20.mgr-10.c-white
+        h4 {{env.user.name}}
+        div {{env.user.email}}
+    a.ex--menu-panel-button.ex--menu-panel-button-active(role='menuitem', routerLink="/profile")
+        i.fa.fa-user
+        span my Profile
+    .ex--panel-close((click)="openPanel('userPanel',false)")
+        span Close
+        svg(ibmIconClose='', size='20')
+
+ibm-panel(id="appPanel",[expanded]="appPanel")
+    ng-template([ngIf]="env.user.authorized")
+        ul.bx--switcher
+            li.bx--switcher__item(*ngFor="let menu of menus")
+                a.bx--switcher__item-link(
+                    routerLink="{{menu.value}}",
+                    (click)="openPanel('appPanel',false)"
+                    ) {{menu.name}}
+
+            li.bx--switcher__item-divider.bx--switcher__item
+                span.bx--switcher__item-link Other Links
+
+            li.bx--switcher__item(*ngFor="let menu of subMenus")
+                a.bx--switcher__item-link(
+                    routerLink="{{menu.value}}",
+                    (click)="openPanel('appPanel',false)"
+                    ) {{menu.name}}
+    .ex--panel-close((click)="openPanel('appPanel',false)",)
+        span Close
+        svg(ibmIconClose='', size='20')

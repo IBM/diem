@@ -1,0 +1,28 @@
+ibm-modal(
+    [open]="openModal",
+    [size]= "modal.options.size",
+    [theme] = "modal.options.theme",
+    (close) = "modalClose()",
+    [ariaLabel] = "modal.options.arialabel",
+    [hasScrollingContent] = "modal.options.hasScrollingContent",
+    )
+    ibm-modal-header((closeSelect)="onHide()")
+        p.bx--modal-header__heading {{modal.options.header}}
+    ng-container(*ngIf='modal.template')
+        ng-template(
+            [ngTemplateOutlet]="modal.template",
+            [ngTemplateOutletContext]="{ $implicit: modal.context}"
+        )
+
+ng-template(#spinnerTemplate="")
+    ibm-loading([isActive]="true", size="'normal", [overlay]="false")
+    div  {{modal.message}}
+    div(*ngIf="modal.message")  {{modal.message}}
+    div(*ngIf="progressMsg")  {{progressMsg | async}}
+
+ng-template(#errorTemplate="")
+    p.ibm-h3.pd-20
+        i.fas.fa-exclamation.fa-3x.mgr-10
+        span   {{modal.message}}
+    .bx--modal-footer
+        button.bx--btn.bx--btn--secondary((click)='close()') Close
