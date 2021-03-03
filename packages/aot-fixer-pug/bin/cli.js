@@ -9,11 +9,11 @@ program
   .version(
     'version    : ' + require("../package.json").version
   )
-  .option('-s, --src-path [path]','path where .pug files are located. Searched recursivly.', 'src')
-  .option('-l, --local-scope','Add a filename based _ngcontent attribute to all tags. See "local-scoped-scss-with-pug-loader" package.', false)
+  .option('-s, --src-path [path]', 'path where .pug files are located. Searched recursivly.', 'src')
+  .option('-l, --local-scope', 'Add a filename based _ngcontent attribute to all tags. See "local-scoped-scss-with-pug-loader" package.', false)
   .parse(process.argv);
 
 fixer({
-  srcPath: program.srcPath,
-  localScope: program.localScope
+  srcPath: program._optionValues.srcPath,
+  localScope: program._optionValues.localScope
 });
