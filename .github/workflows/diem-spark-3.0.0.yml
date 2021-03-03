@@ -41,4 +41,4 @@ jobs:
 
       - name: Push the Docker image
         run: docker push quay.io/diem/spark:3.0.0
-        if: github.event_name == 'push' && ( github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' )
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' 
