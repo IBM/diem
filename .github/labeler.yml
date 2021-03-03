@@ -8,6 +8,8 @@ diem-util:
   - packages/diem-util/**/*
 diem-forms:
   - packages/diem-forms/**/*
+aot-fixer:
+  - packages/aot-fixer-pug/**/*
 diem-spark:
   - applications/diem-spark/**/*
 nodepy:
@@ -16,3 +18,7 @@ diem-core:
   - applications/diem-core/**/*
 diem-help:
   - applications/diem-help/**/*
+workflow:
+  - .github/**/*
+repo:
+  - ./*
