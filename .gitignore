@@ -36,6 +36,7 @@ __pycache__/
 
 # all lib
 lib/
+!packages/aot-fixer-pug/lib
 
 **/*.egg-info
 packages/diem-lib/dist
