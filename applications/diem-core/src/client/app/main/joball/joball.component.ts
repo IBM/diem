@@ -86,11 +86,11 @@ export class JobAllComponent implements OnInit, OnDestroy {
          * this.config = {};
          * listin to the route resolver in main routing till the component get's in
          */
-        this.routeData = this.route.data.subscribe((data: any) => {
+        this.routeData = this.route.data.subscribe(async (data: any) => {
             this.module = data.component;
             console.info(`$joball.component (ngOnInit): loading ${this.module}`);
             if (this.module) {
-                this.MCF.loadConfig(this.module)
+                await this.MCF.loadConfig(this.module)
                     .then((res: any) => {
                         this.parseConfig(res);
                     })

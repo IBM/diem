@@ -134,7 +134,7 @@ export class JobDetailComponent implements OnInit, OnDestroy {
         this.formSub = this.DFCS.form$.subscribe((options: IOptions) => this.handleActions(options));
 
         /** subscribe to the data provided by the route resolver */
-        this.routeData = this.route.data.subscribe((data: any) => {
+        this.routeData = this.route.data.subscribe(async (data: any) => {
             // first check if there's already a config
             if (this.config) {
                 this.config = undefined;
@@ -147,7 +147,7 @@ export class JobDetailComponent implements OnInit, OnDestroy {
             this.id = this.data.params.id || this.data.component;
             if (this.data.component) {
                 console.info(`$jobdetail.component (ngOnInit): using : ${this.data.component} with id ${this.id}`);
-                this.MCF.loadConfig(this.data.component)
+                await this.MCF.loadConfig(this.data.component)
                     .then((res: any) => this.parseConfig(res))
                     .catch(() => {
                         this.loaded = false;

@@ -226,8 +226,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
     public trackByFn = (index: number) => index; // or
 
-    private loadConfig = (template: string) => {
-        this.MCF.loadConfig(template)
+    private loadConfig = async (template: string) => {
+        await this.MCF.loadConfig(template)
             .then((res: any) => this.parseConfig(res))
             .catch(() => {
                 this.errormsg = `Template ${template} not found`;

@@ -11,7 +11,7 @@ ng-container(*ngIf="loaded; else elseBlock")
         .ex--content.h-100(@fadeInAnimation="",*ngIf="config")
 
             df-standard-form(
-                [locals]='config.locals',
+                [locals]='config?.locals',
                 )
 
         button.ex--help-button(
@@ -24,7 +24,7 @@ ng-container(*ngIf="loaded; else elseBlock")
         //- we will pass locals and values
         ng-template(#modalViewChild="", let-config="")
             df-standard-form(
-                [locals]='config.locals',
+                [locals]='config?.locals',
                 [values]='config.values'
                 )
 
