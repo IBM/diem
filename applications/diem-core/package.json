@@ -72,7 +72,7 @@
         "@carbon/icons-angular": "^11.2.1",
         "@carbon/type": "^10.22.0",
         "@fortawesome/fontawesome-free": "^5.15.2",
-        "@mydiem/aot-fixer-pug": "^1.0.1",
+        "@mydiem/aot-fixer-pug": "^1.0.2",
         "@mydiem/diem-angular-util": "^2.0.1",
         "@mydiem/diem-common": "^2.0.1",
         "@mydiem/diem-forms": "^3.0.0",
