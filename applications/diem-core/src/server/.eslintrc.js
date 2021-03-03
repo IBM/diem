@@ -24,14 +24,13 @@ module.exports = {
         sourceType: 'module',
         createDefaultProgram: true,
     },
-    plugins: ['@typescript-eslint', 'sonarjs', 'prettier', 'import', 'jsdoc'],
-    extends: [
-        'eslint:recommended',
-        'plugin:@typescript-eslint/eslint-recommended',
-        'plugin:@typescript-eslint/recommended',
-        'plugin:prettier/recommended',
-        'plugin:sonarjs/recommended',
-        'prettier',
-        '../../node_modules/@mydiem/diem-util/eslintrc-base.js',
-    ],
+    plugins: ['@typescript-eslint', 'sonarjs', 'prettier', 'import', 'jsdoc', 'prototype-pollution-security-rules'],
+    extends: ['plugin:prettier/recommended', '../../node_modules/@mydiem/diem-util/eslintrc-base.js'],
+    rules: {
+        /** prototype-pollution-security-rules rules**/
+        'prototype-pollution-security-rules/detect-merge': 1,
+        'prototype-pollution-security-rules/detect-merge-objects': 1,
+        'prototype-pollution-security-rules/detect-merge-options': 1,
+        'prototype-pollution-security-rules/detect-deep-extend': 1,
+    },
 };

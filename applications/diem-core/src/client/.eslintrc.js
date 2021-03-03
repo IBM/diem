@@ -19,14 +19,10 @@ module.exports = {
         'prettier',
         'import',
         'jsdoc',
+        'prototype-pollution-security-rules'
     ],
     extends: [
-        'eslint:recommended',
         'plugin:@angular-eslint/recommended',
-        'plugin:@typescript-eslint/eslint-recommended',
-        'plugin:@typescript-eslint/recommended',
-        'plugin:sonarjs/recommended',
-        'prettier',
         '../../node_modules/@mydiem/diem-util/eslintrc-base.js',
     ],
     'rules': {
@@ -36,6 +32,12 @@ module.exports = {
                 'selector': 'CallExpression[callee.object.name="console"][callee.property.name!=/^(warn|error|info|debug|trace)$/]',
                 'message': 'Unexpected property on console object was called'
             }
-        ]
+        ],
+        /** prototype-pollution-security-rules rules**/
+        'prototype-pollution-security-rules/detect-merge': 1,
+        'prototype-pollution-security-rules/detect-merge-objects': 1,
+        'prototype-pollution-security-rules/detect-merge-options': 1,
+        'prototype-pollution-security-rules/detect-deep-extend': 1,
+
     }
 };

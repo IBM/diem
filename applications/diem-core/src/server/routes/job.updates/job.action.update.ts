@@ -21,7 +21,7 @@ export const mergeDeep: any = (target: any, source: any) => {
     if (isObject(target) && isObject(source)) {
         Object.keys(source).forEach((key) => {
             if (isObject(source[key])) {
-                if (!target[key] || (!isObject(target[key]) && key !== '__proto__')) {
+                if (key !== '__proto__' && (!target[key] || !isObject(target[key]))) {
                     target[key] = source[key];
                 }
                 mergeDeep(target[key], source[key]);
