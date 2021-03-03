@@ -18,14 +18,14 @@ ng-container(*ngIf="loaded; else elseBlock")
                 [values]='config.values'
                 )
             df-table-list(
-                *ngIf="config.locals",
+                *ngIf="config?.locals",
                 [locals]='config.locals',
                 [params]='config.params'
                 )
 
 ng-template(#modalViewChild="", let-config="")
     df-standard-form(
-        [locals]='config.locals',
+        [locals]='config?.locals',
         [values]='config.values'
         )
 

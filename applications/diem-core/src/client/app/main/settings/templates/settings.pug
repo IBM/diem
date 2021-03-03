@@ -51,7 +51,7 @@ ng-container(*ngIf="loaded && ! fatal")
 
         ng-template(#modalViewChild="", let-config="")
             df-standard-form(
-                [locals]='config.locals',
+                [locals]='config?.locals',
                 [values]='config.values'
                 )
 
@@ -65,7 +65,7 @@ ng-template(#contentTemplate="")
         [values]='config.values'
         )
     df-table-list(
-        *ngIf="config.locals",
+        *ngIf="config?.locals",
         [locals]='config.locals',
         [params]='config.params'
         )

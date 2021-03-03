@@ -145,7 +145,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this.formSub = this.DFCS.form$.subscribe((options: IOptions) => this.handleActions(options));
 
         /** subscribe to the data provided by the route resolver */
-        this.routeData = this.route.data.subscribe((data: any) => {
+        this.routeData = this.route.data.subscribe(async (data: any) => {
             this.fatal = false;
             this.data = data;
             if (!this.data) {
@@ -168,7 +168,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
                 console.info(
                     `$settings.component (ngOnInit): using : ${this.data.params.component} with id ${this.id}`
                 );
-                this.loadConfig(this.module.template);
+                await this.loadConfig(this.module.template);
             }
         });
 
@@ -226,8 +226,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
     public trackByFn = (index: number) => index; // or
 
-    private loadConfig = (template: string) => {
-        this.MCF.loadConfig(template)
+    private loadConfig = async (template: string) => {
+        await this.MCF.loadConfig(template)
             .then((res: any) => this.parseConfig(res))
             .catch(() => {
                 this.errormsg = `Template ${template} not found`;
