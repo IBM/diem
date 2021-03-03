@@ -36,3 +36,6 @@ __pycache__/
 
 # all lib
 lib/
+
+**/*.egg-info
+packages/diem-lib/dist

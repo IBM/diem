@@ -1,0 +1,10 @@
+{
+  "name": "diem-lib",
+  "version": "0.0.8",
+  "description": "ETL- Manager NodePy",
+  "scripts": {
+    "python": "python3 setup.py clean --all && python3 setup.py bdist_wheel",
+    "deploy": "twine upload -r pypi dist/*  --config-file .pypirc",
+    "deploy:test": "twine upload -r pypitest dist/*  --config-file .pypirc"
+  }
+}
