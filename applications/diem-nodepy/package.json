@@ -24,7 +24,7 @@
         "python"
     ],
     "devDependencies": {
-        "@mydiem/diem-common": "^2.0.0",
+        "@mydiem/diem-common": "^2.0.1",
         "@mydiem/diem-util": "^2.4.0",
         "@types/body-parser": "^1.19.0",
         "@types/core-js": "^2.5.4",

@@ -46,4 +46,4 @@ jobs:
         run: |
           npm config set //registry.npmjs.org/:_authToken ${{secrets.NPM_TOKEN}}
           npm publish --ignore-scripts --access public
-        if: github.event_name == 'push' && ( github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main' )
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' 
