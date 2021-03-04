@@ -52,14 +52,3 @@ Diem also allows quick and easy definition of connections, as well as a schedule
 | **Space Selector**   | Easy move between spaces                    | You can at any time easily swtich between organisations your belong to                                                                                                                                                          |
 
 {.bx--data-table .bx--data-table2}
-
-<h2>About Diem</h2>
-<iframe
-    src="https://ibm.ent.box.com/embed/s/e74wohhr2o8j1swyv9pjm8pknizy9qvj"
-    width="800"
-    height="550"
-    frameborder="0"
-    allowfullscreen
-    webkitallowfullscreen
-    msallowfullscreen
-></iframe>
