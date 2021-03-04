@@ -22,7 +22,7 @@ export const npcodefileservices: (body: IServices) => Promise<string> = async (b
     if (body.id === null) {
         return Promise.reject({
             message: 'no id provided',
-            trace: ['@at $nodepy.services.pyfile (npcodefile) - nodid'],
+            trace: ['@at $nodepy.services.pyfile (npcodefileservices) - nodid'],
         });
     }
 
@@ -34,7 +34,7 @@ export const npcodefileservices: (body: IServices) => Promise<string> = async (b
         .lean()
         .exec()
         .catch(async (err: any) => {
-            err.trace = addTrace(err.trace, '@at $nodepy.services.pyfile (npcodefile) - findOne');
+            err.trace = addTrace(err.trace, '@at $nodepy.services.pyfile (npcodefileservices) - findOne');
 
             return Promise.reject(err);
         });
@@ -42,7 +42,7 @@ export const npcodefileservices: (body: IServices) => Promise<string> = async (b
     if (doc === null) {
         return Promise.reject({
             message: 'doc not found',
-            trace: ['@at $nodepy.services.pyfile (npcodefile) - null document'],
+            trace: ['@at $nodepy.services.pyfile (npcodefileservices) - null document'],
         });
     }
 
@@ -59,18 +59,20 @@ export const npcodefileservices: (body: IServices) => Promise<string> = async (b
         org: doc.project.org,
         params,
     }).catch(async (err: any) => {
-        err.trace = addTrace(err.trace, '@at $nodepy.services.pyfile (npcodefile)');
+        err.trace = addTrace(err.trace, '@at $nodepy.services.pyfile (npcodefileservices)');
 
         return Promise.reject(err);
     });
 
     if (!pubJob) {
-        utils.logInfo(`$nodepy.services.pyfile (npcodefile): no file prepared - doc: ${id} - ti: ${body.transid}`);
+        utils.logInfo(
+            `$nodepy.services.pyfile (npcodefileservices): no file prepared - doc: ${id} - ti: ${body.transid}`
+        );
 
         return Promise.resolve('No Python file available');
     }
 
-    utils.logInfo(`$nodepy.services.pyfile (npcodefile): file prepared - doc: ${id} - ti: ${body.transid}`);
+    utils.logInfo(`$nodepy.services.pyfile (npcodefileservices): file prepared - doc: ${id} - ti: ${body.transid}`);
 
     return Promise.resolve(base64decode(pubJob.code));
 };
