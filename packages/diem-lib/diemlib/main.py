@@ -17,7 +17,8 @@ from sys import exit
 import traceback
 import diemlib.config as config
 
-__all__ = ["UtcNow", "printl", "mq", "out", "endJob", "endjob", "error"]
+__all__ = ["UtcNow", "runTime", "printl",
+           "mq", "out", "endJob", "endjob", "error"]
 
 
 def UtcNow():
@@ -131,8 +132,11 @@ def endjob():
 def error(err):
 
     etype, value, tb = sys.exc_info()
-    extract = traceback.extract_tb(tb)[0]
-    msg = f"Error: {str(err)} - line: {extract[1]} - type: {type(err).__name__} - stack: {extract[3]}"
+    if not tb is None:
+        extract = traceback.extract_tb(tb)[0]
+        msg = f"Error: {str(err)} - line: {extract[1]} - type: {type(err).__name__} - stack: {extract[3]}"
+    else:
+        msg = f"Error: {str(err)} - type: {type(err).__name__}"
 
     if config.__isservice:
         print(msg)
