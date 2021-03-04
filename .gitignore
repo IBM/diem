@@ -40,3 +40,5 @@ lib/
 
 **/*.egg-info
 packages/diem-lib/dist
+.vscode
+**/.vscode
