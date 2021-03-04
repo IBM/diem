@@ -28,7 +28,7 @@ export const services: (req: IRequest) => Promise<IServicesReturn> = async (
      * @info the false is to ensure the code is not decoded
      */
     const code: string = await npcodefileservices(body).catch(async (err: IError) => {
-        err.trace = addTrace(err.trace, '@at $services (npcodefile)');
+        err.trace = addTrace(err.trace, '@at $services (services)');
 
         return Promise.reject(err);
     });
@@ -36,7 +36,7 @@ export const services: (req: IRequest) => Promise<IServicesReturn> = async (
     // Post the Job
     const result: any = await servicesPostJob({
         code: base64encode(code),
-        transid: req.tramsid,
+        transid: req.transid,
         id: body.id,
         params: JSON.stringify(body.params),
     }).catch(async (err: IError) => {

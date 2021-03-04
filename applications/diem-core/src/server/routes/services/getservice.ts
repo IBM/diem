@@ -2,9 +2,11 @@
 
 import { utils } from '@common/utils';
 import { IRequest, IError, EStoreActions } from '@interfaces';
+import { pubSub } from '../../config/pubsub';
 import { base64encode, addTrace } from '../shared/functions';
 import { npcodefileservices } from '../executors/nodepy/np.codefile.services';
 import { servicesPostJob } from './services.postjob';
+import { jobOutHandler } from './services.callback';
 
 const jobdetail: string = 'jobdetail.store';
 
@@ -30,6 +32,8 @@ export const getservice: (req: IRequest) => Promise<any> = async (req: IRequest)
 
     body.id = serviceid;
     body.jobid = id;
+    body.email = req.user.email;
+    body.transid = req.transid;
 
     /**
      * get the code for the pyfile
@@ -42,12 +46,15 @@ export const getservice: (req: IRequest) => Promise<any> = async (req: IRequest)
         return Promise.reject(err);
     });
 
-    // Post the Job
+    /* we post the job to nodepy but void the return
+    In case of an error we socket the response
+    The code must continue
+    */
 
     try {
-        await servicesPostJob({
+        void servicesPostJob({
             code: base64encode(code),
-            transid: req.tramsid,
+            transid: req.transid,
             id,
         });
     } catch (err) {
@@ -56,21 +63,13 @@ export const getservice: (req: IRequest) => Promise<any> = async (req: IRequest)
         // as we return directly to the user, we need to log the job here
         void utils.logError(`$services (servicesPostJob): error for job: ${id}`, err);
 
-        return Promise.resolve({
-            payload: [
-                {
-                    loaded: true,
-                    store: jobdetail,
-                    targetid: id,
-                    options: {
-                        field: 'servicesout',
-                    },
-                    type: EStoreActions.UPD_STORE_FORM_RCD,
-                    values: {
-                        servicesout: [{ out: `failed: ${err.message}` }],
-                    },
-                },
-            ],
+        const results: any = await jobOutHandler({ id: body.id, out: err });
+        /* pass the message to redis for global handling */
+
+        utils.logInfo(`$pubsub (publish): publishing payload - job: ${body.id}`);
+        pubSub.publishClientPayload({
+            clientEmail: body.email,
+            payload: { payload: [results] },
         });
     }
 

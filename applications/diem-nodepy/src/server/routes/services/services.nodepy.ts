@@ -1,7 +1,6 @@
 import { spawnSync, SpawnSyncReturns } from 'child_process';
 import path from 'path';
 import { utils } from '@common/utils';
-import { IError } from '@interfaces';
 import * as rimraf from 'rimraf';
 import { ServicesJob, red, ECodeLanguage } from '../../config/interfaces';
 
@@ -45,20 +44,14 @@ export const servicesNodepy: (job: ServicesJob) => Promise<any> = async (job: Se
 
     // collect data from script
 
+    let response_string;
+
     if (response.status !== 0) {
-        const err: Partial<IError> = {
-            message: response.stderr.toString(),
-            trace: ['@at $services.nodepy (response)'],
-            id,
-            name: 'Services Nodepy',
-        };
-
-        cleanup();
-
-        return Promise.reject(err);
+        response_string = response.stderr.toString();
+    } else {
+        response_string = response.stdout.toString();
     }
 
-    const response_string: any = response.stdout.toString();
     let data: any = {};
 
     try {

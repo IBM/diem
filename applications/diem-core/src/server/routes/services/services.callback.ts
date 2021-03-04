@@ -6,7 +6,9 @@ import { IJobResponse } from '../models/models';
 
 const jobdetail: string = 'jobdetail.store';
 
-const jobOutHandler: (job: IJobResponse) => Promise<any> = async (job: IJobResponse): Promise<any> => {
+export const jobOutHandler: (job: Partial<IJobResponse>) => Promise<any> = async (
+    job: Partial<IJobResponse>
+): Promise<any> => {
     utils.logInfo(`$job.handler (jobHandler): out payload - job: ${job.id}`, job.transid);
 
     return Promise.resolve({
@@ -18,7 +20,7 @@ const jobOutHandler: (job: IJobResponse) => Promise<any> = async (job: IJobRespo
         },
         type: EStoreActions.ADD_STORE_TABLE_RCD,
         values: {
-            out: job.out,
+            out: job.out || job.error,
             special: job.special,
         },
     });
