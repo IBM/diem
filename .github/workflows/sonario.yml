@@ -26,5 +26,6 @@ jobs:
           projectBaseDir: applications
           args: >
             -Dsonar.organization=IBM
-            -Dsonar.sources=diem-help/src
+            -Dsonar.projectKey=diem
+            -Dsonar.sources=diem-help/src,diem-core/src,diem-nodepy-/src
             -Dsonar.verbose=true
