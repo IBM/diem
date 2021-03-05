@@ -12,7 +12,7 @@ export const getConfigmap: (id: string, org: string) => Promise<IConfigmapsModel
         org = 'sysutil';
     }
 
-    return ConfigmapsModel.findOne({ selector: id, 'project.org': org }).exec();
+    return ConfigmapsModel.findOne({ 'project.org': org, selector: id }).exec();
 };
 
 export const handleConfigmaps: (code: string, org: string, configmaps: string | string[]) => Promise<string> = async (

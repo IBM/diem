@@ -13,7 +13,7 @@ export interface IForms {
 
 const FormsSchema: Schema = new Schema(
     {
-        _id: { type: String, required: true, unique: true, index: true },
+        _id: { type: String },
         annotations: annotationsSchema,
         _rev: { type: String, required: true },
         config: { type: Object, required: true },

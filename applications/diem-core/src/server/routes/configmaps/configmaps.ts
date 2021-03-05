@@ -50,7 +50,7 @@ export const getconfigmaps: (req: IRequest) => Promise<IConfigmapPayload[]> = as
 
     const filter: any = parseFilter(body);
 
-    const rows: IConfigmapSchema[] = await ConfigmapsModel.find(filter, {}).sort({ selector: 1 }).exec();
+    const rows: IConfigmapSchema[] = await ConfigmapsModel.find(filter, {}).sort({ selector: 1 }).lean().exec();
 
     utils.logInfo(
         `$configmaps (configmaps) - email: ${body.email} - org: ${body.org}`,
@@ -61,7 +61,7 @@ export const getconfigmaps: (req: IRequest) => Promise<IConfigmapPayload[]> = as
     const payload: IConfigmapPayload[] = [];
 
     rows.forEach((row: IConfigmapSchema, i: number) => {
-        const id: string = row._id.toString();
+        const id: string = row._id;
 
         if (row.idtype && row.idtype === EIdType.personal && body.email !== row.owner) {
             row.configmap = { info: '/* redacted */' };

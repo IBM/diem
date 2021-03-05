@@ -50,7 +50,7 @@ export const getwebapikeys: (req: IRequest) => Promise<IWebApikeyPayload[]> = as
 
     const filter: any = parseFilter(body);
 
-    const rows: IWebApikeysSchema[] | [] = await WebApikeysModel.find(filter, {}).sort({ selector: 1 }).exec();
+    const rows: IWebApikeysSchema[] | [] = await WebApikeysModel.find(filter, {}).sort({ selector: 1 }).lean().exec();
 
     utils.logInfo(
         `$webapikey (webapikey) - email: ${body.email} - org: ${body.org}`,
@@ -61,7 +61,7 @@ export const getwebapikeys: (req: IRequest) => Promise<IWebApikeyPayload[]> = as
     const payload: IWebApikeyPayload[] = [];
 
     rows.forEach((row: IWebApikeysSchema, i: number) => {
-        const id: string = row._id.toString();
+        const id: string = row._id;
 
         if (row.idtype && row.idtype === EIdType.personal && body.email !== row.owner) {
             row.webapikey = '/* redacted */';

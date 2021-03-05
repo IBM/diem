@@ -30,7 +30,7 @@ export const allPipelineIds: (org: string, id: string) => Promise<string[]> = as
     // let's find if this jobs is part of a pipeline
 
     try {
-        const pipelines: IJobSchema[] | [] = await DataModel.find({ type: EJobTypes.pipeline, 'project.org': org })
+        const pipelines: IJobSchema[] | [] = await DataModel.find({ 'project.org': org, type: EJobTypes.pipeline })
             .lean()
             .exec();
 

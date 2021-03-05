@@ -61,7 +61,7 @@ const configmapSchema: Schema = new Schema(
         name: { type: String, required: true },
         owner: String,
         project: projectSchema,
-        selector: { type: String, required: true },
+        selector: { type: String, required: true, index: true },
     },
     {
         collection: 'configmap',
@@ -69,6 +69,9 @@ const configmapSchema: Schema = new Schema(
         versionKey: false,
     }
 );
+
+configmapSchema.index({ 'project.org': 1, _id: 1 });
+configmapSchema.index({ 'project.org': 1, selector: 1 });
 
 export interface IConfigmapsModel extends IConfigmapSchema, mongoose.Document {
     _id: string;

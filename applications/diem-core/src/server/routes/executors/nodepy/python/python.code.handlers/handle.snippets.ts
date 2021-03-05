@@ -12,7 +12,7 @@ export const lookupSnippet: (id: string, org: string) => Promise<ISnippetsModel 
         org = 'sysutil';
     }
 
-    return SnippetsModel.findOne({ selector: id, 'project.org': org }).exec();
+    return SnippetsModel.findOne({ 'project.org': org, selector: id }).exec();
 };
 
 export const handleSnippets: (code: string, org: string) => Promise<string> = async (

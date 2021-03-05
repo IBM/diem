@@ -1,7 +1,12 @@
 FROM node:15.11.0-alpine
 
-LABEL maintainer=guy_huinen@be.ibm.com
-LABEL com.ibm.service.name=etl-manager
+LABEL   maintainer=guy_huinen@be.ibm.com \
+    org.label-schema.description="Diem Core Application" \
+    org.label-schema.name="core" \
+    org.label-schema.version=$BUILD_VERSION
+
+ARG BUILD_DATE
+LABEL org.label-schema.build-date=$BUILD_DATE
 
 ENV LANG=en_US.UTF-8 HOME=/home/app NODE_ENV=production
 

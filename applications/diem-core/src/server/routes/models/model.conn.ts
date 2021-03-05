@@ -53,6 +53,8 @@ const connSchema: Schema = new Schema(
     }
 );
 
+connSchema.index({ 'project.org': 1, alias: 1 });
+
 export interface IConnModel extends IConnSchema, mongoose.Document {
     _id: string;
 }

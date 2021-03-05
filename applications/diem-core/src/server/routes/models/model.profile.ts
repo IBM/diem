@@ -14,8 +14,8 @@ const profileSchema: Schema = new Schema(
         _id: { type: Schema.Types.ObjectId, auto: true },
         email: { type: String, index: true, required: true, unique: true },
         modifieddate: Date,
-        org: String,
-        role: String,
+        org: { type: String, index: true, required: true },
+        role: { type: String, required: true },
     },
     {
         _id: false,
