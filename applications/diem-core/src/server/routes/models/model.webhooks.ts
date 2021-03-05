@@ -71,6 +71,9 @@ const webhooksSchema: Schema = new Schema(
     }
 );
 
+webhooksSchema.index({ 'project.org': 1, _id: 1 });
+webhooksSchema.index({ 'project.org': 1, selector: 1 });
+
 export interface IWebhooksModel extends IWebhooksSchema, mongoose.Document {
     _id: string;
 }

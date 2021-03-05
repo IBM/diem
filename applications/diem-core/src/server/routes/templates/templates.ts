@@ -1,6 +1,6 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
-import { IQuery, ITemplatesModel, TemplatesModel, FaIcons } from '../models/models';
+import { IQuery, TemplatesModel, FaIcons, ITemplateSchema } from '../models/models';
 import { parseFilter } from '../jobs/jobs';
 
 const viewSecurity: number = 5;
@@ -49,7 +49,7 @@ export const gettemplates: (req: IRequest) => Promise<ITemplatePayload[]> = asyn
 
     const filter: any = parseFilter(body);
 
-    const docs: ITemplatesModel[] | [] = await TemplatesModel.find(filter, {}).exec();
+    const docs: ITemplateSchema[] | [] = await TemplatesModel.find(filter, {}).lean().exec();
 
     utils.logInfo(
         `$templates (templates) - email: ${body.email} - org: ${body.org}`,
@@ -59,8 +59,8 @@ export const gettemplates: (req: IRequest) => Promise<ITemplatePayload[]> = asyn
 
     const payload: ITemplatePayload[] = [];
 
-    docs.forEach((doc: ITemplatesModel, i: number) => {
-        const id: string = doc._id.toString();
+    docs.forEach((doc: ITemplateSchema, i: number) => {
+        const id: string = doc._id;
         payload[i] = {
             createdby: doc.annotations.createdbyemail,
             createddate: doc.annotations.createddate.toISOString(),

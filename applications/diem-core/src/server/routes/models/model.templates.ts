@@ -18,7 +18,8 @@ export interface ITemplatesBody {
     store: string;
 }
 
-export interface ITemplate {
+export interface ITemplateSchema {
+    _id: string;
     annotations: IJobSchemaAnnotations;
     description: string;
     name: string;
@@ -36,8 +37,8 @@ const templatesSchema: Schema = new Schema(
         description: String,
         name: { type: String, required: true },
         project: projectSchema,
-        type: String,
         template: { type: String, required: true },
+        type: String,
     },
     {
         collection: 'templates',
@@ -46,7 +47,9 @@ const templatesSchema: Schema = new Schema(
     }
 );
 
-export interface ITemplatesModel extends ITemplate, mongoose.Document {
+templatesSchema.index({ 'project.org': 1, _id: 1 });
+
+export interface ITemplatesModel extends ITemplateSchema, mongoose.Document {
     _id: string;
 }
 

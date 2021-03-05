@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
-import { IQuery, ISnippetsModel, SnippetsModel, FaIcons, ISnippetPayload, EIdType } from '../models/models';
+import { IQuery, ISnippetSchema, SnippetsModel, FaIcons, ISnippetPayload, EIdType } from '../models/models';
 import { parseFilter } from '../jobs/jobs';
 
 const viewSecurity: number = 5;
@@ -35,7 +35,7 @@ export const getsnippets: (req: IRequest) => Promise<ISnippetPayload[]> = async 
 
     const filter: any = parseFilter(body);
 
-    const rows: ISnippetsModel[] | [] = await SnippetsModel.find(filter, {}).sort({ selector: 1 }).exec();
+    const rows: ISnippetSchema[] | [] = await SnippetsModel.find(filter, {}).sort({ selector: 1 }).lean().exec();
 
     utils.logInfo(
         `$snippets (snippets) - email: ${body.email} - org: ${body.org}`,
@@ -45,8 +45,8 @@ export const getsnippets: (req: IRequest) => Promise<ISnippetPayload[]> = async 
 
     const payload: ISnippetPayload[] = [];
 
-    rows.forEach((row: ISnippetsModel, i: number) => {
-        const id: string = row._id.toString();
+    rows.forEach((row: ISnippetSchema, i: number) => {
+        const id: string = row._id;
 
         if (row.idtype && row.idtype === EIdType.personal && body.email !== row.owner) {
             row.snippet = '/* redacted */';

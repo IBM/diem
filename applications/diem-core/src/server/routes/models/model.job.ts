@@ -475,6 +475,22 @@ const dataSchema: Schema = new Schema(
 );
 
 dataSchema.index({ 'project.org': 1 }, { unique: true });
+dataSchema.index({ 'project.org': 1, type: 1 });
+
+/**
+ * The Main model interface
+ *
+ * @interface IModel
+ * @extends {IJobSchema}
+ * @extends {mongoose.Document}
+ */
+export interface IModel extends IJobSchema, mongoose.Document {
+    _id: string;
+}
+
+export const DataModel = mongoose.model<IModel>('jobs', dataSchema);
+
+export const newId: () => string = () => mongoose.Types.ObjectId().toString();
 
 export interface IntPayloadValues extends IJob {
     href: string;
@@ -558,18 +574,3 @@ export interface IJobBody extends IJobSchema {
     completed: boolean;
     template_copy: boolean;
 }
-
-/**
- * The Main model interface
- *
- * @interface IModel
- * @extends {IJobSchema}
- * @extends {mongoose.Document}
- */
-export interface IModel extends IJobSchema, mongoose.Document {
-    _id: string;
-}
-
-export const DataModel = mongoose.model<IModel>('jobs', dataSchema);
-
-export const newId: () => string = () => mongoose.Types.ObjectId().toString();

@@ -8,8 +8,8 @@ const replace: (code: string, configmap: string, org: string) => Promise<string>
     org: string
 ) => {
     const doc: IConfigmapsModel | null = await ConfigmapsModel.findOne({
-        selector: configmap,
         'project.org': org,
+        selector: configmap,
     }).exec();
 
     if (doc === null) {

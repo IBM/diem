@@ -7,7 +7,7 @@ const replaceParams: (code: string, connections: any, org: string) => Promise<st
     connections: any,
     org: string
 ) => {
-    const doc: IConnSchema | null = await ConnModel.findOne({ alias: connections, 'project.org': org }).lean().exec();
+    const doc: IConnSchema | null = await ConnModel.findOne({ 'project.org': org, alias: connections }).lean().exec();
 
     if (doc === null) {
         return code;

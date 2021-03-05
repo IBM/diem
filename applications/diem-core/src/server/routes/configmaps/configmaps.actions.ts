@@ -144,6 +144,7 @@ export const configmapdelete: (req: IRequest) => Promise<IRequest | any> = async
     const body: IConfigmapsBody = { ...req.body };
 
     await ConfigmapsModel.deleteOne({ 'project.org': req.user.org, _id: body.id })
+        .lean()
         .exec()
         .catch(async (err: IError) => {
             err.trace = ['@at $configmaps (configmapdelete)'];

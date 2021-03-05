@@ -38,7 +38,7 @@ export interface ISnippetsBody {
     store: string;
 }
 
-export interface ISnippet {
+export interface ISnippetSchema {
     _id: string;
     annotations: IJobSchemaAnnotations;
     description: string;
@@ -71,7 +71,10 @@ const snippetsSchema: Schema = new Schema(
     }
 );
 
-export interface ISnippetsModel extends ISnippet, mongoose.Document {
+snippetsSchema.index({ 'project.org': 1, selector: 1 });
+snippetsSchema.index({ 'project.org': 1, _id: 1 });
+
+export interface ISnippetsModel extends ISnippetSchema, mongoose.Document {
     _id: string;
 }
 

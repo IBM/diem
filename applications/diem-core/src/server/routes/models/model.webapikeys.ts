@@ -66,7 +66,7 @@ export interface IWebApikeysSchema {
 
 const webapikeysSchema: Schema = new Schema(
     {
-        _id: { type: String, required: true, unique: true, index: true },
+        _id: { type: String },
         annotations: annotationsSchema,
         description: String,
         idtype: { type: String },
@@ -83,6 +83,8 @@ const webapikeysSchema: Schema = new Schema(
         versionKey: false,
     }
 );
+
+webapikeysSchema.index({ 'project.org': 1, _id: 1 });
 
 export interface IWebApikeysModel extends IWebApikeysSchema, mongoose.Document {
     _id: string;
