@@ -111,20 +111,17 @@ export class Express {
                 .use(session(sess))
                 .use(this.passport.initialize())
                 .use(this.passport.session())
-                .use(helmet());
-
-            this.app.use(`${utils.Env.apppath}/public`, express.static('./public'));
-            this.app.use(`${utils.Env.apppath}/ace-builds`, express.static('./node_modules/ace-builds'));
-            this.app.use(`${utils.Env.apppath}/tinymce`, express.static('./node_modules/tinymce'));
-
-            this.app
-                .get(`${utils.Env.apppath}/service-worker.js`, (_req: IRequest, res: IResponse) => {
+                .use(helmet())
+                .use(`${utils.Env.apppath}/public`, express.static('./public'))
+                .use(`${utils.Env.apppath}/ace-builds`, express.static('./node_modules/ace-builds'))
+                .use(`${utils.Env.apppath}/tinymce`, express.static('./node_modules/tinymce'))
+                .get(`${utils.Env.apppath}/service-worker.js`, limiter, (_req: IRequest, res: IResponse) => {
                     res.sendFile('/public/js/service-worker.js', { root: path.resolve() });
                 })
-                .get(`${utils.Env.apppath}/workbox-*`, (req: IRequest, res: IResponse) => {
+                .get(`${utils.Env.apppath}/workbox-*`, limiter, (req: IRequest, res: IResponse) => {
                     res.sendFile(`/public/js/workbox-${req.params['0']}`, { root: path.resolve() });
                 })
-                .get(`${utils.Env.apppath}/robots.txt`, (_req: IRequest, res: IResponse) => {
+                .get(`${utils.Env.apppath}/robots.txt`, limiter, (_req: IRequest, res: IResponse) => {
                     res.sendFile('/public/robots.txt', { root: path.resolve() });
                 })
                 .use(limiter)
