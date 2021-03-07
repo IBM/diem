@@ -169,7 +169,7 @@
     "license": "ISC",
     "private": true,
     "scripts": {
-        "build": "./node_modules/.bin/npm-run-all clean clean:front lock gulp:aot-ts ivy webpack:front webpack:node",
+        "build": "./node_modules/.bin/npm-run-all clean clean:front lock gulp:aot-ts ivy build-webpack webpack:front webpack:node",
         "build:local": "npm-run-all clean clean:front -p gulp:default webpack:front-local webpack:node-local",
         "clean": "rimraf server",
         "clean:front": "rimraf public/js ",
