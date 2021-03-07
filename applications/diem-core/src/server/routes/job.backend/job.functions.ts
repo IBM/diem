@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable sonarjs/cognitive-complexity */
-import { utils } from '@mydiem/diem-common/lib/common/utils';
+import { utils } from '@common/utils';
 import { parseExpression } from 'cron-parser';
 import {
     IJobSchema,

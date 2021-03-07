@@ -6,13 +6,12 @@ import * as http from 'http';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import pug from 'pug';
-import { Express } from '@common/express';
+import { Express, limiter } from '@common/express';
 import { IntInternal, IntEnv, IError, IProfile, IRequest, IResponse } from '@interfaces';
 import { utils } from '@common/utils';
 import { slackMsg } from '@common/slack/slack';
 import { slackMsgInt } from '@common/slack/error-int';
 import { multipart } from '@common/busboy';
-import express from 'express';
 import { jwtCheck } from '../routes/webapikeys/webapikeys.jwtcheck';
 import * as routes from '../routes/routes';
 import { getOrg, getRole, getRoleNbr, addTrace } from '../routes/shared/functions';
@@ -138,23 +137,12 @@ export class Server {
         /*** here we start actually handling the requests */
 
         app.use(this.logErrors)
-            .use(`${this.pack.apppath}/ace-builds`, express.static('node_modules/ace-builds'))
-            .use(`${this.pack.apppath}/tinymce`, express.static('node_modules/tinymce'))
-            .get(`${this.pack.apppath}/service-worker.js`, (_req: IRequest, res: IResponse) => {
-                res.sendFile('/public/js/service-worker.js', { root: path.resolve() });
-            })
-            .get(`${this.pack.apppath}/workbox-*`, (req: IRequest, res: IResponse) => {
-                res.sendFile(`/public/js/workbox-${req.params['0']}`, { root: path.resolve() });
-            })
-            .get(`${this.pack.apppath}/robots.txt`, (_req: IRequest, res: IResponse) => {
-                res.sendFile('/public/robots.txt', { root: path.resolve() });
-            })
             .all(`${this.pack.apppath}/api/:function`, jwtCheck, this.api)
             .all(`${this.pack.apppath}/user/:function/:pyfile`, this.secAuth, this.api)
             .all(`${this.pack.apppath}/user/:function`, this.secAuth, this.api)
             .all('/internal/:function', this.api)
             .all('/internal/:function/:pyfile', this.api)
-            .get('*', this.secAuth, (req: IRequest, res: IResponse) => {
+            .get('*', this.secAuth, limiter, (req: IRequest, res: IResponse) => {
                 const hrstart: [number, number] = process.hrtime();
                 res.setHeader('Last-Modified', new Date().toUTCString());
                 req.headers['if-none-match'] = 'no-match-for-this';

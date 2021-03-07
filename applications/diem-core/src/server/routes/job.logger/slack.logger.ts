@@ -2,8 +2,8 @@
 /* eslint-disable complexity */
 /* eslint-disable @typescript-eslint/quotes */
 
-import { slackMsg } from '@mydiem/diem-common/lib/common/slack/slack';
-import { ISlack, utils } from '@mydiem/diem-common/lib/common/utils';
+import { slackMsg } from '@common/slack/slack';
+import { ISlack, utils } from '@common/utils';
 import { IModel, EJobTypes, IWebhooksSchema } from '../models/models';
 import { fmtTime, makeUrl } from '../shared/functions';
 import { getwebhook } from '../webhooks/webhooks';

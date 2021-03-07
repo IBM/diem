@@ -1,8 +1,8 @@
 /* eslint-disable complexity */
-import { utils } from '@mydiem/diem-common/lib/common/utils';
-import { Credentials } from '@mydiem/diem-common/lib/common/cfenv';
+import { utils } from '@common/utils';
+import { Credentials } from '@common/cfenv';
 import * as Api from 'kubernetes-client';
-import { IError } from '@mydiem/diem-common/lib/interfaces/shared';
+import { IError } from '@interfaces';
 import { pubSub } from '../../config/pubsub';
 import { ExecutorTypes, EJobStatus } from '../models/models';
 import { addTrace } from '../shared/functions';

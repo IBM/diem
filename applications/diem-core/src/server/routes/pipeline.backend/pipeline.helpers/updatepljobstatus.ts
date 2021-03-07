@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
-import { utils } from '@mydiem/diem-common/lib/common/utils';
-import { IError } from '@mydiem/diem-common/lib/interfaces/shared';
+import { utils } from '@common/utils';
+import { IError } from '@interfaces';
 import { addTrace } from '../../shared/functions';
 import { IModel } from '../../models/models';
 import { findOne, findOneAndUpdate } from './findone';
