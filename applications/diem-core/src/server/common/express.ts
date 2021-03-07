@@ -113,8 +113,14 @@ export class Express {
                 .use(this.passport.session())
                 .use(helmet())
                 .use(`${utils.Env.apppath}/public`, express.static('./public'))
-                .use(`${utils.Env.apppath}/ace-builds`, express.static('./node_modules/ace-builds'))
-                .use(`${utils.Env.apppath}/tinymce`, express.static('./node_modules/tinymce'))
+                .use(
+                    `${utils.Env.apppath}/ace-builds/src-min-noconflict`,
+                    express.static('./node_modules/ace-builds/src-min-noconflict')
+                )
+                .use(`${utils.Env.apppath}/tinymce/skins`, express.static('./node_modules/tinymce/skins'))
+                .use(`${utils.Env.apppath}/tinymce/icons`, express.static('./node_modules/tinymce/icons'))
+                .use(`${utils.Env.apppath}/tinymce/skins`, express.static('./node_modules/tinymce/skins'))
+                .use(`${utils.Env.apppath}/tinymce/themes`, express.static('./node_modules/tinymce/themes'))
                 .get(`${utils.Env.apppath}/service-worker.js`, limiter, (_req: IRequest, res: IResponse) => {
                     res.sendFile('/public/js/service-worker.js', { root: path.resolve() });
                 })
