@@ -6,7 +6,7 @@ import * as http from 'http';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import pug from 'pug';
-import { Express } from '@common/express';
+import { Express, limiter } from '@common/express';
 import { IntInternal, IntEnv, IError, IProfile, IRequest, IResponse } from '@interfaces';
 import { utils } from '@common/utils';
 import { slackMsg } from '@common/slack/slack';
@@ -142,7 +142,7 @@ export class Server {
             .all(`${this.pack.apppath}/user/:function`, this.secAuth, this.api)
             .all('/internal/:function', this.api)
             .all('/internal/:function/:pyfile', this.api)
-            .get('*', this.secAuth, (req: IRequest, res: IResponse) => {
+            .get('*', this.secAuth, limiter, (req: IRequest, res: IResponse) => {
                 const hrstart: [number, number] = process.hrtime();
                 res.setHeader('Last-Modified', new Date().toUTCString());
                 req.headers['if-none-match'] = 'no-match-for-this';

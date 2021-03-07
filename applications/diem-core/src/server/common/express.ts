@@ -12,7 +12,7 @@ import { Credentials } from './cfenv';
 import { utils } from './utils';
 import { redisc } from './redis';
 
-const limiter = rateLimit({
+export const limiter = rateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute
     max: 100,
     message: 'You have exceeded the 100 requests per minute limit!',
@@ -111,8 +111,7 @@ export class Express {
                 .use(session(sess))
                 .use(this.passport.initialize())
                 .use(this.passport.session())
-                .use(helmet())
-                .use(limiter);
+                .use(helmet());
 
             this.app.use(`${utils.Env.apppath}/public`, express.static('./public'));
             this.app.use(`${utils.Env.apppath}/ace-builds`, express.static('./node_modules/ace-builds'));
@@ -128,6 +127,7 @@ export class Express {
                 .get(`${utils.Env.apppath}/robots.txt`, (_req: IRequest, res: IResponse) => {
                     res.sendFile('/public/robots.txt', { root: path.resolve() });
                 })
+                .use(limiter)
                 .use((req, res, next) =>
                     !hasSome(req, this.config ? this.config.cspExcluded : []) ? csp(req, res, next) : next()
                 )
