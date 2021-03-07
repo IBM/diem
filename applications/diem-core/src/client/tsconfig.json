@@ -1,5 +1,5 @@
 {
-    "extends": "../server/tsconfig.base.json",
+    "extends": "../webpack/tsconfig.base.json",
     "compilerOptions": {
         "skipLibCheck": true,
         "baseUrl": "./",
