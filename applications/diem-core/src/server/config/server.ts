@@ -12,7 +12,6 @@ import { utils } from '@common/utils';
 import { slackMsg } from '@common/slack/slack';
 import { slackMsgInt } from '@common/slack/error-int';
 import { multipart } from '@common/busboy';
-import express from 'express';
 import { jwtCheck } from '../routes/webapikeys/webapikeys.jwtcheck';
 import * as routes from '../routes/routes';
 import { getOrg, getRole, getRoleNbr, addTrace } from '../routes/shared/functions';
@@ -138,8 +137,6 @@ export class Server {
         /*** here we start actually handling the requests */
 
         app.use(this.logErrors)
-            .use(`${this.pack.apppath}/ace-builds`, express.static('node_modules/ace-builds'))
-            .use(`${this.pack.apppath}/tinymce`, express.static('node_modules/tinymce'))
             .get(`${this.pack.apppath}/service-worker.js`, (_req: IRequest, res: IResponse) => {
                 res.sendFile('/public/js/service-worker.js', { root: path.resolve() });
             })

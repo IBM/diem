@@ -6,11 +6,19 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import nocache from 'nocache';
 import bodyParser from 'body-parser';
+import rateLimit from 'express-rate-limit';
 import { IXorg } from '../interfaces/env';
 import { IResponse } from '../interfaces/shared';
 import { Credentials } from './cfenv';
 import { utils } from './utils';
 import { redisc } from './redis';
+
+const limiter = rateLimit({
+    windowMs: 1 * 60 * 1000, // 1 minute
+    max: 100,
+    message: 'You have exceeded the 100 requests per minute limit!',
+    headers: true,
+});
 
 interface IRequest extends express.Request {
     sessionid?: string;
@@ -105,7 +113,9 @@ export class Express {
                 .use(this.passport.initialize())
                 .use(this.passport.session())
                 .use(helmet())
-                .use(`${utils.Env.apppath}/public`, express.static('public'))
+                .use(`${utils.Env.apppath}/public`, express.static('./public'))
+                .use(`${utils.Env.apppath}/ace-builds`, express.static('./node_modules/ace-builds'))
+                .use(`${utils.Env.apppath}/tinymce`, express.static('./node_modules/tinymce'))
                 .use((req, res, next) =>
                     !hasSome(req, this.config ? this.config.cspExcluded : []) ? csp(req, res, next) : next()
                 )
@@ -137,6 +147,7 @@ export class Express {
                 .use(this.requestid)
                 .use(this.sessionid)
                 .use(this.xorg)
+                .use(limiter)
                 .set('case sensitive routing', false)
                 .set('host', process.env.HOST || 'localhost')
                 .set('port', process.env.PORT || 8192)
