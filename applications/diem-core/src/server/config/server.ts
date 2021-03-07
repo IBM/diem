@@ -137,15 +137,6 @@ export class Server {
         /*** here we start actually handling the requests */
 
         app.use(this.logErrors)
-            .get(`${this.pack.apppath}/service-worker.js`, (_req: IRequest, res: IResponse) => {
-                res.sendFile('/public/js/service-worker.js', { root: path.resolve() });
-            })
-            .get(`${this.pack.apppath}/workbox-*`, (req: IRequest, res: IResponse) => {
-                res.sendFile(`/public/js/workbox-${req.params['0']}`, { root: path.resolve() });
-            })
-            .get(`${this.pack.apppath}/robots.txt`, (_req: IRequest, res: IResponse) => {
-                res.sendFile('/public/robots.txt', { root: path.resolve() });
-            })
             .all(`${this.pack.apppath}/api/:function`, jwtCheck, this.api)
             .all(`${this.pack.apppath}/user/:function/:pyfile`, this.secAuth, this.api)
             .all(`${this.pack.apppath}/user/:function`, this.secAuth, this.api)

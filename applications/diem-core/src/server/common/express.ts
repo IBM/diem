@@ -5,7 +5,6 @@ import redisStore from 'connect-redis';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import nocache from 'nocache';
-import bodyParser from 'body-parser';
 import rateLimit from 'express-rate-limit';
 import { IXorg } from '../interfaces/env';
 import { IResponse } from '../interfaces/shared';
@@ -113,9 +112,22 @@ export class Express {
                 .use(this.passport.initialize())
                 .use(this.passport.session())
                 .use(helmet())
-                .use(`${utils.Env.apppath}/public`, express.static('./public'))
-                .use(`${utils.Env.apppath}/ace-builds`, express.static('./node_modules/ace-builds'))
-                .use(`${utils.Env.apppath}/tinymce`, express.static('./node_modules/tinymce'))
+                .use(limiter);
+
+            this.app.use(`${utils.Env.apppath}/public`, express.static('./public'));
+            this.app.use(`${utils.Env.apppath}/ace-builds`, express.static('./node_modules/ace-builds'));
+            this.app.use(`${utils.Env.apppath}/tinymce`, express.static('./node_modules/tinymce'));
+
+            this.app
+                .get(`${utils.Env.apppath}/service-worker.js`, (_req: IRequest, res: IResponse) => {
+                    res.sendFile('/public/js/service-worker.js', { root: path.resolve() });
+                })
+                .get(`${utils.Env.apppath}/workbox-*`, (req: IRequest, res: IResponse) => {
+                    res.sendFile(`/public/js/workbox-${req.params['0']}`, { root: path.resolve() });
+                })
+                .get(`${utils.Env.apppath}/robots.txt`, (_req: IRequest, res: IResponse) => {
+                    res.sendFile('/public/robots.txt', { root: path.resolve() });
+                })
                 .use((req, res, next) =>
                     !hasSome(req, this.config ? this.config.cspExcluded : []) ? csp(req, res, next) : next()
                 )
@@ -130,13 +142,13 @@ export class Express {
                 .use(helmet.referrerPolicy({ policy: 'same-origin' }))
                 .use(cookieParser())
                 .use(
-                    bodyParser.urlencoded({
+                    express.urlencoded({
                         limit: this.config ? this.config.BODYPARSER_URLENCODED_LIMIT : '15mb',
                         extended: false,
                     })
                 )
                 .use(
-                    bodyParser.json({
+                    express.json({
                         limit:
                             this.config && this.config.BODYPARSER_JSON_LIMIT
                                 ? this.config.BODYPARSER_JSON_LIMIT
@@ -147,7 +159,6 @@ export class Express {
                 .use(this.requestid)
                 .use(this.sessionid)
                 .use(this.xorg)
-                .use(limiter)
                 .set('case sensitive routing', false)
                 .set('host', process.env.HOST || 'localhost')
                 .set('port', process.env.PORT || 8192)
