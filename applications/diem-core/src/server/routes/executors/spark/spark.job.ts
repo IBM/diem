@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 
 import { ICrdConfig } from 'routes/spark-operator/base.crd';
-import { utils } from '@mydiem/diem-common/lib/common/utils';
-import { Credentials } from '@mydiem/diem-common/lib/common/cfenv';
+import { utils } from '@common/utils';
+import { Credentials } from '@common/cfenv';
 import { IModel, IConfigmapsModel } from 'routes/models/models';
 import { addTrace } from '../../shared/functions';
 import { spark } from '../../spark-operator/spark.base';

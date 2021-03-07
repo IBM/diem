@@ -2,7 +2,7 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
-import { mongoose } from '@mydiem/diem-common/lib/common/mongo';
+import { mongoose } from '@common/mongo';
 import { format } from 'sql-formatter';
 import { stringify } from 'yaml';
 import { StatusConfig } from '../job.backend/job.functions';

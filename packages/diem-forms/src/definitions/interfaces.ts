@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/indent */
 import { TemplateRef } from '@angular/core';
-import { IntSharedAction } from '@mydiem/diem-common/lib/interfaces';
 import { QuestionGroup } from '../definitions/question-group';
 import { IDFQuestionTableListComponent } from '../df.table.list.component';
 import { ICalendarQuestion } from './question-calendar';
@@ -317,13 +316,17 @@ interface IFormParams {
     keepModal: boolean;
 }
 
-/**
- * IOptions extends the SharedActions between server and client
- *
- * @export
- * @interface IOptions
- * @extends {IntSharedAction}
- */
+interface IntSharedAction {
+    sessionid?: string;
+    type: string;
+    target?: string;
+    targetid?: string;
+    params?: {
+        [index: string]: any;
+        route?: string;
+    };
+}
+
 export interface IOptions extends IntSharedAction, IStoreTableState, IStoreFormState {
     type: string; // the type of the option
     params: IFormParams;

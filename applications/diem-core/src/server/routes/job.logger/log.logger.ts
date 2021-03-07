@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/quotes */
-import { utils } from '@mydiem/diem-common/lib/common/utils';
+import { utils } from '@common/utils';
 import { IModel, IJob, JobLogModel, IJobLog } from '../models/models';
 
 export const logLogger: (doc: IModel) => Promise<void> = async (doc: IModel): Promise<void> => {

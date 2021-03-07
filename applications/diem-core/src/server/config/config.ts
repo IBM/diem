@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 
-import { IExpressConfig } from '@mydiem/diem-common/lib/common/express';
+import { IExpressConfig } from '@common/express';
 
 export const css: any = [];
 

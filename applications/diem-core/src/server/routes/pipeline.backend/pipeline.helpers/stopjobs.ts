@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { utils } from '@mydiem/diem-common/lib/common/utils';
+import { utils } from '@common/utils';
 import { jobStop } from '../../job.front/job.stop';
 import { IModel, DataModel, EJobTypes } from '../../models/models';
 import { findAndUpdatePlJob } from './helpers';
