@@ -101,7 +101,7 @@ export const makePayload: (doc: IJobSchema) => Promise<IModelPayload> = async (
             config = flatten__(doc.config);
 
             if (config.source__sql) {
-                config.source__sql = format(config.source__sql, { language: 'db2' });
+                config.source__sql = format(config.source__sql, { language: 'db2', indent: '' });
             }
         }
 
@@ -113,6 +113,8 @@ export const makePayload: (doc: IJobSchema) => Promise<IModelPayload> = async (
             if (doc.stmt.sql) {
                 stmt.stmt__sql = format(doc.stmt.sql, { language: 'db2' });
             }
+
+            console.info(stmt.stmt__sql);
         }
 
         if (doc.custom) {
