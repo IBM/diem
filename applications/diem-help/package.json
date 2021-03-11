@@ -141,7 +141,7 @@
     "license": "ISC",
     "private": true,
     "scripts": {
-        "build": "./node_modules/.bin/npm-run-all clean clean:front lock gulp:aot-ts ivy webpack:front webpack:node",
+        "build": "./node_modules/.bin/npm-run-all clean clean:front lock gulp:aot-ts ivy build-webpack webpack:front webpack:node",
         "build:local": "npm-run-all clean clean:front -p gulp:default webpack:front-local webpack:node-local",
         "clean": "rimraf server",
         "clean:front": "rimraf public/js ",
@@ -163,6 +163,7 @@
         "lock": "npm install --package-lock",
         "start": "node ./server/server.js",
         "test": "jest --verbose --no-cache",
+        "build-webpack": "rm -rf ./src/webpack/lib && ./node_modules/.bin/tsc -p ./src/webpack/tsconfig.json",
         "webpack:front": "cross-env webpackenv=front webpack --mode  production",
         "webpack:front-local": "cross-env webpackenv=front-local node --trace-deprecation ./node_modules/.bin/webpack -w --mode development",
         "webpack:node": "webpackenv=node webpack  --mode production",
