@@ -24,19 +24,6 @@ module.exports = {
         sourceType: 'module',
         createDefaultProgram: true,
     },
-    plugins: [
-        '@typescript-eslint',
-        'sonarjs',
-        'prettier',
-        'import',
-        'jsdoc',
-    ],
-    extends: [
-        'eslint:recommended',
-        'plugin:@typescript-eslint/eslint-recommended',
-        'plugin:@typescript-eslint/recommended',
-        'plugin:sonarjs/recommended',
-        'prettier',
-        '../../node_modules/@mydiem/diem-util/eslintrc-base.js',
-    ]
+    plugins: ['@typescript-eslint', 'sonarjs', 'prettier', 'import', 'jsdoc'],
+    extends: ['plugin:prettier/recommended', '../../src/webpack/eslintrc-base.js'],
 };
