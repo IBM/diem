@@ -21,13 +21,8 @@ module.exports = {
         'jsdoc',
     ],
     extends: [
-        'eslint:recommended',
         'plugin:@angular-eslint/recommended',
-        'plugin:@typescript-eslint/eslint-recommended',
-        'plugin:@typescript-eslint/recommended',
-        'plugin:sonarjs/recommended',
-        'prettier',
-        '../../node_modules/@mydiem/diem-util/eslintrc-base.js',
+        '../../src/webpack/eslintrc-base.js',
     ],
     'rules': {
         'no-restricted-syntax': [
