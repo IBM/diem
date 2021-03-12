@@ -337,13 +337,18 @@ export class Server {
 
         /* Continue with verification */
 
-        req.user.email = req.user?._json?.email || req.user.id;
+        req.user.email = (req.user?._json?.email || req.user.id).toLowerCase();
+        req.user.name = req.user.displayName || req.user?._json?.name;
+
         const email: string = req.user.email;
+        const name: string = req.user.name;
 
         const Login: any = () => {
             login(req, res)
                 .then(async () => {
-                    utils.logInfo(`$server (secAuth): aquired profile - email: ${email} - ti: ${req.transid}`);
+                    utils.logInfo(
+                        `$server (secAuth): aquired profile - email: ${email} - name: ${name} - ti: ${req.transid}`
+                    );
 
                     next();
                 })
@@ -351,7 +356,7 @@ export class Server {
                     err.caller = '$server';
                     err.trace = addTrace(err.trace, '@at $server (login)');
                     await utils.logMQError(
-                        `$server (secAuth): requiring profile error - email: ${email} - ti: ${req.transid}`,
+                        `$server (secAuth): requiring profile error - email: ${email} - name: ${name} - ti: ${req.transid}`,
                         req,
                         401,
                         `$server : failed login by ${email}`,
@@ -365,7 +370,9 @@ export class Server {
         };
 
         if (!token) {
-            utils.logInfo(`$server (secAuth): no token - logging in - email: ${email} - ti: ${req.transid}`);
+            utils.logInfo(
+                `$server (secAuth): no token - logging in - email: ${email} - name: ${name} - ti: ${req.transid}`
+            );
 
             return Login();
         }
@@ -412,13 +419,13 @@ export class Server {
 
             utils.logCyan(
                 // eslint-disable-next-line max-len
-                `$server (secAuth): verified - email: ${email} - org: ${req.user.org} - role: ${req.user.role} - rolenbr: ${req.user.rolenbr} - method: ${method} - ti: ${req.transid}`
+                `$server (secAuth): verified - email: ${email} - name: ${name} - org: ${req.user.org} - role: ${req.user.role} - rolenbr: ${req.user.rolenbr} - method: ${method} - ti: ${req.transid}`
             );
 
             return next();
         } catch (err) {
             utils.logInfo(
-                `$server (secAuth): verification error - email: ${email} - method: ${method} - ti: ${req.transid}`
+                `$server (secAuth): verification error - email: ${email} - name: ${name} - method: ${method} - ti: ${req.transid}`
             );
 
             this.removeToken(req);

@@ -29,7 +29,6 @@ export interface IRequest extends Request {
     token: IProfile;
     transid: string;
     user: IntPassportUser;
-    displayName?: string;
     files?: IFile[];
     session: any;
     xorg?: IXorg;

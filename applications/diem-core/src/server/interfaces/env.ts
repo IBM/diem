@@ -29,18 +29,24 @@ export interface IXorg {
     orgs: string[];
 }
 
-export interface IntPassportUser {
+export interface OICUser {
     _json: {
         name: string;
         email: string;
+        blueGroups?: string[];
     };
+    displayName: string;
+    id: string;
+}
+
+export interface IntPassportUser extends OICUser {
     email: string;
     id: string;
-    displayName: string;
     name: string;
     org: string;
     role: string;
     rolenbr: number;
     roles: string[];
+    uid: string;
     xorg: IXorg;
 }
