@@ -137,20 +137,11 @@ export class Server {
         /*** here we start actually handling the requests */
 
         app.use(this.logErrors)
-            .get('/login', passport.authenticate('openidconnect', {}))
             .all(`${this.pack.apppath}/api/:function`, jwtCheck, this.api)
             .all(`${this.pack.apppath}/user/:function/:pyfile`, this.secAuth, this.api)
             .all(`${this.pack.apppath}/user/:function`, this.secAuth, this.api)
             .all('/internal/:function', this.api)
             .all('/internal/:function/:pyfile', this.api)
-            .get('/sso/callback', (req: IRequest, res: IResponse, next: any) => {
-                console.info('new callback');
-                const redirect_url = req.session.originalUrl;
-                passport.authenticate('openidconnect', {
-                    successRedirect: redirect_url,
-                    failureRedirect: '/failure',
-                })(req, res, next);
-            })
             .get('*', this.secAuth, limiter, (req: IRequest, res: IResponse) => {
                 const hrstart: [number, number] = process.hrtime();
                 res.setHeader('Last-Modified', new Date().toUTCString());
@@ -163,7 +154,7 @@ export class Server {
                 void toMQ(
                     req,
                     201,
-                    `$server (*) : authenticated request from ${req.user.email}`,
+                    `$server (*) : authenticated request from ${req.user?.email}`,
                     undefined,
                     hrstart,
                     this.pack
@@ -174,7 +165,7 @@ export class Server {
                 void toMQ(
                     req,
                     400,
-                    `$server (*) : authenticated but invalid request from ${req.user.email}`,
+                    `$server (*) : authenticated but invalid request from ${req.user?.email}`,
                     undefined,
                     hrstart,
                     this.pack
