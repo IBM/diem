@@ -30,7 +30,7 @@ export interface IXorg {
 }
 
 export interface IntPassportUser {
-    blueGroups: string[];
+    _json: any;
     email: string;
     firstName: string;
     id: string;

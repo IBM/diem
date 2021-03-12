@@ -144,6 +144,7 @@ export class Server {
             .all('/internal/:function', this.api)
             .all('/internal/:function/:pyfile', this.api)
             .get('/sso/callback', (req: IRequest, res: IResponse, next: any) => {
+                console.info('new callback');
                 const redirect_url = req.session.originalUrl;
                 passport.authenticate('openidconnect', {
                     successRedirect: redirect_url,
@@ -347,7 +348,7 @@ export class Server {
 
         /* Continue with verification */
 
-        req.user.email = req.user.id;
+        req.user.email = req.user?._json?.email || req.user.id;
         const email: string = req.user.email;
 
         const Login: any = () => {
