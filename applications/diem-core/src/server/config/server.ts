@@ -329,10 +329,10 @@ export class Server {
 
         if (req.headers.authorization) {
             token = req.headers.authorization.split(' ')[1];
-            method = 'authorization token';
+            method = 'OIC';
         } else if (req.cookies && req.cookies[utils.Env.appcookie]) {
             token = req.cookies[utils.Env.appcookie];
-            method = 'application token';
+            method = 'Application';
         }
 
         /* Continue with verification */
@@ -419,7 +419,7 @@ export class Server {
 
             utils.logCyan(
                 // eslint-disable-next-line max-len
-                `$server (secAuth): verified - email: ${email} - name: ${name} - org: ${req.user.org} - role: ${req.user.role} - rolenbr: ${req.user.rolenbr} - method: ${method} - ti: ${req.transid}`
+                `$server (secAuth): ok - email: ${email} (${name}) - org: ${req.user.org} - role: ${req.user.role} (${req.user.rolenbr}) - method: ${method} - ti: ${req.transid}`
             );
 
             return next();
