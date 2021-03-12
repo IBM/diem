@@ -13,7 +13,7 @@ export const Strategy = new OpenIDConnectStrategy(
         clientSecret,
         discoveryURL: discoveryUrl,
         response_type: 'code',
-        scope: 'email',
+        scope: 'openid email profile',
         skipUserProfile: true,
     },
     (_iss: any, _sub: any, profile: any, accessToken: any, refreshToken: any, _params: any, done: any) => {

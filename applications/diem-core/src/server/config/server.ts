@@ -335,8 +335,6 @@ export class Server {
             method = 'application token';
         }
 
-        /* return next();
-
         /* Continue with verification */
 
         req.user.email = req.user?._json?.email || req.user.id;

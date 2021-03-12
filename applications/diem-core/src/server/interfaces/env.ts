@@ -30,17 +30,17 @@ export interface IXorg {
 }
 
 export interface IntPassportUser {
-    _json: any;
+    _json: {
+        name: string;
+        email: string;
+    };
     email: string;
-    firstName: string;
     id: string;
-    lastName: string;
+    displayName: string;
     name: string;
     org: string;
     role: string;
     rolenbr: number;
     roles: string[];
-    sessionIndex: string;
-    uid: string;
     xorg: IXorg;
 }

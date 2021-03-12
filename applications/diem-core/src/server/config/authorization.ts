@@ -51,6 +51,8 @@ export const login: (req: IRequest, res: any) => Promise<boolean | Error> = asyn
 
     const email: string = req.user.email;
 
+    req.user.name = req.user.displayName || req.user?._json?.name;
+
     if (!email) {
         return Promise.reject({
             message: 'no email',
