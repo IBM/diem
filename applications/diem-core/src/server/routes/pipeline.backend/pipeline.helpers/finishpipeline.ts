@@ -1,4 +1,4 @@
-import { utils } from '@mydiem/diem-common/lib/common/utils';
+import { utils } from '@common/utils';
 import { IModel, IJob, IJobResponse } from '../../models/models';
 
 export const finishPl: (job: IJobResponse, pldoc: IModel) => Promise<void> = async (

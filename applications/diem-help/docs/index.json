@@ -51,7 +51,7 @@
                         "name": "param_mailoptions_content",
                         "location": "parameters/mailoptions_content.md"
                     },
-                    { "title": "Connections", "name": "param_connections", "location": "parameters/spark.md" },
+                    { "title": "Connections", "name": "param_connections", "location": "parameters/connections.md" },
                     { "title": "Slack", "name": "param_slack", "location": "parameters/slack.md" },
                     { "title": "Spark", "name": "param_spark", "location": "parameters/spark.md" },
                     { "title": "Pipeline", "name": "param_pipeline", "location": "parameters/pipeline.md" },

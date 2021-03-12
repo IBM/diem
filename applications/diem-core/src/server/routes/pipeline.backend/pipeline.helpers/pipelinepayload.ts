@@ -1,5 +1,5 @@
-import { utils } from '@mydiem/diem-common/lib/common/utils';
-import { IntPayload, EStoreActions } from '@mydiem/diem-common/lib/interfaces';
+import { utils } from '@common/utils';
+import { IntPayload, EStoreActions } from '@interfaces';
 import { PayloadValues } from '../../job.backend/job.functions';
 import { jobLogger } from '../../job.logger/job.logger';
 import { IModel, IJobResponse, IJobSchema } from '../../models/models';

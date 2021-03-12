@@ -23,7 +23,7 @@ module.exports = {
     ],
     extends: [
         'plugin:@angular-eslint/recommended',
-        '../../node_modules/@mydiem/diem-util/eslintrc-base.js',
+        '../../src/webpack/eslintrc-base.js',
     ],
     'rules': {
         'no-restricted-syntax': [

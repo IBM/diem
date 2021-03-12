@@ -5,12 +5,11 @@ import path from 'path';
 import * as http from 'http';
 import pug from 'pug';
 import jwt from 'jsonwebtoken';
-import { Express } from '@common/express.lite';
+import { Express, limiter } from '@common/express.lite';
 import { IntInternal, IntEnv, IError, IRequest, IResponse } from '@interfaces';
 import { utils } from '@common/utils';
 import { slackMsg } from '@common/slack/slack';
 import { slackMsgInt } from '@common/slack/error-int';
-import express from 'express';
 import * as routes from '../routes/routes';
 import { addTrace } from '../routes/functions';
 import assets from './assets.json';
@@ -130,21 +129,10 @@ export class Server {
         /*** here we start actually handling the requests */
 
         app.use(this.logErrors)
-            .use(`${utils.Env.apppath}/docs/images`, express.static('docs/images'))
-            .use(`${this.pack.apppath}/ace-builds`, express.static('node_modules/ace-builds'))
-            .get(`${this.pack.apppath}/service-worker.js`, (_req: IRequest, res: IResponse) => {
-                res.sendFile('/public/js/service-worker.js', { root: path.resolve() });
-            })
-            .get(`${this.pack.apppath}/workbox-*`, (req: IRequest, res: IResponse) => {
-                res.sendFile(`/public/js/workbox-${req.params['0']}`, { root: path.resolve() });
-            })
-            .get(`${this.pack.apppath}/robots.txt`, (_req: IRequest, res: IResponse) => {
-                res.sendFile('/public/robots.txt', { root: path.resolve() });
-            })
             .all(`${this.pack.apppath}/user/:function/*`, this.secAuth, this.api)
             .all(`${this.pack.apppath}/user/:function`, this.secAuth, this.api)
             .all('/internal/:function', this.api)
-            .get('*', this.secAuth, (req: IRequest, res: IResponse) => {
+            .get('*', limiter, this.secAuth, (req: IRequest, res: IResponse) => {
                 res.setHeader('Last-Modified', new Date().toUTCString());
                 req.headers['if-none-match'] = 'no-match-for-this';
                 if (req.session) {
@@ -153,7 +141,7 @@ export class Server {
 
                 res.sendFile('/public/index.html', { root: path.resolve() });
             })
-            .all('*', this.secAuth, (_req: IRequest, res: IResponse) =>
+            .all('*', limiter, this.secAuth, (_req: IRequest, res: IResponse) =>
                 res.status(400).json({ message: 'Not allowed Path' })
             );
 
@@ -232,8 +220,6 @@ export class Server {
     };
 
     private secAuth = async (req: IRequest, res: IResponse, next: () => any): Promise<any> => {
-        const hrstart: [number, number] = process.hrtime();
-
         if (req.cookies && req.cookies.access_token) {
             const t: any = jwt.decode(req.cookies.access_token);
 
@@ -246,15 +232,11 @@ export class Server {
                     req.user.name = `${req.user.firstName} ${req.user.lastName}`;
                 }
             } else {
-                await utils.logMQError(
-                    `$server (secAuth): ev: 'no valid profile' - ti: ${req.transid}`,
-                    req,
-                    401,
-                    '$server : failed login',
-                    { name: 'error', message: 'no name found', caller: '$server' },
-                    hrstart,
-                    this.pack
-                );
+                await utils.logMQError(`$server (secAuth): ev: 'no valid profile' - ti: ${req.transid}`, req, {
+                    name: 'error',
+                    message: 'no name found',
+                    caller: '$server',
+                });
 
                 return res.status(400).send('This website requires authentication - access token missing');
             }
@@ -287,7 +269,7 @@ export class Server {
         const errMsg: string = '$server (logErrors)';
 
         await slackMsgInt(err);
-        await utils.logMQError(errMsg, req, 401, errMsg, err, undefined, this.pack);
+        await utils.logMQError(errMsg, req, err);
 
         res.status(500).end(`An internal error happened. It has been logged - transid: ${req.transid || 'none'}`);
     };

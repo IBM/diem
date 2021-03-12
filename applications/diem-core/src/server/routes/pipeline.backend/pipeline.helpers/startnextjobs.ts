@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 /* eslint-disable sonarjs/cognitive-complexity */
-import { utils } from '@mydiem/diem-common/lib/common/utils';
+import { utils } from '@common/utils';
 import { jobStartHandler } from '../../job.backend/job.start.handler';
 import { IJobResponse, IModel, IJobDetails, EJobStatus } from '../../models/models';
 import { addTrace } from '../../shared/functions';

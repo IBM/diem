@@ -1,5 +1,5 @@
 /* eslint-disable sonarjs/cognitive-complexity */
-import { utils } from '@mydiem/diem-common/lib/common/utils';
+import { utils } from '@common/utils';
 import { EJobStatus, IJobResponse, IModel } from '../../models/models';
 import { findOne } from './findone';
 

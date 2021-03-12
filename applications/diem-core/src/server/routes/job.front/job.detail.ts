@@ -2,7 +2,7 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
-import { mongoose } from '@mydiem/diem-common/lib/common/mongo';
+import { mongoose } from '@common/mongo';
 import { format } from 'sql-formatter';
 import { stringify } from 'yaml';
 import { StatusConfig } from '../job.backend/job.functions';
@@ -101,7 +101,7 @@ export const makePayload: (doc: IJobSchema) => Promise<IModelPayload> = async (
             config = flatten__(doc.config);
 
             if (config.source__sql) {
-                config.source__sql = format(config.source__sql, { language: 'db2' });
+                config.source__sql = format(config.source__sql, { language: 'db2', indent: '' });
             }
         }
 
@@ -113,6 +113,8 @@ export const makePayload: (doc: IJobSchema) => Promise<IModelPayload> = async (
             if (doc.stmt.sql) {
                 stmt.stmt__sql = format(doc.stmt.sql, { language: 'db2' });
             }
+
+            console.info(stmt.stmt__sql);
         }
 
         if (doc.custom) {

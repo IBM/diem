@@ -25,7 +25,7 @@ module.exports = {
         createDefaultProgram: true,
     },
     plugins: ['@typescript-eslint', 'sonarjs', 'prettier', 'import', 'jsdoc', 'prototype-pollution-security-rules'],
-    extends: ['plugin:prettier/recommended', '../../node_modules/@mydiem/diem-util/eslintrc-base.js'],
+    extends: ['plugin:prettier/recommended', '../../src/webpack/eslintrc-base.js'],
     rules: {
         /** prototype-pollution-security-rules rules**/
         'prototype-pollution-security-rules/detect-merge': 1,

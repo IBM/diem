@@ -2,7 +2,7 @@
 /* eslint-disable complexity */
 /* eslint-disable max-len */
 
-import { utils } from '@mydiem/diem-common/lib/common/utils';
+import { utils } from '@common/utils';
 import * as Api from 'kubernetes-client';
 import { EJobTypes, IJobParams, IModel } from '../models/models';
 import { ICrdConfig } from './base.crd';
