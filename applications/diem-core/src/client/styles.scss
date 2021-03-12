@@ -15,7 +15,6 @@
 
 */
 
-//@import '~font-awesome/css/font-awesome.min.css';
 @import '~@fortawesome/fontawesome-free/css/all.min.css';
 @import '~carbon-components/scss/globals/scss/styles.scss';
 @import '~@carbon/grid/scss/grid';
@@ -119,7 +118,7 @@ fieldset {
     .bx--dropdown,
     .bx--combo-box,
     .bx--number,
-    .bx--number input[type='number'], //.bx--checkbox-wrapper,
+    .bx--number input[type='number'],
     .ex--radiogroup,
     .bx--content:not(.ex--band) {
         background-color: $ui-02;
@@ -190,7 +189,6 @@ ibm-dropdown.ng-invalid .bx--dropdown {
 
 /* overlay is the first child of the ibm-panel */
 .bx--panel--overlay {
-    //top: 2.5rem; /* this sets the right panel top correct */
     bottom: auto;
     height: auto;
     padding-bottom: 0rem;
@@ -283,7 +281,6 @@ df-panel,
 .ex--panel-nav {
     flex-shrink: 0;
     width: 12rem;
-    // transition: width 0.1s ease;
     &.ex--hasheader {
         .bx--side-nav__navigation {
             top: 9.375rem;

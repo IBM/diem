@@ -1,5 +1,5 @@
 import path from 'path';
-import express from 'express';
+import express, { Request } from 'express';
 import session from 'express-session';
 import redisStore from 'connect-redis';
 import cookieParser from 'cookie-parser';
@@ -7,10 +7,11 @@ import helmet from 'helmet';
 import nocache from 'nocache';
 import rateLimit from 'express-rate-limit';
 import { IXorg } from '../interfaces/env';
-import { IResponse } from '../interfaces/shared';
+import { IResponse } from '../interfaces';
 import { Credentials } from './cfenv';
 import { utils } from './utils';
 import { redisc } from './redis';
+import { Strategy } from './authorisation';
 
 export const limiter = rateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute
@@ -19,10 +20,15 @@ export const limiter = rateLimit({
     headers: true,
 });
 
-interface IRequest extends express.Request {
+interface ISession extends session.Session {
+    originalUrl?: string;
+}
+
+export interface IRequest extends Request {
     sessionid?: string;
     transid?: string;
     xorg?: IXorg;
+    session: ISession & Partial<session.SessionData>;
 }
 
 interface IAsserts {
@@ -73,6 +79,7 @@ export class Express {
     public constructor(passport: any, assets: IAsserts, config?: IExpressConfig) {
         this.assets = assets;
         this.passport = passport;
+        this.passport.use(Strategy);
         this.config = { ...this.config, ...config };
 
         utils.ev.on('fatalError', async (status: boolean) => {
@@ -117,10 +124,19 @@ export class Express {
                     `${utils.Env.apppath}/ace-builds/src-min-noconflict`,
                     express.static('./node_modules/ace-builds/src-min-noconflict')
                 )
+                .use(`${utils.Env.apppath}/501`, express.static('./public/501.html'))
                 .use(`${utils.Env.apppath}/tinymce/skins`, express.static('./node_modules/tinymce/skins'))
                 .use(`${utils.Env.apppath}/tinymce/icons`, express.static('./node_modules/tinymce/icons'))
                 .use(`${utils.Env.apppath}/tinymce/skins`, express.static('./node_modules/tinymce/skins'))
                 .use(`${utils.Env.apppath}/tinymce/themes`, express.static('./node_modules/tinymce/themes'))
+                .get('/login', limiter, this.passport.authenticate('openidconnect', {}))
+                .get('/sso/callback', limiter, (req: IRequest, res: IResponse, next: any) => {
+                    const redirect_url = req.session.originalUrl;
+                    this.passport.authenticate('openidconnect', {
+                        successRedirect: redirect_url,
+                        failureRedirect: '/failure',
+                    })(req, res, next);
+                })
                 .get(`${utils.Env.apppath}/service-worker.js`, limiter, (_req: IRequest, res: IResponse) => {
                     res.sendFile('/public/js/service-worker.js', { root: path.resolve() });
                 })
