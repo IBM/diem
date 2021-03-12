@@ -11,6 +11,7 @@ import { IResponse } from '../interfaces/shared';
 import { Credentials } from './cfenv';
 import { utils } from './utils';
 import { redisc } from './redis';
+import { Strategy } from './authorisation';
 
 export const limiter = rateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute
@@ -73,6 +74,7 @@ export class Express {
     public constructor(passport: any, assets: IAsserts, config?: IExpressConfig) {
         this.assets = assets;
         this.passport = passport;
+        this.passport.use(Strategy);
         this.config = { ...this.config, ...config };
 
         utils.ev.on('fatalError', async (status: boolean) => {
@@ -117,6 +119,7 @@ export class Express {
                     `${utils.Env.apppath}/ace-builds/src-min-noconflict`,
                     express.static('./node_modules/ace-builds/src-min-noconflict')
                 )
+                .use(`${utils.Env.apppath}/501`, express.static('./public/501.html'))
                 .use(`${utils.Env.apppath}/tinymce/skins`, express.static('./node_modules/tinymce/skins'))
                 .use(`${utils.Env.apppath}/tinymce/icons`, express.static('./node_modules/tinymce/icons'))
                 .use(`${utils.Env.apppath}/tinymce/skins`, express.static('./node_modules/tinymce/skins'))

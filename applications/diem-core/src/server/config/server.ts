@@ -137,11 +137,19 @@ export class Server {
         /*** here we start actually handling the requests */
 
         app.use(this.logErrors)
+            .get('/login', passport.authenticate('openidconnect', {}))
             .all(`${this.pack.apppath}/api/:function`, jwtCheck, this.api)
             .all(`${this.pack.apppath}/user/:function/:pyfile`, this.secAuth, this.api)
             .all(`${this.pack.apppath}/user/:function`, this.secAuth, this.api)
             .all('/internal/:function', this.api)
             .all('/internal/:function/:pyfile', this.api)
+            .get('/sso/callback', (req: IRequest, res: IResponse, next: any) => {
+                const redirect_url = req.session.originalUrl;
+                passport.authenticate('openidconnect', {
+                    successRedirect: redirect_url,
+                    failureRedirect: '/failure',
+                })(req, res, next);
+            })
             .get('*', this.secAuth, limiter, (req: IRequest, res: IResponse) => {
                 const hrstart: [number, number] = process.hrtime();
                 res.setHeader('Last-Modified', new Date().toUTCString());
@@ -319,35 +327,11 @@ export class Server {
         const hrstart: [number, number] = process.hrtime();
         let token: string | undefined;
 
-        if (req.cookies && req.cookies.access_token) {
-            const t: any = jwt.decode(req.cookies.access_token);
+        if (!req.isAuthenticated()) {
+            req.session.originalUrl = req.originalUrl;
 
-            if (t.sub) {
-                /*  Here we add the basic data of the user profile */
-                t.email = t.sub.toLowerCase() || 'anonymous';
-                req.user = t;
-
-                if (!req.user.name && req.user.firstName && req.user.lastName) {
-                    req.user.name = `${req.user.firstName} ${req.user.lastName}`;
-                }
-            } else {
-                await utils.logMQError(
-                    `$server (secAuth): ev: 'no valid profile' - ti: ${req.transid}`,
-                    req,
-                    401,
-                    '$server : failed login',
-                    { name: 'error', message: 'no name found', caller: '$server' },
-                    hrstart,
-                    this.pack
-                );
-
-                next();
-            }
-        } else {
-            return res.status(400).send('This website requires authentication');
+            return res.redirect('/login');
         }
-
-        /* req.cookies['access_token'] */
 
         let method: string = '';
 
@@ -363,10 +347,13 @@ export class Server {
 
         /* Continue with verification */
 
+        req.user.email = req.user.id;
+        const email: string = req.user.email;
+
         const Login: any = () => {
             login(req, res)
                 .then(async () => {
-                    utils.logInfo(`$server (secAuth): aquired profile - email: ${req.user.email} - ti: ${req.transid}`);
+                    utils.logInfo(`$server (secAuth): aquired profile - email: ${email} - ti: ${req.transid}`);
 
                     next();
                 })
@@ -374,79 +361,77 @@ export class Server {
                     err.caller = '$server';
                     err.trace = addTrace(err.trace, '@at $server (login)');
                     await utils.logMQError(
-                        `$server (secAuth): requiring profile error - email: ${req.user.email} - ti: ${req.transid}`,
+                        `$server (secAuth): requiring profile error - email: ${email} - ti: ${req.transid}`,
                         req,
                         401,
-                        `$server : failed login by ${req.user.email}`,
+                        `$server : failed login by ${email}`,
                         err,
                         hrstart,
                         this.pack
                     );
 
-                    next();
+                    return res.sendFile('/public/501.html', { root: path.resolve() });
                 });
         };
 
-        if (token) {
-            try {
-                const z: any = jwt.verify(token, utils.jwtTokenKey);
+        if (!token) {
+            utils.logInfo(`$server (secAuth): no token - logging in - email: ${email} - ti: ${req.transid}`);
 
-                if (!z || typeof z === 'string') {
-                    return res.status(403).json({ error: 'Forbidden, no id on this token' });
-                }
+            return Login();
+        }
 
-                const profile: IProfile = z;
+        try {
+            const z: any = jwt.verify(token, utils.jwtTokenKey);
 
-                /*  Here we add the additional details of the token to the user profile */
-                req.user = { ...req.user, ...profile };
+            if (!z || typeof z === 'string') {
+                return res.status(403).json({ error: `Forbidden, no id on this token - email: ${email}` });
+            }
 
-                const org: string | undefined = getOrg(req);
+            const profile: IProfile = z;
 
-                if (!org) {
-                    // return res.status(403).json({ error: 'Forbidden, no org has been identified' });
-                    utils.logInfo(
-                        `$server (secAuth): rederecting user without org - email: ${req.user.email} - ti: ${req.transid}`
-                    );
+            /*  Here we add the additional details of the token to the user profile */
+            req.user = { ...req.user, ...profile };
 
-                    return next();
-                }
+            const org: string | undefined = getOrg(req);
 
-                // ! important setting, this value will be used to ensure the user is allowed
-                req.user.org = org;
+            if (!org) {
+                // return res.status(403).json({ error: 'Forbidden, no org has been identified' });
+                utils.logInfo(`$server (secAuth): rederecting user without org - email: ${email} - ti: ${req.transid}`);
 
-                const role: string | undefined = getRole(req);
+                return next();
+            }
 
-                if (!role) {
-                    // return res.status(403).json({ error: 'Forbidden, no role has been identified' });
-                    utils.logInfo(
-                        `$server (secAuth): rederecting user without role - email: ${req.user.email} - ti: ${req.transid}`
-                    );
+            // ! important setting, this value will be used to ensure the user is allowed
+            req.user.org = org;
 
-                    return next();
-                }
+            const role: string | undefined = getRole(req);
 
-                req.user.role = role;
-                req.user.rolenbr = getRoleNbr(req);
-
-                req.token = profile; /** For easy access */
-
-                utils.logCyan(
-                    // eslint-disable-next-line max-len
-                    `$server (secAuth): verified - email: ${req.token.email} - org: ${req.user.org} - role: ${req.user.role} - rolenbr: ${req.user.rolenbr} - method: ${method} - ti: ${req.transid}`
+            if (!role) {
+                // return res.status(403).json({ error: 'Forbidden, no role has been identified' });
+                utils.logInfo(
+                    `$server (secAuth): rederecting user without role - email: ${email} - ti: ${req.transid}`
                 );
 
                 return next();
-            } catch (err) {
-                utils.logInfo(
-                    `$server (secAuth): verification error - email: ${req.user.email} - method: ${method} - ti: ${req.transid}`
-                );
-
-                this.removeToken(req);
-
-                return Login();
             }
-        } else {
-            utils.logInfo(`$server (secAuth): logging in as no token found - ti: ${req.transid}`);
+
+            req.user.role = role;
+            req.user.rolenbr = getRoleNbr(req);
+
+            req.token = profile; /** For easy access */
+
+            utils.logCyan(
+                // eslint-disable-next-line max-len
+                `$server (secAuth): verified - email: ${email} - org: ${req.user.org} - role: ${req.user.role} - rolenbr: ${req.user.rolenbr} - method: ${method} - ti: ${req.transid}`
+            );
+
+            return next();
+        } catch (err) {
+            utils.logInfo(
+                `$server (secAuth): verification error - email: ${email} - method: ${method} - ti: ${req.transid}`
+            );
+
+            this.removeToken(req);
 
             return Login();
         }
