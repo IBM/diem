@@ -27,6 +27,7 @@ const appConfig: Routes = [
             params: AppParamResolver,
         },
     },
+    { path: '**', redirectTo: '' },
 ];
 
 @NgModule({

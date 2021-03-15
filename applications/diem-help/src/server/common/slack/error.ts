@@ -27,7 +27,7 @@ export const slackMsgError: (req: IRequest, slackConfig?: Partial<ISlack>) => Pr
 
     const sl: string = JSON.stringify(
         {
-            email: req.user.email,
+            email: 'anonymous',
             error,
             transid,
         },
