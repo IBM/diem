@@ -4,7 +4,6 @@ import fs from 'fs';
 import path from 'path';
 import * as http from 'http';
 import pug from 'pug';
-import jwt from 'jsonwebtoken';
 import { Express, limiter } from '@common/express.lite';
 import { IntInternal, IntEnv, IError, IRequest, IResponse } from '@interfaces';
 import { utils } from '@common/utils';
@@ -83,7 +82,7 @@ export class Server {
 
         /*** variables that are moved to the index.html */
         const env: any = {
-            appurl: this.pack.appurl,
+            path: this.pack.apppath,
             css: [],
             description: this.pack.description,
             script: [],
@@ -92,21 +91,21 @@ export class Server {
         const ass: { [index: string]: any } = assets;
 
         if (ass['app.css']) {
-            env.css.push(`${env.appurl}/${ass['app.css'].src}`);
+            env.css.push(`${env.path}/${ass['app.css'].src}`);
         }
 
         env.script = [];
 
         if (ass['app.js']) {
             env.script.push({
-                name: `${env.appurl}/${ass['app.js'].src}`,
+                name: `${env.path}/${ass['app.js'].src}`,
                 sri: ass['app.js'].integrity,
             });
         }
 
         if (ass['styles.js']) {
             env.script.push({
-                name: `${env.appurl}/${ass['styles.js'].src}`,
+                name: `${env.path}/${ass['styles.js'].src}`,
                 sri: ass['styles.js'].integrity,
             });
         }
@@ -115,7 +114,7 @@ export class Server {
 
         if (ass[va]) {
             env.script.push({
-                name: `${env.appurl}/${ass[va].src}`,
+                name: `${env.path}/${ass[va].src}`,
                 sri: ass[va].integrity,
             });
         }
@@ -129,19 +128,13 @@ export class Server {
         /*** here we start actually handling the requests */
 
         app.use(this.logErrors)
-            .all(`${this.pack.apppath}/user/:function/*`, this.secAuth, this.api)
-            .all(`${this.pack.apppath}/user/:function`, this.secAuth, this.api)
+            .all(`${this.pack.apppath}/user/:function/*`, this.api)
+            .all(`${this.pack.apppath}/user/:function`, this.api)
             .all('/internal/:function', this.api)
-            .get('*', limiter, this.secAuth, (req: IRequest, res: IResponse) => {
-                res.setHeader('Last-Modified', new Date().toUTCString());
-                req.headers['if-none-match'] = 'no-match-for-this';
-                if (req.session) {
-                    req.session.redirectUrl = '/';
-                }
-
+            .get('*', limiter, (_req: IRequest, res: IResponse) => {
                 res.sendFile('/public/index.html', { root: path.resolve() });
             })
-            .all('*', limiter, this.secAuth, (_req: IRequest, res: IResponse) =>
+            .all('*', limiter, (_req: IRequest, res: IResponse) =>
                 res.status(400).json({ message: 'Not allowed Path' })
             );
 
@@ -186,7 +179,7 @@ export class Server {
             } catch (err) {
                 const msg: IError = {
                     ...err,
-                    email: req.token ? req.token.email : '',
+                    email: 'anonymous',
                     endpoint: req.params ? req.params.function : 'n/a',
                     name: err.name || '$server (api) function error',
                     time: utils.time(),
@@ -219,36 +212,6 @@ export class Server {
         }
     };
 
-    private secAuth = async (req: IRequest, res: IResponse, next: () => any): Promise<any> => {
-        if (req.cookies && req.cookies.access_token) {
-            const t: any = jwt.decode(req.cookies.access_token);
-
-            if (t.sub) {
-                /*  Here we add the basic data of the user profile */
-                t.email = t.sub.toLowerCase() || 'anonymous';
-                req.user = t;
-
-                if (!req.user.name && req.user.firstName && req.user.lastName) {
-                    req.user.name = `${req.user.firstName} ${req.user.lastName}`;
-                }
-            } else {
-                await utils.logMQError(`$server (secAuth): ev: 'no valid profile' - ti: ${req.transid}`, req, {
-                    name: 'error',
-                    message: 'no name found',
-                    caller: '$server',
-                });
-
-                return res.status(400).send('This website requires authentication - access token missing');
-            }
-        } else {
-            return res.status(400).send('This website requires authentication');
-        }
-
-        /* req.cookies['access_token'] */
-
-        return next();
-    };
-
     private logErrors = async (
         err: IError,
         req: IRequest,
@@ -256,7 +219,7 @@ export class Server {
         next: (err: IError) => any
     ): Promise<void> => {
         err.trace = addTrace(err.trace, '@at $server (logErrors)');
-        err.email = req.token ? req.token.email : '';
+        err.email = 'anonymous';
         err.endpoint = req.params ? req.params.function : 'n/a';
         err.time = utils.time();
         err.transid = req.transid;
