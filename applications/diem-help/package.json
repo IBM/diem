@@ -1,7 +1,7 @@
 {
     "name": "diem-help",
     "description": "Diem Data Integration Engine Multipurpose",
-    "version": "4.4.0",
+    "version": "4.4.1",
     "author": "guy_huinen@be.ibm.com",
     "config": {
         "appname": "Diem",
