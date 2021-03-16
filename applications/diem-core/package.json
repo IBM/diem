@@ -1,7 +1,7 @@
 {
     "name": "diem-core",
     "description": "Diem Data Integration Engine Multipurpose",
-    "version": "5.3.1",
+    "version": "5.3.2",
     "author": "guy_huinen@be.ibm.com",
     "config": {
         "appname": "Diem",
@@ -31,7 +31,7 @@
         "express-rate-limit": "^5.2.6",
         "express-session": "^1.17.1",
         "helmet": "^4.4.1",
-        "ibm-cos-sdk": "^1.9.0",
+        "ibm-cos-sdk": "^1.10.0",
         "json-stream": "^1.0.0",
         "jsonwebtoken": "^8.5.1",
         "kubernetes-client": "^9.0.0",
