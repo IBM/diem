@@ -86,8 +86,8 @@ export const getfiles: (req: IRequest) => Promise<IFilePayload[]> = async (req: 
         })
         .promise()
         .catch(async (err3) => {
-            err3.trace = ['@at $files (listObjectsV2) - listbuckets'];
             err3.bucket = Bucket;
+            err3.trace = ['@at $files (listObjectsV2) - listbuckets'];
 
             if (err3 && ['NetworkingError', 'InvalidAccessKeyId'].includes(err3.code)) {
                 void utils.logError('$files (getfiles): connection error', err3);
@@ -103,6 +103,7 @@ export const getfiles: (req: IRequest) => Promise<IFilePayload[]> = async (req: 
             }
 
             if (err3 && ['NoSuchBucket'].includes(err3.code)) {
+                void utils.logInfo(`$files (getfiles): creating bucket : ${Bucket}`);
                 const bucket: any = await cos
                     .createBucket({
                         Bucket,
@@ -110,6 +111,7 @@ export const getfiles: (req: IRequest) => Promise<IFilePayload[]> = async (req: 
                     })
                     .promise()
                     .catch(async (err4) => {
+                        err4.bucket = Bucket;
                         err4.trace = ['@at $files (getfiles) - createbucket'];
 
                         return Promise.reject(err4);

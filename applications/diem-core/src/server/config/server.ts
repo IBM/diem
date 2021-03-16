@@ -90,8 +90,8 @@ export class Server {
         const app: any = new Express(passport, assets, expressConfig).app;
 
         /*** variables that are moved to the index.html */
-        const env: any = {
-            appurl: this.pack.appurl,
+        const env: { path: string; css: any; description: string; script: any[] } = {
+            path: this.pack.apppath,
             css,
             description: this.pack.description,
             script: [],
@@ -100,21 +100,21 @@ export class Server {
         const ass: { [index: string]: any } = assets;
 
         if (ass['app.css']) {
-            env.css.push(`${env.appurl}/${ass['app.css'].src}`);
+            env.css.push(`${env.path}/${ass['app.css'].src}`);
         }
 
         env.script = [];
 
         if (ass['app.js']) {
             env.script.push({
-                name: `${env.appurl}/${ass['app.js'].src}`,
+                name: `${env.path}/${ass['app.js'].src}`,
                 sri: ass['app.js'].integrity,
             });
         }
 
         if (ass['styles.js']) {
             env.script.push({
-                name: `${env.appurl}/${ass['styles.js'].src}`,
+                name: `${env.path}/${ass['styles.js'].src}`,
                 sri: ass['styles.js'].integrity,
             });
         }
@@ -123,7 +123,7 @@ export class Server {
 
         if (ass[va]) {
             env.script.push({
-                name: `${env.appurl}/${ass[va].src}`,
+                name: `${env.path}/${ass[va].src}`,
                 sri: ass[va].integrity,
             });
         }

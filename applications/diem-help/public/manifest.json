@@ -1,27 +1,31 @@
 {
-    "name": "Home Module for Leap",
+    "name": "Diem Help",
     "short_name": "diem-help",
     "icons": [
         {
             "src": "images/diem_l.png",
             "sizes": "1024x1024",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any maskable"
         },
         {
             "src": "images/diem_m.png",
             "sizes": "512x512",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any maskable"
         },
         {
             "src": "images/diem_s.png",
             "sizes": "256x256",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any maskable"
         }
     ],
-    "theme_color": "#b92b27",
+    "theme_color": "#161616",
     "background_color": "#ffffff",
-    "description": "Home Module for Leap",
+    "description": "Diem Help",
     "display": "standalone",
     "orientation": "portrait",
+    "lang": "en-US",
     "start_url": "/diem-help/"
 }

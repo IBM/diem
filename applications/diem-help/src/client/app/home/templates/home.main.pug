@@ -10,7 +10,8 @@
 
                         ibm-sidenav-item(
                             [route]="[item.name]",
-                            [active]= "item.title === doc_title"
+                            [active]= "item.title === doc_title",
+                            [title]= "item.title"
                             )
 
                             | {{item.title}}
@@ -23,7 +24,7 @@
 
                         li.bx--side-nav__item
 
-                            a.bx--side-nav__link.LeftNav-module--outboundLink--13-_V([attr.href]="item.location", target="_blank")
+                            a.bx--side-nav__link.LeftNav-module--outboundLink--13-_V([attr.href]="item.location", target="_blank", rel="noreferrer")
                                 .bx--side-nav__icon.bx--side-nav__icon--small
                                     svg(ibmIconLaunch='', size='20')
                                 span.bx--side-nav__link-text {{item.title}}
