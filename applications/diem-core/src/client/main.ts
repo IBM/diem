@@ -28,7 +28,7 @@ console.debug(
 const nav: any = navigator;
 if (nav.serviceWorker !== undefined) {
     nav.serviceWorker
-        .register(`${appConfig.apppath}/service-worker.js`)
+        .register(`${appConfig.apppath}/service-worker.js`, { enabled: process.env.NODE_ENV })
         .then(() => {
             console.info('$main: Service Worker registered');
         })
