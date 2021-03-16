@@ -27,7 +27,6 @@ export const etlNodepy: (job: IntJob) => any = (job: IntJob) => {
             env: {
                 PATH: `/home/app/.local/bin:${process.env.PATH}`,
                 APPPATH: process.env.APPPATH,
-                PYTHON_VERSION: process.env.PYTHON_VERSION,
                 CLASSPATH: '/opt/spark/jars/*',
             },
             cwd: `${path.resolve()}/workdir/${id}/workdir`,
