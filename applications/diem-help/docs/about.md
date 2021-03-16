@@ -5,6 +5,7 @@
     align-items: center;
 ">Welcome to <img src="../../diem-help/public/images/diem_logo.svg" alt="Diem" style="
     width: 300px;
+    height: 80px;
     background: black;
     padding: 10px 20px 10px 20px;
     border-radius: 5px;
@@ -23,7 +24,7 @@ Diem also allows quick and easy definition of connections, as well as a schedule
 
 ## Application Features
 
-![overview](../../../diem-help/docs/images/architecture/overview1.png)
+![overview](../../../diem-help/docs/images/architecture/overview1.png =1200x45)
 
 | Feature              | Feature Summary                             | Benefits                                                                                                                                                                                                                        |
 | -------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
