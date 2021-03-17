@@ -10,7 +10,7 @@ spec:
     spec:
       containers:
       - name: diem-mongohelper
-        image: quay.io/diem/mongohelper:1.0.1
+        image: quay.io/diem/mongoloader:1.0.0
         envFrom:
             - secretRef:
                 name: {{ .Values.core.secrets.secretmapref }}
