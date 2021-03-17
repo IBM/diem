@@ -1,0 +1,17 @@
+ng-container
+    ng-template(
+        ngFor='',
+        let-question='',
+        [ngForOf]="questions",
+        let i="index",
+        [ngForTrackBy]="trackByFn",
+        )
+        df-question(
+            [ngClass]='question.class',
+            [ngStyle]='question.typeStyle',
+            [form]='form',
+            [formSpecs]='formSpecs',
+            [TimeCheck]='TimeCheck',
+            [questionGroup]='questionGroup',
+            [question]='question',
+        )

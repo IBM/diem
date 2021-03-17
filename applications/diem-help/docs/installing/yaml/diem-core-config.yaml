@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: etl-mgr
+  namespace: default
+data:
+  PORT: "8192"
+  DEBUGPORT: "9208"
+  APPPATH: "/etl-mgr"
+  SLACK__EMOJI: ":diem:"
+  SLACK__DEPLOY__CHANNEL: "#bizops-deploy-guy"
+  SLACK__DEPLOY__USERNAME: "etl-mgr- (Notification)"
+  SLACK__INTERNAL__CHANNEL: "#bizops-bugs-guy"
+  SLACK__INTERNAL__USERNAME: "etl-mgr - (Internal)"
+  SLACK__USER__CHANNEL: "#bizops-bugs-guy"
+  SLACK__USER__USERNAME: "etl-mgr - (User)"
+  SPARK__NAMESPACE: "default"
+  SPARK__IMAGE: "127.0.0.1:30500/bizops/etl-spark-py:3.0.0"
+  SPARK__FILE_URL: "http://etl-mgr/internal/pyfile"
+  SPARK__CALLBACK_URL: "http://etl-mgr/internal/spark_callback"
+  SPARK__IMAGEPULLSECRETS: regsecret
+  SPARK__VOLUME: spark-shared-data
+  OPERATOR__DRIVER_CORES: "2"
+  OPERATOR__DRIVER_MEMORY: "1024m"
+  OPERATOR__EXECUTOR_CORES: "8"
+  OPERATOR__EXECUTOR_INSTANCES: "2"
+  OPERATOR__EXECUTOR_MEMORY: "8G"
+  FORMS_LOCATION: "etl-mgr-carbon-config"

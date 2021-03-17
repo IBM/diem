@@ -1,0 +1,108 @@
+ng-container(*ngIf="formSpecs && formSpecs.sidebar && formSpecs.buttons && formSpecs.buttons.length>0")
+    ibm-panel([expanded]="sidebar", #sidebardiv="")
+        df-buttons(
+            *ngIf='formSpecs.buttons && formSpecs.buttons.length>0',
+            [formSpecs]='formSpecs',
+            [form]='form'
+        )
+        .ex--panel-close((click)="sidebar = false")
+            span Close
+            svg(ibmIconClose='', size='20')
+
+    button(
+        *ngIf="! sidebar",
+        [ngClass] = "formSpecs.sidebar.class",
+        [ngStyle] = "formSpecs.sidebar.style",
+        type="button",
+        value="",
+        (click)="sidebar = true",
+        )
+        svg(ibmIconOpenPanelFilledRight="", size='20')
+
+div([ngClass]="formSpecs.style.panelClass")
+    nav.bx--side-nav__navigation(role="navigation")
+        ul.bx--side-nav__items
+            ng-template(
+                ngFor='',
+                let-questionGroup='',
+                [ngForOf]="questionGroups",
+                let-i="index",
+                [ngForTrackBy]="trackByFn",
+                )
+                a(
+                    *ngIf="visibleSection(questionGroup)",
+                    [class.ex--menu-panel-button-active] ="this.active === i",
+                    [ngClass]='questionGroup.header.panelClass',
+                    [ngStyle]='questionGroup.header.panelStyle',
+                    (click)="setActive(i)"
+                    )
+                    i(
+                        [ngClass]='questionGroup.header.iconClass',
+                        [ngStyle]='questionGroup.header.iconStyle',
+                    )
+                    span([innerHTML]='questionGroup.header.label')
+            .ex--panel-close((click)="navClass = 'ex--panel-min'")
+                svg(ibmIconChevronLeft='', size='20')
+        .ex--panel-icon-slide-right((click)="navClass = ''")
+                svg(ibmIconChevronRight='', size='20')
+
+div(
+    [ngClass]='formSpecs.style.sectionPanelClass',
+    [ngStyle]='formSpecs.style.sectionPanelStyle',
+    )
+    ng-template(
+        ngFor='',
+        let-questionGroup='',
+        [ngForOf]="questionGroups",
+        let-i="index",
+        [ngForTrackBy]="trackByFn",
+        )
+        ng-container(*ngIf="questionGroup.tabs && active === i")
+            ibm-tabs([type]="questionGroup.header?.tabstype || 'container'")
+
+                ng-container(
+                    *ngFor="let tab of questionGroup.tabs; let t=index;",
+                )
+                    ibm-tab(
+                        *ngIf="visibleSection(tab)",
+                        [heading]="tab.header.label",
+                        [active]= "t === tabnumber",
+                        (selected) = "selectedtab(t)"
+                        )
+
+                        fieldset(
+                            *ngIf="t === tabnumber",
+                            [ngClass]='tab.class',
+                            [ngStyle]='tab.style'
+                            )
+
+                            df-group-body(
+                                [form]='form',
+                                [formSpecs]='formSpecs',
+                                [TimeCheck]='TimeCheck',
+                                [questionGroup]='tab'
+                            )
+
+
+
+
+        ng-container(*ngIf="!questionGroup.tabs && active === i")
+
+            fieldset(
+                *ngIf="active === i",
+                [ngClass]='questionGroup.header.class',
+                [ngStyle]='questionGroup.header.style'
+                )
+
+                df-group-body(
+                    [form]='form',
+                    [formSpecs]='formSpecs',
+                    [TimeCheck]='TimeCheck',
+                    [questionGroup]='questionGroup'
+                    )
+                df-buttons(
+                    *ngIf='questionGroup.buttons && questionGroup.buttons.length > 0',
+                    [formSpecs]='formSpecs',
+                    [questionGroup]='questionGroup',
+                    [form]='form'
+                )

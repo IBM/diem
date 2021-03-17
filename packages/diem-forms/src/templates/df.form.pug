@@ -1,0 +1,37 @@
+form(
+  [attr.id]="formSpecs.id",
+  [formGroup]='form',
+  [class]='formSpecs.style.formClass',
+  [ngSwitch]='true')
+    span.bx--loading--title(*ngIf='! loaded')
+        .bx--loading.bx--loading--small
+            svg.bx--loading__svg(viewBox="-75 -75 150 150")
+                title Loading...
+                circle.bx--loading__stroke(cx="0", cy="0", r="37.5")
+        span Loading...
+
+    ng-template([ngIf]="loaded && formSpecs.style && formSpecs.style.type")
+
+        df-group(
+            *ngSwitchCase="['basic','fieldset'].includes(formSpecs.style.type)",
+            [TimeCheck]='TimeCheck',
+            [formSpecs]='formSpecs',
+            [form]='form',
+            [questionGroups]='questionGroups',
+            )
+
+        df-panel(
+            *ngSwitchCase="formSpecs.style.type === 'panelset'",
+            [TimeCheck]='TimeCheck',
+            [formSpecs]='formSpecs',
+            [form]='form',
+            [questionGroups]='questionGroups',
+            )
+
+        df-fieldset-group(
+            *ngSwitchCase="['fieldsetgroup', 'boxgroup','basicgroup'].includes(formSpecs.style.type)",
+            [TimeCheck]='TimeCheck',
+            [formSpecs]='formSpecs',
+            [form]='form',
+            [questionGroups]='questionGroups',
+            )

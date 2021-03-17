@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: external-couche
+spec:
+  ports:
+    - name: app
+      port: 80
+      protocol: TCP
+      targetPort: 5984
+  clusterIP: None
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: external-couche
+subsets:
+  - addresses:
+      # list all external ips for this service
+      - ip: 192.168.65.2
+    ports:
+      - name: app
+        port: 5984
+        protocol: TCP

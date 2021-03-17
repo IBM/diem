@@ -1,0 +1,73 @@
+ng-container(*ngIf="loaded; else elseBlock")
+    ng-container(*ngIf="! error; else errorBlock")
+
+        .ex--band.bx--content(
+            *ngIf="config.header",
+            [ngClass]="config.header.headerColor")
+            .bx--row
+                ng-template(
+                    [ngTemplateOutlet]="headerTmpl",
+                    [ngTemplateOutletContext]="{ $implicit: config}"
+                )
+
+        .bx--content.ex--content.h-100(@fadeInAnimation="")
+
+            df-standard-form(
+                *ngIf="config.filter",
+                [locals]='config.filter',
+                [values]='config.values'
+                )
+            df-table-list(
+                *ngIf="config?.locals",
+                [locals]='config.locals',
+                [params]='config.params'
+                )
+
+ng-template(#modalViewChild="", let-config="")
+    df-standard-form(
+        [locals]='config?.locals',
+        [values]='config.values'
+        )
+
+ng-template(#errorBlock="")
+    .bx--content.ex--content.h-100(@fadeInAnimation="")
+        ex-app-error(
+            [error]="error"
+            )
+
+ng-template(#elseBlock="")
+    span.bx--loading--title
+        .bx--loading.bx--loading--small
+            svg.bx--loading__svg(viewBox="-75 -75 150 150")
+                title Loading...
+                circle.bx--loading__stroke(cx="0", cy="0", r="37.5")
+        span Loading...
+
+ng-template(#header="")
+    .bx--col-lg-13
+        i([ngClass]="config.header.headerIcon")
+        h3.ex--header([innerHTML]="config.header.title")
+    .bx--col-lg-3
+        p(
+            *ngIf="config.header && config.header.button && MCF.evalStr(config.header.button.visible)"
+            )
+            button(
+                [ibmButton]="config.header.button.type" ,
+                [size]="config.header.button.size",
+                [attr.modal-primary-focus]="config.header.button.focus || null",
+                [class]='config.header.button.class',
+                [ngStyle]='config.header.button.style',
+                [routerLink]="config.header.button.link",
+            )
+
+                span([innerHTML]="config.header.button.label")
+
+                i(
+                    *ngIf='config.header.button.iconClass',
+                    [ngClass]='config.header.button.iconClass',
+                    [ngStyle]='config.header.button.iconStyle',
+                )
+        span(
+            *ngIf="config.header && config.header.button && ! MCF.evalStr(config.header.button.visible)",
+            [ngStyle]="config.header.button.altStyle",
+            [innerHTML]="config.header.button.altText")

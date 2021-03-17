@@ -1,0 +1,52 @@
+.diem--content
+    .leftNavWrapper
+        ibm-sidenav(rail="true",[expanded]="true")
+
+            ng-container(*ngFor="let item of items")
+
+                ng-template([ngIf]="! item.section")
+
+                    ng-template([ngIf]="item.name && item.location")
+
+                        ibm-sidenav-item(
+                            [route]="[item.name]",
+                            [active]= "item.title === doc_title",
+                            [title]= "item.title"
+                            )
+
+                            | {{item.title}}
+
+                    ng-template([ngIf]="item.title==='divider'")
+
+                            hr.LeftNav-module--divider--1Z49I
+
+                    ng-template([ngIf]="! item.name && item.location")
+
+                        li.bx--side-nav__item
+
+                            a.bx--side-nav__link.LeftNav-module--outboundLink--13-_V([attr.href]="item.location", target="_blank", rel="noreferrer")
+                                .bx--side-nav__icon.bx--side-nav__icon--small
+                                    svg(ibmIconLaunch='', size='20')
+                                span.bx--side-nav__link-text {{item.title}}
+
+                ng-template([ngIf]="item.section")
+
+                    ibm-sidenav-menu([title]="item.section.title")
+
+                        ng-container(*ngFor="let item of item.section.items")
+
+                            ibm-sidenav-item(
+                                [route]="[item.name]",
+                                [active]= "item.title === doc_title"
+                                )
+
+                                 | {{item.title}}
+
+    .container
+        .ex-doc-header([ngStyle]="header")
+            .bx--grid
+                .bx--row
+                    .bx--col-lg-12
+                        h1.PageHeader-module--text--1cbUz([innerHTML]="doc_title")
+        .bx--grid.Main-module--padded--_Y6lG
+            section.section([innerHTML]="doc_content")

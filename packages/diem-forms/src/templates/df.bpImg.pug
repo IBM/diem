@@ -1,0 +1,13 @@
+div(*ngIf='showName && !showImg' )
+  |{{key[keyName]}}
+
+div(class='ui-helper-clearfix', *ngIf='showName && showImg', style="border-bottom:1px solid #D5D5D5")
+  img(src='//{{imgurl}}/myw3/unified-profile-photo/v1/image/{{key[keyName]}}?def=avatar&s=50' style="float:left;width:32px;display:inline-block;margin:5px 0 2px 5px")
+  div(style="font-size: 12px;margin: 10px 20px;word-wrap: break-word;width: auto;margin-left: 50px;") {{key[displayField]}}
+
+img.table-img-circle(
+    *ngIf='!showName && key',
+    alt='user image',
+    style='width:50px',
+    src='//{{imgurl}}/myw3/unified-profile-photo/v1/image/{{key}}?def=avatar&s=50'
+   )

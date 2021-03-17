@@ -1,0 +1,1107 @@
+/*
+
+#f4f4f4 : $ui-01
+#fff: $ui-02
+#e0e0e0 $ui-03
+#393939 $interactive-02
+#24a148 $support-02
+#da1e28 $danger
+#161616 $ui-05
+#c6c6c6 $active-ui
+#8d8d8d #8d8d8d
+
+
+
+
+*/
+
+@import '~@fortawesome/fontawesome-free/css/all.min.css';
+@import '~carbon-components/scss/globals/scss/styles.scss';
+@import '~@carbon/grid/scss/grid';
+@import '~@carbon/type/scss/styles';
+
+@include carbon--type-reset();
+
+:root {
+    --main-black: $ui-05;
+    --panel-overlay: #262626;
+    --panel-overlay-close: $interactive-02;
+}
+
+a:-webkit-any-link {
+    text-decoration: none;
+}
+
+.productive-heading-04 {
+    @include carbon--type-style('productive-heading-04');
+}
+
+.productive-heading-03 {
+    @include carbon--type-style('productive-heading-03');
+}
+
+.productive-heading-01 {
+    @include carbon--type-style('productive-heading-01');
+}
+
+.ibm-padding-top-1 {
+    padding-top: $spacing-06;
+}
+
+html,
+main {
+    margin: 0;
+    height: 100%;
+}
+
+body {
+    background-color: $ui-01;
+}
+
+/* remove this blue border from focus except button */
+*:focus:not(.bx--btn--primary),
+*:active:not(.bx--btn--primary) {
+    outline: 0;
+}
+
+df-standard-form {
+    width: 100%;
+}
+
+.ex--header {
+    display: inline-block;
+    margin-left: 0.4em;
+}
+
+.bx--content {
+    background-color: $ui-01;
+    margin-top: 3.125rem;
+    transform: none;
+    width: 100%;
+    transition: 0.11s ease;
+}
+
+.bx--header > a.bx--header__name:first-child {
+    display: none;
+}
+
+.ex--content {
+    margin-top: 9rem;
+    margin-bottom: 2rem;
+}
+
+fieldset {
+    background-color: $ui-02;
+    padding: 0.5em 1em;
+    box-sizing: border-box;
+    margin-bottom: 2.5rem;
+    legend {
+        color: $ui-02;
+        background-color: #6f6f6f;
+        border: 0.0625rem solid gray;
+        padding: 0.625rem;
+        border-radius: 0.625rem;
+    }
+    a {
+        color: $ui-02;
+        cursor: pointer;
+    }
+    .ui-fieldset-content-wrapper-overflown {
+        overflow: hidden;
+    }
+}
+
+/* the toggling between read and edit mode */
+
+.editmode {
+    .bx--text-input,
+    .bx--dropdown,
+    .bx--combo-box,
+    .bx--number,
+    .bx--number input[type='number'],
+    .ex--radiogroup,
+    .bx--content:not(.ex--band) {
+        background-color: $ui-02;
+    }
+    fieldset.bx--grid,
+    ibm-tab fieldset,
+    .readonly {
+        background-color: $ui-01;
+    }
+}
+
+.bx--text-input {
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+body.editmode {
+    background-color: $ui-02;
+}
+
+/* for form fields */
+
+.bx--col-padding-b {
+    padding-bottom: 1rem;
+}
+
+/* addition to the loading icon when a page loads */
+
+.bx--loading--title {
+    display: flex;
+    padding: 2rem;
+    .bx--loading--small {
+        display: inline-block;
+        margin-left: 0.625rem;
+    }
+    span {
+        margin-left: 0.3125rem;
+        margin-top: 0.625rem;
+    }
+}
+
+/* to color the fields invalid when in edit mode */
+
+input.ng-invalid,
+.ng-invalid.bx--text-area,
+df-question .ng-invalid .ex--radiogroup,
+ibm-dropdown.ng-invalid .bx--dropdown {
+    border: 0.0625rem solid $danger;
+    &:focus {
+        outline: 0.125rem solid $danger;
+    }
+}
+
+/* ibm band is the top band of a detail page */
+.ex--band {
+    background-color: #325c80;
+    z-index: 10;
+    margin-top: 2.5rem;
+    color: $ui-02;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+/* panel stuff */
+
+/* overlay is the first child of the ibm-panel */
+.bx--panel--overlay {
+    bottom: auto;
+    height: auto;
+    padding-bottom: 0rem;
+    background-color: #262626;
+}
+
+.ex--panel-form .bx--panel--overlay {
+    display: none;
+}
+
+.socketconn .ex--panel-form .bx--panel--overlay {
+    display: inline;
+}
+
+.ex--panel-close {
+    text-align: right;
+    cursor: pointer;
+    margin-top: 2rem;
+    background-color: $interactive-02;
+    padding: 0.8125rem;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    svg {
+        fill: $ui-02;
+        margin-right: 1rem;
+    }
+    span {
+        color: $ui-02;
+        margin-right: 0.8125rem;
+        font-weight: 600;
+    }
+}
+
+.ex--action-panel-button {
+    cursor: pointer;
+    font-size: 0.875rem;
+    padding: 0.625rem;
+    color: $active-ui;
+    font-weight: 600;
+    i {
+        margin-right: 0.625rem;
+    }
+}
+
+/* the magic button */
+
+.ex--run-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    border-color: transparent;
+    background: $inverse-support-02;
+    transition: all 0.11s;
+    z-index: 10;
+    padding-top: 0.325rem;
+    cursor: not-allowed;
+    position: fixed;
+    right: 2rem;
+    top: 4rem;
+    fill: $ui-02;
+    filter: blur(10rem);
+    pointer-events: none;
+}
+
+.socketconn {
+    .ex--run-icon {
+        filter: none;
+        cursor: pointer;
+        pointer-events: all;
+    }
+}
+
+/* the form sidenav */
+
+/* the setting header */
+
+.ex--page-detail-header {
+    margin: 3.1rem 0 0;
+    padding: 0 2.5rem 1rem 2.5rem;
+}
+
+df-panel,
+.ex--panel {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.ex--panel-nav {
+    flex-shrink: 0;
+    width: 12rem;
+    &.ex--hasheader {
+        .bx--side-nav__navigation {
+            top: 9.375rem;
+        }
+    }
+    .bx--side-nav__navigation {
+        top: 3rem;
+        position: fixed;
+        left: 0;
+        background-color: #262626;
+        transition: width 0.1s ease;
+        width: 12rem;
+    }
+}
+
+.ex--panel-min .ex--panel-nav {
+    width: 2rem;
+    transition: width 0.8s ease;
+    .ex--panel-icon-slide-right {
+        display: block;
+    }
+    .bx--side-nav__navigation {
+        width: 3rem;
+        transition: width 0.8s ease;
+    }
+    ul {
+        display: none;
+    }
+}
+
+.ex--panel-icon-slide-right {
+    display: none;
+    cursor: pointer;
+    margin-top: 1rem;
+    margin-left: 0.6rem;
+    svg {
+        fill: $ui-02;
+        margin-right: 1rem;
+    }
+}
+
+/* needs explain */
+.ex--panel-form {
+    flex: 1;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.ex--menu-panel-button {
+    cursor: pointer !important;
+    display: block;
+    padding: 0.625rem;
+    padding-left: 1.5rem;
+    margin-bottom: 0.3125rem;
+    color: $active-ui;
+    position: relative;
+    font-weight: 600;
+    &:hover {
+        background-color: $interactive-02;
+    }
+    i {
+        margin-right: 1rem;
+    }
+    &.ex--menu-panel-button-active {
+        background-color: $interactive-02;
+        &::before {
+            background-color: #0f62fe;
+            bottom: 0;
+            content: '';
+            left: 0;
+            position: absolute;
+            top: 0;
+            width: 0.25rem;
+        }
+    }
+}
+
+.ex--menu-panel-close {
+    cursor: pointer;
+}
+
+.ex--menu-panel-title {
+    padding: 0.625rem;
+    padding-left: 1rem;
+    padding-bottom: 1rem;
+    color: #c6c6c6;
+    font-weight: 600;
+    border-bottom: 1px solid gray;
+    div {
+        margin-top: 0.625rem;
+    }
+}
+
+/* the help button */
+
+.ex--help-button {
+    bottom: 1rem;
+    top: unset;
+    right: 1rem;
+    background: $interactive-02;
+    position: fixed;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border-color: transparent;
+    transition: all 0.11s;
+    z-index: 10;
+    fill: $ui-02;
+    cursor: pointer;
+    i {
+        color: $ui-02;
+    }
+}
+
+/*  the socket at the top of the screen connected or not */
+
+.socketconn .socketfa {
+    opacity: 1;
+    fill: $support-02;
+    font-weight: bold;
+}
+
+.socketfa {
+    opacity: 0.5;
+    fill: $ui-02;
+}
+
+/* the ace editor  */
+
+.ace_editor {
+    border: 0.0625rem solid #c8c8c8;
+    border-radius: 0.1875rem;
+    font-size: 0.75rem;
+    &.read .ace_scroller {
+        background-color: $ui-01;
+    }
+}
+
+/* to make the error modal window  */
+.bx--modal-container[aria-label='error'] {
+    background-color: $ui-05;
+    min-height: 20rem;
+    i {
+        color: $danger;
+    }
+    p {
+        color: $active-ui;
+        display: flex;
+        align-items: center;
+        padding: 2rem;
+        font-size: 1.5rem;
+    }
+    .bx--modal-close svg {
+        fill: $ui-02;
+    }
+}
+
+/* modal fixes to support dynamic forms */
+.bx--modal-content df-buttons {
+    position: fixed;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    bottom: 0;
+    right: 0;
+}
+
+/* to make the modal window fullscreen add to the size="lg" a arialable=fulscreen */
+.bx--modal-container--lg[aria-label='fullscreen'] {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    .bx--modal-content {
+        padding: 0;
+    }
+}
+
+.bx--modal-container--lg[aria-label='maximum'] {
+    width: 85%;
+    transform: scaleY(1);
+}
+
+/* this is for the chips model not in carbon */
+
+.p-chips-token {
+    color: #565151;
+    background-color: #e5e0df;
+    border: 0;
+    appearance: none;
+    font-size: 0.75rem;
+    font-weight: 400;
+    line-height: 1rem;
+    letter-spacing: 0.02rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2rem;
+    max-width: 100%;
+    min-height: 1.5rem;
+    margin: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    word-break: break-word;
+    border-radius: 0.9375rem;
+    cursor: default;
+    position: relative;
+    .p-chips-token-label {
+        font-size: 0.875rem;
+        margin-right: 0.625rem;
+    }
+}
+
+.p-chips-input-token {
+    display: inline-block;
+    vertical-align: middle;
+    list-style-type: none;
+    margin: 0 0 0 0.125em;
+    padding: 0.2145rem 0;
+    position: relative;
+    input {
+        border: 0;
+        width: 10rem;
+        outline: medium none;
+        background-color: transparent;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+        -moz-border-radius: 0;
+        -webkit-border-radius: 0;
+        border-radius: 0;
+    }
+}
+
+.p-chips .p-chips-multiple-container {
+    display: block;
+}
+
+.p-chips-token-icon {
+    margin-top: -0.5rem;
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    cursor: pointer;
+    display: inline-block;
+    font: normal normal normal 0.875rem/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    &::before {
+        content: '\00d7';
+    }
+}
+
+/* home page */
+
+.landing-page__banner {
+    background: url(../../public/images/leadspace.jpg) center center / cover no-repeat fixed;
+    width: 100%;
+    margin-left: 0;
+    transition: 0.11s ease;
+    position: relative;
+    margin-top: 3rem;
+    .landing-page__title {
+        margin-top: 3.75rem;
+        font-size: carbon--type-scale(12);
+        color: $ui-02;
+    }
+    .landing-page__subtitle {
+        padding-top: 0.625rem;
+        font-size: carbon--type-scale(9);
+        color: $ui-02;
+    }
+}
+
+#ibm-leadspace-body {
+    margin: 0 auto;
+    min-height: 23.125rem;
+    padding: 1.875rem 0 90rem;
+    z-index: 10;
+}
+
+#ibm-leadspace-content {
+    margin-top: 2rem;
+    color: $ui-02;
+}
+
+/* for the toast messages */
+
+.ex--toast {
+    opacity: 0;
+    position: fixed;
+    z-index: 100;
+    max-width: 25rem;
+    .bx--toast-notification__title {
+        margin-top: 0;
+    }
+    .bx--inline-notification__text-wrapper {
+        display: block;
+    }
+    &.toast-br {
+        right: 0.625rem;
+        bottom: 0.625rem;
+    }
+    &.toast-tr {
+        right: 0.625rem;
+        top: 3.125rem;
+    }
+    &.toast-bl {
+        left: 0.625rem;
+        bottom: 0.625rem;
+    }
+    &.toast-tl {
+        left: 0.625rem;
+        top: 3.125rem;
+    }
+}
+
+/* for the tables */
+
+.bx--data-table {
+    .ex--table-header-expand {
+        width: 2rem;
+    }
+    .ex--table-row-expanded:hover {
+        background: $ui-02;
+        td {
+            background: $ui-02;
+        }
+    }
+    &.bx--data-table--sticky-header {
+        max-height: 30rem;
+        tbody {
+            will-change: auto;
+        }
+    }
+}
+
+.ex--table-white {
+    .bx--data-table {
+        td {
+            background-color: $ui-02;
+        }
+    }
+}
+
+.nohover {
+    .bx--data-table {
+        tbody tr:hover,
+        tbody tr:hover td,
+        tbody tr:hover th {
+            background: none;
+        }
+        tbody {
+            background: #fff;
+        }
+    }
+}
+
+df-table-list .bx--table-toolbar {
+    overflow: visible;
+    z-index: 1;
+    fieldset {
+        border: 1px solid #e0e0e0;
+    }
+}
+
+/* switcher top right */
+
+.bx--switcher__item-divider {
+    color: #525252;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #525252;
+    margin: 1rem 1rem 0.5rem;
+    cursor: none;
+    span {
+        color: $active-ui;
+        font-size: 0.75rem;
+    }
+}
+
+/* some common classes */
+
+.mgt-0 {
+    margin-top: 0;
+}
+
+.mgt-10 {
+    margin-top: 0.625rem;
+}
+
+.mgt-50 {
+    margin-top: 3.125rem;
+}
+
+.mgr-5 {
+    margin-right: 0.625rem;
+}
+
+.mgr-10 {
+    margin-right: 0.625rem;
+}
+
+.mgl-10 {
+    margin-left: 0.625rem;
+}
+
+.mgb-10 {
+    margin-bottom: 0.625rem;
+}
+
+.mgb-20 {
+    margin-bottom: 1.25rem;
+}
+
+.mgb-50 {
+    margin-bottom: 3.125rem;
+}
+
+.mgb-100 {
+    margin-bottom: 6.25rem;
+}
+
+.pd-0 {
+    padding: 0;
+}
+
+.pd-20 {
+    padding: 1.25rem;
+}
+
+.pdt-5 {
+    padding-top: 0.3125rem;
+}
+
+.pdt-0 {
+    padding-top: 0;
+}
+
+.fs-14 {
+    font-size: 0.875rem;
+    .bx--tag {
+        font-size: 0.875rem;
+    }
+}
+
+.dbl {
+    display: block;
+}
+
+.dbf {
+    display: flex;
+}
+
+.dinbl {
+    display: inline-block;
+}
+
+.v-align {
+    display: flex;
+    align-items: center;
+}
+
+.e-align {
+    display: flex;
+    align-items: flex-end;
+}
+
+.bgw {
+    background: $ui-02;
+}
+
+/* disable the run start stop icons */
+
+.ex--action-panel-button.disabled,
+a.disabled,
+i.disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+i.pointer {
+    cursor: pointer;
+}
+
+/* toggle box */
+
+ibm-toggle {
+    .bx--toggle__switch::before {
+        background-color: #4589ff;
+    }
+    .bx--toggle-input__label .bx--toggle__switch {
+        margin-top: 0.4rem;
+    }
+}
+
+/* the status icon */
+.statfa {
+    padding: 0.625rem;
+    background: #e0e0e0;
+    border-radius: 50%;
+    min-width: 3rem;
+    min-height: 3rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.b-align {
+    display: flex;
+    flex-grow: 1;
+    align-self: flex-end;
+    align-items: flex-end;
+    flex-direction: column;
+}
+
+.hidden {
+    display: none;
+}
+
+.h-100 {
+    height: 100%;
+}
+
+.c-white {
+    color: $ui-02;
+}
+
+.c-red {
+    color: $danger;
+}
+
+.c-green {
+    color: $support-02;
+}
+
+.c-gray {
+    color: $interactive-02;
+}
+
+.c-yellow {
+    color: $support-03;
+}
+
+.bgw {
+    background-color: $ui-02;
+}
+
+/* ngrx-graph */
+
+$primary-main: #19579e;
+$primary-dark: #12448e;
+$primary-light: #2066b0;
+$secondary-main: #ff8800;
+$secondary-dark: #bf6600;
+$secondary-light: #ffab4c;
+$primary-white: #ffffff;
+$secondary-white: #f8f8f8;
+$terciary-white: #f1f1f1;
+$cuaternary-white: #e4e4e4;
+$primary-text: #797979;
+
+.chart-container {
+    display: block;
+    height: 25rem;
+    width: 100%;
+}
+
+.chart-outer {
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+.node {
+    &__box {
+        fill: $primary-main;
+        stroke-width: 0.1875rem;
+        stroke: white;
+    }
+    &__text {
+        fill: white;
+    }
+    &__icon {
+        fill: $secondary-main;
+        &__circle {
+            fill: white;
+            &--with-text {
+                -webkit-transform: translateY(1.75rem);
+                -moz-transform: translateY(1.75rem);
+                transform: translateY(1.75rem);
+            }
+            &--without-text {
+                -webkit-transform: translateY(1rem);
+                -moz-transform: translateY(1rem);
+                transform: translateY(1rem);
+            }
+        }
+        &-item {
+            fill: $primary-main;
+            -webkit-transform: scale(0.025, 0.025);
+            -moz-transform: scale(0.025, 0.025);
+            transform: scale(0.025, 0.025);
+            stroke-width: 0.1875rem;
+            stroke: white;
+            &__circle {
+                fill: white;
+            }
+            &--disabled {
+                fill: $primary-text;
+            }
+        }
+        &--with-text {
+            -webkit-transform: scale(0.015, 0.015) translateY(1000rem);
+            -moz-transform: scale(0.015, 0.015) translateY(1000rem);
+            transform: scale(0.015, 0.015) translateY(1000rem);
+        }
+        &--without-text {
+            -webkit-transform: scale(0.015, 0.015) translateY(6.25rem);
+            -moz-transform: scale(0.015, 0.015) translateY(6.25rem);
+            transform: scale(0.015, 0.015) translateY(6.25rem);
+        }
+    }
+    &__header {
+        -webkit-transform: translate(10rem, -6.25rem);
+        -moz-transform: translate(10rem, -6.25rem);
+        transform: translate(10rem, -6.25rem);
+        &__text {
+            font-size: 30rem;
+            fill: $primary-text;
+        }
+        &__icon {
+            fill: rgba($primary-main, 0.5);
+        }
+        &--start {
+            -webkit-transform: translate(0rem, -3.125rem);
+            -moz-transform: translate(0rem, -3.125rem);
+            transform: translate(0rem, -3.125rem);
+        }
+    }
+    &--disabled {
+        .node__box {
+            fill: $terciary-white;
+        }
+        .node__text,
+        .node__icon,
+        .node__icon__circle {
+            fill: $primary-text;
+        }
+        .node__icon__circle {
+            stroke-width: 0.1875rem;
+            stroke: white;
+        }
+    }
+}
+
+.line {
+    stroke: transparent;
+    &--enabled {
+        stroke: $primary-main;
+    }
+    &--disabled {
+        stroke: $primary-text;
+    }
+}
+
+/* to remove later */
+
+.p-toggleable-content[aria-hidden='true'] {
+    height: 0px;
+    overflow: hidden;
+}
+
+/* prime radion button */
+
+.ex--radiogroup {
+    background-color: $ui-01;
+    padding: 0.5em 1em;
+    min-height: 2.5rem;
+    border-bottom: 1px solid #8d8d8d;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+/*  this is for the background for the radio buttons in the modal */
+.bx--modal {
+    .ex--radiogroup {
+        background-color: $ui-02;
+    }
+    input:read-only {
+        background-color: $ui-01;
+    }
+}
+
+p-radiobutton {
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+    .p-radiobutton-label {
+        margin-left: 0.5rem;
+        line-height: 1;
+        &.p-disabled {
+            color: $active-ui;
+            cursor: not-allowed;
+        }
+    }
+}
+
+.p-radiobutton {
+    display: inline-flex;
+    cursor: pointer;
+    user-select: none;
+    vertical-align: bottom;
+    width: 20px;
+    height: 20px;
+    .p-radiobutton-box {
+        border: 1px solid $ui-05;
+        background: $ui-01;
+        width: 1.125rem;
+        height: 1.125rem;
+        color: #495057;
+        border-radius: 50%;
+        transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+        &.p-disabled {
+            border-color: $active-ui;
+            cursor: not-allowed;
+        }
+    }
+    .p-field-radiobutton {
+        margin-bottom: 1rem;
+        display: flex;
+        -ms-flex-align: center;
+        align-items: center;
+    }
+
+    .p-hidden-accessible {
+        border: 0;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+
+    .p-radiobutton-box.p-highlight {
+        .p-radiobutton-icon::before {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+            background-color: $ui-05;
+            border-radius: 50%;
+            transform: scale(0.5);
+            content: '';
+        }
+        &.p-disabled .p-radiobutton-icon::before {
+            background-color: #8d8d8d;
+        }
+    }
+}
+
+/* back to top button  */
+#backtotop {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: $active-ui;
+    border-color: transparent;
+    position: fixed;
+    bottom: 1rem;
+    right: 2rem;
+    transition: all 0.11s;
+    cursor: pointer;
+    z-index: 9000;
+    padding-top: 0.325rem;
+    color: $ui-05;
+    display: none;
+    &.active {
+        display: block;
+    }
+}
+
+/* tiny editor hide borders for dynamic loading */
+
+df-tiny-editor textarea:first-child {
+    border: none;
+    resize: none;
+    background: transparent;
+}
+
+.tinymce_editor {
+    & blockquote {
+        border-left: 2px solid #ccc;
+        margin-left: 1.5rem;
+        padding-left: 1rem;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        margin-inline-start: 40px;
+        margin-inline-end: 40px;
+    }
+    & ul,
+    ol {
+        font-size: 1rem;
+        line-height: 2rem;
+        margin-left: 2rem;
+    }
+
+    & ul {
+        list-style-type: square;
+    }
+    & ol {
+        list-style-type: decimal;
+    }
+}
+
+button.bx--overflow-menu {
+    border-radius: 50%;
+    border-color: transparent;
+    background: #42be65;
+}

@@ -1,0 +1,464 @@
+.ibm-fluid {
+    margin: 0 auto;
+    padding: 0 10px 10px
+}
+
+.ui-widget-content .ui-fieldset-legend a {
+    color: #fff
+}
+
+html .ibm-type .ui-widget * :not(.fa):not(.mce-ico):not(.pi):not([class*="ace_"]) {
+    font-family: "ibm-plex-sans", "Helvetica Neue", Arial, sans-serif;
+}
+
+div[class*="ace_"] {
+    font-size: inherit;
+}
+
+.ibm-fluid .ibm-fluid {
+    margin-left: -10px;
+    margin-right: -10px
+}
+
+@media only screen and (min-width:0) and (max-width:579px) {
+    .ibm-fluid .ibm-fluid {
+        margin-left: -20px;
+        margin-right: -20px
+    }
+}
+
+@media(min-width:768px) {
+    .ibm-fluid [class*=ibm-col-].ibm-fluid-padding {
+        padding-left: 6%;
+        padding-right: 6%;
+    }
+}
+
+/* some settings for mobile stuff */
+
+@media only screen and (min-width:0) and (max-width:579px) {
+
+    .ibm-sitenav-menu-list,
+    .ibm-mh-marketplace-link {
+        display: none;
+    }
+}
+
+.ibm-fluid,
+.ibm-fluid [class*=ibm-col-] {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box
+}
+
+/*
+.ibm-fluid::after,
+.ibm-fluid [class*=ibm-col-]::after {
+    content: '';
+    display: table;
+    clear: both
+}
+*/
+
+.ibm-fluid [class*=ibm-col-] {
+    float: none;
+    margin: 0;
+    padding: 0 10px
+}
+
+.ibm-fluid .ibm-col-small-12-6 {
+    float: left;
+    width: 50%
+}
+
+@media(min-width:768px) {
+    .ibm-fluid .ibm-col-12-1 {
+        width: 8.3333333333%
+    }
+
+    .ibm-fluid .ibm-col-12-2 {
+        width: 16.6666666667%
+    }
+
+    .ibm-fluid .ibm-col-12-3 {
+        width: 25%
+    }
+
+    .ibm-fluid .ibm-col-12-4 {
+        width: 33.3333333333%
+    }
+
+    .ibm-fluid .ibm-col-12-5 {
+        width: 41.6666666667%
+    }
+
+    .ibm-fluid .ibm-col-12-6 {
+        width: 50%
+    }
+
+    .ibm-fluid .ibm-col-12-7 {
+        width: 58.3333333333%
+    }
+
+    .ibm-fluid .ibm-col-12-8 {
+        width: 66.6666666667%
+    }
+
+    .ibm-fluid .ibm-col-12-9 {
+        width: 75%
+    }
+
+    .ibm-fluid .ibm-col-12-10 {
+        width: 83.3333333333%
+    }
+
+    .ibm-fluid .ibm-col-12-11 {
+        width: 91.6666666667%
+    }
+
+    .ibm-fluid .ibm-col-12-12 {
+        width: 100%
+    }
+
+    .ibm-fluid [class*=ibm-col-] {
+        float: left
+    }
+
+    .ibm-fluid .ibm-fluid {
+        padding: 0;
+        width: calc(100%+20px)
+    }
+}
+
+@media(min-width:580px) and (max-width:768px) {
+    .ibm-fluid .ibm-col-12-1 {
+        width: 25%
+    }
+
+    .ibm-fluid .ibm-col-12-2 {
+        width: 25%
+    }
+
+    .ibm-fluid .ibm-col-12-3 {
+        width: 25%
+    }
+
+    .ibm-fluid .ibm-col-12-4 {
+        width: 50%
+    }
+
+    .ibm-fluid .ibm-col-12-5 {
+        width: 50%
+    }
+
+    .ibm-fluid .ibm-col-12-6 {
+        width: 50%
+    }
+
+    .ibm-fluid .ibm-col-12-7 {
+        width: 75%
+    }
+
+    .ibm-fluid .ibm-col-12-8 {
+        width: 75%
+    }
+
+    .ibm-fluid .ibm-col-12-9 {
+        width: 75%
+    }
+
+    .ibm-fluid .ibm-col-12-10 {
+        width: 100%
+    }
+
+    .ibm-fluid .ibm-col-12-11 {
+        width: 100%
+    }
+
+    .ibm-fluid .ibm-col-12-12 {
+        width: 100%
+    }
+
+    .ibm-fluid [class*=ibm-col-] {
+        float: left
+    }
+
+    .ibm-fluid .ibm-fluid {
+        padding: 0;
+        width: calc(100%+20px)
+    }
+}
+
+@media(min-width:580px) and (max-width:999px) {
+    .ibm-fluid .ibm-col-medium-12-1 {
+        width: 8.3333333333%
+    }
+
+    .ibm-fluid .ibm-col-medium-12-2 {
+        width: 16.6666666667%
+    }
+
+    .ibm-fluid .ibm-col-medium-12-3 {
+        width: 25%
+    }
+
+    .ibm-fluid .ibm-col-medium-12-4 {
+        width: 33.3333333333%
+    }
+
+    .ibm-fluid .ibm-col-medium-12-5 {
+        width: 41.6666666667%
+    }
+
+    .ibm-fluid .ibm-col-medium-12-6 {
+        width: 50%
+    }
+
+    .ibm-fluid .ibm-col-medium-12-7 {
+        width: 58.3333333333%
+    }
+
+    .ibm-fluid .ibm-col-medium-12-8 {
+        width: 66.6666666667%
+    }
+
+    .ibm-fluid .ibm-col-medium-12-9 {
+        width: 75%
+    }
+
+    .ibm-fluid .ibm-col-medium-12-10 {
+        width: 83.3333333333%
+    }
+
+    .ibm-fluid .ibm-col-medium-12-11 {
+        width: 91.6666666667%
+    }
+
+    .ibm-fluid .ibm-col-medium-12-12 {
+        width: 100%
+    }
+}
+
+.ibm-fluid.ibm-seamless {
+    padding-left: 20px;
+    padding-right: 20px
+}
+
+.ibm-fluid.ibm-seamless [class*=ibm-col-] {
+    padding: 0
+}
+
+.ibm-masthead-iconsonly>li>button.ibm-masthead-signin-link.authuser,
+.ibm-masthead-iconsonly>li>button.ibm-masthead-signin-link.authuser:hover {
+    background-image: url("../../../../public/images/user.png");
+    background-size: cover;
+}
+
+.ibm-ind-link button[class*="ibm-btn-"][class*="-btn"]:before {
+    left: .4em;
+}
+
+.wp-6 {
+    width: 6px;
+}
+
+input,
+select,
+textarea {
+    padding: 5px;
+    margin-top: 2px;
+}
+
+img {
+    border-radius: 15px;
+}
+
+a {
+    cursor: pointer;
+}
+
+div[layout-wrap] {
+    flex-wrap: wrap;
+}
+
+table {
+    font-size: 12px;
+}
+
+.ibm-data-table tbody {
+    font-size: 13px;
+}
+
+a[role="button"] {
+    cursor: pointer;
+}
+
+.col-icon {
+    width: 38px;
+    text-align: center;
+    font-size: 16px;
+}
+
+/* fix to make the radio button full */
+
+.ibm-fluid .ui-radiobutton-icon {
+    display: none;
+}
+
+.ui-autocomplete-multiple ul>li:before {
+    content: "";
+}
+
+.ibm-fluid {
+    padding: 0px;
+}
+
+.ibm-fluid .ibm-sitenav-menu-list li.ibm-active ul {
+    display: none !important;
+}
+
+.ibm-fluid .ibm-sitenav-menu-list li.ibm-active:hover ul {
+    display: block !important;
+}
+
+#ibm-home a {
+    background-image: url(../../../../public/images/ibm.png);
+    background-size: 85%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.ibm-fluid #ibm-home a:before {
+    content: '';
+}
+
+.dr-home {
+    margin-left: 20px;
+}
+
+.dr-masthead-divider {
+    width: 1px;
+    float: left;
+    height: 26px;
+    background-color: #bebebe;
+    margin-top: 12px;
+}
+
+.pd-0 {
+    padding: 0 !important;
+}
+
+.pd-5 {
+    padding: 5 !important;
+}
+
+.pd-l-10 {
+    padding-left: 10px !important;
+}
+
+/*  for the modals freeze */
+
+.io-app.ibm-no-scroll {
+    overflow: hidden;
+}
+
+/* add a margin to the footer if the header becomes sticky */
+
+.ibm-sitenav-menu-sticky footer {
+    margin-top: 50px;
+    display: block;
+}
+
+.footer-sub {
+    clear: both;
+    height: 50px;
+    color: #3B4545;
+    margin-left: 30px;
+    text-align: right;
+    margin-right: 5%;
+}
+
+.clear-l {
+    clear: left
+}
+
+.io-app th .ui-column-title {
+    display: inline !important;
+}
+
+/* for our 4 modules */
+
+.leap-500 {
+    background: url('../../../../public/images/error-page2.jpg') center / cover no-repeat;
+}
+
+.leap-403 {
+    min-height: 500px;
+    background: url('../../../../public/images/error-page1.jpg') center / cover no-repeat;
+}
+
+.leap-404 {
+    background: url('../../../../public/images/error-page1.jpg') center / cover no-repeat;
+}
+
+.leap-401 {
+    background: url('../../../../public/images/error-page1.jpg') center / cover no-repeat;
+}
+
+/* grow stuff */
+
+body.ibm-fluid .ui-toast .ui-toast-message.ui-toast-message-error {
+    background-color: #e71d32;
+}
+
+body.ibm-fluid .ui-toast .ui-toast-message.ui-toast-message-info {
+    background-color: #4178be;
+}
+
+body.ibm-fluid .ui-toast .ui-toast-message.ui-toast-message-warn {
+    background-color: #fdd600;
+}
+
+body.ibm-fluid .ui-toast .ui-toast-message.ui-toast-message-error,
+body.ibm-fluid .ui-toast .ui-toast-message.ui-toast-message-info,
+body.ibm-fluid .ui-toast .ui-toast-message.ui-toast-message-info .ui-toast-close-icon,
+body.ibm-fluid .ui-toast .ui-toast-message.ui-toast-message-error .ui-toast-close-icon {
+    color: #fff;
+}
+
+body.ibm-fluid .ui-toast-detail {
+    font-size: 13px;
+}
+
+body.ibm-fluid .ui-toast .ui-toast-message {
+    border-radius: 5px;
+}
+
+/* overwrite prime default icon size */
+
+body.ibm-fluid .pi:not(.ui-toast-icon) {
+    font-size: 14px;
+}
+
+body.ibm-fluid a {
+    color: #264a60;
+    text-decoration: none;
+}
+
+body.ibm-fluid .ui-paginator .ui-dropdown .ui-dropdown-label,
+body.ibm-fluid .ui-paginator .ui-dropdown .ui-dropdown-trigger {
+    color: #586262;
+}
+
+body.ibm-fluid .ibm-required {
+    color: #ad1625;
+}
+
+body.ibm-fluid .ui-treetable .ui-treetable-loading-icon {
+    font-size: 2em;
+}
+
+body.ibm-fluid.ibm-processing .ibm-btn-pri {
+    pointer-events: none;
+    opacity: 0.5;
+}

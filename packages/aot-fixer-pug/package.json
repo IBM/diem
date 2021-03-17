@@ -1,0 +1,28 @@
+{
+  "name": "@mydiem/aot-fixer-pug",
+  "version": "1.0.2",
+  "author": {
+    "name": "Guy Huinen (clone from Team Sofa)"
+  },
+  "bin": {
+    "aot-fixer-pug": "./bin/cli.js"
+  },
+  "dependencies": {
+    "commander": "^7.1.0",
+    "glob": "^7.1.6",
+    "pug-code-gen": "^2.0.3",
+    "pug-lexer": "^5.0.1",
+    "pug-parser": "^6.0.0",
+    "pug-runtime": "^3.0.1",
+    "pug-source-gen": "^0.0.2",
+    "pug-walk": "^2.0.0",
+    "shorthash": "^0.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.ibm.com/io-applications2/ng2-aot-fixer-pug.git"
+  },
+  "description": "A small tool to generate typescript files from .pug template files. Useful for ng2 devlopment",
+  "homepage": "https://github.ibm.com/io-applications2/ng2-aot-fixer-pug#readme",
+  "license": "MIT"
+}

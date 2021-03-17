@@ -1,0 +1,21 @@
+{
+    "extends": "../webpack/tsconfig.base.json",
+    "compilerOptions": {
+        "skipLibCheck": true,
+        "baseUrl": "./",
+        "module": "ES2020",
+        "paths": {
+            "@interfaces": ["../server/interfaces/index"]
+        },
+        "typeRoots": ["../../node_modules/@types"],
+        "lib": ["es2020", "dom"]
+    },
+    "exclude": ["../../node_modules"],
+    "angularCompilerOptions": {
+        "entryModule": "app.module#AppModule",
+        "skipTemplateCodegen": true,
+        "disableTypeScriptVersionCheck": true,
+        "fullTemplateTypeCheck": true,
+        "enableIvy": true
+    }
+}

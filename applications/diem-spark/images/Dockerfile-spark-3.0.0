@@ -1,0 +1,18 @@
+# v3.0.0_2021-02-25_1
+FROM quay.io/diem/base-spark:3.0.0
+
+LABEL   maintainer=guy_huinen@be.ibm.com \
+        org.label-schema.description="Spark Image for Diem" \
+        org.label-schema.name="spark" \
+        org.label-schema.version=$BUILD_VERSION
+
+ARG BUILD_DATE
+LABEL org.label-schema.build-date=$BUILD_DATE
+
+COPY jars/* /opt/spark/jars/
+
+WORKDIR /opt/
+
+USER root
+
+RUN chmod -R 775 .

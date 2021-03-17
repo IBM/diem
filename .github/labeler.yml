@@ -1,0 +1,24 @@
+aot-fixer-pug:
+  - packages/aot-fixer-pugl/**/*
+diem-angular-util:
+  - packages/diem-angular-util/**/*
+diem-common:
+  - packages/diem-common/**/*
+diem-util:
+  - packages/diem-util/**/*
+diem-forms:
+  - packages/diem-forms/**/*
+aot-fixer:
+  - packages/aot-fixer-pug/**/*
+diem-spark:
+  - applications/diem-spark/**/*
+nodepy:
+  - applications/diem-nodepy/**/*
+diem-core:
+  - applications/diem-core/**/*
+diem-help:
+  - applications/diem-help/**/*
+workflow:
+  - .github/**/*
+repo:
+  - ./*

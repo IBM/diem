@@ -1,0 +1,146 @@
+{
+    "config": {
+        "Title": "Diem Hel and Documentatiom",
+        "background": "./diem-help/public/images/library.jpg"
+    },
+    "items": [
+        { "title": "Welcome", "name": "about", "location": "about.md" },
+        { "title": "Board Now", "name": "boarding", "location": "boarding.md" },
+        {
+            "section": {
+                "title": "Architecture",
+                "items": [
+                    { "title": "Cloud Architecture", "name": "cloud", "location": "architecture/cloud.md" },
+                    {
+                        "title": "Execution Flow",
+                        "name": "execution_flow",
+                        "location": "architecture/execution_flow.md"
+                    }
+                ]
+            }
+        },
+        {
+            "section": {
+                "title": "Job Types",
+                "items": [
+                    { "title": "Data Transfer", "name": "datatransfer", "location": "jobtypes/datatransfer.md" },
+                    { "title": "Statement", "name": "statement", "location": "jobtypes/statement.md" },
+                    { "title": "Scala", "name": "scala", "location": "jobtypes/scala.md" },
+                    { "title": "URL Get Post", "name": "urlgetpost", "location": "jobtypes/urlgetpost.md" },
+                    { "title": "Custom Code", "name": "customcode", "location": "jobtypes/customcode.md" },
+                    { "title": "Pipelines", "name": "pipelines", "location": "jobtypes/pipelines.md" },
+                    { "title": "Partitioning", "name": "partitioning", "location": "jobtypes/partitioning.md" }
+                ]
+            }
+        },
+        {
+            "section": {
+                "title": "Parameters",
+                "items": [
+                    { "title": "About Parameters", "name": "param_about", "location": "parameters/about.md" },
+                    { "title": "Values", "name": "param_values", "location": "parameters/values.md" },
+                    { "title": "Config Maps", "name": "param_configmaps", "location": "parameters/configmaps.md" },
+                    { "title": "File Options", "name": "param_fileoptions", "location": "parameters/fileoptions.md" },
+                    {
+                        "title": "Mail (Job)",
+                        "name": "param_mailoptions_job",
+                        "location": "parameters/mailoptions_job.md"
+                    },
+                    {
+                        "title": "Mail (Content)",
+                        "name": "param_mailoptions_content",
+                        "location": "parameters/mailoptions_content.md"
+                    },
+                    { "title": "Connections", "name": "param_connections", "location": "parameters/connections.md" },
+                    { "title": "Slack", "name": "param_slack", "location": "parameters/slack.md" },
+                    { "title": "Spark", "name": "param_spark", "location": "parameters/spark.md" },
+                    { "title": "Pipeline", "name": "param_pipeline", "location": "parameters/pipeline.md" },
+                    { "title": "Config Overwrite", "name": "param_config", "location": "parameters/config.md" },
+                    { "title": "PIP", "name": "param_pip", "location": "parameters/pip.md" }
+                ]
+            }
+        },
+        {
+            "section": {
+                "title": "Integrations",
+                "items": [
+                    { "title": "Connections", "name": "int_connections", "location": "integrations/connections.md" },
+                    { "title": "Web Hooks", "name": "int_webhooks", "location": "integrations/webhooks.md" },
+                    { "title": "Files", "name": "int_files", "location": "integrations/files.md" },
+                    { "title": "Config Maps", "name": "int_configmaps", "location": "integrations/configmaps.md" },
+                    { "title": "Tags", "name": "int_tags", "location": "integrations/tags.md" },
+                    { "title": "Templates", "name": "int_templates", "location": "integrations/templates.md" },
+                    {
+                        "title": "Code Snippets",
+                        "name": "int_codesnippets",
+                        "location": "integrations/codesnippets.md"
+                    },
+                    { "title": "Box Integration", "name": "int_box", "location": "integrations/box.md" },
+                    { "title": "GitHub Integration", "name": "int_git", "location": "integrations/git.md" }
+                ]
+            }
+        },
+        {
+            "section": {
+                "title": "Rest Services",
+                "items": [
+                    { "title": "Job Rest", "name": "jobrest", "location": "rest/jobrest.md" },
+                    { "title": "Services Rest", "name": "servicesrest", "location": "rest/servicesrest.md" }
+                ]
+            }
+        },
+        {
+            "section": {
+                "title": "Administration",
+                "items": [
+                    { "title": "Profiles", "name": "profiles", "location": "administration/profiles.md" },
+                    { "title": "Organizations", "name": "orgs", "location": "administration/orgs.md" },
+                    { "title": "SSO", "name": "sso", "location": "administration/sso.md" }
+                ]
+            }
+        },
+        {
+            "section": {
+                "title": "Utilities",
+                "items": [
+                    { "title": "Flow Charts", "name": "test", "location": "utilities/mermaid.md" },
+                    { "title": "DB2 Snippets", "name": "db2-snippet", "location": "utilities/db2-snippets.md" },
+                    {
+                        "title": "DB2 Partitioning",
+                        "name": "db2-partitioning",
+                        "location": "utilities/db2-partitioning.md"
+                    },
+                    { "title": "PostgresQL Related", "name": "postgresql", "location": "utilities/postgresql.md" },
+                    { "title": "Python Related", "name": "python", "location": "utilities/python.md" }
+                ]
+            }
+        },
+        {
+            "section": {
+                "title": "Installing",
+                "items": [
+                    { "title": "Local Setup", "name": "localsetup", "location": "installing/localsetup.md" },
+                    { "title": "Spark", "name": "spark", "location": "installing/spark.md" },
+                    { "title": "Spark Operator", "name": "spark-operator", "location": "installing/spark-operator.md" },
+                    { "title": "Yalm Files", "name": "yamlfiles", "location": "installing/yaml/readme.md" }
+                ]
+            }
+        },
+        { "title": "divider" },
+        { "title": "Diem Application", "location": "//diem.mybluemix.net/etl-mgr/home" },
+        { "title": "Github", "location": "//github.ibm.com/CIO-SETS/diem" },
+        { "title": "divider" },
+
+        {
+            "section": {
+                "title": "Contributing",
+                "items": [
+                    { "title": "Contributing", "name": "contribution", "location": "contributing/contributing.md" },
+                    { "title": "Adding Media", "name": "media", "location": "contributing/media.md" },
+                    { "title": "Markdown", "name": "markdown", "location": "contributing/markdown.md" },
+                    { "title": "Diem Images", "name": "diem-images", "location": "contributing/diem-images.md" }
+                ]
+            }
+        }
+    ]
+}

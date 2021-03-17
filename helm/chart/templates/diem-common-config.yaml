@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.common.config.configmapref }}
+  namespace: {{ .Release.Namespace }}
+data:
+  K8_INSTANCE: {{ .Values.common.config.K8_INSTANCE }}
+  K8_SYSTEM: {{ .Values.common.config.K8_SYSTEM }}
+  K8_SYSTEM_NAME: {{ .Values.common.config.K8_SYSTEM_NAME }}
+  K8_APPURLSHORT: {{ .Values.ingress.host }}

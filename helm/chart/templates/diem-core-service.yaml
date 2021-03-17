@@ -1,0 +1,21 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.core.deployment.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.core.deployment.name }}
+    tier: {{ .Values.core.deployment.tier }}
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.core.deployment.port }}
+      targetPort: {{ .Values.core.deployment.targetPort }}
+  selector:
+    app: {{ .Values.core.deployment.name }}
+    tier: {{ .Values.core.deployment.tier }}
+  type: ClusterIP
+  sessionAffinity: None
+status:
+  loadBalancer: {}

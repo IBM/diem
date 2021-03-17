@@ -1,0 +1,820 @@
+/*
+
+#f4f4f4 : $ui-01
+#fff: $ui-02
+#e0e0e0 $ui-03
+#393939 $interactive-02
+#24a148 $support-02
+#da1e28 $danger
+#161616 $ui-05
+#c6c6c6 $active-ui
+#8d8d8d #8d8d8d
+
+
+
+
+
+*/
+
+@import '~highlight.js/scss/vs2015.scss';
+
+//@import '~font-awesome/css/font-awesome.min.css';
+@import '~@fortawesome/fontawesome-free/css/all.min.css';
+@import '~carbon-components/scss/globals/scss/styles.scss';
+@import '~@carbon/grid/scss/grid';
+@import '~@carbon/type/scss/styles';
+
+@include carbon--type-reset();
+
+:root {
+    --main-black: $ui-05;
+    --panel-overlay: #262626;
+    --panel-overlay-close: $interactive-02;
+}
+
+a:-webkit-any-link {
+    text-decoration: none;
+}
+
+.productive-heading-04 {
+    @include carbon--type-style('productive-heading-04');
+}
+
+.productive-heading-03 {
+    @include carbon--type-style('productive-heading-03');
+}
+
+.productive-heading-01 {
+    @include carbon--type-style('productive-heading-01');
+}
+
+.ibm-padding-top-1 {
+    padding-top: $spacing-06;
+}
+
+html,
+main {
+    margin: 0;
+    height: 100%;
+}
+
+body {
+    background-color: $ui-01;
+}
+
+/* remove this blue border from focus except button */
+*:focus:not(.bx--btn--primary),
+*:active:not(.bx--btn--primary) {
+    outline: 0;
+}
+
+.bx--header > a.bx--header__name:first-child {
+    display: none;
+}
+
+.ex--header {
+    display: inline-block;
+    margin-left: 0.4em;
+}
+
+.ex--header_global {
+    display: flex;
+    flex: 1 1;
+    justify-content: flex-end;
+    height: 100%;
+}
+
+.bx--side-nav__icon:not(.bx--side-nav__submenu-chevron) {
+    margin-right: 0;
+}
+
+.bx--content {
+    background-color: $ui-01;
+    margin-top: 3.125rem;
+    transform: none;
+    width: 100%;
+    transition: 0.11s ease;
+}
+
+/* diem help css */
+
+.diem--content {
+    .bx--side-nav__item.bx--side-nav__item--icon a.bx--side-nav__link {
+        padding-left: 2rem;
+    }
+    .bx--side-nav {
+        color: #c6c6c6;
+        background-color: #161616;
+        height: 100%;
+    }
+
+    a.bx--side-nav__link {
+        padding-left: 0px;
+    }
+
+    a.bx--side-nav__link > .bx--side-nav__link-text,
+    .bx--side-nav__submenu-title:not(:hover) {
+        color: #c6c6c6;
+    }
+    .bx--side-nav__icon > svg {
+        fill: #c6c6c6;
+    }
+
+    .bx--side-nav__submenu {
+        padding-left: 0px;
+    }
+
+    .LeftNav-module--divider--1Z49I {
+        margin: 0.5rem 1rem;
+        border-color: #393939;
+        border-style: solid;
+        border-bottom: none;
+    }
+
+    a.bx--side-nav__link.LeftNav-module--outboundLink--13-_V {
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        padding-left: 1rem;
+    }
+
+    .bx--side-nav__item:not(.bx--side-nav__item--active) > .bx--side-nav__link:hover > span,
+    .bx--side-nav__item:not(.bx--side-nav__item--active) .bx--side-nav__menu-item > .bx--side-nav__link:hover > span {
+        color: #f4f4f4 !important;
+    }
+
+    a.bx--side-nav__link.LeftNav-module--outboundLink--13-_V,
+    .bx--side-nav__link,
+    .bx--side-nav__submenu {
+        &:hover {
+            background-color: #393939 !important;
+            color: #f4f4f4 !important;
+        }
+    }
+
+    a.bx--side-nav__link[aria-current='page'] {
+        background-color: #393939 !important;
+    }
+
+    a.bx--side-nav__link[aria-current='page'] > span {
+        color: #c6c6c6;
+    }
+
+    .bx--side-nav__item--active .bx--side-nav__submenu[aria-expanded='false'] {
+        background-color: #393939 !important;
+    }
+
+    .bx--side-nav__item--active .bx--side-nav__submenu-title {
+        color: #f4f4f4 !important;
+    }
+
+    blockquote,
+    q {
+        quotes: none;
+        padding: 0 1em;
+        color: #525252;
+        border-left: 0.25em solid #dfe2e5;
+        margin-top: 0;
+        margin-bottom: 16px;
+    }
+
+    p > img {
+        max-width: 100%;
+    }
+}
+
+.bx--data-table th {
+    padding-left: 1rem;
+}
+
+.PageHeader-module--text--1cbUz {
+    line-height: 1.13;
+    font-size: 4.75rem;
+    font-weight: 300;
+    letter-spacing: 0;
+    margin-bottom: 2rem;
+    margin-top: auto;
+}
+
+.Main-module--padded--_Y6lG {
+    min-height: calc(100vh - 40rem);
+    padding-top: 80px;
+    padding-bottom: 10rem;
+}
+
+.container {
+    background: var(--cds-ui-background, #f4f4f4);
+    width: 100%;
+    margin-left: 0;
+    transition: 0.11s ease;
+    position: relative;
+    min-height: calc(100vh - 48px);
+
+    .bx--grid {
+        padding-left: 400px;
+        padding-right: 2rem;
+        margin: 0;
+    }
+    .ex-doc-header {
+        --height: 20rem;
+        height: var(--height);
+        background-color: #000;
+        color: #fff;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        border-bottom: 1px solid #393939;
+        min-height: 250px;
+        resize: both;
+    }
+}
+
+section {
+    pre:not(.mermaid) {
+        background-color: rgb(22, 22, 22);
+        color: rgb(255, 255, 255);
+        padding: 1rem;
+        position: relative;
+        overflow: auto;
+        width: 100%;
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+        code {
+            position: relative;
+            color: #fff;
+            font-family: IBM Plex Mono, Menlo, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier, monospace;
+            font-size: 0.875rem;
+            font-weight: 400;
+            line-height: 1.43;
+            letter-spacing: 0.32px;
+        }
+    }
+
+    h2,
+    h3 {
+        --space: 4rem;
+        margin-top: var(--space);
+        font-weight: 400;
+        line-height: 1.25;
+        letter-spacing: 0;
+        margin-bottom: 2rem;
+    }
+    h2 {
+        font-size: 2rem;
+    }
+
+    p {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    table.bx--data-table tbody tr td {
+        background: #fff;
+    }
+
+    table.bx--data-table2 tbody tr td {
+        font-size: 16px;
+        background: transparent;
+        padding: 5px;
+    }
+}
+
+/* other stuff */
+
+.preview-header-wrapper {
+    display: none;
+    margin-top: 0;
+}
+
+.ex--content {
+    margin-top: 9rem;
+    margin-bottom: 2rem;
+}
+
+/* addition to the loading icon when a page loads */
+
+.bx--loading--title {
+    display: flex;
+    padding: 2rem;
+    .bx--loading--small {
+        display: inline-block;
+        margin-left: 0.625rem;
+    }
+    span {
+        margin-left: 0.3125rem;
+        margin-top: 0.625rem;
+    }
+}
+
+/* overlay is the first child of the ibm-panel */
+.bx--panel--overlay {
+    //top: 2.5rem; /* this sets the right panel top correct */
+    bottom: auto;
+    height: auto;
+    padding-bottom: 0rem;
+    background-color: #262626;
+}
+
+.ex--panel-form .bx--panel--overlay {
+    display: none;
+}
+
+.ex--panel-close {
+    text-align: right;
+    cursor: pointer;
+    margin-top: 2rem;
+    background-color: $interactive-02;
+    padding: 0.8125rem;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    svg {
+        fill: $ui-02;
+        margin-right: 1rem;
+    }
+    span {
+        color: $ui-02;
+        margin-right: 0.8125rem;
+        font-weight: 600;
+    }
+}
+
+.ex--action-panel-button {
+    cursor: pointer;
+    font-size: 0.875rem;
+    padding: 0.625rem;
+    color: $active-ui;
+    font-weight: 600;
+    i {
+        margin-right: 0.625rem;
+    }
+}
+
+/* the magic button */
+
+.ex--run-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    border-color: transparent;
+    background: $inverse-support-02;
+    transition: all 0.11s;
+    z-index: 10;
+    padding-top: 0.325rem;
+    cursor: not-allowed;
+    position: fixed;
+    right: 2rem;
+    top: 4rem;
+    fill: $ui-02;
+    filter: blur(10rem);
+    pointer-events: none;
+}
+
+.socketconn {
+    .ex--run-icon {
+        filter: none;
+        cursor: pointer;
+        pointer-events: all;
+    }
+}
+
+/* the form sidenav */
+
+/* the setting header */
+
+.ex--page-detail-header {
+    margin: 3.1rem 0 0;
+    padding: 0 2.5rem 1rem 2.5rem;
+}
+
+df-panel,
+.ex--panel {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.ex--panel-nav {
+    flex-shrink: 0;
+    width: 12rem;
+    // transition: width 0.1s ease;
+    &.ex--hasheader {
+        .bx--side-nav__navigation {
+            top: 9.375rem;
+        }
+    }
+    .bx--side-nav__navigation {
+        top: 3rem;
+        position: fixed;
+        left: 0;
+        background-color: #262626;
+        transition: width 0.1s ease;
+        width: 12rem;
+    }
+}
+
+.ex--panel-min .ex--panel-nav {
+    width: 2rem;
+    transition: width 0.8s ease;
+    .ex--panel-icon-slide-right {
+        display: block;
+    }
+    .bx--side-nav__navigation {
+        width: 3rem;
+        transition: width 0.8s ease;
+    }
+    ul {
+        display: none;
+    }
+}
+
+.ex--panel-icon-slide-right {
+    display: none;
+    cursor: pointer;
+    margin-top: 1rem;
+    margin-left: 0.6rem;
+    svg {
+        fill: $ui-02;
+        margin-right: 1rem;
+    }
+}
+
+/* needs explain */
+.ex--panel-form {
+    flex: 1;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.ex--menu-panel-button {
+    cursor: pointer !important;
+    display: block;
+    padding: 0.625rem;
+    padding-left: 1.5rem;
+    margin-bottom: 0.3125rem;
+    color: $active-ui;
+    position: relative;
+    font-weight: 600;
+    &:hover {
+        background-color: $interactive-02;
+    }
+    i {
+        margin-right: 1rem;
+    }
+    &.ex--menu-panel-button-active {
+        background-color: $interactive-02;
+        &::before {
+            background-color: #0f62fe;
+            bottom: 0;
+            content: '';
+            left: 0;
+            position: absolute;
+            top: 0;
+            width: 0.25rem;
+        }
+    }
+}
+
+.ex--menu-panel-close {
+    cursor: pointer;
+}
+
+.ex--menu-panel-title {
+    padding: 0.625rem;
+    padding-left: 1rem;
+    padding-bottom: 1rem;
+    color: #c6c6c6;
+    font-weight: 600;
+    border-bottom: 1px solid gray;
+    div {
+        margin-top: 0.625rem;
+    }
+}
+
+/* the help button */
+
+.ex--help-button {
+    bottom: 1rem;
+    top: unset;
+    right: 1rem;
+    background: $interactive-02;
+    position: fixed;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border-color: transparent;
+    transition: all 0.11s;
+    z-index: 10;
+    fill: $ui-02;
+    cursor: pointer;
+    i {
+        color: $ui-02;
+    }
+}
+
+/* to make the error modal window  */
+.bx--modal-container[aria-label='error'] {
+    background-color: $ui-05;
+    min-height: 20rem;
+    i {
+        color: $danger;
+    }
+    p {
+        color: $active-ui;
+        display: flex;
+        align-items: center;
+        padding: 2rem;
+        font-size: 1.5rem;
+    }
+    .bx--modal-close svg {
+        fill: $ui-02;
+    }
+}
+
+/* modal fixes to support dynamic forms */
+.bx--modal-content df-buttons {
+    position: fixed;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    bottom: 0;
+    right: 0;
+}
+
+/* to make the modal window fullscreen add to the size="lg" a arialable=fulscreen */
+.bx--modal-container--lg[aria-label='fullscreen'] {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    .bx--modal-content {
+        padding: 0;
+    }
+}
+
+.bx--modal-container--lg[aria-label='maximum'] {
+    width: 85%;
+    transform: scaleY(1);
+}
+
+/* for the toast messages */
+
+.ex--toast {
+    opacity: 0;
+    position: fixed;
+    z-index: 100;
+    max-width: 25rem;
+    .bx--toast-notification__title {
+        margin-top: 0;
+    }
+    .bx--inline-notification__text-wrapper {
+        display: block;
+    }
+    &.toast-br {
+        right: 0.625rem;
+        bottom: 0.625rem;
+    }
+    &.toast-tr {
+        right: 0.625rem;
+        top: 3.125rem;
+    }
+    &.toast-bl {
+        left: 0.625rem;
+        bottom: 0.625rem;
+    }
+    &.toast-tl {
+        left: 0.625rem;
+        top: 3.125rem;
+    }
+}
+
+/* switcher top right */
+
+.bx--switcher__item-divider {
+    color: #525252;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #525252;
+    margin: 1rem 1rem 0.5rem;
+    cursor: none;
+    span {
+        color: $active-ui;
+        font-size: 0.75rem;
+    }
+}
+
+/* some common classes */
+
+.mgt-0 {
+    margin-top: 0;
+}
+
+.mgt-10 {
+    margin-top: 0.625rem;
+}
+
+.mgt-50 {
+    margin-top: 3.125rem;
+}
+
+.mgr-5 {
+    margin-right: 0.625rem;
+}
+
+.mgr-10 {
+    margin-right: 0.625rem;
+}
+
+.mgl-10 {
+    margin-left: 0.625rem;
+}
+
+.mgb-10 {
+    margin-bottom: 0.625rem;
+}
+
+.mgb-20 {
+    margin-bottom: 1.25rem;
+}
+
+.mgb-50 {
+    margin-bottom: 3.125rem;
+}
+
+.mgb-100 {
+    margin-bottom: 6.25rem;
+}
+
+.pd-0 {
+    padding: 0;
+}
+
+.pd-20 {
+    padding: 1.25rem;
+}
+
+.pdt-5 {
+    padding-top: 0.3125rem;
+}
+
+.pdt-0 {
+    padding-top: 0;
+}
+
+.fs-14 {
+    font-size: 0.875rem;
+    .bx--tag {
+        font-size: 0.875rem;
+    }
+}
+
+.dbl {
+    display: block;
+}
+
+.dbf {
+    display: flex;
+}
+
+.dinbl {
+    display: inline-block;
+}
+
+.v-align {
+    display: flex;
+    align-items: center;
+}
+
+.e-align {
+    display: flex;
+    align-items: flex-end;
+}
+
+.bgw {
+    background: $ui-02;
+}
+
+/* disable the run start stop icons */
+
+.ex--action-panel-button.disabled,
+a.disabled,
+i.disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+i.pointer {
+    cursor: pointer;
+}
+
+/* toggle box */
+
+ibm-toggle {
+    .bx--toggle__switch::before {
+        background-color: #4589ff;
+    }
+    .bx--toggle-input__label .bx--toggle__switch {
+        margin-top: 0.4rem;
+    }
+}
+
+/* the status icon */
+.statfa {
+    padding: 0.625rem;
+    background: #e0e0e0;
+    border-radius: 50%;
+    min-width: 3rem;
+    min-height: 3rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.b-align {
+    display: flex;
+    flex-grow: 1;
+    align-self: flex-end;
+    align-items: flex-end;
+    flex-direction: column;
+}
+
+.hidden {
+    display: none;
+}
+
+.h-100 {
+    height: 100%;
+}
+
+.c-white {
+    color: $ui-02;
+}
+
+.c-red {
+    color: $danger;
+}
+
+.c-green {
+    color: $support-02;
+}
+
+.c-gray {
+    color: $interactive-02;
+}
+
+.c-yellow {
+    color: $support-03;
+}
+
+.bgw {
+    background-color: $ui-02;
+}
+
+/*  this is for the background for the radio buttons in the modal */
+.bx--modal {
+    .ex--radiogroup {
+        background-color: $ui-02;
+    }
+    input:read-only {
+        background-color: $ui-01;
+    }
+}
+
+/* back to top button  */
+#backtotop {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: $active-ui;
+    border-color: transparent;
+    position: fixed;
+    bottom: 1rem;
+    right: 2rem;
+    transition: all 0.11s;
+    cursor: pointer;
+    z-index: 9000;
+    padding-top: 0.325rem;
+    color: $ui-05;
+    display: none;
+    &.active {
+        display: block;
+    }
+}
+
+/* Only for diem Help */
+
+.section {
+    & ul {
+        font-size: 1rem;
+        list-style-type: square;
+        line-height: 2rem;
+        margin-left: 1rem;
+    }
+
+    & .bx--inline-notification__text-wrapper span {
+        font-size: 1rem;
+        margin-top: 0.3rem;
+    }
+}

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: k8-bizops-config
+  namespace: default
+data:
+  K8_INSTANCE: "US"
+  K8_SYSTEM: "uat"
+  K8_SYSTEM_NAME: "Diem on Test"
+  K8_APPURL: "https://bizops.ibm.com"
+  K8_APPURLSHORT: "bizops.ibm.com"
+  K8_APIDB: "jwttokens"
+  JWTTOKEN: "e8b7398b-6eac-821b-4e09-5b903da7be3a"

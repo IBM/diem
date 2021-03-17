@@ -1,0 +1,18 @@
+input(type='file', ng2FileSelect='', [uploader]='uploader', multiple='')
+div
+    table.table
+        thead
+            tr
+                th(width='50%') Name
+        tbody
+            tr(*ngFor='let item of uploader.queue')
+                td
+                    strong {{ item?.file?.name }}
+                td(nowrap='')
+                    button.btn.btn-danger.btn-xs(type='button', (click)='item.remove()')
+                        span.glyphicon.glyphicon-trash
+                        |  Remove
+    div
+        button.btn.btn-danger.btn-s(type='button', (click)='uploader.clearQueue()', [disabled]='!uploader.queue.length')
+            span.glyphicon.glyphicon-trash
+            |  Remove all

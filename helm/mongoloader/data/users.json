@@ -1,0 +1,16 @@
+[{
+    "_id": "5ffdbfc09fbd390291a1a347",
+    "annotations": {
+      "transid": "0974b097-7be0-1c8e-fafd-391072bbfde7",
+      "createdbyemail": "guy_huinen@be.ibm.com",
+      "createdbyname": "Guy Huinen",
+      "createddate": "2021-01-12T15:26:56.611Z",
+      "modifiedbyemail": "guy_huinen@be.ibm.com",
+      "modifiedbyname": "Guy Huinen",
+      "modifieddate": "2021-01-12T15:26:56.611Z"
+    },
+    "email": "guy_huinen@be.ibm.com",
+    "org": "sysadmin",
+    "role": "admin"
+  }
+  ]
