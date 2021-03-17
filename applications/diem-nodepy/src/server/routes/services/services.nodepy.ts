@@ -35,7 +35,6 @@ export const servicesNodepy: (job: ServicesJob) => Promise<any> = async (job: Se
             env: {
                 PATH: process.env.PATH,
                 APPPATH: process.env.APPPATH,
-                PYTHON_VERSION: process.env.PYTHON_VERSION,
                 CLASSPATH: '/opt/spark/jars/*',
             },
             cwd: `${path.resolve()}/workdir/${id}/workdir`,
