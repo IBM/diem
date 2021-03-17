@@ -1,0 +1,21 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.nodepy.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.nodepy.name }}
+    tier: {{ .Values.nodepy.tier }}
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.nodepy.port }}
+      targetPort: {{ .Values.nodepy.targetPort }}
+  selector:
+    app: {{ .Values.nodepy.name }}
+    tier: {{ .Values.nodepy.tier }}
+  type: ClusterIP
+  sessionAffinity: None
+status:
+  loadBalancer: {}

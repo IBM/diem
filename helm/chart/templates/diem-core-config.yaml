@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.core.config.configmapref }}
+  namespace: {{ .Release.Namespace }}
+data:
+  PORT: {{ .Values.core.deployment.targetPort | quote }}
+  APPPATH: {{ .Values.core.config.APPPATH | quote }}
+  {{- if .Values.core.config.slack.enabled }}
+  {{- with .Values.core.config.slack }}
+  SLACK__EMOJI: {{ .SLACK_EMOJI | quote | indent 4}}
+  SLACK__DEPLOY__CHANNEL: {{ .SLACK_DEPLOY_CHANNEL | quote }}
+  SLACK__DEPLOY__USERNAME: {{ .SLACK_DEPLOY_USERNAME | quote }}
+  SLACK__INTERNAL__CHANNEL: {{ .SLACK_INTERNAL_CHANNEL | quote }}
+  SLACK__INTERNAL__USERNAME: {{ .SLACK_INTERNAL_USERNAME | indent 4}}
+  SLACK__USER__CHANNEL: {{ .SLACK_USER_CHANNEL | quote | indent 4}}
+  SLACK__USER__USERNAME: {{ .SLACK_USER_USERNAME | quote }}
+  {{- end }}
+  {{- end }}
+  SPARK__NAMESPACE: {{ index .Values "spark-operator" "sparkJobNamespace" | default .Release.Namespace | quote}}
+  SPARK__VOLUME: {{ .Values.core.config.volume.volumeClaimName }}
+  SPARK_FILE_URL: {{ printf "http://%s/internal/pyfile" .Values.ingress.host }}
+  SPARK_CALLBACK_URL: {{ printf "http://%s/internal/spark_callback" .Values.ingress.host }}
+  {{- with .Values.core.config.spark }}
+  SPARK__IMAGE: {{ .SPARK_IMAGE }}
+  SPARK__IMAGEPULLSECRETS: {{ .SPARK_IMAGEPULLSECRETS }}
+  OPERATOR__DRIVER_CORES: {{ .OPERATOR_DRIVER_CORES  | quote}}
+  OPERATOR__DRIVER_MEMORY: {{ .OPERATOR_DRIVER_MEMORY  | quote}}
+  OPERATOR__EXECUTOR_CORES: {{ .OPERATOR_EXECUTOR_CORES  | quote }}
+  OPERATOR__EXECUTOR_INSTANCES: {{ .OPERATOR_EXECUTOR_INSTANCES  | quote}}
+  OPERATOR__EXECUTOR_MEMORY: {{ .OPERATOR_EXECUTOR_MEMORY | quote }}
+  {{- end }}
+  {{- if .Values.core.auth.discoveryUrl }}
+  DISCOVERY_URL: {{ .Values.core.auth.discoveryUrl }}
+  {{- end }}
+  {{- if .Values.core.auth.callbackUrl }}
+  CALLBACK_URL: {{ printf "https://%s/%s" .Values.ingress.host .Values.core.auth.callbackUrl }}
+  {{- end }}
