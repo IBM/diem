@@ -1,5 +1,13 @@
 FROM nikolaik/python-nodejs:python3.8-nodejs15
 
+LABEL   maintainer=guy_huinen@be.ibm.com \
+    org.label-schema.description="Diem Nodepy Application" \
+    org.label-schema.name="nodepy" \
+    org.label-schema.version=$BUILD_VERSION
+
+ARG BUILD_DATE
+LABEL org.label-schema.build-date=$BUILD_DATE
+
 RUN apt-get update && \
     apt-get install -y openjdk-11-jre-headless && \
     apt-get clean;
