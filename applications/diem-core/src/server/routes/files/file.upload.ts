@@ -1,8 +1,9 @@
 import { utils } from '@common/utils';
-import { IRequest, IFile, EStoreActions, IntServerPayload } from '@interfaces';
+import { IRequest, IFile, EStoreActions, IntServerPayload, IError } from '@interfaces';
 import { cosFunctions, ICos, IPutObject } from '@common/cos.functions';
 import { IFilesBody, FaIcons } from '../models/models';
 import { pubSub } from '../../config/pubsub';
+import { addTrace } from '../shared/functions';
 import { getName, getBucket } from './files';
 
 interface ICosFileMeta {
@@ -23,7 +24,11 @@ const cosUpload: (params: IPutObject) => Promise<ICos['ICosObj']> = async (
                 utils.logInfo('$cos (cosUpload)', params.Key, process.hrtime(hrstart));
                 resolve(data);
             })
-            .catch((err: Error) => reject(err));
+            .catch((err: IError) => {
+                err.trace = [`@at $cos.functions (s3Upload): ${params.Bucket} `];
+
+                reject(err);
+            });
     });
 
 const uploadFiles: (req: IRequest) => Promise<void> = async (req: IRequest): Promise<void> => {
@@ -52,7 +57,11 @@ const uploadFiles: (req: IRequest) => Promise<void> = async (req: IRequest): Pro
         try {
             await cosUpload(upload);
         } catch (err) {
-            pubSub.publishClientPayload({
+            err.trace = addTrace(err.trace, '@at $file.upload (uploadFiles)');
+
+            utils.logInfo(`$file.upload (uploadFiles) - email: ${body.email}`, err);
+
+            return pubSub.publishClientPayload({
                 clientEmail: req.user.email,
                 payload: [{ message: 'file upload failed', email: req.user.email, success: false }],
             });
@@ -100,6 +109,8 @@ export const fileupload: (req: IRequest) => Promise<IRequest | any> = async (
     const hrstart: [number, number] = process.hrtime();
 
     const body: IFilesBody = { ...req.body };
+
+    body.email = req.user.email;
 
     if (!req.files) {
         return Promise.reject({
