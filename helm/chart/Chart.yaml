@@ -3,14 +3,14 @@ name: diem
 description: A Helm chart for Diem
 
 ##  DIEM
-## 
+##
 ##  See https://github.ibm.com/CIO-SETS/diem
-## 
+##
 type: application
 
 ##  This is the chart version. This version number is incremented with each update
 ##  Versions are following Semantic Versioning (https://semver.org/)
-version: 0.1.1
+version: 0.1.2
 
 ##  This is the Diem application verion.
 appVersion: "4.0.0"
