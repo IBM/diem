@@ -41,7 +41,7 @@ jobs:
           helm quay --help
 
       - name: Login to quay.io
-        run: echo "${{secrets.helm_test}}" | helm quay login -u huineng+diem_robot --password-stdin quay.io quay.io/huineng/diem
+        run: helm quay login -u huineng+diem_robot -p ${{secrets.helm_test}} quay.io quay.io/huineng/diem
 
       - name: Push the Docker image
         run: helm quay push quay.io/huineng
