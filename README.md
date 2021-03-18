@@ -7,6 +7,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/IBM/diem)](https://github.com/IBM/diem/stargazers)
 [![GitHub license](https://img.shields.io/github/license/IBM/diem)](https://github.com/IBM/diem/blob/main/LICENSE)
 [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FIBM%2Fdiem%2Fbadge%3Fref%3Dmain&style=flat)](https://actions-badge.atrox.dev/IBM/diem/goto?ref=main)
+<img alt="Helm" src="https://img.shields.io/badge/dynamic/yaml?label=helm&query=version&prefix=v&url=https://raw.githubusercontent.com/IBM/diem/gh/latest/helm/chart/Chart.yaml"/>
 <br/><br/>
 <img alt="NodeJS" src="https://img.shields.io/badge/node.js%20-%2343853D.svg?&style=for-the-badge&logo=node.js&logoColor=white"/>
 <img alt="Angular" src="https://img.shields.io/badge/angular%20-%23DD0031.svg?&style=for-the-badge&logo=angular&logoColor=white"/>
