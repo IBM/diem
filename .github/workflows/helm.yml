@@ -4,13 +4,13 @@ name: "CI mongoloader"
 
 # Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the latest branch
+  # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [latest]
+    branches: [main]
     paths:
       - "helm/chart/**"
   pull_request:
-    branches: [latest]
+    branches: [main]
     paths:
       - "helm/chart/**"
 
@@ -41,9 +41,9 @@ jobs:
           helm quay --help
 
       - name: Login to quay.io
-        run: helm quay login -u huineng+diem_robot -p ${{secrets.helm_test}} quay.io/huineng/diem
-        if: github.event_name == 'push' && github.ref == 'refs/heads/latest'
+        run: helm quay login -u diem+ibm_deploy_robot -p ${{secrets.DOCKER_QUAY}} quay.io/diem/diem
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
       - name: Push the Helm Chart
-        run: helm quay push quay.io/huineng
-        if: github.event_name == 'push' && github.ref == 'refs/heads/latest'
+        run: helm quay push quay.io/diem
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
