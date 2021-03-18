@@ -1,7 +1,7 @@
 <!-- markdownlint-disable MD033 -->
 # Install Diem via helm
 
-<img alt="Helm" src="https://img.shields.io/badge/dynamic/yaml?label=helm&query=version&prefix=v&url=https://raw.githubusercontent.com/IBM/diem/gh/latest/helm/chart/Chart.yaml"/>
+<img alt="Helm" src="https://img.shields.io/badge/dynamic/yaml?label=helm%20chart&query=version&prefix=v&url=https://raw.githubusercontent.com/IBM/diem/gh/latest/helm/chart/Chart.yaml"/>
 
 1. install [helm 3](https://helm.sh/docs/intro/install/)
 
