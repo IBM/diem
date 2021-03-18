@@ -1,4 +1,8 @@
+<!-- markdownlint-disable MD033 -->
 # Diem Chart and MongoLoader
+
+<img alt="Helm" src="https://img.shields.io/badge/dynamic/yaml?label=helm%20chart&query=version&prefix=v&url=https://raw.githubusercontent.com/IBM/diem/latest/helm/chart/Chart.yaml"/>
+<img alt="Version" src="https://img.shields.io/badge/dynamic/json?label=mongo%20loader&query=version&prefix=v&url=https://raw.githubusercontent.com/IBM/diem/latest/helm/mongoloader/package.json"/>
 
 ## Diem Helm Chart
 

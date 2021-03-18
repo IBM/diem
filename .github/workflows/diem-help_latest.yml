@@ -8,16 +8,12 @@ on:
   push:
     branches: [latest]
     paths:
-      - "applications/diem-help/src/**"
-      - "applications/diem-help/docs/**"
-      - "applications/diem-help/package.json"
+      - "applications/diem-help/**"
 
   pull_request:
     branches: [latest]
     paths:
-      - "applications/diem-help/src/**"
-      - "applications/diem-help/docs/**"
-      - "applications/diem-help/package.json"
+      - "applications/diem-help/**"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
