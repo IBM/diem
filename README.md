@@ -1,5 +1,4 @@
 <!-- markdownlint-disable MD033 -->
-<!-- markdownlint-disable MD041 -->
 # DIEM
 
 [![GitHub issues](https://img.shields.io/github/issues/IBM/diem)](https://github.com/IBM/diem/issues)
