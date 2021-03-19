@@ -67,8 +67,13 @@ for sql in sqls:
 
     try:
         st_time = time.time()
-        tgt_stmt = tgt_conn.createStatement()
-        tgt_stmt.executeUpdate(f"""{sql}""")
+        fw = sql.split()[0]
+        if fw.upper() in ['CALL']:
+            tgt_stmt = tgt_conn.prepareStatement(f"""{sql}""")
+            tgt_stmt.execute()
+        else:
+            tgt_stmt = tgt_conn.prepareCall(f"""{sql}""")
+            tgt_stmt.executeUpdate(f"""{sql}""")
         tgt_conn.commit()
         i += 1
         msg = f"Completed Sequence {i} - Runtime: {round(time.time() - st_time,2)} - Affected rows: {tgt_stmt.getUpdateCount()}"
