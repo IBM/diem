@@ -12,7 +12,8 @@
         "outDir": "../webpack/lib",
         "pretty": true,
         "rootDir": "../webpack/src",
-        "stripInternal": true
+        "stripInternal": true,
+        "lib": ["es2020", "webworker"]
     },
     "includes": ["../webpack/src/**/*.ts"]
 }
