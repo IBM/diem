@@ -4,7 +4,6 @@
 
 export {};
 const webpack: any = require('webpack');
-const { GenerateSW }: any = require('workbox-webpack-plugin');
 const TerserPlugin: any = require('terser-webpack-plugin');
 const ngToolsWebpack: any = require('@ngtools/webpack');
 const CopyWebpackPlugin: any = require('copy-webpack-plugin');
@@ -12,6 +11,7 @@ const MiniCssExtractPlugin: any = require('mini-css-extract-plugin');
 const OptimizeCSSAssetsPlugin: any = require('optimize-css-assets-webpack-plugin');
 const cssnano: any = require('cssnano');
 const WebpackAssetsManifest: any = require('webpack-assets-manifest');
+const { InjectManifest }: any = require('workbox-webpack-plugin');
 /** const Ba = require('webpack-bundle-analyzer'); */
 
 console.info(`$webpack.front: environment: ${process.env.webpackenv}`);
@@ -194,8 +194,19 @@ module.exports = {
                     to: 'server/index.pug',
                 },
                 {
-                    from: 'node_modules/tinymce/skins/',
-                    to: 'public/skins/',
+                    from: `${(global as any).__basedir}/public/images/*.jpg`,
+                },
+                {
+                    from: `${(global as any).__basedir}/public/images/*.gif`,
+                },
+                {
+                    from: `${(global as any).__basedir}/public/images/favicon*.*`,
+                },
+                {
+                    from: `${(global as any).__basedir}/public/images/diem_logo.*`,
+                },
+                {
+                    from: `${(global as any).__basedir}/public/images/diem_s.*`,
                 },
             ],
         }),
@@ -217,13 +228,6 @@ module.exports = {
 
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
 
-        new GenerateSW({
-            swDest: `${(global as any).__basedir}/public/js/service-worker.js`,
-            sourcemap: false,
-            mode: 'production',
-            offlineGoogleAnalytics: false,
-        }),
-
         new WebpackAssetsManifest({
             integrity: true,
             integrityHashes: ['sha256'],
@@ -232,6 +236,12 @@ module.exports = {
 
         new webpack.ProvidePlugin({
             process: 'process/browser',
+        }),
+
+        new InjectManifest({
+            swSrc: `${(global as any).__basedir}/src/webpack/src/service-worker.js`,
+            swDest: `${(global as any).__basedir}/public/js/service-worker.js`,
+            exclude: [/\.pug$/, /\.ttf$/, /\.eot$/],
         }),
     ],
 

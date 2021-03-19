@@ -171,8 +171,10 @@ module.exports = {
                     to: `${(global as any).__basedir}/server/index.pug`,
                 },
                 {
-                    from: `${(global as any).__basedir}/node_modules/tinymce/skins/`,
-                    to: `${(global as any).__basedir}/public/skins/`,
+                    from: `${(global as any).__basedir}/public/images/*.jpg`,
+                },
+                {
+                    from: `${(global as any).__basedir}/public/images/favicon.*`,
                 },
             ],
         }),

@@ -3,20 +3,20 @@ ibm-header(
     *ngIf="env.user.authorized",
     [route]="['home']",
     )
-    a.bx--header__name(role='menuitem', routerLink="home")
+    a.bx--header__name(routerLink="home")
         img(src="./etl-mgr/public/images/diem_logo.svg", alt="Diem Logo", height="25", width="100")
-    ibm-header-navigation(role="menu")
+    ibm-header-navigation
         ng-container(*ngFor="let menu of menus")
-            li.h-100(*ngIf="evalStr(menu.visible)",)
-                a.bx--header__menu-item(role='menuitem', routerLink="{{menu.value}}") {{menu.name}}
+            li.h-100(role='menuitem',*ngIf="evalStr(menu.visible)")
+                a.bx--header__menu-item(routerLink="{{menu.value}}") {{menu.name}}
     ibm-header-global
         ibm-header-navigation.disabled
-            a.bx--header__menu-item
-                svg.socketfa(ibmIconDataConnected='', size='20')
+            li(role="menuitem",aria-label="Socket")
+                a.bx--header__menu-item
+                    svg.socketfa(ibmIconDataConnected='', size='20')
 
-            li.bx--header__submenu(style="height: 100%", #orgmenu="")
+            li.bx--header__submenu(role="menuitem", style="height: 100%", #orgmenu="")
                 a.bx--header__menu-item.bx--header__menu-title(
-                    role="menuitem",
                     tabindex="0",
                     aria-haspopup="true",
                     [attr.aria-expanded]="mexpanded",
@@ -53,7 +53,7 @@ ibm-header(
 
 ibm-panel(id="infoPanel", [expanded]="infoPanel")
     ibm-switcher-list
-        div You don't have any notifications
+        li You don't have any notifications
     .ex--panel-close((click)="openPanel('infoPanel',false)",)
         span Close
         svg(ibmIconClose='', size='20')
