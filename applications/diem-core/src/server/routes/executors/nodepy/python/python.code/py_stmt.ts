@@ -72,7 +72,7 @@ for sql in sqls:
             tgt_stmt = tgt_conn.prepareStatement(f"""{sql}""")
             tgt_stmt.execute()
         else:
-            tgt_stmt = tgt_conn.prepareCall(f"""{sql}""")
+            tgt_stmt = tgt_conn.createStatement()
             tgt_stmt.executeUpdate(f"""{sql}""")
         tgt_conn.commit()
         i += 1
