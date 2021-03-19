@@ -5,6 +5,7 @@ interface ICfg {
     endpoint: string;
     accessKeyId: string;
     secretAccessKey: string;
+    signatureVersion?: string;
 }
 
 class Cos {
@@ -12,6 +13,8 @@ class Cos {
 
     public constructor() {
         const cosCfg: ICfg = Credentials('COS');
+
+        cosCfg.signatureVersion = 'iam';
 
         this.cos = new AWS.S3(cosCfg);
     }
