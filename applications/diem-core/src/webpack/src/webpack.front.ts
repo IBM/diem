@@ -197,13 +197,16 @@ module.exports = {
                     from: `${(global as any).__basedir}/public/images/*.jpg`,
                 },
                 {
+                    from: `${(global as any).__basedir}/public/images/*.gif`,
+                },
+                {
                     from: `${(global as any).__basedir}/public/images/favicon*.*`,
                 },
                 {
-                    from: `${(global as any).__basedir}/public/images/diem_logo.svg`,
+                    from: `${(global as any).__basedir}/public/images/diem_logo.*`,
                 },
                 {
-                    from: `${(global as any).__basedir}/public/images/diem_s.png`,
+                    from: `${(global as any).__basedir}/public/images/diem_s.*`,
                 },
             ],
         }),
