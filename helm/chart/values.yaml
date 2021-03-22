@@ -89,6 +89,7 @@ core:
       apiKeyId: ""
       endpoint: ""
       serviceInstanceId: ""
+      signatureVersion: ""
 
   ## 
   secrets:

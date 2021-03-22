@@ -1,6 +1,6 @@
 import { spawn } from 'child_process';
 import path from 'path';
-import { postJob } from '../../config/axios';
+import { publisher } from '../../config/nats_publisher';
 import { IntJob, green, red, ECodeLanguage } from '../../config/interfaces';
 import { workers, deleteWorker } from './etl.workers';
 import { addToBuffer, addToErrorBuffer } from './etl.buffer';
@@ -59,7 +59,7 @@ export const etlNodepy: (job: IntJob) => any = (job: IntJob) => {
         console.error(red, `$np ${process.pid} ${id}: incoming error`);
 
         try {
-            void postJob({
+            void publisher.publish('job',{
                 ...job,
                 count: null,
                 error: response,

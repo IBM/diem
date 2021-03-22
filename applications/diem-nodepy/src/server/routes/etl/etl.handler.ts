@@ -12,11 +12,6 @@ const base64decode: (file: string) => string = (file: string) => {
 };
 
 export const etlHandler: (req: any, res: any) => any = async (req: any, res: any) => {
-    if (req.method === 'GET') {
-        return res.status(200).json({
-            message: 'Only Post is allowed',
-        });
-    }
 
     const job: IntJob = { ...req.body };
 

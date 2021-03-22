@@ -1,15 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import * as http from 'http';
-import express from 'express';
-import { slackMsg } from '@common/slack/slack';
-import { slackMsgInt } from '@common/slack/error-int';
-import bodyParser from 'body-parser';
-import helmet from 'helmet';
-import { IntInternal, IntEnv, IResponse } from '@interfaces';
+import { IntInternal, IntEnv } from '@interfaces';
 import { utils } from '@common/utils';
-import { etlHandler } from '../routes/etl/etl.handler';
-import { servicesHandler } from '../routes/services/services.handler';
-import { interactiveHandler } from '../routes/interactive/interactive.handler';
+import { subscriber} from './nats_subscriber';
+import { publisher } from './nats_publisher';
+import { NC } from './nats_connect';
 
 export class Server {
     public pack: IntEnv;
@@ -36,7 +30,6 @@ export class Server {
             })
             .on('exit', (code: any) => {
                 utils.logInfo(`$server.ts (exit): fatal error, system shutting down : ${code}`);
-                void slackMsgInt(code);
                 setTimeout(() => {
                     process.exit(1);
                 }, 1000);
@@ -65,39 +58,24 @@ export class Server {
         });
     }
 
-    public start = (): void => {
-        const app: any = express()
-            .set('port', process.env.PORT || 8192)
-            .set('trust proxy', 1)
-            .use(helmet())
-            .use(
-                bodyParser.urlencoded({
-                    limit: '15mb',
-                    extended: false,
-                })
-            )
-            .use(
-                bodyParser.json({
-                    limit: '15mb',
-                })
-            )
-            .all('/api/', etlHandler)
-            .all('/services/', servicesHandler)
-            .all('/interactive', interactiveHandler)
-            .all('/nodepy/interactive', interactiveHandler)
-            .all('*', (_req: any, res: IResponse) => res.status(400).json({ message: 'Not allowed' }));
+    public start = async (): Promise<void> => {
 
-        const httpServer: http.Server = http.createServer(app);
+        try {
+            await NC.connect();
+        } catch (err) {
+            return console.error(err)
+        }
+        
+        await subscriber.connect();
+        await publisher.connect();
 
-        httpServer.listen(app.get('port'), () => {
-            const msg: string =
-                `👽 $server (start): ${this.pack.packname}@${this.pack.version}` +
-                ` started up on ${this.pack.K8_SYSTEM_NAME} - port:${app.get('port')} - pid: ${process.pid} (node ${
-                    process.version
-                })`;
-            utils.logInfo(msg);
-            void slackMsg(msg);
-        });
+        const msg: string =
+            `👽 $server (start): ${this.pack.packname}@${this.pack.version}` +
+            ` started up on ${this.pack.K8_SYSTEM_NAME} - pid: ${process.pid} (node ${
+                process.version
+            })`;
+        utils.logInfo(msg);
+        void publisher.publish('event',msg)
     };
 
     // private ensureAuthenticated = (_req: IRequest, _res: IResponse, next: () => any): any => next();
