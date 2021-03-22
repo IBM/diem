@@ -2,9 +2,12 @@ import AWS from 'ibm-cos-sdk';
 import { Credentials } from './cfenv';
 
 interface ICfg {
+    accessKeyId?: string;
+    apiKeyId?: string;
     endpoint: string;
-    accessKeyId: string;
-    secretAccessKey: string;
+    secretAccessKey?: string;
+    signatureVersion?: string;
+    serviceInstanceId?: string;
 }
 
 class Cos {
@@ -12,6 +15,10 @@ class Cos {
 
     public constructor() {
         const cosCfg: ICfg = Credentials('COS');
+
+        if (cosCfg.serviceInstanceId) {
+            cosCfg.signatureVersion = 'iam';
+        }
 
         this.cos = new AWS.S3(cosCfg);
     }

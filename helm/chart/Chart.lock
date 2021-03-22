@@ -1,0 +1,15 @@
+dependencies:
+- name: spark-operator
+  repository: https://googlecloudplatform.github.io/spark-on-k8s-operator
+  version: 1.0.8
+- name: mongodb
+  repository: https://charts.bitnami.com/bitnami
+  version: 10.0.5
+- name: redis
+  repository: https://charts.bitnami.com/bitnami
+  version: 12.1.1
+- name: minio
+  repository: https://helm.min.io/
+  version: 8.0.10
+digest: sha256:c956e0da79593360347cef634548f55dfb80362d8f6c609bcb283b8ee0539aca
+generated: "2021-03-16T13:22:47.929492+01:00"

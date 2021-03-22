@@ -1,19 +1,9 @@
-# ETL Manager Module
+<!-- markdownlint-disable MD033 -->
+# Diem Core
 
-T classify
+> This contains the front (ui) and backend code of the Diem Application
 
-connections can be used in the jobs as follows
+<img alt="Version" src="https://img.shields.io/badge/dynamic/json?label=diem%20core&query=version&prefix=v&url=https://raw.githubusercontent.com/IBM/diem/main/applications/diem-core/package.json"/>&nbsp;&nbsp;<img alt="angular" src="https://img.shields.io/badge/dynamic/json?label=angular&query=$['devDependencies']['@angular/cli']&prefix=v&url=https://raw.githubusercontent.com/IBM/diem/main/applications/diem-core/package.json"/>&nbsp;&nbsp;<img alt="typescript" src="https://img.shields.io/badge/dynamic/json?label=typescript&query=$['devDependencies']['typescript']&prefix=v&url=https://raw.githubusercontent.com/IBM/diem/main/applications/diem-core/package.json"/>
+<img alt="webpack" src="https://img.shields.io/badge/dynamic/json?label=webpack&query=$['devDependencies']['webpack']&prefix=v&url=https://raw.githubusercontent.com/IBM/diem/main/applications/diem-core/package.json"/>&nbsp;&nbsp;<img alt="eslint" src="https://img.shields.io/badge/dynamic/json?label=eslint&query=$['devDependencies']['eslint']&prefix=v&url=https://raw.githubusercontent.com/IBM/diem/main/applications/diem-core/package.json"/>&nbsp;&nbsp;<img alt="mongoose" src="https://img.shields.io/badge/dynamic/json?label=mongoose&query=$['dependencies']['mongoose']&prefix=v&url=https://raw.githubusercontent.com/IBM/diem/main/applications/diem-core/package.json"/>
 
-```txt
-db2wh_etl_type
-db2wh_etl_driver
-db2wh_etl_alias
-db2wh_etl_user
-db2wh_etl_password
-db2wh_etl_owner
-db2wh_etl_dbhost
-db2wh_etl_dbport
-db2wh_etl_dbname
-db2wh_etl_jdbc
-db2wh_etl_description
-```
+

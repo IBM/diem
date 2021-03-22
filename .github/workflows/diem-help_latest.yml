@@ -9,6 +9,7 @@ on:
     branches: [latest]
     paths:
       - "applications/diem-help/**"
+
   pull_request:
     branches: [latest]
     paths:

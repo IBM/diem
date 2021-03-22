@@ -119,6 +119,7 @@ export class Express {
                 .use(this.passport.initialize())
                 .use(this.passport.session())
                 .use(helmet())
+                .use(helmet.referrerPolicy({ policy: 'strict-origin-when-cross-origin' }))
                 .use(`${utils.Env.apppath}/public`, express.static('./public'))
                 .use(
                     `${utils.Env.apppath}/ace-builds/src-min-noconflict`,
@@ -158,7 +159,6 @@ export class Express {
                         ? this.featurePolicyApi(req, res, next)
                         : this.featurePolicy(req, res, next)
                 )
-                .use(helmet.referrerPolicy({ policy: 'same-origin' }))
                 .use(cookieParser())
                 .use(
                     express.urlencoded({

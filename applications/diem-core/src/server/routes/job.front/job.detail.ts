@@ -113,8 +113,6 @@ export const makePayload: (doc: IJobSchema) => Promise<IModelPayload> = async (
             if (doc.stmt.sql) {
                 stmt.stmt__sql = format(doc.stmt.sql, { language: 'db2' });
             }
-
-            console.info(stmt.stmt__sql);
         }
 
         if (doc.custom) {
