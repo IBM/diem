@@ -1,0 +1,21 @@
+{{- if .Values.nats.external }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.nats.name }}-lb
+  namespace: {{ .Release.Namespace }}
+spec:
+  type: LoadBalancer
+  selector:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ .Values.nats.name }}
+  ports:
+    - protocol: TCP
+      port: 4222
+      targetPort: 4222
+      name: {{ .Values.nats.name }}
+    - protocol: TCP
+      port: 6222
+      targetPort: 6222
+      name: {{ .Values.nats.name }}-cluster
+{{- end }}

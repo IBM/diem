@@ -1,0 +1,58 @@
+{{- if eq .Values.ingress.version "v1beta1"}}
+kind: Ingress
+apiVersion: networking.k8s.io/v1beta1
+metadata:
+  annotations:
+    ingress.bluemix.net/client-max-body-size: 200m
+    ingress.bluemix.net/proxy-body-size: 200m
+    ingress.bluemix.net/proxy-buffer-size: size=8k
+    ingress.bluemix.net/rewrite-path: service=sonarqube rewrite=/
+    ingress.kubernetes.io/client_max_body_size: 200m
+    ingress.kubernetes.io/ingress.allow-http: "false"
+    ingress.kubernetes.io/rewrite-target: /
+    ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 8k
+    nginx.org/client-max-body-size: 200m
+    nginx.org/websocket-services: {{ .Values.core.deployment.socketName }}
+  name: {{ .Values.ingress.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - backend:
+              serviceName: {{ .Values.core.deployment.name }}
+              servicePort: {{ .Values.core.deployment.port }}
+            pathType: Prefix
+            path: /
+          - backend:
+              serviceName: {{ .Values.core.deployment.name }}
+              servicePort: {{ .Values.core.deployment.port }}
+            pathType: Prefix
+            path: "/sso/callback"
+          - backend:
+              serviceName: {{ .Values.core.deployment.name }}
+              servicePort: {{ .Values.core.deployment.port }}
+            pathType: Prefix
+            path: "/login"
+          - backend:
+              serviceName: {{ .Values.core.deployment.name }}
+              servicePort: {{ .Values.core.deployment.port }}
+            pathType: Prefix
+            path: "{{ .Values.core.config.APPPATH }}"
+          - backend:
+              serviceName: {{ .Values.core.deployment.name }}
+              servicePort: {{ .Values.core.deployment.port }}
+            pathType: Prefix
+            path: "/{{ .Values.core.deployment.socketName }}"
+          - backend:
+              serviceName: {{ printf "%s-%s-client" .Release.Name .Values.nats.name }}
+              servicePort: {{ .Values.nats.port }}
+            pathType: Prefix
+            path: /{{ .Values.nats.name }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host }}
+      secretName: {{ .Values.ingress.tls }}
+{{- end}}

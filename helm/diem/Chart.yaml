@@ -10,7 +10,7 @@ type: application
 
 ##  This is the chart version. This version number is incremented with each update
 ##  Versions are following Semantic Versioning (https://semver.org/)
-version: 0.1.3
+version: 0.2.0
 
 ##  This is the Diem application verion.
 appVersion: "4.0.0"
@@ -35,3 +35,6 @@ dependencies:
     repository: https://helm.min.io/
     version: "8.0.10"
     condition: minio.createservice
+  - name: nats
+    repository: https://charts.bitnami.com/bitnami
+    version: "6.2.3"

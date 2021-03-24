@@ -11,5 +11,8 @@ dependencies:
 - name: minio
   repository: https://helm.min.io/
   version: 8.0.10
-digest: sha256:c956e0da79593360347cef634548f55dfb80362d8f6c609bcb283b8ee0539aca
-generated: "2021-03-16T13:22:47.929492+01:00"
+- name: nats
+  repository: https://charts.bitnami.com/bitnami
+  version: 6.2.3
+digest: sha256:a377d84b03d41ddfc843adb89c188df9650320bb6fd60ae7f1badf577e422fe9
+generated: "2021-03-22T20:20:34.180112+01:00"

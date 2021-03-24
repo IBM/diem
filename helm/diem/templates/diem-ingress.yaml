@@ -1,3 +1,4 @@
+{{- if eq .Values.ingress.version "v1"}}
 kind: Ingress
 apiVersion: networking.k8s.io/v1
 metadata:
@@ -47,15 +48,17 @@ spec:
                 port:
                   number: {{ .Values.core.deployment.port }}
             pathType: Prefix
-            path: "{{ .Values.core.config.APPPATH }}" 
+            path: "{{ .Values.core.config.APPPATH }}"
           - backend:
               service:
                 name: {{ .Values.core.deployment.name }}
                 port:
                   number: {{ .Values.core.deployment.port }}
             pathType: Prefix
-            path: "/{{ .Values.core.deployment.socketName }}" 
+            path: "/{{ .Values.core.deployment.socketName }}"
+
   tls:
     - hosts:
         - {{ .Values.ingress.host }}
       secretName: {{ .Values.ingress.tls }}
+{{- end}}

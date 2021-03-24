@@ -2,6 +2,9 @@ ingress:
   ## name is the name of your ingress file
   name: diem-ingress
 
+  ## the name of the version v1 or v1beta
+  version: v1
+
   ## tls will be the name of your tls secret. It will be created for you if don't have one
   ## Otherwise get the tls from your cluster
   ## kubectl describe ingress diem-ingress
@@ -29,10 +32,8 @@ common:
 
 ## these are the settings for Diem Core
 core:
-
   ## this relates to the diem-core deployment
   deployment:
-
     ## name is the name of the deployment
     name: diem-core
 
@@ -42,7 +43,7 @@ core:
 
     tier: backend
     version: 0.1.0
-    image: quay.io/diem/core:5.3.0
+    image: quay.io/diem/core:5.4.0
     replicas: 1
     port: 8080
 
@@ -91,7 +92,7 @@ core:
       serviceInstanceId: ""
       signatureVersion: ""
 
-  ## 
+  ##
   secrets:
     secretmapref: diem-core-secret
     SESSION_NAME: etl.sid
@@ -108,12 +109,11 @@ core:
     callbackUrl: sso/callback
 
 nodepy:
-
   ## configmapref is the name of the nodepy config map ref
   configmapref: diem-nodepy-config
-  
-  ## image is the the name of the nodepy image 
-  image: quay.io/diem/nodepy:latest
+
+  ## image is the the name of the nodepy image
+  image: quay.io/diem/nodepy:4.4.3
   name: nodepy
   port: 8080
   replicas: 1
@@ -122,10 +122,9 @@ nodepy:
   version: 4.4.1
 
 ## enable the spark Operator
-## for more details see 
+## for more details see
 ## https://github.com/GoogleCloudPlatform/spark-on-k8s-operator
 spark-operator:
-
   ## overwrite the spark job namespace if needed, otherwise it will
   ## run in the default namespace
   sparkJobNamespace: ""
@@ -147,6 +146,42 @@ mongodb:
     password: diempassword
     database: ibmclouddb
 
+## Nats
+## see https://github.com/bitnami/charts/tree/master/bitnami/nats
+
+nats:
+  ## the name of the service
+  name: nats
+
+  ## port nats runs under
+  port: 4222
+
+  ## authentication
+  ## it4s recommended you create your own long encrypted password
+  ## follow the instructions here https://docs.nats.io/nats-tools/natscli
+  ## either fill in the password in plain text or
+  ## encrypt your password and fill in your plain password in the unencrypted_password
+  ## if you do not want to use an encrypted password leave the unencrypted_password blank
+  auth:
+    unencrypted_password: natsuserauthorisationpassword
+    password: $2a$11$ZiPM3G2YnDkv/HtqhFNGz./XW9iSJpwyrXaEsm6tPQi00cN6pft0q
+    token: ""
+  clusterAuth:
+    unencrypted_password: natsuserauthorisationpassword
+    password: $2a$11$ZiPM3G2YnDkv/HtqhFNGz./XW9iSJpwyrXaEsm6tPQi00cN6pft0q
+    token: ""
+
+  ## enable external access, this will create a load balancer
+  ## you can get your ip from >_ kubectl get svc diem-nats-lb -o wide
+  external: false
+
+  ## the number of pods
+  replicaCount: 1
+
+  extraFlags:
+    cluster_name: diem-nats-cluster
+    no_advertise: true
+
 redis:
   createservice: true
   password: diempassword
@@ -156,9 +191,7 @@ minio:
   accessKey: diemadmin
   secretKey: diempassword
 
-
   persistence:
-
     ## use an existing claim
     # existingClaim: spark-shared-data
     # VolumeName: spark-data

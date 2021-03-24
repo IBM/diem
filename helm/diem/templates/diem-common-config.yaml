@@ -8,3 +8,9 @@ data:
   K8_SYSTEM: {{ .Values.common.config.K8_SYSTEM }}
   K8_SYSTEM_NAME: {{ .Values.common.config.K8_SYSTEM_NAME }}
   K8_APPURLSHORT: {{ .Values.ingress.host }}
+  {{- if .Values.nats.auth.user }}
+  NATS__USER: {{ .Values.nats.auth.user }}
+  {{- end }}
+  {{- if .Values.nats.clusterAuth.user }}
+  NATS__CLUSTERUSER: {{ .Values.nats.clusterAuth.user }}
+  {{- end }}
