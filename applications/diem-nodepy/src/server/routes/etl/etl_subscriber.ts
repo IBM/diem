@@ -1,5 +1,6 @@
 import { Msg, NatsConnection, NatsError } from 'nats';
-import { NC, IPayload, toBuf, fromBuf } from './nats_connect';
+import { NC, IPayload, toBuf, fromBuf } from '../../config/nats_connect';
+import { handler } from './etl.handler'
 
 const queue: string = 'diem.nodepy'
 
@@ -23,7 +24,7 @@ class Subscriber {
         return Promise.resolve()
     };
 
-    private cb = (err: NatsError | null, msg: Msg) => {
+    private cb = async (err: NatsError | null, msg: Msg) => {
         if (err) {
             return console.error(err);
         }
@@ -39,9 +40,11 @@ class Subscriber {
             );
             console.info(`$nats_subscriber (cb): confirming message: id: ${payload.id} - client: ${payload.client}`);
         } else {
+            const payload: IPayload = fromBuf(msg.data);
+            await handler(payload.data)
             console.info(`$nats_subscriber (cb): new message: id: ${payload.id} - client: ${payload.client}`);
         }
     };
 }
 
-export const subscriber = new Subscriber();
+export const etl_subscriber = new Subscriber();

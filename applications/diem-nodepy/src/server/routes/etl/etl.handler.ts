@@ -11,19 +11,6 @@ const base64decode: (file: string) => string = (file: string) => {
     return buff.toString('utf8');
 };
 
-export const etlHandler: (req: any, res: any) => any = async (req: any, res: any) => {
-
-    const job: IntJob = { ...req.body };
-
-    try {
-        const resp: any = await handler(job);
-
-        return res.status(200).json(resp);
-    } catch (err) {
-        return res.status(500).json(err);
-    }
-};
-
 export const handler: (job: IntJob) => any = async (job: IntJob): Promise<IHandler> => {
     if (!job.id) {
         return Promise.reject({

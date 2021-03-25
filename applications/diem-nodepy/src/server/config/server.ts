@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { IntInternal, IntEnv } from '@interfaces';
 import { utils } from '@common/utils';
-import { subscriber} from './nats_subscriber';
+import { etl_subscriber} from '../routes/etl/etl_subscriber';
 import { publisher } from './nats_publisher';
 import { NC } from './nats_connect';
 
@@ -66,7 +66,7 @@ export class Server {
             return console.error(err)
         }
         
-        await subscriber.connect();
+        await etl_subscriber.connect();
         await publisher.connect();
 
         const msg: string =

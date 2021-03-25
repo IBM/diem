@@ -1,11 +1,23 @@
 /*jshint esversion: 8 */
 import { connect, NatsConnection } from 'nats';
+import { Credentials } from '../common/cfenv';
+
 
 export interface IPayload {
     id: string | number;
     inbox?: string;
     client: number;
-    payload?: any;
+    data?: any;
+}
+
+interface INatsCredentials {
+  clusterpassword: string,
+  clustertoken?: string,
+  clusteruser: string,
+  ip: string,
+  password: string,
+  token?: string,
+  user: string,
 }
 
 export const toBuf = (msg: {[index: string]: any} | string) => {
@@ -30,11 +42,14 @@ class NCConnection {
     public nc!: NatsConnection;
 
     public connect = async (): Promise<NatsConnection> => {
+
+      const credentials: INatsCredentials = Credentials('nats');
+
         try {
             this.nc = await connect({
-                servers: 'http://localhost:4222',
-                user: 'nats_client',
-                pass: 'es1admin',
+                servers: `${credentials.ip}:4222`,
+                user: credentials.user,
+                pass: credentials.password,
                 name: 'Diem Connection',
             });
 
@@ -52,7 +67,11 @@ class NCConnection {
         void (async () => {
             console.info(`$nats_connect (connect): connected to nats - ${this.nc.getServer()}`);
             for await (const s of this.nc.status()) {
-                console.info(`$nats_connect (events): ${s.type}: ${s.data}`);
+                if(s.type === 'update') {
+                    console.info(`$connect (events): ${s.type}`, s.data);
+                  } else {
+                    console.info(`$connect (events): ${s.type} - data: ${s.data}`);
+                  }
             }
         })();
     };
