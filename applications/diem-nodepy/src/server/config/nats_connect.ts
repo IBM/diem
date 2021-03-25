@@ -2,7 +2,6 @@
 import { connect, NatsConnection } from 'nats';
 import { Credentials } from '../common/cfenv';
 
-
 export interface IPayload {
     id: string | number;
     inbox?: string;
@@ -11,39 +10,38 @@ export interface IPayload {
 }
 
 interface INatsCredentials {
-  clusterpassword: string,
-  clustertoken?: string,
-  clusteruser: string,
-  ip: string,
-  password: string,
-  token?: string,
-  user: string,
+    clusterpassword: string;
+    clustertoken?: string;
+    clusteruser: string;
+    ip: string;
+    password: string;
+    token?: string;
+    user: string;
 }
 
-export const toBuf = (msg: {[index: string]: any} | string) => {
+export const toBuf = (msg: { [index: string]: any } | string) => {
     if (typeof msg === 'string') {
-        return Buffer.from(msg)
+        return Buffer.from(msg);
     }
     return Buffer.from(JSON.stringify(msg));
-  };
-  
-  export const fromBuf = (buf: Uint8Array) => {
+};
+
+export const fromBuf = (buf: Uint8Array) => {
     if (!buf) {
-      return "";
+        return '';
     }
     try {
-      return JSON.parse(buf.toString());
+        return JSON.parse(buf.toString());
     } catch (err) {
-      return buf.toString();
+        return buf.toString();
     }
-  };
+};
 
 class NCConnection {
-    public nc!: NatsConnection;
+    private nc!: NatsConnection;
 
     public connect = async (): Promise<NatsConnection> => {
-
-      const credentials: INatsCredentials = Credentials('nats');
+        const credentials: INatsCredentials = Credentials('nats');
 
         try {
             this.nc = await connect({
@@ -67,11 +65,11 @@ class NCConnection {
         void (async () => {
             console.info(`$nats_connect (connect): connected to nats - ${this.nc.getServer()}`);
             for await (const s of this.nc.status()) {
-                if(s.type === 'update') {
+                if (s.type === 'update') {
                     console.info(`$connect (events): ${s.type}`, s.data);
-                  } else {
+                } else {
                     console.info(`$connect (events): ${s.type} - data: ${s.data}`);
-                  }
+                }
             }
         })();
     };

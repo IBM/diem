@@ -9,12 +9,13 @@ class Publisher {
 
     public constructor() {
         this.inbox = createInbox();
+
         console.info(`$nats_publisher (publish): created inbox ${this.inbox}`);
     }
 
     public connect = async (): Promise<boolean> => {
         try {
-            this.nc = NC.nc;
+            this.nc = await NC.connect();
         } catch (err) {
             switch (err.code) {
                 case ErrorCode.NoResponders:
@@ -33,7 +34,7 @@ class Publisher {
         return Promise.resolve(true);
     };
 
-    public publish = async (channel:string, event: any) => {
+    public publish = async (channel: string, event: any) => {
         this.nc.publish(`diem.${channel}`, toBuf({ id: 'pl', client: this.client, payload: event }), {
             reply: this.inbox,
         });

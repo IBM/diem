@@ -9,22 +9,22 @@ class Publisher {
 
     public constructor() {
         this.inbox = createInbox();
-        console.info(`$nats_publisher (publish): created inbox ${this.inbox}`);
+        console.info(`$nats_publisher (connect): created inbox ${this.inbox}`);
     }
 
     public connect = async (): Promise<boolean> => {
         try {
-            this.nc = NC.nc;
+            this.nc = await NC.connect();
         } catch (err) {
             switch (err.code) {
                 case ErrorCode.NoResponders:
-                    console.info('$nats_publisher (publish): no service available');
+                    console.info('$nats_publisher (connect): no service available');
                     break;
                 case ErrorCode.Timeout:
-                    console.info('$nats_publisher (publish): service did not respond');
+                    console.info('$nats_publisher (connect): service did not respond');
                     break;
                 default:
-                    console.error('$nats_publisher (publish): request error:', err);
+                    console.error('$nats_publisher (connect): request error:', err);
             }
 
             return Promise.reject();
