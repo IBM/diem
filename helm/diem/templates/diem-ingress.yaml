@@ -16,6 +16,8 @@ metadata:
     nginx.org/websocket-services: {{ .Values.core.deployment.socketName }}
   name: {{ .Values.ingress.name }}
   namespace: {{ .Release.Namespace }}
+  labels:
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
 spec:
   rules:
     - host: {{ .Values.ingress.host }}

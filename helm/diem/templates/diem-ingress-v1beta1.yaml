@@ -16,6 +16,8 @@ metadata:
     nginx.org/websocket-services: {{ .Values.core.deployment.socketName }}
   name: {{ .Values.ingress.name }}
   namespace: {{ .Release.Namespace }}
+  labels:
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
 spec:
   rules:
     - host: {{ .Values.ingress.host }}
@@ -46,11 +48,6 @@ spec:
               servicePort: {{ .Values.core.deployment.port }}
             pathType: Prefix
             path: "/{{ .Values.core.deployment.socketName }}"
-          - backend:
-              serviceName: {{ printf "%s-%s-client" .Release.Name .Values.nats.name }}
-              servicePort: {{ .Values.nats.port }}
-            pathType: Prefix
-            path: /{{ .Values.nats.name }}
   tls:
     - hosts:
         - {{ .Values.ingress.host }}

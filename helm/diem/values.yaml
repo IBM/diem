@@ -153,9 +153,6 @@ nats:
   ## the name of the service
   name: nats
 
-  ## port nats runs under
-  port: 4222
-
   ## authentication
   ## it4s recommended you create your own long encrypted password
   ## follow the instructions here https://docs.nats.io/nats-tools/natscli
@@ -163,10 +160,12 @@ nats:
   ## encrypt your password and fill in your plain password in the unencrypted_password
   ## if you do not want to use an encrypted password leave the unencrypted_password blank
   auth:
+    user: nats_client
     unencrypted_password: natsuserauthorisationpassword
     password: $2a$11$ZiPM3G2YnDkv/HtqhFNGz./XW9iSJpwyrXaEsm6tPQi00cN6pft0q
     token: ""
   clusterAuth:
+    user: nats_cluster
     unencrypted_password: natsuserauthorisationpassword
     password: $2a$11$ZiPM3G2YnDkv/HtqhFNGz./XW9iSJpwyrXaEsm6tPQi00cN6pft0q
     token: ""
@@ -174,6 +173,10 @@ nats:
   ## enable external access, this will create a load balancer
   ## you can get your ip from >_ kubectl get svc diem-nats-lb -o wide
   external: false
+
+  ## only if external is enabled (will be your loadbalancer ip)
+  ## you might need to reapply the helm chart twice once you have it
+  ip: 0.0.0.0
 
   ## the number of pods
   replicaCount: 1

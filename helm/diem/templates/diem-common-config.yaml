@@ -1,16 +1,30 @@
+{{- $service := printf "%s-%s-lb" .Release.Name .Values.nats.name -}}
+{{- $ip := printf "%s-%s-lb" .Release.Name .Values.nats.name -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ .Values.common.config.configmapref }}
   namespace: {{ .Release.Namespace }}
+  annotations:
+    helm.sh/hook-weight: "5"
+    helm.sh/hook: post-install,post-upgrade
+  labels:
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
 data:
   K8_INSTANCE: {{ .Values.common.config.K8_INSTANCE }}
   K8_SYSTEM: {{ .Values.common.config.K8_SYSTEM }}
   K8_SYSTEM_NAME: {{ .Values.common.config.K8_SYSTEM_NAME }}
   K8_APPURLSHORT: {{ .Values.ingress.host }}
   {{- if .Values.nats.auth.user }}
-  NATS__USER: {{ .Values.nats.auth.user }}
+  NATS__USER: {{ .Values.nats.auth.user | quote }}
   {{- end }}
   {{- if .Values.nats.clusterAuth.user }}
-  NATS__CLUSTERUSER: {{ .Values.nats.clusterAuth.user }}
+  NATS__CLUSTERUSER: {{ .Values.nats.clusterAuth.user | quote }}
+  {{- end }}
+  {{- if .Values.nats.external }}
+  {{- if (lookup "v1" "Service" .Release.Namespace $service).status }}
+  NATS__IP: {{ (index (lookup "v1" "Service" .Release.Namespace $service).status.loadBalancer.ingress 0).ip }}
+  {{- else }}
+  NATS__IP: 0.0.0.0
+  {{- end }}
   {{- end }}

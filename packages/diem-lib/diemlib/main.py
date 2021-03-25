@@ -16,6 +16,8 @@ import sys
 from sys import exit
 import traceback
 import diemlib.config as config
+import diemlib.Nats as Nats
+import asyncio
 
 __all__ = ["UtcNow", "runTime", "printl",
            "mq", "out", "endJob", "endjob", "error"]
@@ -38,6 +40,15 @@ def printl(msg):
 
 
 def mq(data):
+
+    if not 'loop' in locals():
+        print("Creating loop")
+        loop = asyncio.get_event_loop()
+    if not 'nats' in locals():
+        print("Creating nats")
+        nats = Nats()
+
+
     # Returns job data back to the main application
     data["id"] = config.__id
     data["jobid"] = config.__jobid
@@ -63,7 +74,7 @@ def mq(data):
         error(e)
         raise
 
-    requests.post(url=config.__url, data=data)
+    loop.create_task(nats.publish(data))
 
 
 def out(data):

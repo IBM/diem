@@ -4,6 +4,8 @@ kind: Service
 metadata:
   name: {{ .Release.Name }}-{{ .Values.nats.name }}-lb
   namespace: {{ .Release.Namespace }}
+  labels:
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
 spec:
   type: LoadBalancer
   selector:

@@ -27,3 +27,7 @@
     ```cmd
     >_ helm quay upgrade --install quay.io/huineng/diem@0.1.0 diem -f values_local.yaml
     ```
+
+## todo
+
+{{ (index (lookup "v1" "Service" .Release.Namespace $service).status.loadBalancer.ingress 0).ip }}

@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
   name: {{ .Values.core.config.configmapref }}
   namespace: {{ .Release.Namespace }}
+  labels:
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
 data:
   PORT: {{ .Values.core.deployment.targetPort | quote }}
   APPPATH: {{ .Values.core.config.APPPATH | quote }}

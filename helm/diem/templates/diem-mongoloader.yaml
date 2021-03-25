@@ -3,15 +3,16 @@ kind: Job
 metadata:
   name: diem-mongohelper
   annotations:
-    helm.sh/hook: "post-install,post-upgrade"
+    helm.sh/hook: post-install,post-upgrade
     helm.sh/hook-delete-policy: hook-succeeded
+    helm.sh/hook-weight: "10"
 spec:
   template:
     spec:
       containers:
-      - name: diem-mongohelper
-        image: quay.io/diem/mongoloader:1.0.0
-        envFrom:
+        - name: diem-mongohelper
+          image: quay.io/diem/mongoloader:1.0.0
+          envFrom:
             - secretRef:
                 name: {{ .Values.core.secrets.secretmapref }}
       restartPolicy: OnFailure

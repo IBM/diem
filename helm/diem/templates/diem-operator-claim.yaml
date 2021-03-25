@@ -5,6 +5,8 @@ metadata:
   annotations:
     "helm.sh/resource-policy": keep
     "helm.sh/hook": "pre-install"
+  labels:
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
 spec:
   accessModes:
     - ReadWriteOnce

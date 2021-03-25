@@ -6,6 +6,7 @@ metadata:
   labels:
     app: {{ .Values.nodepy.name }}
     tier: {{ .Values.nodepy.tier }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
 spec:
   ports:
     - name: http
