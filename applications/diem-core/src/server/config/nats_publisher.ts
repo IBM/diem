@@ -1,5 +1,5 @@
 import { createInbox, ErrorCode, NatsConnection, JSONCodec } from 'nats';
-import { NC, toBuf } from './nats_connect';
+import { NC, toBuff } from './nats_connect';
 
 const jc = JSONCodec();
 
@@ -38,7 +38,7 @@ class Publisher {
     };
 
     public publish = async (channel: string, event: any) => {
-        this.nc.publish(`diem.${channel}`, toBuf({ id: 'pl', client: this.client, payload: event }));
+        this.nc.publish(`diem.${channel}`, toBuff({ id: 'pl', client: this.client, payload: event }));
     };
 
     public request = async (channel: string, event: any) => {

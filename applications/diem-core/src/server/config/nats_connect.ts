@@ -27,7 +27,7 @@ export const toBuff = (msg: { [index: string]: any } | string) => {
         return sc.encode(msg);
     }
 
-    return jc.encode(JSON.stringify(msg));
+    return jc.encode(msg);
 };
 
 export const fromBuff = (buf: Uint8Array): IPayload | string | undefined => {
@@ -38,6 +38,8 @@ export const fromBuff = (buf: Uint8Array): IPayload | string | undefined => {
         const t: unknown = jc.decode(buf);
         if (t && typeof t === 'object') {
             return t as IPayload;
+        } else if (t && typeof t === 'string') {
+            return sc.decode(buf);
         }
 
         return undefined;

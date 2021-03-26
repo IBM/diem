@@ -1,11 +1,12 @@
-import { Msg, NatsConnection, NatsError } from 'nats';
-import { NC, IPayload, toBuf, fromBuf } from './nats_connect';
+import { NatsConnection, Subscription } from 'nats';
+import { NC, IPayload, toBuff, fromBuff } from './nats_connect';
 
 const queue: string = 'diem.*';
 
 class Subscriber {
     private nc!: NatsConnection;
     private client!: number;
+    private subscription!: Subscription;
 
     public connect = async () => {
         try {
@@ -18,45 +19,53 @@ class Subscriber {
 
         this.client = this.nc.info?.client_id || 0;
 
-        this.nc.subscribe(queue, { callback: this.event, queue });
+        this.subscription = this.nc.subscribe(queue, { queue });
+
+        void this.subs();
 
         console.info(`$nats_subscriber (connect): connected : client ${this.client}`);
 
         return Promise.resolve();
     };
 
-    private event = async (err: NatsError | null, msg: Msg) => {
-        if (err) {
-            return console.error(err);
-        }
+    private subs = async () => {
+        for await (const msg of this.subscription) {
+            const payload: IPayload | string | undefined = fromBuff(msg.data);
+            const subject: string = msg.subject;
 
-        const payload: IPayload = fromBuf(msg.data);
-        const subject: string = msg.subject;
+            // if it's not the payload we need, we cannot handle it
+            if (!payload || typeof payload !== 'object' || !payload.id) {
+                return console.info(`$nats_subscriber (subs): unknown message: ${subject}`);
+            }
 
-        let channel: string;
+            let channel: string;
 
-        if (subject.includes('.')) {
-            channel = subject.split('.')[1];
-        } else {
-            channel = subject;
-        }
+            if (subject.includes('.')) {
+                channel = subject.split('.')[1];
+            } else {
+                channel = subject;
+            }
 
-        if (msg.reply) {
-            msg.respond(
-                toBuf({
-                    client: this.client,
-                    id: payload.id,
-                })
-            );
-            console.info(`$nats_subscriber (cb): confirming message: id: ${payload.id} - client: ${payload.client}`);
-        } else {
             if (channel === 'info') {
                 return console.info(
-                    `$nats_subscriber (cb): (${channel}) - id: ${payload.id} - client: ${payload.client} - info: ${payload.data}`
+                    `$nats_subscriber (${channel}): id: ${payload.id} - client: ${payload.client} - info: ${payload.data}`
                 );
             }
 
-            console.info(`$nats_subscriber: (${channel}) - id: ${payload.id} - client: ${payload.client}`);
+            if (msg.reply) {
+                msg.respond(
+                    toBuff({
+                        client: this.client,
+                        id: payload.id,
+                    })
+                );
+                console.info(
+                    `$$nats_subscriber (${channel}): id: ${payload.id} - client: ${payload.client} - client: ${msg.sid}`
+                );
+
+                return;
+            }
+            console.info(`$$nats_subscriber (${channel}): id: ${payload.id} - client: ${payload.client}`);
         }
     };
 }

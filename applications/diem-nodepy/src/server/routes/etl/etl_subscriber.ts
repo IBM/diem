@@ -22,14 +22,14 @@ class Subscriber {
 
         this.subscription = this.nc.subscribe(queue);
 
-        void this.handleSubscriptions();
+        void this.subs();
 
         console.info(`$nats_subscriber (subscribe): connected : client ${this.client}`);
 
         return Promise.resolve();
     };
 
-    private handleSubscriptions = async () => {
+    private subs = async () => {
         for await (const msg of this.subscription) {
             const payload: IPayload | string | undefined = fromBuff(msg.data);
             if (payload && typeof payload === 'object' && payload.id) {
