@@ -1,15 +1,15 @@
-import { createInbox, ErrorCode, NatsConnection, JSONCodec } from 'nats';
-import { NC, toBuff } from './nats_connect';
-
-const jc = JSONCodec();
+import { utils } from '@common/utils';
+import { createInbox, ErrorCode, NatsConnection, ServerInfo } from 'nats';
+import { NC, fromBuff, toBuff } from './nats_connect';
 
 class Publisher {
     private nc!: NatsConnection;
-    private client!: number;
-
+    private info!: ServerInfo;
     private inbox: string;
+    private client: string;
 
     public constructor() {
+        this.client = utils.Env.client;
         this.inbox = createInbox();
         console.info(`$nats_publisher (connect): created inbox ${this.inbox}`);
     }
@@ -31,23 +31,31 @@ class Publisher {
 
             return Promise.reject();
         }
-        this.client = this.nc.info?.client_id || 0;
-        console.info(`$nats_publisher (connect): connected : client ${this.client}`);
+
+        if (this.nc.info) {
+            this.info = this.nc.info;
+            console.info(
+                `$nats_publisher (connect): connected : nsid ${this.info.client_id} - nsc ${this.info.client_ip}`
+            );
+        }
 
         return Promise.resolve(true);
     };
 
     public publish = async (channel: string, event: any) => {
-        this.nc.publish(`diem.${channel}`, toBuff({ id: 'pl', client: this.client, payload: event }));
+        this.nc.publish(`diem.${channel}`, toBuff({ client: this.client, data: event }));
     };
 
     public request = async (channel: string, event: any) => {
+        console.info(
+            `$nats_publisher (request): new request : nsid ${this.info.client_id} - nsc ${this.info.client_ip}`
+        );
         await this.nc
-            .request(channel, jc.encode({ id: 'pl', client: this.client, payload: event }), {
+            .request(channel, toBuff({ client: this.client, data: event }), {
                 timeout: 1000,
             })
             .then((m) => {
-                console.info(`got response: ${jc.decode(m.data)}`);
+                console.info(`got response: ${fromBuff(m.data)}`);
             })
             .catch(async (err) => {
                 console.info(`problem with request: ${err.message}`);

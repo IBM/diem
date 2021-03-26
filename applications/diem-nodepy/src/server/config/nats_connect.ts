@@ -6,9 +6,8 @@ const jc = JSONCodec();
 const sc = StringCodec();
 
 export interface IPayload {
-    id: string | number;
     inbox?: string;
-    client: number;
+    client: string;
     data?: any;
 }
 

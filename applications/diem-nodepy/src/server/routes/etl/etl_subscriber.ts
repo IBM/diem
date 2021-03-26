@@ -1,13 +1,19 @@
-import { NatsConnection, Subscription } from 'nats';
+import { NatsConnection, ServerInfo, Subscription } from 'nats';
 import { NC, IPayload, fromBuff, toBuff } from '@config/nats_connect';
 import { handler } from './etl.handler';
+import { utils } from '@common/utils';
 
 const queue: string = 'nodepy.*';
 
 class Subscriber {
     private nc!: NatsConnection;
-    private client!: number;
+    private info!: ServerInfo;
     private subscription!: Subscription;
+    private client: string;
+
+    public constructor() {
+        this.client = utils.Env.client;
+    }
 
     public connect = async () => {
         try {
@@ -18,7 +24,12 @@ class Subscriber {
             return;
         }
 
-        this.client = this.nc.info?.client_id || 0;
+        if (this.nc.info) {
+            this.info = this.nc.info;
+            console.info(
+                `$etl_publisher (connect): connected : nsid ${this.info.client_id} - nsc ${this.info.client_ip}`
+            );
+        }
 
         this.subscription = this.nc.subscribe(queue);
 
@@ -32,19 +43,19 @@ class Subscriber {
     private subs = async () => {
         for await (const msg of this.subscription) {
             const payload: IPayload | string | undefined = fromBuff(msg.data);
-            if (payload && typeof payload === 'object' && payload.id) {
+            if (payload && typeof payload === 'object' && payload.client) {
                 if (msg.reply) {
                     msg.respond(
                         toBuff({
                             client: this.client,
-                            id: payload.id,
+                            sid: msg.sid || 0,
                         })
                     );
                     console.info(
-                        `$request (cb): confirming message: id: ${payload.id} - client: ${payload.client} - client: ${msg.sid}`
+                        `$request (cb): confirming message: client: ${payload.client} - sid: ${msg.sid}`
                     );
                 } else {
-                    console.info(`$request (cb): new message: id: ${payload.id} - client: ${payload.client}`);
+                    console.info(`$request (cb): new message: client: ${payload.client} - sid: ${msg.sid}`);
                 }
 
                 if (payload.data) {

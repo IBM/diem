@@ -1,12 +1,18 @@
-import { NatsConnection, Subscription } from 'nats';
+import { utils } from '@common/utils';
+import { NatsConnection, Subscription, ServerInfo } from 'nats';
 import { NC, IPayload, toBuff, fromBuff } from './nats_connect';
 
 const queue: string = 'diem.*';
 
 class Subscriber {
     private nc!: NatsConnection;
-    private client!: number;
+    private info!: ServerInfo;
     private subscription!: Subscription;
+    private client: string;
+
+    public constructor() {
+        this.client = utils.Env.client;
+    }
 
     public connect = async () => {
         try {
@@ -17,13 +23,16 @@ class Subscriber {
             return;
         }
 
-        this.client = this.nc.info?.client_id || 0;
+        if (this.nc.info) {
+            this.info = this.nc.info;
+            console.info(
+                `$nats_subscriber (connect): connected : nsid ${this.info.client_id} - nsc ${this.info.client_ip}`
+            );
+        }
 
         this.subscription = this.nc.subscribe(queue, { queue });
 
         void this.subs();
-
-        console.info(`$nats_subscriber (connect): connected : client ${this.client}`);
 
         return Promise.resolve();
     };
@@ -34,7 +43,7 @@ class Subscriber {
             const subject: string = msg.subject;
 
             // if it's not the payload we need, we cannot handle it
-            if (!payload || typeof payload !== 'object' || !payload.id) {
+            if (!payload || typeof payload !== 'object' || !payload.client) {
                 return console.info(`$nats_subscriber (subs): unknown message: ${subject}`);
             }
 
@@ -47,25 +56,21 @@ class Subscriber {
             }
 
             if (channel === 'info') {
-                return console.info(
-                    `$nats_subscriber (${channel}): id: ${payload.id} - client: ${payload.client} - info: ${payload.data}`
-                );
+                return console.info(`$nats_subscriber (${channel}): client: ${payload.client} - info: ${payload.data}`);
             }
 
             if (msg.reply) {
                 msg.respond(
                     toBuff({
                         client: this.client,
-                        id: payload.id,
+                        sid: msg.sid || 0,
                     })
                 );
-                console.info(
-                    `$$nats_subscriber (${channel}): id: ${payload.id} - client: ${payload.client} - client: ${msg.sid}`
-                );
+                console.info(`$$nats_subscriber (${channel}):  client: ${payload.client} - client: ${msg.sid}`);
 
                 return;
             }
-            console.info(`$$nats_subscriber (${channel}): id: ${payload.id} - client: ${payload.client}`);
+            console.info(`$$nats_subscriber (${channel}): client: ${payload.client}`);
         }
     };
 }

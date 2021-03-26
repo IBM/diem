@@ -4,7 +4,6 @@ import moment from 'moment';
 import { publisher } from '@config/nats_publisher';
 import { IntEnv } from '../interfaces/env';
 import { IError } from '../interfaces/shared';
-import { Credentials } from './cfenv';
 
 export interface ISlack {
     emoji: string;
@@ -19,29 +18,18 @@ class Utils {
 
     public Env: IntEnv = {
         NODE_ENV: process.env.NODE_ENV || 'local',
-        app: process.env.APP || process.env.NAME || 'rfb',
-        appcookie: process.env.APPCOOKIE || 'leap-rfb',
-        apppath: process.env.APPPATH || '',
-        appurl: `//${process.env.K8_APPURLSHORT}${process.env.APPPATH}` || 'https://blueboard.ibm.com',
+        app: process.env.APP || process.env.NAME || 'nodepy',
         description: process.env.DESCRIPTION || '',
         K8_APP: process.env.APP || 'noname',
-        K8_APPURL: `https://${process.env.K8_APPURLSHORT}` || 'https://diem.ibm.com',
-        K8_APPURLSHORT: process.env.K8_APPURLSHORT || 'diem.ibm.com',
         K8_SYSTEM: process.env.K8_SYSTEM || 'test',
         K8_SYSTEM_NAME: process.env.K8_SYSTEM_NAME || 'test',
+        client: process.env.HOSTNAME || process.env.APP || process.env.NAME || 'diem',
         packname: process.env.NAME || '',
         version: process.env.VERSION || '0',
     };
 
-    private jwtToken: string;
-
-    public get jwtTokenKey(): string {
-        return this.jwtToken;
-    }
-
     public constructor() {
         this.ev = new EventEmitter();
-        this.jwtToken = Credentials('jwttoken') || `${this.Env.appcookie}`;
     }
 
     public log = (msg: any) => {

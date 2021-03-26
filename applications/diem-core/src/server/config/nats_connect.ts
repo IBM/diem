@@ -6,10 +6,10 @@ const jc = JSONCodec();
 const sc = StringCodec();
 
 export interface IPayload {
-    id: string | number;
     inbox?: string;
-    client: number;
+    client: string;
     data?: any;
+    sid?: number; // number used when the message has an id
 }
 
 interface INatsCredentials {
@@ -22,7 +22,7 @@ interface INatsCredentials {
     user: string;
 }
 
-export const toBuff = (msg: { [index: string]: any } | string) => {
+export const toBuff = (msg: IPayload) => {
     if (typeof msg === 'string') {
         return sc.encode(msg);
     }
