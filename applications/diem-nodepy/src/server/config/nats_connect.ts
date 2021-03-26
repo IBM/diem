@@ -50,14 +50,20 @@ class NCConnection {
     private nc!: NatsConnection;
 
     public connect = async (): Promise<NatsConnection> => {
+
+        if (this.nc) {
+            return this.nc;
+        }
+
         const credentials: INatsCredentials = Credentials('nats');
 
         try {
+            console.error('$nats_connect (connect): connecting...');
             this.nc = await connect({
                 servers: `${credentials.ip}:4222`,
                 user: credentials.user,
                 pass: credentials.password,
-                name: 'Diem Connection',
+                name: 'Diem Nodepy',
             });
 
             this.events();

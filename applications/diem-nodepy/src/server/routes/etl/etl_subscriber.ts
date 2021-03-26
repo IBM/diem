@@ -19,16 +19,16 @@ class Subscriber {
         }
 
         this.client = this.nc.info?.client_id || 0;
+
         this.subscription = this.nc.subscribe(queue);
 
-        await this.handleSubscriptions();
+        void this.handleSubscriptions();
 
         console.info(`$nats_subscriber (subscribe): connected : client ${this.client}`);
 
         return Promise.resolve();
     };
 
-<<<<<<< HEAD
     private handleSubscriptions = async () => {
         for await (const msg of this.subscription) {
             const payload: IPayload | string | undefined = fromBuff(msg.data);
@@ -51,22 +51,6 @@ class Subscriber {
                     await handler(payload.data);
                 }
             }
-=======
-        const payload: IPayload = fromBuf(msg.data);
-
-        if (msg.reply) {
-            msg.respond(
-                toBuf({
-                    client: this.client,
-                    id: payload.id,
-                })
-            );
-            console.info(`$nats_subscriber (cb): confirming message: id: ${payload.id} - client: ${payload.client}`);
-        } else {
-            const payload: IPayload = fromBuf(msg.data);
-            await handler(payload.data);
-            console.info(`$nats_subscriber (cb): new message: id: ${payload.id} - client: ${payload.client}`);
->>>>>>> 39a19aba60e19e66a9836e4d9dec6b3fdf37796f
         }
     };
 }

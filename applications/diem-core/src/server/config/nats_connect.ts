@@ -1,6 +1,9 @@
 /*jshint esversion: 8 */
-import { connect, NatsConnection } from 'nats';
+import { connect, NatsConnection, JSONCodec, StringCodec } from 'nats';
 import { Credentials } from '../common/cfenv';
+
+const jc = JSONCodec();
+const sc = StringCodec();
 
 export interface IPayload {
     id: string | number;
@@ -19,22 +22,27 @@ interface INatsCredentials {
     user: string;
 }
 
-export const toBuf = (msg: { [index: string]: any } | string) => {
+export const toBuff = (msg: { [index: string]: any } | string) => {
     if (typeof msg === 'string') {
-        return Buffer.from(msg);
+        return sc.encode(msg);
     }
 
-    return Buffer.from(JSON.stringify(msg));
+    return jc.encode(JSON.stringify(msg));
 };
 
-export const fromBuf = (buf: Uint8Array) => {
+export const fromBuff = (buf: Uint8Array): IPayload | string | undefined => {
     if (!buf) {
-        return '';
+        return undefined;
     }
     try {
-        return JSON.parse(buf.toString());
+        const t: unknown = jc.decode(buf);
+        if (t && typeof t === 'object') {
+            return t as IPayload;
+        }
+
+        return undefined;
     } catch (err) {
-        return buf.toString();
+        return sc.decode(buf);
     }
 };
 
@@ -49,7 +57,7 @@ class NCConnection {
         const credentials: INatsCredentials = Credentials('nats');
 
         try {
-            console.error('$nats_connect (connect): connecting');
+            console.error('$nats_connect (connect): connecting...');
             this.nc = await connect({
                 servers: `${credentials.ip}:4222`,
                 user: credentials.user,
