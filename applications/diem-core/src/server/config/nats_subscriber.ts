@@ -1,4 +1,3 @@
-import { utils } from '@common/utils';
 import { NatsConnection, Subscription, ServerInfo } from 'nats';
 import { NC, IPayload, toBuff, fromBuff } from './nats_connect';
 
@@ -11,7 +10,7 @@ class Subscriber {
     private client: string;
 
     public constructor() {
-        this.client = utils.Env.client;
+        this.client = process.env.HOSTNAME || 'diem-core';
     }
 
     public connect = async () => {

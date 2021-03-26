@@ -31,7 +31,6 @@ class Utils {
         K8_APPURLSHORT: process.env.K8_APPURLSHORT || 'diem.ibm.com',
         K8_SYSTEM: process.env.K8_SYSTEM || 'test',
         K8_SYSTEM_NAME: process.env.K8_SYSTEM_NAME || 'test',
-        client: process.env.HOSTNAME || process.env.APP || process.env.NAME || 'diem',
         packname: process.env.NAME || '',
         version: process.env.VERSION || '0',
     };

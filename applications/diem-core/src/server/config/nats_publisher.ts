@@ -1,4 +1,3 @@
-import { utils } from '@common/utils';
 import { createInbox, ErrorCode, NatsConnection, ServerInfo } from 'nats';
 import { NC, fromBuff, toBuff } from './nats_connect';
 
@@ -9,8 +8,9 @@ class Publisher {
     private client: string;
 
     public constructor() {
-        this.client = utils.Env.client;
+        this.client = process.env.HOSTNAME || 'diem-core';
         this.inbox = createInbox();
+
         console.info(`$nats_publisher (connect): created inbox ${this.inbox}`);
     }
 

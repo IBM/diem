@@ -1,7 +1,6 @@
 import { NatsConnection, ServerInfo, Subscription } from 'nats';
 import { NC, IPayload, fromBuff, toBuff } from '@config/nats_connect';
 import { handler } from './etl.handler';
-import { utils } from '@common/utils';
 
 const queue: string = 'nodepy.*';
 
@@ -12,7 +11,7 @@ class Subscriber {
     private client: string;
 
     public constructor() {
-        this.client = utils.Env.client;
+        this.client = process.env.HOSTNAME || 'diem-nodepy';
     }
 
     public connect = async () => {

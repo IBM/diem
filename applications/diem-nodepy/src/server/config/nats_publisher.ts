@@ -1,13 +1,14 @@
-import { createInbox, ErrorCode, NatsConnection } from 'nats';
+import { createInbox, ErrorCode, NatsConnection, ServerInfo } from 'nats';
 import { NC, toBuff } from './nats_connect';
 
 class Publisher {
     private nc!: NatsConnection;
-    private client!: number;
-
+    private info!: ServerInfo;
     private inbox: string;
+    private client: string;
 
     public constructor() {
+        this.client = process.env.HOSTNAME || 'nodepy';
         this.inbox = createInbox();
 
         console.info(`$nats_publisher (publish): created inbox ${this.inbox}`);
@@ -30,8 +31,12 @@ class Publisher {
 
             return Promise.reject();
         }
-        this.client = this.nc.info?.client_id || 0;
-        console.info(`$nats_publisher (connect): connected : client ${this.client}`);
+        if (this.nc.info) {
+            this.info = this.nc.info;
+            console.info(
+                `$nats_publisher (connect): connected : nsid ${this.info.client_id} - nsc ${this.info.client_ip}`
+            );
+        }
 
         return Promise.resolve(true);
     };
