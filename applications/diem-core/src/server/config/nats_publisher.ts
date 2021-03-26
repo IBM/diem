@@ -1,5 +1,7 @@
-import { createInbox, ErrorCode, NatsConnection } from 'nats';
+import { createInbox, ErrorCode, NatsConnection, JSONCodec } from 'nats';
 import { NC, toBuf } from './nats_connect';
+
+const jc = JSONCodec();
 
 class Publisher {
     private nc!: NatsConnection;
@@ -36,9 +38,24 @@ class Publisher {
     };
 
     public publish = async (channel: string, event: any) => {
-        this.nc.publish(`diem.${channel}`, toBuf({ id: 'pl', client: this.client, payload: event }), {
-            reply: this.inbox,
-        });
+        this.nc.publish(`diem.${channel}`, toBuf({ id: 'pl', client: this.client, payload: event }));
+    };
+
+    public request = async (channel: string, event: any) => {
+        await this.nc
+            .request(channel, jc.encode({ id: 'pl', client: this.client, payload: event }), {
+                timeout: 1000,
+            })
+            .then((m) => {
+                console.info(`got response: ${jc.decode(m.data)}`);
+            })
+            .catch(async (err) => {
+                console.info(`problem with request: ${err.message}`);
+
+                return Promise.reject(err);
+            });
+
+        return Promise.resolve();
     };
 }
 
