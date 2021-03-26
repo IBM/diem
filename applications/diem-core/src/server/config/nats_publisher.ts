@@ -1,5 +1,7 @@
-import { createInbox, ErrorCode, NatsConnection } from 'nats';
+import { createInbox, ErrorCode, NatsConnection, JSONCodec } from 'nats';
 import { NC, toBuf } from './nats_connect';
+
+const jc = JSONCodec();
 
 class Publisher {
     private nc!: NatsConnection;
@@ -9,22 +11,22 @@ class Publisher {
 
     public constructor() {
         this.inbox = createInbox();
-        console.info(`$nats_publisher (publish): created inbox ${this.inbox}`);
+        console.info(`$nats_publisher (connect): created inbox ${this.inbox}`);
     }
 
     public connect = async (): Promise<boolean> => {
         try {
-            this.nc = NC.nc;
+            this.nc = await NC.connect();
         } catch (err) {
             switch (err.code) {
                 case ErrorCode.NoResponders:
-                    console.info('$nats_publisher (publish): no service available');
+                    console.info('$nats_publisher (connect): no service available');
                     break;
                 case ErrorCode.Timeout:
-                    console.info('$nats_publisher (publish): service did not respond');
+                    console.info('$nats_publisher (connect): service did not respond');
                     break;
                 default:
-                    console.error('$nats_publisher (publish): request error:', err);
+                    console.error('$nats_publisher (connect): request error:', err);
             }
 
             return Promise.reject();
@@ -36,9 +38,24 @@ class Publisher {
     };
 
     public publish = async (channel: string, event: any) => {
-        this.nc.publish(`diem.${channel}`, toBuf({ id: 'pl', client: this.client, payload: event }), {
-            reply: this.inbox,
-        });
+        this.nc.publish(`diem.${channel}`, toBuf({ id: 'pl', client: this.client, payload: event }));
+    };
+
+    public request = async (channel: string, event: any) => {
+        await this.nc
+            .request(channel, jc.encode({ id: 'pl', client: this.client, payload: event }), {
+                timeout: 1000,
+            })
+            .then((m) => {
+                console.info(`got response: ${jc.decode(m.data)}`);
+            })
+            .catch(async (err) => {
+                console.info(`problem with request: ${err.message}`);
+
+                return Promise.reject(err);
+            });
+
+        return Promise.resolve();
     };
 }
 

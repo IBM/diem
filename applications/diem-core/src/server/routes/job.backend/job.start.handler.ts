@@ -227,11 +227,7 @@ export const jobStartHandler: (job: IETLJob, caller: ICaller) => Promise<void> =
         doc.job.transid
     );
 
-    await createNodePyJob(doc, job).catch(async (err: any) => {
-        err.trace = addTrace(err.trace, '@at $job.start.handler (jobStartHandler) - createNodePyJob');
-
-        return errHandler(err);
-    });
+    await createNodePyJob(doc, job); // this is void
 
     await jobLogger(doc).catch(async (err: any) => {
         err.trace = addTrace(err.trace, '@at $job.start.handler (saveDoc) - jobLogger - nodepy');

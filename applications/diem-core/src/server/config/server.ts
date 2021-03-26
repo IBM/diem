@@ -16,11 +16,14 @@ import { jwtCheck } from '../routes/webapikeys/webapikeys.jwtcheck';
 import * as routes from '../routes/routes';
 import { getOrg, getRole, getRoleNbr, addTrace } from '../routes/shared/functions';
 import { toMQ } from '../routes/logger/logger';
+import { publisher } from './nats_publisher';
+import { NC } from './nats_connect';
 import { css, expressConfig } from './config';
 import { login } from './authorization';
 import assets from './assets.json';
 import { WSS } from './socket';
 import { cron } from './cron';
+import { subscriber } from './nats_subscriber';
 
 export class Server {
     public pack: IntEnv;
@@ -188,6 +191,14 @@ export class Server {
 
         await WSS.start(httpServer);
         cron.start();
+
+        try {
+            await NC.connect();
+        } catch (err) {
+            return console.error(err);
+        }
+        await subscriber.connect();
+        await publisher.connect();
         // spark.startWatcher().catch((err: Error) => console.error(err));
     };
 

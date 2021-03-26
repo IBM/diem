@@ -47,12 +47,9 @@ export const fromBuff = (buf: Uint8Array): IPayload | string | undefined => {
 };
 
 class NCConnection {
-    public nc!: NatsConnection;
+    private nc!: NatsConnection;
 
     public connect = async (): Promise<NatsConnection> => {
-
-        if
-
         const credentials: INatsCredentials = Credentials('nats');
 
         try {

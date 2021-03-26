@@ -11,7 +11,7 @@ class Subscriber {
 
     public connect = async () => {
         try {
-            this.nc = NC.nc;
+            this.nc = await NC.connect();
         } catch (err) {
             console.error('$nats_subscriber (publish): connect error:', err);
 
@@ -28,6 +28,7 @@ class Subscriber {
         return Promise.resolve();
     };
 
+<<<<<<< HEAD
     private handleSubscriptions = async () => {
         for await (const msg of this.subscription) {
             const payload: IPayload | string | undefined = fromBuff(msg.data);
@@ -50,6 +51,22 @@ class Subscriber {
                     await handler(payload.data);
                 }
             }
+=======
+        const payload: IPayload = fromBuf(msg.data);
+
+        if (msg.reply) {
+            msg.respond(
+                toBuf({
+                    client: this.client,
+                    id: payload.id,
+                })
+            );
+            console.info(`$nats_subscriber (cb): confirming message: id: ${payload.id} - client: ${payload.client}`);
+        } else {
+            const payload: IPayload = fromBuf(msg.data);
+            await handler(payload.data);
+            console.info(`$nats_subscriber (cb): new message: id: ${payload.id} - client: ${payload.client}`);
+>>>>>>> 39a19aba60e19e66a9836e4d9dec6b3fdf37796f
         }
     };
 }

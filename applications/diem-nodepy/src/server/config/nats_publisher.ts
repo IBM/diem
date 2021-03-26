@@ -9,6 +9,7 @@ class Publisher {
 
     public constructor() {
         this.inbox = createInbox();
+
         console.info(`$nats_publisher (publish): created inbox ${this.inbox}`);
     }
 
