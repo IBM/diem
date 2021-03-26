@@ -9,6 +9,7 @@ export interface IPayload {
     inbox?: string;
     client: string;
     data?: any;
+    sid?: number; // number used when the message has an id
 }
 
 interface INatsCredentials {
@@ -21,12 +22,12 @@ interface INatsCredentials {
     user: string;
 }
 
-export const toBuff = (msg: { [index: string]: any } | string) => {
+export const toBuff = (msg: IPayload) => {
     if (typeof msg === 'string') {
         return sc.encode(msg);
     }
 
-    return jc.encode(JSON.stringify(msg));
+    return jc.encode(msg);
 };
 
 export const fromBuff = (buf: Uint8Array): IPayload | string | undefined => {
@@ -37,6 +38,8 @@ export const fromBuff = (buf: Uint8Array): IPayload | string | undefined => {
         const t: unknown = jc.decode(buf);
         if (t && typeof t === 'object') {
             return t as IPayload;
+        } else if (t && typeof t === 'string') {
+            return sc.decode(buf);
         }
 
         return undefined;
@@ -49,7 +52,6 @@ class NCConnection {
     private nc!: NatsConnection;
 
     public connect = async (): Promise<NatsConnection> => {
-
         if (this.nc) {
             return this.nc;
         }

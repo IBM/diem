@@ -42,11 +42,11 @@ class Publisher {
     };
 
     public publish = async (channel: string, event: any) => {
-        this.nc.publish(`diem.${channel}`, toBuff({ id: 'nodepy', client: this.client, data: event }));
+        this.nc.publish(`diem.${channel}`, toBuff({ client: this.client, data: event }));
     };
 
     public request = async (channel: string, event: any) => {
-        this.nc.publish(`diem.${channel}`, toBuff({ id: 'nodepy', client: this.client, data: event }), {
+        this.nc.publish(`diem.${channel}`, toBuff({ client: this.client, data: event }), {
             reply: this.inbox,
         });
     };
