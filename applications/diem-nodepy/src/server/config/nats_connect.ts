@@ -1,7 +1,9 @@
 /*jshint esversion: 8 */
-import { connect, NatsConnection } from 'nats';
+import { connect, NatsConnection, JSONCodec, StringCodec } from 'nats';
 import { Credentials } from '../common/cfenv';
 
+const jc = JSONCodec();
+const sc = StringCodec();
 
 export interface IPayload {
     id: string | number;
@@ -11,39 +13,47 @@ export interface IPayload {
 }
 
 interface INatsCredentials {
-  clusterpassword: string,
-  clustertoken?: string,
-  clusteruser: string,
-  ip: string,
-  password: string,
-  token?: string,
-  user: string,
+    clusterpassword: string;
+    clustertoken?: string;
+    clusteruser: string;
+    ip: string;
+    password: string;
+    token?: string;
+    user: string;
 }
 
-export const toBuf = (msg: {[index: string]: any} | string) => {
+export const toBuff = (msg: { [index: string]: any } | string) => {
     if (typeof msg === 'string') {
-        return Buffer.from(msg)
+        return sc.encode(msg);
     }
-    return Buffer.from(JSON.stringify(msg));
-  };
-  
-  export const fromBuf = (buf: Uint8Array) => {
+
+    return jc.encode(JSON.stringify(msg));
+};
+
+export const fromBuff = (buf: Uint8Array): IPayload | string | undefined => {
     if (!buf) {
-      return "";
+        return undefined;
     }
     try {
-      return JSON.parse(buf.toString());
+        const t: unknown = jc.decode(buf);
+        if (t && typeof t === 'object') {
+            return t as IPayload;
+        }
+
+        return undefined;
     } catch (err) {
-      return buf.toString();
+        return sc.decode(buf);
     }
-  };
+};
 
 class NCConnection {
     public nc!: NatsConnection;
 
     public connect = async (): Promise<NatsConnection> => {
 
-      const credentials: INatsCredentials = Credentials('nats');
+        if
+
+        const credentials: INatsCredentials = Credentials('nats');
 
         try {
             this.nc = await connect({
@@ -67,11 +77,11 @@ class NCConnection {
         void (async () => {
             console.info(`$nats_connect (connect): connected to nats - ${this.nc.getServer()}`);
             for await (const s of this.nc.status()) {
-                if(s.type === 'update') {
+                if (s.type === 'update') {
                     console.info(`$connect (events): ${s.type}`, s.data);
-                  } else {
+                } else {
                     console.info(`$connect (events): ${s.type} - data: ${s.data}`);
-                  }
+                }
             }
         })();
     };
