@@ -1,8 +1,8 @@
 import { ChildProcessWithoutNullStreams } from 'child_process';
 import path from 'path';
 import * as rimraf from 'rimraf';
-import { publisher } from '../../config/nats_publisher';
-import { IntJob, green, red } from '../../config/interfaces';
+import { publisher } from '@config/nats_publisher';
+import { IntJob, green, red } from '@config/interfaces';
 
 interface IChildProcess extends ChildProcessWithoutNullStreams {
     buffer?: string;

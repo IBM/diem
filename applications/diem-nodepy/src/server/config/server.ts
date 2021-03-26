@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { IntInternal, IntEnv } from '@interfaces';
 import { utils } from '@common/utils';
-import { etl_subscriber} from '../routes/etl/etl_subscriber';
+import { etl_subscriber } from '../routes/etl/etl_subscriber';
 import { publisher } from './nats_publisher';
 import { NC } from './nats_connect';
 
@@ -59,27 +59,28 @@ export class Server {
     }
 
     public start = async (): Promise<void> => {
-
         try {
             await NC.connect();
         } catch (err) {
-            return console.error(err)
+            return console.error(err);
         }
-        
+
         await etl_subscriber.connect();
         await publisher.connect();
 
         const msg: string =
             `👽 $server (start): ${this.pack.packname}@${this.pack.version}` +
-            ` started up on ${this.pack.K8_SYSTEM_NAME} - pid: ${process.pid} (node ${
-                process.version
-            })`;
+            ` started up on ${this.pack.K8_SYSTEM_NAME} - pid: ${process.pid} (node ${process.version})`;
         utils.logInfo(msg);
-        void publisher.publish('event',msg)
+        void publisher.publish(
+            'info',
+            `${this.pack.packname}@${this.pack.version} connected - env: ${this.pack.K8_SYSTEM_NAME} - pid: ${process.pid}`
+        );
     };
 
     // private ensureAuthenticated = (_req: IRequest, _res: IResponse, next: () => any): any => next();
 }
 
 const server: Server = new Server();
-server.start();
+
+void server.start();

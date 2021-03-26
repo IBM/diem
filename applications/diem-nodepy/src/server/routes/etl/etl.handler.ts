@@ -2,7 +2,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { utils } from '@common/utils';
 import { IError } from '@interfaces';
-import { IntJob, IHandler, ECodeLanguage } from '../../config/interfaces';
+import { IntJob, IHandler, ECodeLanguage } from '@config/interfaces';
 import { etlNodepy } from './etl.nodepy';
 
 const base64decode: (file: string) => string = (file: string) => {

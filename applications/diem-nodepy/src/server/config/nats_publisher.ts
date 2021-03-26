@@ -1,5 +1,5 @@
 import { createInbox, ErrorCode, NatsConnection } from 'nats';
-import { NC, toBuf } from './nats_connect';
+import { NC, toBuff } from './nats_connect';
 
 class Publisher {
     private nc!: NatsConnection;
@@ -14,7 +14,7 @@ class Publisher {
 
     public connect = async (): Promise<boolean> => {
         try {
-            this.nc = NC.nc;
+            this.nc = await NC.connect();
         } catch (err) {
             switch (err.code) {
                 case ErrorCode.NoResponders:
@@ -26,15 +26,21 @@ class Publisher {
                 default:
                     console.error('$nats_publisher (publish): request error:', err);
             }
+
             return Promise.reject();
         }
         this.client = this.nc.info?.client_id || 0;
         console.info(`$nats_publisher (connect): connected : client ${this.client}`);
+
         return Promise.resolve(true);
     };
 
-    public publish = async (channel:string, event: any) => {
-        this.nc.publish(`diem.${channel}`, toBuf({ id: 'pl', client: this.client, payload: event }), {
+    public publish = async (channel: string, event: any) => {
+        this.nc.publish(`diem.${channel}`, toBuff({ id: 'nodepy', client: this.client, data: event }));
+    };
+
+    public request = async (channel: string, event: any) => {
+        this.nc.publish(`diem.${channel}`, toBuff({ id: 'nodepy', client: this.client, data: event }), {
             reply: this.inbox,
         });
     };

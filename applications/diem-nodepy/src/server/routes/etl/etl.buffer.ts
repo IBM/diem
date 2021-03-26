@@ -1,4 +1,4 @@
-import { green, red, blue } from '../../config/interfaces';
+import { green, red, blue } from '@config/interfaces';
 import { workers } from './etl.workers';
 
 export const addToBuffer: (id: string, buffer: Buffer) => void = (id: string, buffer: Buffer) => {

@@ -1,10 +1,10 @@
 import { EventEmitter } from 'events';
 import { printHRTime } from 'print-hrtime';
 import moment from 'moment';
+import { publisher } from '@config/nats_publisher';
 import { IntEnv } from '../interfaces/env';
 import { IError } from '../interfaces/shared';
 import { Credentials } from './cfenv';
-import { publisher } from '../config/nats_publisher';
 
 export interface ISlack {
     emoji: string;
@@ -83,12 +83,10 @@ class Utils {
         }
 
         if (err) {
-            await publisher.publish('error',
-                {
-                    ...err,
-                    log: msg,
-                },
-            );
+            await publisher.publish('error', {
+                ...err,
+                log: msg,
+            });
         }
     };
 
