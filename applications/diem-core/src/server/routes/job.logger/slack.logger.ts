@@ -4,7 +4,7 @@
 
 import { slackMsg } from '@common/slack/slack';
 import { ISlack, utils } from '@common/utils';
-import { IModel, EJobTypes, IWebhooksSchema } from '../models/models';
+import { IModel, EJobTypes, IWebhooksSchema } from '@models';
 import { fmtTime, makeUrl } from '../shared/functions';
 import { getwebhook } from '../webhooks/webhooks';
 

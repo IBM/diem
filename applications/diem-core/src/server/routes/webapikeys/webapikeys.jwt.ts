@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { IWebApiKey } from 'routes/models/models';
+import { IWebApiKey } from 'routes/models';
 import { utils } from '@common/utils';
 import { addTrace } from '../shared/functions';
 

@@ -1,6 +1,6 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
-import { DataModel, IJobSchema } from '../models/models';
+import { DataModel, IJobSchema } from '@models';
 import { addTrace } from '../shared/functions';
 
 export const jobdownload: (req: IRequest) => Promise<any> = async (req: IRequest): Promise<any> => {

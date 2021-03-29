@@ -1,5 +1,5 @@
 import { getConnection } from '../../../spark/spark.job.handlers/hendle.spark.common';
-import { IConnSchema } from '../../../../models/models';
+import { IConnSchema } from '@models';
 import { addTrace } from '../../../../shared/functions';
 import { IntPythonStmtJob } from '../../np.interfaces';
 import { py_jdbc } from './py';

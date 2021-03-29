@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
-import { ConnModel, IConnSchema, IConnModel, IQuery, FaIcons, EIdType } from '../models/models';
+import { ConnModel, IConnSchema, IConnModel, IQuery, FaIcons, EIdType } from '@models';
 import { addTrace } from '../shared/functions';
 
 const viewSecurity: number = 60;

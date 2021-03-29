@@ -1,7 +1,7 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
 import { stringify } from 'yaml';
-import { IOrg, OrgsModel } from '../models/models';
+import { IOrg, OrgsModel } from '@models';
 
 interface IOrgPayload {
     email: string;

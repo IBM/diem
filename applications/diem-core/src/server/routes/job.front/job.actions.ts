@@ -1,6 +1,6 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
-import { DataModel, EJobStatus, EJobTypes, IBody, IETLJob, IModel } from '../models/models';
+import { DataModel, EJobStatus, EJobTypes, IBody, IETLJob, IModel } from '@models';
 import { jobStart } from '../job.backend/job.start';
 import { addTrace } from '../shared/functions';
 import { findAndUpdatePlJob, stopJobs } from '../pipeline.backend/pipeline.helpers/helpers';

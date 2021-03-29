@@ -1,6 +1,6 @@
 import { utils } from '@common/utils';
 import { IError } from '@interfaces';
-import { IModel, IJob, ExecutorTypes } from '../models/models';
+import { IModel, IJob, ExecutorTypes } from '@models';
 import { deleteJob } from '../executors/spark/spark.job';
 import { jobLogger } from '../job.logger/job.logger';
 import { addTrace } from '../shared/functions';

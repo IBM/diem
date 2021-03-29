@@ -3,8 +3,8 @@ import { utils } from '@common/utils';
 import { Credentials } from '@common/cfenv';
 import * as Api from 'kubernetes-client';
 import { IError } from '@interfaces';
-import { pubSub } from '../../config/pubsub';
-import { ExecutorTypes, EJobStatus } from '../models/models';
+import { pubSub } from '@config/pubsub';
+import { ExecutorTypes, EJobStatus } from '@models';
 import { addTrace } from '../shared/functions';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires

@@ -2,7 +2,7 @@ import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
 import { findByFilter, countByFilter } from '../job.backend/job.functions';
 import { addTrace } from '../shared/functions';
-import { IntPayloadValues, IQuery } from '../models/models';
+import { IntPayloadValues, IQuery } from '@models';
 
 /**
  * @info also by gettemplate and settings

@@ -11,7 +11,7 @@ import {
     EJobTypes,
     IScheduleSchema,
     FaIcons,
-} from '../models/models';
+} from '@models';
 import { fmtTime, addTrace } from '../shared/functions';
 
 export const StatusConfig: any = {

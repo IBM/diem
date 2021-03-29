@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { utils } from '@common/utils';
-import { EJobStatus, IJobResponse, IJobSchema, IModel } from '../../models/models';
-import { pubSub } from '../../../config/pubsub';
+import { EJobStatus, IJobResponse, IJobSchema, IModel } from '@models';
+import { pubSub } from '@config/pubsub';
 import { crdconfig, ICrdConfig } from '../../spark-operator/base.crd';
 import { spark, sparkCredentials } from '../../spark-operator/spark.base';
 import { caclCap } from '../../spark-operator/spark.capacity';

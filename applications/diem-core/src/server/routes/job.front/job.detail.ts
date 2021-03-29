@@ -17,7 +17,7 @@ import {
     IntPayloadValues,
     IJobSchema,
     ExecutorTypes,
-} from '../models/models';
+} from '@models';
 import { flatten__, fmtTime, prePend, addTrace } from '../shared/functions';
 import { getGraphLinks } from './job.grapht';
 import { lookupTemplate } from './job.template';

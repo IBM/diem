@@ -2,7 +2,7 @@ import { utils } from '@common/utils';
 import { IntPayload, EStoreActions } from '@interfaces';
 import { PayloadValues } from '../../job.backend/job.functions';
 import { jobLogger } from '../../job.logger/job.logger';
-import { IModel, IJobResponse, IJobSchema } from '../../models/models';
+import { IModel, IJobResponse, IJobSchema } from '@models';
 import { addTrace } from '../../shared/functions';
 
 export const makePlPayload: (

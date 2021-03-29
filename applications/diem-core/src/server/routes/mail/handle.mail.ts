@@ -12,7 +12,7 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 
 import { utils } from '@common/utils';
-import { EJobStatus, IModel } from '../models/models';
+import { EJobStatus, IModel } from '@models';
 import { fmtTime, addTrace } from '../shared/functions';
 import { sendMail } from './mail.notifications';
 import { IMailMeta, IMailInput, IMailParams } from './mail.interfaces';

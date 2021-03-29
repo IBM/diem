@@ -2,7 +2,7 @@
 
 import { utils } from '@common/utils';
 import { IRequest, IError, EStoreActions } from '@interfaces';
-import { pubSub } from '../../config/pubsub';
+import { pubSub } from '@config/pubsub';
 import { base64encode, addTrace } from '../shared/functions';
 import { npcodefileservices } from '../executors/nodepy/np.codefile.services';
 import { servicesPostJob } from './services.postjob';

@@ -1,7 +1,7 @@
 import { utils } from '@common/utils';
 import { IRequest, EStoreActions, IntPayload, IntServerPayload } from '@interfaces';
 import { getGraphLinks } from '../job.front/job.grapht';
-import { DataModel, IJobBody, IJobDetail, IModel, IntPayloadValues } from '../models/models';
+import { DataModel, IJobBody, IJobDetail, IModel, IntPayloadValues } from '@models';
 import { addTrace } from '../shared/functions';
 
 /**

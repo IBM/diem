@@ -1,7 +1,6 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
-import { IOrgsModel, OrgsModel, FaIcons } from '../models/models';
-import { IProfilesBody } from '../models/model.profiles';
+import { IOrgsModel, OrgsModel, FaIcons, IProfilesBody } from '@models';
 import { addTrace } from '../shared/functions';
 
 const viewSecurity: number = 60;

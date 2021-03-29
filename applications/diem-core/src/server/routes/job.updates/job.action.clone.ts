@@ -1,5 +1,5 @@
 import { IntServerPayload } from '@interfaces';
-import { DataModel, EJobStatus, IJobBody, IModel, IJobSchema, newId, IJobDetail } from '../models/models';
+import { DataModel, EJobStatus, IJobBody, IModel, IJobSchema, newId, IJobDetail } from '@models';
 import { addTrace } from '../shared/functions';
 
 export const actionClone: (body: IJobBody) => Promise<any> = async (body: IJobBody) => {

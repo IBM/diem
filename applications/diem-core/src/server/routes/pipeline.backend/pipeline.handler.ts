@@ -6,9 +6,9 @@
 
 import { IntPayload } from '@interfaces';
 import { utils } from '@common/utils';
-import { EJobStatus, IJobResponse, IModel } from '../models/models';
+import { EJobStatus, IJobResponse, IModel } from '@models';
 
-import { pubSub } from '../../config/pubsub';
+import { pubSub } from '@config/pubsub';
 
 import { addTrace } from '../shared/functions';
 import {

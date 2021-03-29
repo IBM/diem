@@ -3,7 +3,7 @@
 
 /* eslint-disable max-len */
 
-import { IConnSchema, IJobConfig, IJobSchema } from '../../../models/models';
+import { IConnSchema, IJobConfig, IJobSchema } from '@models';
 import { addTrace } from '../../../shared/functions';
 import { ISrc, ITgt } from '../spark.interfaces';
 

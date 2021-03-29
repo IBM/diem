@@ -5,11 +5,11 @@
 
 import { utils } from '@common/utils';
 import { IError } from '@interfaces';
-import { DataModel, EJobTypes, IModel, IETLJob, EJobStatus, ExecutorTypes } from '../models/models';
+import { DataModel, EJobTypes, IModel, IETLJob, EJobStatus, ExecutorTypes } from '@models';
 import { createSparkPythonJob, ICapacity, publishSparkJob } from '../executors/spark/spark.python.job';
 import { createSparkScalaJob } from '../executors/spark/spark.scala.job';
 import { createNodePyJob } from '../executors/nodepy/np.create';
-import { pubSub } from '../../config/pubsub';
+import { pubSub } from '@config/pubsub';
 import { addTrace } from '../shared/functions';
 import { mergeDeep } from '../job.updates/job.action.update';
 import { plStartHandler } from '../pipeline.backend/pipeline.start.handler';

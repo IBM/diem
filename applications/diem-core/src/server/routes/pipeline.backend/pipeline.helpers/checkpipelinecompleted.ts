@@ -1,6 +1,6 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 import { utils } from '@common/utils';
-import { EJobStatus, IJobResponse, IModel } from '../../models/models';
+import { EJobStatus, IJobResponse, IModel } from '@models';
 import { findOne } from './findone';
 
 export const checkPlCompleted: (job: IJobResponse, plid: string) => Promise<[boolean, boolean, boolean]> = async (

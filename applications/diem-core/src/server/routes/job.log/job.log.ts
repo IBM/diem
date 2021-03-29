@@ -1,7 +1,7 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
 import { addTrace } from '../shared/functions';
-import { IQuery, JobLogModel, IJobLogModel, IJobLog } from '../models/models';
+import { IQuery, JobLogModel, IJobLogModel, IJobLog } from '@models';
 import { StatusConfig } from '../job.backend/job.functions';
 
 const parseFilter: (job: IQuery) => any = (job: IQuery) => {

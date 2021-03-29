@@ -1,6 +1,6 @@
 import { EStoreActions, IError, IntPayload, IntServerPayload, IntSharedAction } from '@interfaces';
 import { allPipelineJobs } from '../pipeline.backend/pipeline.helpers/getallpipelinejobs';
-import { DataModel, IJobBody } from '../models/models';
+import { DataModel, IJobBody } from '@models';
 
 export const actionDelete: (body: IJobBody) => Promise<any> = async (body: IJobBody) => {
     // let's find if this jobs is part of a pipeline

@@ -2,9 +2,9 @@
 
 import { utils } from '@common/utils';
 import { IError } from '@interfaces';
-import { EJobStatus, IETLJob } from '../../models/models';
-import { pubSub } from '../../../config/pubsub';
-import { publisher } from '../../../config/nats_publisher';
+import { EJobStatus, IETLJob } from '@models';
+import { pubSub } from '@config/pubsub';
+import { publisher } from '@config/nats_publisher';
 import { addTrace } from '../../shared/functions';
 
 export interface INodePyJob extends IETLJob {

@@ -4,7 +4,7 @@
 
 import { EStoreActions, IntPayload } from '@interfaces';
 import { utils } from '@common/utils';
-import { DataModel, EJobTypes, IJobResponse, IModel, EJobStatus, ISocketPayload } from '../models/models';
+import { DataModel, EJobTypes, IJobResponse, IModel, EJobStatus, ISocketPayload } from '@models';
 import { pipelineHandler } from '../pipeline.backend/pipeline.handler';
 import { addTrace } from '../shared/functions';
 import { PayloadValues } from './job.functions';

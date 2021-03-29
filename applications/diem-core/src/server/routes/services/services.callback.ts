@@ -1,8 +1,8 @@
 import { utils } from '@common/utils';
 import { EStoreActions, IRequest } from '@interfaces';
 import { addTrace } from '../shared/functions';
-import { pubSub } from '../../config/pubsub';
-import { IJobResponse } from '../models/models';
+import { pubSub } from '@config/pubsub';
+import { IJobResponse } from '@models';
 
 const jobdetail: string = 'jobdetail.store';
 

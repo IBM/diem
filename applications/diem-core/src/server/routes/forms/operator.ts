@@ -2,7 +2,7 @@ import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
 import { redisf } from '@common/redis.functions';
 import { addTrace } from '../shared/functions';
-import { FormsModel } from '../models/models';
+import { FormsModel } from '@models';
 
 const app: string = utils.Env.app;
 

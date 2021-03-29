@@ -1,5 +1,5 @@
 import { sparkCredentials } from '../../../../spark-operator/spark.base';
-import { IETLJob } from '../../../../models/models';
+import { IETLJob } from '@models';
 
 // ideal is to make this an env variable as it's the same path as spark in spark operator uses
 const filepath: string = '/tmp/spark-local-dir';

@@ -1,7 +1,7 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 import { parse } from 'yaml';
 import { EStoreActions, IntPayload, IntServerPayload, IntSharedAction } from '@interfaces';
-import { DataModel, EJobStatus, EJobTypes, ExecutorTypes, IJobBody, IJobSchema, IModel } from '../models/models';
+import { DataModel, EJobStatus, EJobTypes, ExecutorTypes, IJobBody, IJobSchema, IModel } from '@models';
 import { extract__, expand, addTrace } from '../shared/functions';
 import { nextSchedule } from '../job.backend/job.functions';
 import { makePayload } from '../job.front/job.detail';

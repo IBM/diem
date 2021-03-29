@@ -1,5 +1,5 @@
 import { addTrace } from '../../../../shared/functions';
-import { IJobSchema } from '../../../../models/models';
+import { IJobSchema } from '@models';
 
 export const handleNodePyServicesCustomJob: (code: string, doc: IJobSchema) => Promise<string> = async (
     code: string,

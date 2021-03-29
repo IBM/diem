@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
-import { IQuery, ISnippetSchema, SnippetsModel, FaIcons, ISnippetPayload, EIdType } from '../models/models';
+import { IQuery, ISnippetSchema, SnippetsModel, FaIcons, ISnippetPayload, EIdType } from '@models';
 import { parseFilter } from '../jobs/jobs';
 
 const viewSecurity: number = 5;

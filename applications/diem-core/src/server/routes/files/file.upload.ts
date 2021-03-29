@@ -1,8 +1,8 @@
 import { utils } from '@common/utils';
 import { IRequest, IFile, EStoreActions, IntServerPayload, IError } from '@interfaces';
 import { cosFunctions, ICos, IPutObject } from '@common/cos.functions';
-import { IFilesBody, FaIcons } from '../models/models';
-import { pubSub } from '../../config/pubsub';
+import { IFilesBody, FaIcons } from '@models';
+import { pubSub } from '@config/pubsub';
 import { addTrace } from '../shared/functions';
 import { getName, getBucket } from './files';
 

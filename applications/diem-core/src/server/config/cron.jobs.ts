@@ -1,6 +1,6 @@
 import moment from 'moment';
 import { utils } from '@common/utils';
-import { DataModel, IModel } from '../routes/models/models';
+import { DataModel, IModel } from '../routes/models';
 import { jobStart } from '../routes/job.backend/job.start';
 
 const getdocs: (t: number) => Promise<IModel[]> = async (t: number): Promise<IModel[]> => {

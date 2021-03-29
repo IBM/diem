@@ -1,6 +1,6 @@
 import { utils } from '@common/utils';
 import { IRequest, IntServerPayload } from '@interfaces';
-import { DataModel, EJobStatus, IJobBody, IJobResponse, IModel } from '../models/models';
+import { DataModel, EJobStatus, IJobBody, IJobResponse, IModel } from '@models';
 import { addTrace } from '../shared/functions';
 import { makemakePlPayload } from '../pipeline.backend/pipeline.dependency';
 

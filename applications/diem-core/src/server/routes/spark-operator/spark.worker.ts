@@ -7,8 +7,8 @@ This model is not used anymore. it's purpose was to watch in continous mode pods
 import { utils } from '@common/utils';
 import { Credentials } from '@common/cfenv';
 import * as Api from 'kubernetes-client';
-import { pubSub } from '../../config/pubsub';
-import { EJobStatus, ExecutorTypes } from '../models/models';
+import { pubSub } from '@config/pubsub';
+import { EJobStatus, ExecutorTypes } from '@models';
 
 //' import { jobLogger } from '../job/job.logger';
 

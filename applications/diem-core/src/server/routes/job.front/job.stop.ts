@@ -1,7 +1,7 @@
 import { utils } from '@common/utils';
-import { EJobStatus, IETLJob, ExecutorTypes } from '../models/models';
+import { EJobStatus, IETLJob, ExecutorTypes } from '@models';
 import { deleteJob } from '../executors/spark/spark.job';
-import { pubSub } from '../../config/pubsub';
+import { pubSub } from '@config/pubsub';
 import { addTrace } from '../shared/functions';
 
 const stopSparkJob: (job: IETLJob) => Promise<boolean | Error> = async (job: IETLJob): Promise<boolean | Error> => {

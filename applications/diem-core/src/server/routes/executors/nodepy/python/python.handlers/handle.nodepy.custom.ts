@@ -1,5 +1,5 @@
 import { addTrace } from '../../../../shared/functions';
-import { IJobSchema } from '../../../../models/models';
+import { IJobSchema } from '@models';
 
 const py_end: () => string = (): string => String.raw`
 ### py_end ###

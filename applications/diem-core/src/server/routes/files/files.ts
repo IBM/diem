@@ -3,7 +3,7 @@ import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
 import { cos } from '@common/cos';
 import { S3 } from 'ibm-cos-sdk';
-import { FaIcons } from '../models/models';
+import { FaIcons } from '@models';
 
 const viewSecurity: number = 60;
 const editSecurity: number = 60;

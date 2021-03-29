@@ -2,7 +2,7 @@
 import { utils } from '@common/utils';
 import { IRequest, EStoreActions, IntPayload, IntServerPayload, IError } from '@interfaces';
 import { parse, stringify } from 'yaml';
-import { IConfigmapsBody, IConfigmapsModel, ConfigmapsModel, FaIcons, EIdType } from '../models/models';
+import { IConfigmapsBody, IConfigmapsModel, ConfigmapsModel, FaIcons, EIdType } from '@models';
 
 export const configmapupdate: (req: IRequest) => Promise<IRequest | any> = async (
     req: IRequest

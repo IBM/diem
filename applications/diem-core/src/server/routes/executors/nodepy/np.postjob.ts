@@ -3,9 +3,9 @@
 import axios, { AxiosError } from 'axios';
 import { utils } from '@common/utils';
 import { IError } from '@interfaces';
+import { pubSub } from '@config/pubsub';
 import { addTrace } from '../../shared/functions';
-import { EJobStatus, IETLJob } from '../../models/models';
-import { pubSub } from '../../../config/pubsub';
+import { EJobStatus, IETLJob } from '@models';
 
 export interface INodePyJob extends IETLJob {
     code: string;

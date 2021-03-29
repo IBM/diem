@@ -2,7 +2,7 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 import moment, { Moment } from 'moment';
 import { addTrace } from '../shared/functions';
-import { IJobDetails, IJobDetail, EJobTypes, DataModel, IntPayloadValues, IJobSchema } from '../models/models';
+import { IJobDetails, IJobDetail, EJobTypes, DataModel, IntPayloadValues, IJobSchema } from '@models';
 import { handlePayloadValues } from '../job.backend/job.functions';
 
 export const getGraphLinks: (pldoc: IJobSchema) => Promise<[string, string, IntPayloadValues[]]> = async (

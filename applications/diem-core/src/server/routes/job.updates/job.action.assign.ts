@@ -1,5 +1,5 @@
 import { EStoreActions, IntPayload, IntServerPayload, IntSharedAction } from '@interfaces';
-import { DataModel, IJobBody, IModel } from '../models/models';
+import { DataModel, IJobBody, IModel } from '@models';
 import { addTrace } from '../shared/functions';
 import { makePayload } from '../job.front/job.detail';
 

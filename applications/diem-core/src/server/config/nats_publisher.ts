@@ -1,17 +1,14 @@
-import { createInbox, ErrorCode, NatsConnection, ServerInfo } from 'nats';
+import { utils } from '@common/utils';
+import { ErrorCode, NatsConnection, ServerInfo } from 'nats';
 import { NC, fromBuff, toBuff } from './nats_connect';
 
 class Publisher {
     private nc!: NatsConnection;
     private info!: ServerInfo;
-    private inbox: string;
     private client: string;
 
     public constructor() {
         this.client = process.env.HOSTNAME || 'diem-core';
-        this.inbox = createInbox();
-
-        console.info(`$nats_publisher (connect): created inbox ${this.inbox}`);
     }
 
     public connect = async (): Promise<boolean> => {
@@ -20,13 +17,13 @@ class Publisher {
         } catch (err) {
             switch (err.code) {
                 case ErrorCode.NoResponders:
-                    console.info('$nats_publisher (connect): no service available');
+                    utils.logInfo('$nats_publisher (connect): no service available');
                     break;
                 case ErrorCode.Timeout:
-                    console.info('$nats_publisher (connect): service did not respond');
+                    utils.logInfo('$nats_publisher (connect): service did not respond');
                     break;
                 default:
-                    console.error('$nats_publisher (connect): request error:', err);
+                    void utils.logError('$nats_publisher (connect): request error:', err);
             }
 
             return Promise.reject();
@@ -34,7 +31,7 @@ class Publisher {
 
         if (this.nc.info) {
             this.info = this.nc.info;
-            console.info(
+            utils.logInfo(
                 `$nats_publisher (connect): connected : nsid ${this.info.client_id} - nsc ${this.info.client_ip}`
             );
         }
@@ -46,24 +43,36 @@ class Publisher {
         this.nc.publish(`diem.${channel}`, toBuff({ client: this.client, data: event }));
     };
 
-    public request = async (channel: string, event: any) => {
-        console.info(
-            `$nats_publisher (request): new request : nsid ${this.info.client_id} - nsc ${this.info.client_ip}`
-        );
-        await this.nc
-            .request(channel, toBuff({ client: this.client, data: event }), {
-                timeout: 1000,
-            })
-            .then((m) => {
-                console.info(`got response: ${fromBuff(m.data)}`);
-            })
-            .catch(async (err) => {
-                console.info(`problem with request: ${err.message}`);
+    public publish_global = async (channel: string, event: any) => {
+        this.nc.publish(`global.${channel}`, toBuff({ client: this.client, data: event }));
+    };
 
-                return Promise.reject(err);
+    public request = async (channel: string, event: any) => {
+        const hrstart: [number, number] = process.hrtime();
+
+        utils.logInfo(`$nats_publisher (request): new request : channel: ${channel} client: ${this.client}`);
+
+        try {
+            const payload = toBuff({ client: this.client, data: event });
+            const m: any = await this.nc.request(channel, payload, {
+                timeout: 1000,
             });
 
-        return Promise.resolve();
+            const data = fromBuff(m.data);
+            if (data) {
+                utils.logInfo(
+                    `$nats_publisher (request): delivery confimed - client: ${data.client}`,
+                    undefined,
+                    process.hrtime(hrstart)
+                );
+            }
+
+            return Promise.resolve();
+        } catch (err) {
+            utils.logInfo(`$nats_publisher (request): error: ${err.message}`);
+
+            return Promise.reject(err);
+        }
     };
 }
 

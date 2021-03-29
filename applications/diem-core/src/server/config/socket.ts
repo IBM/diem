@@ -4,7 +4,7 @@ import { utils } from '@common/utils';
 import { IntEnv } from '@interfaces';
 import { slackMsg } from '@common/slack/slack';
 import jwt from 'jsonwebtoken';
-import { IClientPayload } from '../routes/models/models';
+import { IClientPayload } from '../routes/models';
 import { IntInteractivePayload } from '../routes/interactive/interactive';
 import { pubSub } from './pubsub';
 

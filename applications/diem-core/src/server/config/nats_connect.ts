@@ -1,5 +1,6 @@
 /*jshint esversion: 8 */
-import { connect, NatsConnection, JSONCodec, StringCodec } from 'nats';
+import { utils } from '@common/utils';
+import { connect, NatsConnection, JSONCodec, StringCodec, nkeyAuthenticator } from 'nats';
 import { Credentials } from '../common/cfenv';
 
 const jc = JSONCodec();
@@ -17,9 +18,10 @@ interface INatsCredentials {
     clustertoken?: string;
     clusteruser: string;
     ip: string;
-    password: string;
+    password?: string;
     token?: string;
-    user: string;
+    user?: string;
+    seed?: string;
 }
 
 export const toBuff = (msg: IPayload) => {
@@ -30,7 +32,7 @@ export const toBuff = (msg: IPayload) => {
     return jc.encode(msg);
 };
 
-export const fromBuff = (buf: Uint8Array): IPayload | string | undefined => {
+export const fromBuff = (buf: Uint8Array): IPayload | undefined => {
     if (!buf) {
         return undefined;
     }
@@ -38,13 +40,11 @@ export const fromBuff = (buf: Uint8Array): IPayload | string | undefined => {
         const t: unknown = jc.decode(buf);
         if (t && typeof t === 'object') {
             return t as IPayload;
-        } else if (t && typeof t === 'string') {
-            return sc.decode(buf);
         }
 
         return undefined;
     } catch (err) {
-        return sc.decode(buf);
+        return undefined;
     }
 };
 
@@ -59,19 +59,30 @@ class NCConnection {
         const credentials: INatsCredentials = Credentials('nats');
 
         try {
-            console.error('$nats_connect (connect): connecting...');
-            this.nc = await connect({
-                servers: `${credentials.ip}:4222`,
-                user: credentials.user,
-                pass: credentials.password,
-                name: 'Diem Connection',
-            });
+            if (credentials.seed) {
+                console.error('$nats_connect (connect): connecting using seed...');
+                this.nc = await connect({
+                    servers: `${credentials.ip}:4222`,
+                    authenticator: nkeyAuthenticator(Buffer.from(credentials.seed)),
+                    name: 'Diem Nodepy',
+                });
+            } else if (credentials.user && credentials.password) {
+                console.error('$nats_connect (connect): connecting using user & pass...');
+                this.nc = await connect({
+                    servers: `${credentials.ip}:4222`,
+                    user: credentials.user,
+                    pass: credentials.password,
+                    name: 'Diem Nodepy',
+                });
+            } else {
+                return Promise.reject({ message: 'No Authentication' });
+            }
 
             this.events();
 
             return Promise.resolve(this.nc);
         } catch (err) {
-            console.error('$nats_connect (connect): error', err);
+            void utils.logError('$nats_connect (connect): error', err);
 
             return Promise.reject({ message: 'could not connect' });
         }
@@ -79,12 +90,12 @@ class NCConnection {
 
     private events = () => {
         void (async () => {
-            console.info(`$nats_connect (connect): connected to nats - ${this.nc.getServer()}`);
+            utils.logInfo(`$nats_connect (connect): connected to nats - ${this.nc.getServer()}`);
             for await (const s of this.nc.status()) {
                 if (s.type === 'update') {
-                    console.info(`$connect (events): ${s.type}`, s.data);
+                    utils.logInfo(`$connect (events): ${s.type} - data: ${s.data.toString()}`);
                 } else {
-                    console.info(`$connect (events): ${s.type} - data: ${s.data}`);
+                    utils.logInfo(`$connect (events): ${s.type} - data: ${s.data}`);
                 }
             }
         })();

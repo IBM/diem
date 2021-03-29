@@ -3,7 +3,7 @@
 
 import { addTrace } from '../../../../shared/functions';
 import { getConnection } from '../../../spark/spark.job.handlers/hendle.spark.common';
-import { IConnSchema } from '../../../../models/models';
+import { IConnSchema } from '@models';
 import { IntPythonTransferJob } from '../../np.interfaces';
 import { py_truncate, py_jdbc } from './py';
 

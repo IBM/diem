@@ -1,5 +1,5 @@
 import { IError } from '@interfaces';
-import { ECodeLanguage, IETLJob, IModel } from '../../models/models';
+import { ECodeLanguage, IETLJob, IModel } from '@models';
 import { addTrace } from '../../shared/functions';
 import { javascriptHandler } from './javascript/javascript.handler';
 import { INodePyJob } from './np.interfaces';

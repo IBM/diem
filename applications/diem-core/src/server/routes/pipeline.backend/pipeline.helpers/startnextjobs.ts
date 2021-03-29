@@ -2,7 +2,7 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 import { utils } from '@common/utils';
 import { jobStartHandler } from '../../job.backend/job.start.handler';
-import { IJobResponse, IModel, IJobDetails, EJobStatus } from '../../models/models';
+import { IJobResponse, IModel, IJobDetails, EJobStatus } from '@models';
 import { addTrace } from '../../shared/functions';
 import { findOne } from './findone';
 

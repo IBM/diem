@@ -4,7 +4,7 @@
 
 import { utils } from '@common/utils';
 
-import { IModel } from '../models/models';
+import { IModel } from '@models';
 
 import { addTrace } from '../shared/functions';
 import { nextSchedule } from './job.functions';

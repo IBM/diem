@@ -1,6 +1,6 @@
 import { utils } from '@common/utils';
-import { DataModel, EJobStatus, IJob, IJobDetails, EJobStatusCodes, IModel } from '../models/models';
-import { pubSub } from '../../config/pubsub';
+import { DataModel, EJobStatus, IJob, IJobDetails, EJobStatusCodes, IModel } from '@models';
+import { pubSub } from '@config/pubsub';
 import { flatten__, addTrace } from '../shared/functions';
 import { jobStartHandler } from '../job.backend/job.start.handler';
 import { findByFilter } from '../job.backend/job.functions';

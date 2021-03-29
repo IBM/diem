@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/quotes */
-import { IModel, EJobTypes } from '../models/models';
+import { IModel, EJobTypes } from '@models';
 import { addTrace } from '../shared/functions';
 import { handleMail } from '../mail/handle.mail';
 import { toSlack } from './slack.logger';

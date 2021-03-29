@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/quotes */
 import { utils } from '@common/utils';
-import { IModel, IJob, JobLogModel, IJobLog } from '../models/models';
+import { IModel, IJob, JobLogModel, IJobLog } from '@models';
 
 export const logLogger: (doc: IModel) => Promise<void> = async (doc: IModel): Promise<void> => {
     const id: string = doc._id.toString();

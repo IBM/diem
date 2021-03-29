@@ -1,4 +1,4 @@
-import { IConnSchema } from '../../../../models/models';
+import { IConnSchema } from '@models';
 import { jdbc_config } from '../../../spark/spark.job.handlers/hendle.spark.common';
 
 export const py_truncate: (truncate: boolean, target: string, connection: IConnSchema) => string = (

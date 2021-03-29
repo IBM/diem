@@ -2,7 +2,7 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
 import { stringify } from 'yaml';
-import { IQuery, IConfigmapSchema, ConfigmapsModel, FaIcons, IConfigmapPayload, EIdType } from '../models/models';
+import { IQuery, IConfigmapSchema, ConfigmapsModel, FaIcons, IConfigmapPayload, EIdType } from '@models';
 import { parseFilter } from '../jobs/jobs';
 
 const viewSecurity: number = 60;

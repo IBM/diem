@@ -1,4 +1,4 @@
-import { ISnippetsModel, SnippetsModel } from '../../../../models/models';
+import { ISnippetsModel, SnippetsModel } from '@models';
 
 export const lookupSnippet: (id: string, org: string) => Promise<ISnippetsModel | null> = async (
     id: string,
