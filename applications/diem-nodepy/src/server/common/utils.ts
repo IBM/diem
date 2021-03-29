@@ -1,7 +1,6 @@
 import { EventEmitter } from 'events';
 import { printHRTime } from 'print-hrtime';
 import moment from 'moment';
-import { publisher } from '@config/nats_publisher';
 import { IntEnv } from '../interfaces/env';
 import { IError } from '../interfaces/shared';
 
@@ -64,17 +63,6 @@ class Utils {
 
     public logError = async (msg: any, err?: IError) => {
         console.error('\x1b[31m%s\x1b[0m', `${msg} - ${this.time()} - pid (${process.pid})`, '\n', err || '');
-
-        if (err && !err.caller && err.trace) {
-            err.caller = err.trace[0];
-        }
-
-        if (err) {
-            await publisher.publish('error', {
-                ...err,
-                log: msg,
-            });
-        }
     };
 
     public time = (date?: Date, format?: string): string => {

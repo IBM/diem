@@ -1,3 +1,4 @@
+import { utils } from '@common/utils';
 import { createInbox, ErrorCode, NatsConnection, ServerInfo } from 'nats';
 import { NC, toBuff } from './nats_connect';
 
@@ -10,20 +11,18 @@ class Publisher {
     public constructor() {
         this.client = process.env.HOSTNAME || 'nodepy';
         this.inbox = createInbox();
-
-        console.info(`$nats_publisher (publish): created inbox ${this.inbox}`);
     }
 
-    public connect = async (): Promise<boolean> => {
+    public connect = async (): Promise<void> => {
         try {
             this.nc = await NC.connect();
         } catch (err) {
             switch (err.code) {
                 case ErrorCode.NoResponders:
-                    console.info('$nats_publisher (publish): no service available');
+                    utils.logInfo('$nats_publisher (publish): no service available');
                     break;
                 case ErrorCode.Timeout:
-                    console.info('$nats_publisher (publish): service did not respond');
+                    utils.logInfo('$nats_publisher (publish): service did not respond');
                     break;
                 default:
                     console.error('$nats_publisher (publish): request error:', err);
@@ -33,19 +32,24 @@ class Publisher {
         }
         if (this.nc.info) {
             this.info = this.nc.info;
-            console.info(
+            utils.logInfo(
                 `$nats_publisher (connect): connected : nsid ${this.info.client_id} - nsc ${this.info.client_ip}`
             );
         }
 
-        return Promise.resolve(true);
+        return Promise.resolve();
     };
 
-    public publish = async (channel: string, event: any) => {
+    public publish = (channel: string, event: any) => {
         this.nc.publish(`diem.${channel}`, toBuff({ client: this.client, data: event }));
     };
 
-    public request = async (channel: string, event: any) => {
+    public publish_global = (channel: string, event: any) => {
+        utils.logInfo(`$nats_publisher (publish_global): publishing : channel: global.${channel}`);
+        this.nc.publish(`diem.${channel}`, toBuff({ client: this.client, data: event }));
+    };
+
+    public request = (channel: string, event: any) => {
         this.nc.publish(`diem.${channel}`, toBuff({ client: this.client, data: event }), {
             reply: this.inbox,
         });

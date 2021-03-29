@@ -1,5 +1,6 @@
 import { NatsConnection, ServerInfo, Subscription } from 'nats';
 import { NC, IPayload, fromBuff, toBuff } from '@config/nats_connect';
+import { utils } from '@common/utils';
 import { handler } from './etl.handler';
 
 const queue: string = 'nodepy.*';
@@ -25,7 +26,7 @@ class Subscriber {
 
         if (this.nc.info) {
             this.info = this.nc.info;
-            console.info(
+            utils.logInfo(
                 `$etl_publisher (connect): connected : nsid ${this.info.client_id} - nsc ${this.info.client_ip}`
             );
         }
@@ -34,7 +35,7 @@ class Subscriber {
 
         void this.subs();
 
-        console.info(`$nats_subscriber (subscribe): connected : client ${this.client}`);
+        utils.logInfo(`$nats_subscriber (subscribe): connected : client ${this.client}`);
 
         return Promise.resolve();
     };
@@ -44,21 +45,20 @@ class Subscriber {
             const payload: IPayload | string | undefined = fromBuff(msg.data);
             if (payload && typeof payload === 'object' && payload.client) {
                 if (msg.reply) {
-                    msg.respond(
+                    const confirmed: boolean = msg.respond(
                         toBuff({
                             client: this.client,
-                            sid: msg.sid || 0,
                         })
                     );
-                    console.info(
-                        `$request (cb): confirming message: client: ${payload.client} - sid: ${msg.sid}`
+                    utils.logInfo(
+                        `$request (subs): confirming message: source: ${this.client} - target: ${payload.client} - confirmed: ${confirmed}`
                     );
                 } else {
-                    console.info(`$request (cb): new message: client: ${payload.client} - sid: ${msg.sid}`);
+                    utils.logInfo(`$request (sub): new message: client: ${payload.client} - sid: ${msg.sid}`);
                 }
 
                 if (payload.data) {
-                    await handler(payload.data);
+                    void handler(payload.data);
                 }
             }
         }

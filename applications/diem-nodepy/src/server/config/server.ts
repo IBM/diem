@@ -72,7 +72,8 @@ export class Server {
             `👽 $server (start): ${this.pack.packname}@${this.pack.version}` +
             ` started up on ${this.pack.K8_SYSTEM_NAME} - pid: ${process.pid} (node ${process.version})`;
         utils.logInfo(msg);
-        void publisher.publish(
+
+        void publisher.publish_global(
             'info',
             `${this.pack.packname}@${this.pack.version} connected - env: ${this.pack.K8_SYSTEM_NAME} - pid: ${process.pid}`
         );

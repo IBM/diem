@@ -2,7 +2,8 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { utils } from '@common/utils';
 import { IError } from '@interfaces';
-import { IntJob, IHandler, ECodeLanguage } from '@config/interfaces';
+import { IntJob, ECodeLanguage } from '@config/interfaces';
+import { publisher } from '@config/nats_publisher';
 import { etlNodepy } from './etl.nodepy';
 
 const base64decode: (file: string) => string = (file: string) => {
@@ -11,7 +12,7 @@ const base64decode: (file: string) => string = (file: string) => {
     return buff.toString('utf8');
 };
 
-export const handler: (job: IntJob) => any = async (job: IntJob): Promise<IHandler> => {
+export const handler: (job: IntJob) => any = async (job: IntJob): Promise<void> => {
     if (!job.id) {
         return Promise.reject({
             ok: false,
@@ -32,7 +33,14 @@ export const handler: (job: IntJob) => any = async (job: IntJob): Promise<IHandl
 
         void utils.logError(`$etl.handler (handler): mkdir - job: ${id}`, err);
 
-        return Promise.reject(err);
+        publisher.publish('job', {
+            ...job,
+            count: null,
+            error: err.message,
+            status: 'Failed',
+            jobend: new Date(),
+            runtime: null,
+        });
     });
 
     const extention: string = job.language === ECodeLanguage.javascript ? 'js' : 'py';
@@ -46,13 +54,18 @@ export const handler: (job: IntJob) => any = async (job: IntJob): Promise<IHandl
 
         void utils.logError(`$etl.handler (handler): savefile - job: ${id}`, err);
 
-        return Promise.reject(err);
+        void publisher.publish('job', {
+            ...job,
+            count: null,
+            error: err.message,
+            status: 'Failed',
+            jobend: new Date(),
+            runtime: null,
+        });
     });
 
     // just start it , no need to await here
     void etlNodepy(job);
-
-    return Promise.resolve({ ok: true, id });
 
     // execute the file
 };

@@ -2,6 +2,7 @@ import { spawn } from 'child_process';
 import path from 'path';
 import { publisher } from '@config/nats_publisher';
 import { IntJob, green, red, ECodeLanguage } from '@config/interfaces';
+import { IError } from 'interfaces';
 import { workers, deleteWorker } from './etl.workers';
 import { addToBuffer, addToErrorBuffer } from './etl.buffer';
 
@@ -58,18 +59,14 @@ export const etlNodepy: (job: IntJob) => any = (job: IntJob) => {
         // console.error(red, `$np ${process.pid} ${id}: incoming error)`, '\n', response);
         console.error(red, `$np ${process.pid} ${id}: incoming error`);
 
-        try {
-            void publisher.publish('job',{
-                ...job,
-                count: null,
-                error: response,
-                status: 'Failed',
-                jobend: new Date(),
-                runtime: null,
-            });
-        } catch (err) {
-            console.error(red, `$np ${process.pid} ${id}: error posting file (stderr)`, err);
-        }
+        publisher.publish('job', {
+            ...job,
+            count: null,
+            error: response,
+            status: 'Failed',
+            jobend: new Date(),
+            runtime: null,
+        });
     });
 
     /**
@@ -85,5 +82,17 @@ export const etlNodepy: (job: IntJob) => any = (job: IntJob) => {
 
     workers[id].on('close', async (code: number | null) => {
         await deleteWorker(job, code, 'close');
+    });
+
+    workers[id].on('error', async (err: IError) => {
+        console.error(red, `$np ${process.pid} ${id}: error creating process`, err.message);
+        void publisher.publish('job', {
+            ...job,
+            count: null,
+            error: err.message,
+            status: 'Failed',
+            jobend: new Date(),
+            runtime: null,
+        });
     });
 };

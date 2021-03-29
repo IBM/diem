@@ -46,7 +46,7 @@ export const deleteWorker: (job: IntJob, code: number | null, action: string) =>
         // there is an error reported that has not yet been traced back to the etl manager
 
         try {
-            void publisher.publish('job',{
+            void publisher.publish('job', {
                 ...job,
                 count: null,
                 error: workers[id].errbuffer,
