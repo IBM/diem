@@ -6,6 +6,7 @@ msg = __\`Job __\${config.__id} finished - time: __\${UtcNow()} - running time: 
 data = {
     status: "Completed",
     out: msg,
+    jobend: UtcNow()
 }
 mq(data)
 

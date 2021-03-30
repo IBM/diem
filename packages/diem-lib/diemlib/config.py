@@ -20,3 +20,4 @@ __starttime: None
 __transid = None
 __url = None
 __isservice = False
+__nats = False

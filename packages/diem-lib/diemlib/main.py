@@ -36,17 +36,18 @@ def runTime():
 
 
 def printl(msg):
-    print(msg)
+    mq({"out": msg})
 
 
 def mq(data):
 
-    if not 'loop' in locals():
-        print("Creating loop")
-        loop = asyncio.get_event_loop()
-    if not 'nats' in locals():
-        print("Creating nats")
-        nats = Nats()
+    if config.__nats:
+        if not 'loop' in locals():
+            print("Creating loop")
+            loop = asyncio.get_event_loop()
+        if not 'nats' in locals():
+            print("Creating nats")
+            nats = Nats()
 
 
     # Returns job data back to the main application
@@ -74,7 +75,10 @@ def mq(data):
         error(e)
         raise
 
-    loop.create_task(nats.publish(data))
+    if(config.__nats):
+        loop.create_task(nats.publish(data))
+    else:
+        print(json.dumps(data))
 
 
 def out(data):
@@ -125,9 +129,6 @@ def endJob(kwargs):
 
         mq(data)
 
-        msg = f"--- job {config.__id} finished at {UtcNow()} --- running time: {runTime()} ---"
-
-        printl(msg)
         exit()
 
     except Exception as e:
@@ -163,6 +164,4 @@ def error(err):
         }
         mq(data)
 
-    msg = f"Job {config.__id} failed - time: {UtcNow()} - runtime: {runTime()}"
-    printl(msg)
     exit(1)

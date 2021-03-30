@@ -17,7 +17,9 @@ export const finishJob: (doc: IModel) => Promise<any> = async (doc: IModel): Pro
     }
 
     if (doc.job.jobstart) {
-        doc.job.runtime = Math.round(Math.abs(doc.job.jobend.getTime() - doc.job.jobstart.getTime()) / 1000) || 0;
+        // a zero never displays as equal to false.. so the minimum is one second
+        const runtime: number = Math.round(Math.abs(doc.job.jobend.getTime() - doc.job.jobstart.getTime()) / 1000) || 1;
+        doc.job.runtime = runtime === 0 ? 1 : runtime;
     }
 
     const log: IJob = {

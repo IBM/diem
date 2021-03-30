@@ -63,9 +63,24 @@ class Subscriber {
                 }
 
                 if (channel === 'job') {
-                    utils.logInfo(`$nats_subscriber (${channel}): client: ${payload.client} - data: ${payload.data}`);
+                    const data = payload.data;
 
-                    await pubSub.publish(payload.data);
+                    if (data && typeof data === 'string' && data.endsWith('\n')) {
+                        const json_array: string[] = data.split('\n').filter((s: string) => s);
+                        utils.logInfo(
+                            `$nats_subscriber (${channel}): client: ${payload.client} - incomming data - buffered: ${json_array.length}`
+                        );
+                        for await (const json of json_array) {
+                            try {
+                                await pubSub.publish(JSON.parse(json));
+                            } catch (err) {
+                                utils.logInfo('$nats_subscriber (subs): job - unrelated data');
+                            }
+                        }
+                    } else {
+                        utils.logInfo(`$nats_subscriber (${channel}): client: ${payload.client} - incomming data`);
+                        await pubSub.publish(payload.data);
+                    }
                 }
 
                 if (msg.reply) {

@@ -1,5 +1,5 @@
-import { sparkCredentials } from '../../../../spark-operator/spark.base';
 import { IETLJob } from '@models';
+import { sparkCredentials } from '../../../../spark-operator/spark.base';
 
 // ideal is to make this an env variable as it's the same path as spark in spark operator uses
 const filepath: string = '/tmp/spark-local-dir';
@@ -12,7 +12,6 @@ export const javascript_start: (job: IETLJob) => string = (job: IETLJob): string
 
 /*jshint esversion: 6 */
 
-const axios = require('axios');
 const moment = require('moment');
 
 const mq = (data) => {
@@ -29,7 +28,9 @@ const mq = (data) => {
             /* nothing */
         }
     }
-    axios.post(config.__url, data);
+    if(process.send){
+        process.send(data);
+    }
 };
 
 const out = (data) => {
