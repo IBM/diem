@@ -1,4 +1,5 @@
 import { green, red, blue } from '@config/interfaces';
+import { publisher } from '@config/nats_publisher';
 import { workers } from './etl.workers';
 
 export const addToBuffer: (id: string, buffer: Buffer) => void = (id: string, buffer: Buffer) => {
@@ -11,9 +12,14 @@ export const addToBuffer: (id: string, buffer: Buffer) => void = (id: string, bu
     const data: string = buffer.toString();
 
     if (data.endsWith('\n')) {
-        workers[id].buffer = workers[id]?.buffer ? (workers[id].buffer += data.toString()) : data.toString();
+        workers[id].buffer = workers[id]?.buffer ? (workers[id].buffer += data) : data;
 
-        console.info(green, `$np ${process.pid} ${id}:`, '', workers[id].buffer);
+        console.info(green, `$np ${process.pid} - processing data - id: ${id}:`, '');
+
+        const resp: string | undefined = workers[id].buffer;
+        if (resp) {
+            void publisher.publish('job', resp);
+        }
 
         workers[id].buffer = undefined;
     } else {
@@ -33,9 +39,9 @@ export const addToErrorBuffer: (id: string, buffer: Buffer) => void = (id: strin
     const data: string = buffer.toString();
 
     if (data.endsWith('\n')) {
-        workers[id].errbuffer = workers[id]?.errbuffer ? (workers[id].errbuffer += data.toString()) : data.toString();
+        workers[id].errbuffer = workers[id]?.errbuffer ? (workers[id].errbuffer += data) : data;
 
-        console.info(red, `$np ${process.pid} ${id}: returning error`, workers[id].errbuffer);
+        console.info(red, `$np ${process.pid} ${id}: returning error`);
     } else {
         console.info(blue, `$np ${process.pid} ${id}: buffering incoming error stream`);
         workers[id].errbuffer = workers[id]?.errbuffer ? (workers[id].errbuffer += data) : data;

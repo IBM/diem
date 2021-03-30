@@ -32,7 +32,6 @@
         "@types/webpack-env": "^1.16.0",
         "@typescript-eslint/eslint-plugin": "^4.19.0",
         "@typescript-eslint/parser": "^4.19.0",
-        "cross-env": "^7.0.3",
         "eslint": "^7.23.0",
         "eslint-config-prettier": "^8.0.0",
         "eslint-plugin-import": "^2.22.1",
@@ -65,7 +64,7 @@
         "kube:prod": "./node_modules/.bin/npm-run-all build docker:build-prod docker:push-prod",
         "build-webpack": "rm -rf ./src/webpack/lib && ./node_modules/.bin/tsc -p ./src/webpack/tsconfig.json",
         "webpack:node": "webpackenv=node webpack --mode production",
-        "webpack:node-test": "cross-env webpackenv=node-test webpack -w --mode development",
+        "webpack:node-test": "webpackenv=node-test webpack -w --mode development",
         "lock": "npm install --package-lock",
         "kube:init": "node ../../common/k8s/init",
         "cpdir": "cp -r ../../packages/diem-lib/dist/  ./local/"

@@ -1,10 +1,10 @@
-import { ChildProcessWithoutNullStreams } from 'child_process';
+import { ChildProcessByStdio } from 'child_process';
 import path from 'path';
 import * as rimraf from 'rimraf';
 import { publisher } from '@config/nats_publisher';
 import { IntJob, green, red } from '@config/interfaces';
 
-interface IChildProcess extends ChildProcessWithoutNullStreams {
+interface IChildProcess extends ChildProcessByStdio<any, any, any> {
     buffer?: string;
     errbuffer?: string;
 }
@@ -64,7 +64,7 @@ export const deleteWorker: (job: IntJob, code: number | null, action: string) =>
     // const file: string = `${path.resolve()}/workdir/${folder}/${id}.py`;
 
     try {
-        rimraf.sync(`${path.resolve()}/workdir/${id}`);
+        // rimraf.sync(`${path.resolve()}/workdir/${id}`);
 
         console.info(green, `$np ${process.pid} ${id}: removed folder ${id}`);
     } catch (err) {
