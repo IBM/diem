@@ -40,11 +40,7 @@ class Publisher {
     };
 
     public publish = async (channel: string, event: any) => {
-        this.nc.publish(`diem.${channel}`, toBuff({ client: this.client, data: event }));
-    };
-
-    public publish_global = async (channel: string, event: any) => {
-        this.nc.publish(`global.${channel}`, toBuff({ client: this.client, data: event }));
+        this.nc.publish(channel, toBuff({ client: this.client, data: event }));
     };
 
     public request = async (channel: string, event: any) => {
@@ -61,7 +57,7 @@ class Publisher {
             const data = fromBuff(m.data);
             if (data) {
                 utils.logInfo(
-                    `$nats_publisher (request): delivery confimed - client: ${data.client}`,
+                    `$nats_publisher (request): delivery confirmed - client: ${data.client}`,
                     undefined,
                     process.hrtime(hrstart)
                 );

@@ -5,10 +5,6 @@ export const py_start: () => string = () => String.raw`
 
 import sys
 
-def diem_except_hook(exctype, value, traceback):
-    error(value)
-sys.excepthook = diem_except_hook
-
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 import time
@@ -28,6 +24,14 @@ config.__transid = env.get('TRANSID', '37e1c542-bb41-4e78-e085-6ad891f46d94')
 config.__org = env.get('ORG', 'noop')
 config.__starttime = time.time()
 config.__jobstart = UtcNow()
+config.__nats = True
+config.natsurl = env.get('NATSURL')
+config.natsclient = env.get('NATSCLIENT')
+config.natschannel = env.get('NATSCHANNEL')
+
+def diem_except_hook(exctype, value, traceback):
+    error(value)
+sys.excepthook = diem_except_hook
 
 msg = f"--- job {config.__id} started by {config.__email} for org {config.__org} at {UtcNow()}---"
 print(msg)

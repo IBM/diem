@@ -2,8 +2,8 @@ import { utils } from '@common/utils';
 import { Redis } from '@common/redis';
 import { RedisClient } from 'redis';
 import { IntEnv } from '@interfaces';
+import { IJobResponse, IClientPayload, ISocketPayload } from '@models';
 import { jobHandler } from '../routes/job.backend/job.handler';
-import { IJobResponse, IClientPayload, ISocketPayload } from '../routes/models';
 import { addTrace } from '../routes/shared/functions';
 import { publisher } from './nats_publisher';
 
@@ -21,7 +21,7 @@ export class Server {
         this.pub = new Redis().redisClient;
         this.sub = new Redis().redisClient;
 
-        this.sub.subscribe(['global', 'client', 'np_interactive', 'nodepy', 'spark_master', clientpayload]);
+        this.sub.subscribe(['global', 'user', 'np_interactive', 'nodepy', 'spark_master', clientpayload]);
 
         this.sub.on('message', async (channel, msg) => {
             const json: any = this.toJson(msg);
@@ -41,7 +41,7 @@ export class Server {
 
             utils.logInfo(`$pubsub (publish): publishing payload - job: ${job.id}`);
 
-            void publisher.publish_global('users', pl);
+            void publisher.publish('global.core.users', pl);
 
             return Promise.resolve();
             // }, 1);
@@ -57,20 +57,13 @@ export class Server {
     public publishClient: (message: string) => void = (message: string) => {
         /* pass the message to redis for global handling */
 
-        void publisher.publish_global('client', message);
-    };
-
-    public publishNodePy: (channel: string, message: any) => void = (channel: string, message: any) => {
-        /* pass the message to redis for global handling */
-
-        this.pub.publish(channel, JSON.stringify(message));
-        void publisher.publish_global('client', message);
+        void publisher.publish('global.core.user', message);
     };
 
     public publishClientPayload: (clientPayload: IClientPayload) => void = (clientPayload: IClientPayload) => {
         /* pass the message to redis for global handling */
 
-        void publisher.publish_global(clientpayload, clientPayload);
+        void publisher.publish(clientpayload, clientPayload);
     };
 
     public toString: (json: any) => string = (json: any) => JSON.stringify(json);

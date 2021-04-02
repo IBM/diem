@@ -66,7 +66,7 @@ export const getservice: (req: IRequest) => Promise<any> = async (req: IRequest)
         const results: any = await jobOutHandler({ id: body.id, out: err });
         /* pass the message to redis for global handling */
 
-        utils.logInfo(`$pubsub (publish): publishing payload - job: ${body.id}`);
+        utils.logInfo(`$getservice (getservice): publishing payload - job: ${body.id}`);
         pubSub.publishClientPayload({
             clientEmail: body.email,
             payload: { payload: [results] },
