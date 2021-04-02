@@ -2,6 +2,7 @@
 import { IntInternal, IntEnv } from '@interfaces';
 import { utils } from '@common/utils';
 import { etl_subscriber } from '../routes/etl/etl_subscriber';
+import { services_subscriber } from '../routes/services/services_subscriber';
 import { publisher } from './nats_publisher';
 import { NC } from './nats_connect';
 
@@ -66,6 +67,7 @@ export class Server {
         }
 
         await etl_subscriber.connect();
+        await services_subscriber.connect();
         await publisher.connect();
 
         const msg: string =
