@@ -1,10 +1,11 @@
 import { utils } from '@common/utils';
+import { INatsPayload } from '@interfaces';
 import { NatsConnection, Subscription, ServerInfo } from 'nats';
-import { NC, IPayload, toBuff, fromBuff } from './nats_connect';
+import { NC, toBuff, fromBuff } from './nats_connect';
 import { pubSub } from './pubsub';
 import { WSS } from './socket';
 
-const queue: string = 'diem.*';
+const queue: string = 'core.*';
 const global_queue: string = 'global.*';
 
 class Subscriber {
@@ -45,7 +46,7 @@ class Subscriber {
 
     private subs = async (): Promise<void> => {
         for await (const msg of this.subscription) {
-            const payload: IPayload | string | undefined = fromBuff(msg.data);
+            const payload: INatsPayload | string | undefined = fromBuff(msg.data);
             const subject: string = msg.subject;
 
             // if it's not the payload we need, we cannot handle it
@@ -102,7 +103,7 @@ class Subscriber {
 
     private global_subs = async (): Promise<void> => {
         for await (const msg of this.global_subscription) {
-            const payload: IPayload | string | undefined = fromBuff(msg.data);
+            const payload: INatsPayload | string | undefined = fromBuff(msg.data);
             const subject: string = msg.subject;
 
             // if it's not the payload we need, we cannot handle it

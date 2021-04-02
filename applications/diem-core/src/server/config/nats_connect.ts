@@ -1,30 +1,13 @@
 /*jshint esversion: 8 */
 import { utils } from '@common/utils';
+import { INatsCredentials, INatsPayload } from '@interfaces';
 import { connect, NatsConnection, JSONCodec, StringCodec, nkeyAuthenticator } from 'nats';
 import { Credentials } from '../common/cfenv';
 
 const jc = JSONCodec();
 const sc = StringCodec();
 
-export interface IPayload {
-    inbox?: string;
-    client: string;
-    data?: any;
-    sid?: number; // number used when the message has an id
-}
-
-interface INatsCredentials {
-    clusterpassword: string;
-    clustertoken?: string;
-    clusteruser: string;
-    ip: string;
-    password?: string;
-    token?: string;
-    user?: string;
-    seed?: string;
-}
-
-export const toBuff = (msg: IPayload) => {
+export const toBuff = (msg: INatsPayload) => {
     if (typeof msg === 'string') {
         return sc.encode(msg);
     }
@@ -32,14 +15,14 @@ export const toBuff = (msg: IPayload) => {
     return jc.encode(msg);
 };
 
-export const fromBuff = (buf: Uint8Array): IPayload | undefined => {
+export const fromBuff = (buf: Uint8Array): INatsPayload | undefined => {
     if (!buf) {
         return undefined;
     }
     try {
         const t: unknown = jc.decode(buf);
         if (t && typeof t === 'object') {
-            return t as IPayload;
+            return t as INatsPayload;
         }
 
         return undefined;
@@ -93,7 +76,7 @@ class NCConnection {
             utils.logInfo(`$nats_connect (connect): connected to nats - ${this.nc.getServer()}`);
             for await (const s of this.nc.status()) {
                 if (s.type === 'update') {
-                    utils.logInfo(`$connect (events): ${s.type} - data: ${s.data.toString()}`);
+                    utils.logInfo(`$connect (events): ${s.type} - data: ${JSON.stringify(s.data)}`);
                 } else {
                     utils.logInfo(`$connect (events): ${s.type} - data: ${s.data}`);
                 }

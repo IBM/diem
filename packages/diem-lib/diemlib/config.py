@@ -21,3 +21,6 @@ __transid = None
 __url = None
 __isservice = False
 __nats = False
+natsurl = None
+natschannel = None
+natsclient = None

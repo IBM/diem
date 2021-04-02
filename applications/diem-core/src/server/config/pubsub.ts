@@ -2,8 +2,8 @@ import { utils } from '@common/utils';
 import { Redis } from '@common/redis';
 import { RedisClient } from 'redis';
 import { IntEnv } from '@interfaces';
+import { IJobResponse, IClientPayload, ISocketPayload } from '@models';
 import { jobHandler } from '../routes/job.backend/job.handler';
-import { IJobResponse, IClientPayload, ISocketPayload } from '../routes/models';
 import { addTrace } from '../routes/shared/functions';
 import { publisher } from './nats_publisher';
 

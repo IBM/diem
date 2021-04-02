@@ -16,7 +16,7 @@ import sys
 from sys import exit
 import traceback
 import diemlib.config as config
-import diemlib.Nats as Nats
+from diemlib.natshandler import NatsService
 import asyncio
 
 __all__ = ["UtcNow", "runTime", "printl",
@@ -41,14 +41,13 @@ def printl(msg):
 
 def mq(data):
 
+    # check if we are going to use nats
     if config.__nats:
-        if not 'loop' in locals():
-            print("Creating loop")
-            loop = asyncio.get_event_loop()
-        if not 'nats' in locals():
-            print("Creating nats")
-            nats = Nats()
 
+        # check if nats is already present if not create the service
+        if not hasattr(config, 'nats_service'):
+            print("nats: Creating nats_service")
+            config.nats_service = NatsService()
 
     # Returns job data back to the main application
     data["id"] = config.__id
@@ -56,7 +55,6 @@ def mq(data):
     data["transid"] = config.__transid
     data["email"] = config.__email
     data["name"] = config.__name
-
     try:
         if "out" in data:
             res = data.get("out")
@@ -70,13 +68,14 @@ def mq(data):
                     data["out"] = str(res)
                 except Exception:
                     data["out"] = "Response must be booleam, number, string or json"
-
     except Exception as e:
         error(e)
         raise
-
-    if(config.__nats):
-        loop.create_task(nats.publish(data))
+    if hasattr(config, 'nats_service'):
+        config.nats_service.publish({
+            "client": config.natsclient,
+            "data" : data,
+        })
     else:
         print(json.dumps(data))
 
