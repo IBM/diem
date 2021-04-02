@@ -21,10 +21,3 @@ export interface INatsMessage {
     channel: string;
     client: string;
 }
-
-export enum ENatsChannels {
-    'core.job',
-    'core.info',
-    'spark.job.start',
-    'spark.job.stop',
-}

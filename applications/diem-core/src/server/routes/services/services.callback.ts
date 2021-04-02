@@ -47,7 +47,7 @@ export const services_callback: (req: IRequest) => Promise<any> = async (req: IR
         const results: any = await jobOutHandler(job);
         /* pass the message to redis for global handling */
 
-        utils.logInfo(`$pubsub (publish): publishing payload - job: ${job.id}`);
+        utils.logInfo(`$services_callback (services_callback): publishing payload - job: ${job.id}`);
         pubSub.publishClientPayload({
             clientEmail: job.email,
             payload: { payload: [results] },

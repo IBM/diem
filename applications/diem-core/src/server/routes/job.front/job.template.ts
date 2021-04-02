@@ -2,15 +2,7 @@ import { utils } from '@common/utils';
 import { IRequest, EStoreActions, IntPayload } from '@interfaces';
 import { format } from 'sql-formatter';
 import { publisher } from '@config/nats_publisher';
-import {
-    DataModel,
-    IJobBody,
-    IModel,
-    ITemplatesModel,
-    TemplatesModel,
-    ISocketPayload,
-    EJobTypes,
-} from '@models';
+import { DataModel, IJobBody, IModel, ITemplatesModel, TemplatesModel, ISocketPayload, EJobTypes } from '@models';
 import { addTrace } from '../shared/functions';
 
 export const lookupTemplate: (id: string) => Promise<ITemplatesModel | null> = async (
@@ -122,7 +114,7 @@ const getTemplate: (body: IJobBody) => Promise<any> = async (body: IJobBody): Pr
             success: true /** just display a success message */,
         };
 
-        void publisher.publish_global('users', serverPayload);
+        void publisher.publish('global.core.users', serverPayload);
 
         return Promise.resolve(true);
     } catch (err) {
@@ -229,7 +221,7 @@ export const removetemplate: (req: IRequest) => Promise<any> = async (req: IRequ
             success: true /** just display a success message */,
         };
 
-        void publisher.publish_global('users', serverPayload);
+        void publisher.publish('global.core.users', serverPayload);
 
         return Promise.resolve(true);
     } catch (err) {

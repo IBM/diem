@@ -54,7 +54,7 @@ export const jobupdates: (req: IRequest) => Promise<any> = async (req: IRequest)
 
         serverPayload.org = body.org;
 
-        void publisher.publish_global('users', serverPayload);
+        void publisher.publish('global.core.users', serverPayload);
 
         return Promise.resolve(true);
     } catch (err) {
