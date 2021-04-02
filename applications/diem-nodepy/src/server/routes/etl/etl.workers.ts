@@ -64,7 +64,7 @@ export const deleteWorker: (job: IntJob, code: number | null, action: string) =>
     // const file: string = `${path.resolve()}/workdir/${folder}/${id}.py`;
 
     try {
-        // rimraf.sync(`${path.resolve()}/workdir/${id}`);
+        rimraf.sync(`${path.resolve()}/workdir/${id}`);
 
         console.info(green, `$np ${process.pid} ${id}: removed folder ${id}`);
     } catch (err) {
