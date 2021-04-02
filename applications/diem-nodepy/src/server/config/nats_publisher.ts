@@ -41,16 +41,17 @@ class Publisher {
     };
 
     public publish = (channel: string, event: any) => {
-        this.nc.publish(`diem.${channel}`, toBuff({ client: this.client, data: event }));
+        this.nc.publish(`core.${channel}`, toBuff({ client: this.client, data: event }));
     };
 
     public publish_global = (channel: string, event: any) => {
-        utils.logInfo(`$nats_publisher (publish_global): publishing : channel: global.${channel}`);
-        this.nc.publish(`diem.${channel}`, toBuff({ client: this.client, data: event }));
+        const channel_name: string = `global.core.${channel}`;
+        utils.logInfo(`$nats_publisher (publish_global): publishing : channel: ${channel_name}`);
+        this.nc.publish(channel_name, toBuff({ client: this.client, data: event }));
     };
 
     public request = (channel: string, event: any) => {
-        this.nc.publish(`diem.${channel}`, toBuff({ client: this.client, data: event }), {
+        this.nc.publish(`core.${channel}`, toBuff({ client: this.client, data: event }), {
             reply: this.inbox,
         });
     };
