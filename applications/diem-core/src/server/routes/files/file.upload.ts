@@ -61,8 +61,8 @@ const uploadFiles: (req: IRequest) => Promise<void> = async (req: IRequest): Pro
 
             utils.logInfo(`$file.upload (uploadFiles) - email: ${body.email}`, err);
 
-            return pubSub.publishClientPayload({
-                clientEmail: req.user.email,
+            return pubSub.publishUserPayload({
+                email: req.user.email,
                 payload: [{ message: 'file upload failed', email: req.user.email, success: false }],
             });
         }
@@ -96,8 +96,8 @@ const uploadFiles: (req: IRequest) => Promise<void> = async (req: IRequest): Pro
             success: true /** just display a success message */,
         };
 
-        pubSub.publishClientPayload({
-            clientEmail: req.user.email,
+        pubSub.publishUserPayload({
+            email: req.user.email,
             payload,
         });
     });

@@ -34,7 +34,6 @@ export { pipelineinlinejobs } from './pipeline.front/pipeline.inline.jobs';
 export { pipelinejobs, pipelinejob } from './pipeline.front/pipeline.job';
 export { pyfile } from './executors/spark/spark.pyfile';
 export { services } from './services/services';
-export { services_callback } from './services/services.callback';
 export { slackMsgError } from '@common/slack/error';
 export { snippetdelete, snippetupdate } from './snippets/snippet.actions';
 export { spark_callback } from './api/job.callback';

@@ -73,10 +73,26 @@ class Subscriber {
                             `$nats_subscriber (${msg_type}): client: ${payload.client} - incomming data - buffered: ${json_array.length}`
                         );
                         for await (const json of json_array) {
+                            let valid: boolean = true;
+                            let parsed_json;
+
                             try {
-                                await pubSub.publish(JSON.parse(json));
+                                parsed_json = JSON.parse(json);
                             } catch (err) {
-                                utils.logInfo('$nats_subscriber (subs): job - unrelated data');
+                                utils.logInfo('$nats_subscriber (subs): job - unparsable json');
+                                valid = false;
+                            }
+
+                            if (valid) {
+                                try {
+                                    if (parsed_json.serviceid) {
+                                        await pubSub.publishService(parsed_json);
+                                    } else {
+                                        await pubSub.publish(parsed_json);
+                                    }
+                                } catch (err) {
+                                    utils.logInfo('$nats_subscriber (subs): job - publishing failed');
+                                }
                             }
                         }
                     } else {
@@ -95,7 +111,7 @@ class Subscriber {
                     utils.logInfo(`$$nats_subscriber (${msg_type}):  client: ${payload.client} - client: ${msg.sid}`);
                 }
 
-                if (!['error', 'info'].includes(msg_type)) {
+                if (!['info', 'job'].includes(msg_type)) {
                     utils.logInfo(`$nats_subscriber (${msg_type}): client: ${payload.client}`);
                 }
             }
@@ -119,36 +135,32 @@ class Subscriber {
 
                 if (msg_type === 'info') {
                     utils.logInfo(
-                        `$nats_subscriber (global-${msg_type}): client: ${payload.client} - data: ${payload.data}`
+                        `$nats_subscriber (global.${msg_type}): client: ${payload.client} - data: ${payload.data}`
                     );
                 }
 
                 if (msg_type === 'error') {
-                    utils.logInfo(`$nats_subscriber (global-${msg_type}): client: ${payload.client}`);
+                    utils.logInfo(`$nats_subscriber (global.${msg_type}): client: ${payload.client}`);
 
                     await pubSub.publish(payload.data);
                 }
 
                 if (msg_type === 'users') {
-                    utils.logInfo(`$nats_subscriber (global-${msg_type}): client: ${payload.client}`);
+                    utils.logInfo(`$nats_subscriber (global.${msg_type}): client: ${payload.client}`);
 
                     WSS.bc(payload.data);
                 }
 
                 if (msg_type === 'user') {
-                    utils.logInfo(`$nats_subscriber (global-${msg_type}): client: ${payload.client}`);
+                    utils.logInfo(`$nats_subscriber (global.${msg_type}): client: ${payload.client}`);
 
-                    WSS.message(payload.data);
+                    const data: { email: string; payload: string } = payload.data;
+
+                    WSS.bcUser({ email: data.email, payload: data.payload });
                 }
 
-                if (msg_type === 'client-payload') {
-                    utils.logInfo(`$nats_subscriber (global-${msg_type}): client: ${payload.client}`);
-
-                    WSS.bcClient(payload.data);
-                }
-
-                if (!['users', 'error', 'info'].includes(msg_type)) {
-                    utils.logInfo(`$nats_subscriber (global-${msg_type}): client: ${payload.client}`);
+                if (!['user', 'users', 'error', 'info'].includes(msg_type)) {
+                    utils.logInfo(`$nats_subscriber (global.${msg_type}): client: ${payload.client}`);
                 }
             }
         }

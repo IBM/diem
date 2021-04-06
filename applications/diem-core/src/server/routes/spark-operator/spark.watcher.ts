@@ -70,7 +70,6 @@ export const sparkCredentials: {
     namespace: string;
     image: string;
     file_url: string;
-    callback_url: string;
 } = Credentials('spark');
 
 class SparkLib {

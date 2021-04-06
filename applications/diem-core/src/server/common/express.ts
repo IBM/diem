@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import nocache from 'nocache';
 import rateLimit from 'express-rate-limit';
+import passport from 'passport';
 import { IXorg } from '../interfaces/env';
 import { IResponse } from '../interfaces';
 import { Credentials } from './cfenv';
@@ -66,7 +67,6 @@ export class Express {
         },
     };
 
-    private passport!: any;
     private config: IExpressConfig = {
         BODYPARSER_JSON_LIMIT: '15mb',
         BODYPARSER_URLENCODED_LIMIT: '15mb',
@@ -76,10 +76,9 @@ export class Express {
     };
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    public constructor(passport: any, assets: IAsserts, config?: IExpressConfig) {
+    public constructor(assets: IAsserts, config?: IExpressConfig) {
         this.assets = assets;
-        this.passport = passport;
-        this.passport.use(Strategy);
+        passport.use(Strategy);
         this.config = { ...this.config, ...config };
 
         utils.ev.on('fatalError', async (status: boolean) => {
@@ -116,8 +115,8 @@ export class Express {
             this.app
                 .use(this.checkSession())
                 .use(session(sess))
-                .use(this.passport.initialize())
-                .use(this.passport.session())
+                .use(passport.initialize())
+                .use(passport.session())
                 .use(helmet())
                 .use(helmet.referrerPolicy({ policy: 'strict-origin-when-cross-origin' }))
                 .use(`${utils.Env.apppath}/public`, express.static('./public'))
@@ -130,14 +129,27 @@ export class Express {
                 .use(`${utils.Env.apppath}/tinymce/icons`, express.static('./node_modules/tinymce/icons'))
                 .use(`${utils.Env.apppath}/tinymce/skins`, express.static('./node_modules/tinymce/skins'))
                 .use(`${utils.Env.apppath}/tinymce/themes`, express.static('./node_modules/tinymce/themes'))
-                .get('/login', limiter, this.passport.authenticate('openidconnect', {}))
-                .get('/sso/callback', limiter, (req: IRequest, res: IResponse, next: any) => {
-                    const redirect_url = req.session.originalUrl;
-                    this.passport.authenticate('openidconnect', {
-                        successRedirect: redirect_url,
-                        failureRedirect: '/failure',
-                    })(req, res, next);
+                .get('/login', limiter, passport.authenticate('openidconnect', {}))
+                .get('/favicon.png', limiter, (_req: IRequest, res: IResponse) => {
+                    res.sendFile('/public/images/favicon.png', { root: path.resolve() });
                 })
+                .get(
+                    '/sso/callback',
+                    limiter,
+                    passport.authenticate('openidconnect'),
+                    (req: IRequest, res: IResponse) => {
+                        if (req.session) {
+                            return res.redirect(req.session.originalUrl || '/');
+                        }
+                    },
+                    (err: Error, _req: IRequest, res: IResponse, _next: any) => {
+                        if (err) {
+                            // maybe an old sso callback, let's return to the login
+                            return res.redirect('/login');
+                            // return res.sendFile('/public/501.html', { root: path.resolve() });
+                        }
+                    }
+                )
                 .get(`${utils.Env.apppath}/service-worker.js`, limiter, (_req: IRequest, res: IResponse) => {
                     res.sendFile('/public/js/service-worker.js', { root: path.resolve() });
                 })
@@ -188,11 +200,11 @@ export class Express {
             console.error('$express (start)', err);
         }
 
-        this.passport.serializeUser((user: any, done: any) => {
+        passport.serializeUser((user: any, done: any) => {
             done(undefined, user);
         });
 
-        this.passport.deserializeUser((obj: any, done: any) => {
+        passport.deserializeUser((obj: any, done: any) => {
             done(undefined, obj);
         });
     };

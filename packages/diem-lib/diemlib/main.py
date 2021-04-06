@@ -8,7 +8,6 @@
    It contains generic functions that can be used within the jobs
 """
 
-import requests
 import time
 import json
 import datetime
@@ -53,6 +52,7 @@ def mq(data):
     data["id"] = config.__id
     data["jobid"] = config.__jobid
     data["transid"] = config.__transid
+    data["serviceid"] = config.__serviceid
     data["email"] = config.__email
     data["name"] = config.__name
     try:
@@ -157,6 +157,7 @@ def error(err):
             "error": msg,
             "id": config.__id,
             "jobid": config.__jobid,
+            "serviceid": config.__serviceid,
             "jobend": time.strftime("%Y-%m-%d %H:%M:%S"),
             "name": config.__name,
             "status": "Failed",

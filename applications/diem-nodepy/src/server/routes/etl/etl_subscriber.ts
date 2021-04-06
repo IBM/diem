@@ -6,7 +6,7 @@ import { handler } from './etl.handler';
 import { stopWorker } from './etl.workers';
 
 const queue: string = 'nodepy';
-const nodepy_channel: string = 'nodepy.*.*';
+const nodepy_channel: string = 'nodepy.job.*';
 const global_nodepy_channel: string = 'global.nodepy.*';
 
 class Subscriber {

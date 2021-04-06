@@ -14,8 +14,6 @@ from nats.aio.errors import ErrConnectionClosed, ErrTimeout
 import diemlib.config as config
 import json
 
-nats_fallbackurl = config.__url
-
 class NatsConnection:
     async def connect(self):
         self.usenats = False
@@ -38,15 +36,8 @@ class NatsConnection:
         return
     async def publish(self,data):
         data_enc = json.dumps(data).encode()
-        if self.usenats:
-            await self.nc.publish(config.natschannel, data_enc)
-            print('nats: message sent')
-        else:
-            try:
-                requests.post(url=nats_fallbackurl, data=data_enc)
-            except Exception as e:
-                print('nats: fatal error')
-                print(e)
+        await self.nc.publish(config.natschannel, data_enc)
+        print('nats: message sent')
 
 class NatsService:
     def __init__(self):

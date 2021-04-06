@@ -86,6 +86,7 @@ export interface IETLJob {
     executor: keyof typeof ExecutorTypes;
     id: string;
     jobid: string;
+    serviceid?: string;
     jobstart: Date;
     name: string;
     params?: IJobParams;

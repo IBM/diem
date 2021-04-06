@@ -17,8 +17,8 @@ export interface IJobSchemaAnnotations {
     transid: string;
 }
 
-export interface IClientPayload {
-    clientEmail: string;
+export interface IUserPayload {
+    email: string;
     payload: any;
 }
 

@@ -1,36 +1,16 @@
 import { utils } from '@common/utils';
-import { Redis } from '@common/redis';
-import { RedisClient } from 'redis';
 import { IntEnv } from '@interfaces';
-import { IJobResponse, IClientPayload, ISocketPayload } from '@models';
+import { IJobResponse, IUserPayload, ISocketPayload } from '@models';
+import { servicesOutHandler } from '../routes/services/getservice';
 import { jobHandler } from '../routes/job.backend/job.handler';
 import { addTrace } from '../routes/shared/functions';
 import { publisher } from './nats_publisher';
 
-const clientpayload: string = 'client-payload';
-
 export class Server {
     public pack: IntEnv;
 
-    public pub: RedisClient;
-    public sub: RedisClient;
-
     public constructor() {
         this.pack = utils.Env;
-
-        this.pub = new Redis().redisClient;
-        this.sub = new Redis().redisClient;
-
-        this.sub.subscribe(['global', 'user', 'np_interactive', 'nodepy', 'spark_master', clientpayload]);
-
-        this.sub.on('message', async (channel, msg) => {
-            const json: any = this.toJson(msg);
-            if (channel === 'nodepy') {
-                await this.publish(json);
-            } else {
-                // nada
-            }
-        });
     }
 
     public publish: (job: IJobResponse) => Promise<void> = async (job: IJobResponse): Promise<void> => {
@@ -54,16 +34,37 @@ export class Server {
         }
     };
 
-    public publishClient: (message: string) => void = (message: string) => {
-        /* pass the message to redis for global handling */
+    public publishService: (job: IJobResponse) => Promise<void> = async (job: IJobResponse): Promise<void> => {
+        try {
+            // setTimeout(async () => {
+            const results: ISocketPayload | void = await servicesOutHandler(job);
+            /* pass the message to redis for global handling */
 
-        void publisher.publish('global.core.user', message);
+            utils.logInfo(`$pubsub (publishservice): publishing payload - job: ${job.id}`);
+
+            pubSub.publishUserPayload({
+                email: job.email,
+                payload: {
+                    org: job.org,
+                    payload: [results],
+                },
+            });
+
+            return Promise.resolve();
+            // }, 1);
+        } catch (err) {
+            err.trace = addTrace(err.trace, '@at $pubsub (publish)');
+
+            await utils.logError(`$pubsub (publish): error - job: ${job.id}`, err);
+
+            return Promise.reject(err);
+        }
     };
 
-    public publishClientPayload: (clientPayload: IClientPayload) => void = (clientPayload: IClientPayload) => {
+    public publishUserPayload: (userPayload: IUserPayload) => void = (userPayload: IUserPayload) => {
         /* pass the message to redis for global handling */
 
-        void publisher.publish(clientpayload, clientPayload);
+        void publisher.publish('global.core.user', userPayload);
     };
 
     public toString: (json: any) => string = (json: any) => JSON.stringify(json);

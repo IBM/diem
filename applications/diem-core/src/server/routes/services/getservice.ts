@@ -3,21 +3,32 @@
 import { utils } from '@common/utils';
 import { IRequest, IError, EStoreActions } from '@interfaces';
 import { pubSub } from '@config/pubsub';
+import { publisher } from '@config/nats_publisher';
+import { IJobResponse } from '@models';
 import { base64encode, addTrace } from '../shared/functions';
-import { npcodefileservices } from '../executors/nodepy/np.codefile.services';
-import { servicesPostJob } from './services.postjob';
-import { jobOutHandler } from './services.callback';
+import { npcodefileservices, IServices } from '../executors/nodepy/np.codefile.services';
 
 const jobdetail: string = 'jobdetail.store';
 
-interface IServices {
-    email: string;
-    id: string;
-    serviceid: string;
-    jobid?: string;
-    token: string;
-    transid: string;
-}
+export const servicesOutHandler: (job: Partial<IJobResponse>) => Promise<any> = async (
+    job: Partial<IJobResponse>
+): Promise<any> => {
+    utils.logInfo(`$getservice (servicesOutHandler): out payload - job: ${job.id}`, job.transid);
+
+    return Promise.resolve({
+        loaded: true,
+        store: jobdetail,
+        targetid: job.jobid || job.id,
+        options: {
+            field: 'servicesout',
+        },
+        type: EStoreActions.ADD_STORE_TABLE_RCD,
+        values: {
+            out: job.out || job.error,
+            special: job.special,
+        },
+    });
+};
 
 export const getservice: (req: IRequest) => Promise<any> = async (req: IRequest): Promise<any> => {
     // eslint-disable-next-line no-async-promise-executor
@@ -28,9 +39,8 @@ export const getservice: (req: IRequest) => Promise<any> = async (req: IRequest)
 
     const id: string = body.id;
 
-    const serviceid: string = body.serviceid;
+    body.serviceid = body.serviceid;
 
-    body.id = serviceid;
     body.jobid = id;
     body.email = req.user.email;
     body.transid = req.transid;
@@ -51,8 +61,10 @@ export const getservice: (req: IRequest) => Promise<any> = async (req: IRequest)
     The code must continue
     */
 
+    const channel: string = 'nodepy.job.start';
+
     try {
-        void servicesPostJob({
+        void publisher.publish(channel, {
             code: base64encode(code),
             transid: req.transid,
             id,
@@ -63,18 +75,18 @@ export const getservice: (req: IRequest) => Promise<any> = async (req: IRequest)
         // as we return directly to the user, we need to log the job here
         void utils.logError(`$services (servicesPostJob): error for job: ${id}`, err);
 
-        const results: any = await jobOutHandler({ id: body.id, out: err });
+        const results: any = await servicesOutHandler({ id: body.id, out: err });
         /* pass the message to redis for global handling */
 
         utils.logInfo(`$getservice (getservice): publishing payload - job: ${body.id}`);
-        pubSub.publishClientPayload({
-            clientEmail: body.email,
+        pubSub.publishUserPayload({
+            email: body.email,
             payload: { payload: [results] },
         });
     }
 
     utils.logInfo(
-        `$getservice (getservice): service posted - job ${id} - service: ${serviceid}`,
+        `$getservice (getservice): service requested - job ${id} - service: ${body.serviceid} - channel:${channel}`,
         req.transid,
         process.hrtime(hrstart)
     );

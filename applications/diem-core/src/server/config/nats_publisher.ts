@@ -1,4 +1,5 @@
 import { utils } from '@common/utils';
+import { INatsPayload } from '@interfaces';
 import { ErrorCode, NatsConnection, ServerInfo } from 'nats';
 import { NC, fromBuff, toBuff } from './nats_connect';
 
@@ -43,27 +44,29 @@ class Publisher {
         this.nc.publish(channel, toBuff({ client: this.client, data: event }));
     };
 
-    public request = async (channel: string, event: any) => {
+    public request = async (channel: string, data: any): Promise<INatsPayload | undefined> => {
         const hrstart: [number, number] = process.hrtime();
 
         utils.logInfo(`$nats_publisher (request): new request : channel: ${channel} client: ${this.client}`);
 
         try {
-            const payload = toBuff({ client: this.client, data: event });
-            const m: any = await this.nc.request(channel, payload, {
-                timeout: 1000,
+            const payload = toBuff({ client: this.client, data });
+            const response: any = await this.nc.request(channel, payload, {
+                timeout: 10000,
             });
 
-            const data = fromBuff(m.data);
-            if (data) {
+            const response_data = fromBuff(response.data);
+            if (response_data) {
                 utils.logInfo(
-                    `$nats_publisher (request): delivery confirmed - client: ${data.client}`,
+                    `$nats_publisher (request): delivery confirmed - client: ${response_data.client}`,
                     undefined,
                     process.hrtime(hrstart)
                 );
+
+                return Promise.resolve(response_data);
             }
 
-            return Promise.resolve();
+            return Promise.resolve(undefined);
         } catch (err) {
             utils.logInfo(`$nats_publisher (request): error: ${err.message}`);
 

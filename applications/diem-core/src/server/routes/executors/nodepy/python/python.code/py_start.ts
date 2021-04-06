@@ -1,13 +1,9 @@
 import { IETLJob } from '@models';
-import { sparkCredentials } from '../../../../spark-operator/spark.base';
 
 // ideal is to make this an env variable as it's the same path as spark in spark operator uses
 const filepath: string = '/tmp/spark-local-dir';
 
-export const py_start: (job: IETLJob) => string = (job: IETLJob): string => {
-    const callback_url: string = sparkCredentials.callback_url;
-
-    return String.raw`
+export const py_start: (job: IETLJob) => string = (job: IETLJob): string => String.raw`
 ### py_start ###
 
 import sys
@@ -18,7 +14,6 @@ from diemlib.main import *
 
 env = os.environ
 
-config.__url = '${callback_url}'
 config.__id = '${job.id}'
 config.__email = '${job.email}'
 config.__jobid = '${job.jobid}'
@@ -43,4 +38,3 @@ data = {
 mq(data)
 
 ######`;
-};

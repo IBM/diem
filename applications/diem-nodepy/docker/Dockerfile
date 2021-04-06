@@ -28,6 +28,8 @@ COPY package.json package-lock.json $HOME/
 
 RUN cd $HOME && npm ci --production
 
+# RUN python3 -m pip install --index-url https://test.pypi.org/simple/ diemlib==0.0.11b3
+
 WORKDIR $HOME
 COPY server $HOME/server
 

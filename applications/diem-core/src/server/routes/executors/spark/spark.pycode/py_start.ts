@@ -14,7 +14,6 @@ from diemlib.main import *
 
 env = os.environ
 
-config.__url = env.get('SPARK__CALLBACK_URL','http://etl-mgr/internal/spark_callback')
 config.__id = env.get('ID', 'noop')
 config.__email = env.get('EMAIL', 'noop')
 config.__jobid = env.get('JOBID', 'noop')

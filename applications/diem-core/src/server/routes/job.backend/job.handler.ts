@@ -28,7 +28,7 @@ const runTime: (doc: IModel) => number = (doc: IModel): number => {
 export const updateOne: (doc: IModel, obj: any) => any = async (doc: IModel, obj: any) =>
     Promise.resolve(await doc.updateOne(obj));
 
-const jobOutHandler: (doc: IModel, job: IJobResponse) => Promise<ISocketPayload> = async (
+export const jobOutHandler: (doc: IModel, job: IJobResponse) => Promise<ISocketPayload> = async (
     doc: IModel,
     job: IJobResponse
 ): Promise<ISocketPayload> => {
@@ -89,7 +89,7 @@ const jobDocOutHandler: (payload: IntPayload[], doc: IModel, job: IJobResponse) 
         doc.out = [obj];
     }
 
-    utils.logInfo(`$job.handler (jobHandler): out payload - job: ${job.id}`, job.transid);
+    utils.logInfo(`$job.handler (jobDocOutHandler): out payload - job: ${job.id}`, job.transid);
 
     payload.push({
         loaded: true,

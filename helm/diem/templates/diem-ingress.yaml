@@ -57,6 +57,13 @@ spec:
                 port:
                   number: {{ .Values.core.deployment.port }}
             pathType: Prefix
+            path: /favicon.png
+          - backend:
+              service:
+                name: {{ .Values.core.deployment.name }}
+                port:
+                  number: {{ .Values.core.deployment.port }}
+            pathType: Prefix
             path: "/{{ .Values.core.deployment.socketName }}"
 
   tls:

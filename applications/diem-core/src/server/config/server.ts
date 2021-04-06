@@ -4,7 +4,6 @@ import fs from 'fs';
 import path from 'path';
 import * as http from 'http';
 import jwt from 'jsonwebtoken';
-import passport from 'passport';
 import pug from 'pug';
 import { Express, limiter } from '@common/express';
 import { IntInternal, IntEnv, IError, IProfile, IRequest, IResponse } from '@interfaces';
@@ -88,9 +87,15 @@ export class Server {
     }
 
     public start = async (): Promise<void> => {
+        // we suppress console error
+        // eslint-disable-next-line no-console
+        console.error = () => {
+            // no console.log
+        };
+
         /*** The require packages */
 
-        const app: any = new Express(passport, assets, expressConfig).app;
+        const app: any = new Express(assets, expressConfig).app;
 
         /*** variables that are moved to the index.html */
         const env: { path: string; css: any; description: string; script: any[] } = {
@@ -231,15 +236,7 @@ export class Server {
             } catch (err) {
                 err.transid = req.transid;
                 err.pid = process.pid;
-                await utils.logMQError(
-                    '$server (api) Busboy Error',
-                    req,
-                    401,
-                    '$server (api error)',
-                    err,
-                    hrstart,
-                    this.pack
-                );
+                await toMQ(req, 401, '$server (api error)', err, hrstart, this.pack);
 
                 return res.status(404).send('Your request could not be completed, incorrect parsing');
             }
@@ -366,15 +363,11 @@ export class Server {
                 .catch(async (err: any) => {
                     err.caller = '$server';
                     err.trace = addTrace(err.trace, '@at $server (login)');
-                    await utils.logMQError(
+                    void utils.logError(
                         `$server (secAuth): requiring profile error - email: ${email} - name: ${name} - ti: ${req.transid}`,
-                        req,
-                        401,
-                        `$server : failed login by ${email}`,
-                        err,
-                        hrstart,
-                        this.pack
+                        err
                     );
+                    await toMQ(req, 401, `$server : failed login by ${email}`, err, hrstart, this.pack);
 
                     return res.sendFile('/public/501.html', { root: path.resolve() });
                 });
@@ -464,8 +457,8 @@ export class Server {
 
         const errMsg: string = '$server (logErrors)';
 
-        await slackMsgInt(err);
-        await utils.logMQError(errMsg, req, 401, errMsg, err, undefined, this.pack);
+        void utils.logError(errMsg, err);
+        void toMQ(req, 401, errMsg, err, undefined, this.pack);
 
         res.status(500).end(`An internal error happened. It has been logged - transid: ${req.transid || 'none'}`);
     };

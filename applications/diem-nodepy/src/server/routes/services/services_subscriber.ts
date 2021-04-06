@@ -3,8 +3,8 @@ import { NC, IPayload, fromBuff, toBuff } from '@config/nats_connect';
 import { utils } from '@common/utils';
 import { handler } from './services.handler';
 
-const queue: string = 'nodepy_s';
-const nodepy_channel: string = 'nodepy_s.*';
+const queue: string = 'nodepy';
+const nodepy_channel: string = 'nodepy.services.*';
 
 class Subscriber {
     private nc!: NatsConnection;

@@ -57,7 +57,6 @@ export const createSparkPythonJob: (doc: IModel) => Promise<ICapacity> = async (
         ID: id,
         TRANSID: doc.job.transid,
         JOBID: doc.job.jobid ? doc.job.jobid : id,
-        SPARK__CALLBACK_URL: sparkCredentials.callback_url,
         NATSCLIENT: nats.client,
         NATSCHANNEL: nats.channel,
         NATSURL: nats.url,
@@ -174,12 +173,5 @@ export const publishSparkJob: (doc: IJobSchema) => Promise<void> = async (doc: I
             fsGroup: 0,
             privileged: true,
             runAsUser: 0, // spark needs to run as root , natbe to be fixed
-        };
-
-        crdjob.spec.driver.envSecretKeyRefs = {
-            CLOUDAMQP_URL: {
-                key: 'RABBITMQ__URL',
-                name: 'k8-bizops-secret',
-            },
         };
         */

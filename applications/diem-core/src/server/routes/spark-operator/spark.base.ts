@@ -13,7 +13,6 @@ export const sparkCredentials: {
     image: string;
     scala_image: string;
     file_url: string;
-    callback_url: string;
     imagepullsecrets?: string;
     volume?: string;
 } = Credentials('spark');
