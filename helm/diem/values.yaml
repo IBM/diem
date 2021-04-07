@@ -43,7 +43,7 @@ core:
 
     tier: backend
     version: 0.1.0
-    image: quay.io/diem/core:5.4.0
+    image: quay.io/diem/core:1.0.0
     replicas: 1
     port: 8080
 
@@ -58,7 +58,7 @@ core:
     APPPATH: /etl-mgr
 
     spark:
-      SPARK_IMAGE: quay.io/diem/pyspark:latest
+      SPARK_IMAGE: quay.io/diem/pyspark:3.1.1-rc1
       SPARK_IMAGEPULLSECRETS: regsecret
       OPERATOR_DRIVER_CORES: "2"
       OPERATOR_DRIVER_MEMORY: 1024m
@@ -111,15 +111,20 @@ core:
 nodepy:
   ## configmapref is the name of the nodepy config map ref
   configmapref: diem-nodepy-config
+  secretmapref: diem-nodepy-config
 
   ## image is the the name of the nodepy image
-  image: quay.io/diem/nodepy:4.4.3
+  image: quay.io/diem/nodepy:1.0.0
   name: nodepy
   port: 8080
   replicas: 1
   targetPort: 8192
   tier: backend
   version: 4.4.1
+
+  nats:
+
+
 
 ## enable the spark Operator
 ## for more details see
@@ -159,15 +164,17 @@ nats:
   ## either fill in the password in plain text or
   ## encrypt your password and fill in your plain password in the unencrypted_password
   ## if you do not want to use an encrypted password leave the unencrypted_password blank
+  ## example
+  ##    unencrypted_password: natsuserauthorisationpassword
+  ##    password: $2a$11$4X.WN5r4PeaB4vYMtbFsEOKJTSxEiWuCq/FV25RsWZvLFSEeDOrf6
+  ##
   auth:
     user: nats_client
-    unencrypted_password: natsuserauthorisationpassword
-    password: $2a$11$ZiPM3G2YnDkv/HtqhFNGz./XW9iSJpwyrXaEsm6tPQi00cN6pft0q
+    password: ""
     token: ""
   clusterAuth:
     user: nats_cluster
-    unencrypted_password: natsuserauthorisationpassword
-    password: $2a$11$ZiPM3G2YnDkv/HtqhFNGz./XW9iSJpwyrXaEsm6tPQi00cN6pft0q
+    password: ""
     token: ""
 
   ## enable external access, this will create a load balancer
@@ -178,12 +185,14 @@ nats:
   ## you might need to reapply the helm chart twice once you have it
   ip: 0.0.0.0
 
-  ## the number of pods
+  priorityClassName : system-node-critical
+
   replicaCount: 1
 
   extraFlags:
     cluster_name: diem-nats-cluster
     no_advertise: true
+
 
 redis:
   createservice: true

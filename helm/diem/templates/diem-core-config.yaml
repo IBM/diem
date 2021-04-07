@@ -22,7 +22,6 @@ data:
   SPARK__NAMESPACE: {{ index .Values "spark-operator" "sparkJobNamespace" | default .Release.Namespace | quote}}
   SPARK__VOLUME: {{ .Values.core.config.volume.volumeClaimName }}
   SPARK_FILE_URL: {{ printf "http://%s/internal/pyfile" .Values.ingress.host }}
-  SPARK_CALLBACK_URL: {{ printf "http://%s/internal/spark_callback" .Values.ingress.host }}
   {{- with .Values.core.config.spark }}
   SPARK__IMAGE: {{ .SPARK_IMAGE }}
   SPARK__IMAGEPULLSECRETS: {{ .SPARK_IMAGEPULLSECRETS }}

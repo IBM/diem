@@ -19,3 +19,6 @@ data:
   SLACK__USER__USERNAME: {{ .SLACK_USER_USERNAME | quote }}
   {{- end }}
   {{- end }}
+  {{- if .Values.nats.auth.user }}
+  NATS__USER: {{ .Values.nats.auth.user | quote }}
+  {{- end }}

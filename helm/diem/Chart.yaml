@@ -1,39 +1,38 @@
-apiVersion: v2
-name: diem
-description: A Helm chart for Diem
-
 ##  DIEM
 ##
 ##  See https://github.ibm.com/CIO-SETS/diem
 ##
+apiVersion: v2
+name: diem
+description: A Helm chart for Diem
 type: application
-
-##  This is the chart version. This version number is incremented with each update
-##  Versions are following Semantic Versioning (https://semver.org/)
-version: 0.2.0
-
-##  This is the Diem application verion.
-appVersion: "4.0.0"
-
+version: 0.2.1
+appVersion: 1.0.0
+home: https://github.com/IBM/DIEM
 icon: https://raw.githubusercontent.com/IBM/diem/main/applications/diem-help/docs/images/diem/diem_s.png
+
+maintainers:
+  - name: Guy Huinen
+    github: https://github.com/huineng
+    email: guy_huinen#be.ibm.com
 
 ##  There are 3 optional and 1 mandatory dependency
 ##  mongo redis and minio can be disabled or enabled via the values, they are by default enabled
 dependencies:
   - name: spark-operator
     repository: https://googlecloudplatform.github.io/spark-on-k8s-operator
-    version: "1.0.8"
+    version: 1.0.8
   - name: mongodb
     repository: https://charts.bitnami.com/bitnami
-    version: "10.0.5"
+    version: 10.0.5
     condition: mongodb.createservice
   - name: redis
     repository: https://charts.bitnami.com/bitnami
-    version: "12.1.1"
+    version: 12.1.1
     condition: redis.createservice
   - name: minio
     repository: https://helm.min.io/
-    version: "8.0.10"
+    version: 8.0.10
     condition: minio.createservice
   - name: nats
     repository: https://charts.bitnami.com/bitnami
