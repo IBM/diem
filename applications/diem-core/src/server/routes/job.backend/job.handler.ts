@@ -45,8 +45,11 @@ export const jobOutHandler: (doc: IModel, job: IJobResponse) => Promise<ISocketP
     }
 
     await doc.save().catch(async (err: any) => {
-        err.caller = '$job.handler';
-        void utils.logError(`$job.handler (jobHandler): save failed - doc: ${id}`, err);
+        err.trace = addTrace(err.trace, '@at $job.handler (jobHandler)');
+
+        err.id = id;
+
+        void utils.emit('error', err);
     });
 
     utils.logInfo(`$job.handler (jobHandler): out payload - job: ${job.id}`, job.transid);

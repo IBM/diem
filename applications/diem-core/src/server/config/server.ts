@@ -84,14 +84,18 @@ export class Server {
                 utils.logInfo(`$server.ts (internal): fatal removed by ${internal.source}`);
             }
         });
+
+        utils.ev.on('error', async (err: IError) => {
+            void utils.logError('$server.ts (error)', err);
+        });
     }
 
     public start = async (): Promise<void> => {
         // we suppress console error
         // eslint-disable-next-line no-console
-        console.error = () => {
-            // no console.log
-        };
+        // console.error = () => {
+        // no console.log
+        // };
 
         /*** The require packages */
 
@@ -191,7 +195,7 @@ export class Server {
                     process.version
                 })`;
             utils.logInfo(msg);
-            await slackMsg(msg);
+            void slackMsg(msg);
         });
 
         await WSS.start(httpServer);

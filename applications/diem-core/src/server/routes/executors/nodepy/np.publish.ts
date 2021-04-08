@@ -11,10 +11,20 @@ export interface INodePyJob extends IETLJob {
     code: string;
 }
 
-export const nodePyPublishJob: (job: INodePyJob) => Promise<void> = async (job: INodePyJob): Promise<void> => {
-    await publisher.request('nodepy.job.start', job).catch(async (err: IError) => {
-        err.trace = addTrace(err.trace, '@at $np.publish (nodePyPublishJob) - response');
-        utils.logInfo(`$nodepy.job (job): error from nodepy - job: ${job.id}`, `ti: ${job.transid}`);
+export const nodePyRequestJob: (job: INodePyJob) => Promise<void> = async (job: INodePyJob): Promise<void> => {
+    void pubSub.publish({
+        ...job,
+        count: null,
+        jobend: null,
+        jobstart: new Date(),
+        runtime: null,
+        status: EJobStatus.submitted,
+    });
+
+    void publisher.request('nodepy.job.start', job).catch(async (err: IError) => {
+        err.trace = addTrace(err.trace, '@at $np.publish (nodePyRequestJob) - request');
+
+        void utils.logError(`$np.publish (nodePyRequestJob): error - job: ${job.id}`, err);
 
         void pubSub.publish({
             ...job,
@@ -25,16 +35,6 @@ export const nodePyPublishJob: (job: INodePyJob) => Promise<void> = async (job: 
             error: err.message,
             status: EJobStatus.failed,
         });
-    });
-
-    // we publish first the job , any error will handled later
-    void pubSub.publish({
-        ...job,
-        count: null,
-        jobend: null,
-        jobstart: new Date(),
-        runtime: null,
-        status: EJobStatus.submitted,
     });
 
     return Promise.resolve();

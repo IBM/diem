@@ -155,6 +155,7 @@ class Utils {
                 {
                     ...err,
                     log: msg,
+                    message: err.message,
                 },
                 slackConfig
             );

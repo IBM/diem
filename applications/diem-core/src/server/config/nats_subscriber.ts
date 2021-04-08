@@ -32,7 +32,7 @@ class Subscriber {
         if (this.nc.info) {
             this.info = this.nc.info;
             utils.logInfo(
-                `$nats_subscriber (connect): connected : nsid ${this.info.client_id} - nsc ${this.info.client_ip}`
+                `$nats_subscriber (connect): connected - nsid ${this.info.client_id} - nsc ${this.info.client_ip}`
             );
         }
 

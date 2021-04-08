@@ -6,7 +6,7 @@ apiVersion: v2
 name: diem
 description: A Helm chart for Diem
 type: application
-version: 0.2.1
+version: 0.2.2
 appVersion: 1.0.0
 home: https://github.com/IBM/DIEM
 icon: https://raw.githubusercontent.com/IBM/diem/main/applications/diem-help/docs/images/diem/diem_s.png
@@ -37,3 +37,4 @@ dependencies:
   - name: nats
     repository: https://charts.bitnami.com/bitnami
     version: "6.2.3"
+    condition: nats.createservice

@@ -107,7 +107,7 @@ export const createSparkPythonJob: (doc: IModel) => Promise<ICapacity> = async (
         err.trace = addTrace(err.trace, '@at $spark.job (jobStart)');
         err.id = id;
         err.org = org;
-        void utils.logError('$spark (createSparkPythonJob): error', err);
+        void utils.emit('error', err);
 
         const pjob: IJobResponse = {
             ...doc.toObject().job,
@@ -127,7 +127,7 @@ export const createSparkPythonJob: (doc: IModel) => Promise<ICapacity> = async (
     await sparkWatcher.startWatcher(id).catch(async (err) => {
         err.trace = addTrace(err.trace, '@at $spark.job (startWatcher)');
 
-        void utils.logError('$spark (createSparkPythonJob): error', err);
+        void utils.emit('error', err);
     });
 
     utils.logInfo(

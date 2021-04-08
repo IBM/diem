@@ -21,13 +21,4 @@ data:
   {{- if .Values.nats.clusterAuth.user }}
   NATS__CLUSTERUSER: {{ .Values.nats.clusterAuth.user | quote }}
   {{- end }}
-  
-  {{- if .Values.nats.external }}
-  {{- if (lookup "v1" "Service" .Release.Namespace $service).status }}
-  NATS__IP: {{ (index (lookup "v1" "Service" .Release.Namespace $service).status.loadBalancer.ingress 0).ip }}
-  {{- else }}
-  NATS__IP: 0.0.0.0
-  {{- end }}
-  {{- else }}
   NATS__IP: {{ printf "%s-%s-client" .Release.Name .Values.nats.name }}
-  {{- end }}

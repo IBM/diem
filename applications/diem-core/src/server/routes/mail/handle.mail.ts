@@ -111,7 +111,7 @@ export const handleMail: (doc: IModel) => Promise<any> = async (doc: IModel): Pr
             `$handle.mail (handleMail): No Mail Setting - Completed : doc: ${id} - name: ${doc.name} - ti: ${doc.job.transid}`
         );
 
-        return;
+        return Promise.resolve();
     }
 
     if (doc.mail && doc.mail.enabled === false) {
@@ -119,7 +119,7 @@ export const handleMail: (doc: IModel) => Promise<any> = async (doc: IModel): Pr
             `$handle.mail (handleMail): mail disabled - doc: ${id} - name: ${doc.name} - ti: ${doc.job.transid}`
         );
 
-        return;
+        return Promise.resolve();
     }
 
     // here we can now continue with the mail sending
@@ -137,7 +137,7 @@ export const handleMail: (doc: IModel) => Promise<any> = async (doc: IModel): Pr
             `$handle.mail (handleMail): No Mail Set - doc: ${id} - name: ${doc.name} - ti: ${doc.job.transid}`
         );
 
-        return;
+        return Promise.resolve();
     }
 
     const uniq: (a: string[], b: string[]) => string[] = (a: string[], b: string[]): string[] => {

@@ -1,8 +1,12 @@
 /*jshint esversion: 8 */
 import { utils } from '@common/utils';
 import { INatsCredentials, INatsPayload } from '@interfaces';
-import { connect, NatsConnection, JSONCodec, StringCodec, nkeyAuthenticator } from 'nats';
+import { connect, NatsConnection, JSONCodec, StringCodec, nkeyAuthenticator, NatsError } from 'nats';
 import { Credentials } from '../common/cfenv';
+
+export interface INatsError extends NatsError {
+    trace: string[];
+}
 
 const jc = JSONCodec();
 const sc = StringCodec();
@@ -73,7 +77,16 @@ class NCConnection {
 
     private events = () => {
         void (async () => {
-            utils.logInfo(`$nats_connect (connect): connected to nats - ${this.nc.getServer()}`);
+            if (this.nc.info) {
+                const info = this.nc.info;
+                utils.logInfo(
+                    `$nats_connect (connect): connected - ${this.nc.getServer()} - cluster: ${info.cluster} - server: ${
+                        info.server_name
+                    }`
+                );
+            } else {
+                utils.logInfo(`$nats_connect (connect): connected - ${this.nc.getServer()}`);
+            }
             for await (const s of this.nc.status()) {
                 if (s.type === 'update') {
                     utils.logInfo(`$connect (events): ${s.type} - data: ${JSON.stringify(s.data)}`);

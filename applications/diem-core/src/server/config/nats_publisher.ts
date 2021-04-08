@@ -1,7 +1,8 @@
 import { utils } from '@common/utils';
 import { INatsPayload } from '@interfaces';
 import { ErrorCode, NatsConnection, ServerInfo } from 'nats';
-import { NC, fromBuff, toBuff } from './nats_connect';
+import { addTrace } from '../routes/shared/functions';
+import { NC, fromBuff, toBuff, INatsError } from './nats_connect';
 
 class Publisher {
     private nc!: NatsConnection;
@@ -47,13 +48,31 @@ class Publisher {
     public request = async (channel: string, data: any): Promise<INatsPayload | undefined> => {
         const hrstart: [number, number] = process.hrtime();
 
-        utils.logInfo(`$nats_publisher (request): new request : channel: ${channel} client: ${this.client}`);
+        utils.logInfo(`$nats_publisher (request): new request - channel: ${channel} client: ${this.client}`);
 
         try {
             const payload = toBuff({ client: this.client, data });
-            const response: any = await this.nc.request(channel, payload, {
-                timeout: 10000,
-            });
+            const response: any = await this.nc
+                .request(channel, payload, {
+                    timeout: 10000,
+                })
+                .catch(async (err: INatsError) => {
+                    switch (err.code) {
+                        case ErrorCode.NoResponders:
+                            err.trace = addTrace(err.trace, '@at $np.create (nodePyRequestJob) - no responders');
+                            err.message = 'No Executor is available to handle your request';
+                            break;
+                        case ErrorCode.Timeout:
+                            err.trace = addTrace(err.trace, '@at $np.create (nodePyRequestJob) - timeout');
+                            err.message = 'Timeout handling your request';
+                            break;
+                        default:
+                            err.trace = addTrace(err.trace, '@at $np.create (nodePyRequestJob) - other error');
+                    }
+
+                    // pass to the try catch handler below
+                    return Promise.reject(err);
+                });
 
             const response_data = fromBuff(response.data);
             if (response_data) {
@@ -68,7 +87,7 @@ class Publisher {
 
             return Promise.resolve(undefined);
         } catch (err) {
-            utils.logInfo(`$nats_publisher (request): error: ${err.message}`);
+            //     utils.logInfo(`$nats_publisher (request): error: ${err.message}`);
 
             return Promise.reject(err);
         }

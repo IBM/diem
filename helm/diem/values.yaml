@@ -124,8 +124,6 @@ nodepy:
 
   nats:
 
-
-
 ## enable the spark Operator
 ## for more details see
 ## https://github.com/GoogleCloudPlatform/spark-on-k8s-operator
@@ -155,6 +153,7 @@ mongodb:
 ## see https://github.com/bitnami/charts/tree/master/bitnami/nats
 
 nats:
+  createservice: true
   ## the name of the service
   name: nats
 
@@ -173,7 +172,7 @@ nats:
     password: ""
     token: ""
   clusterAuth:
-    user: nats_cluster
+    user: ""
     password: ""
     token: ""
 
@@ -185,14 +184,13 @@ nats:
   ## you might need to reapply the helm chart twice once you have it
   ip: 0.0.0.0
 
-  priorityClassName : system-node-critical
+  priorityClassName: system-node-critical
 
   replicaCount: 1
 
   extraFlags:
     cluster_name: diem-nats-cluster
     no_advertise: true
-
 
 redis:
   createservice: true
