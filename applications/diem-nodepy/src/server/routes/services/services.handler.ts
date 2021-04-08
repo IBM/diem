@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs';
 import path from 'path';
-import { utils } from '@common/utils';
+import { utils } from '@config/utils';
 import { IError } from '@interfaces';
 import { ServicesJob, IHandler } from '@config/interfaces';
 import { addTrace } from '../shared/functions';

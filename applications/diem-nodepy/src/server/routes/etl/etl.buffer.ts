@@ -14,7 +14,7 @@ export const addToBuffer: (id: string, buffer: Buffer) => void = (id: string, bu
     if (data.endsWith('\n')) {
         workers[id].buffer = workers[id]?.buffer ? (workers[id].buffer += data) : data;
 
-        console.info(green, `$np ${process.pid} - processing data - id: ${id}:`, '');
+        console.info(green, `$np ${process.pid} ${id}: processing data`, '');
 
         const resp: string | undefined = workers[id].buffer;
         if (resp) {

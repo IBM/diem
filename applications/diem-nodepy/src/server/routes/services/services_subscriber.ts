@@ -1,6 +1,6 @@
 import { NatsConnection, ServerInfo, Subscription } from 'nats';
 import { NC, IPayload, fromBuff, toBuff } from '@config/nats_connect';
-import { utils } from '@common/utils';
+import { utils } from '@config/utils';
 import { handler } from './services.handler';
 
 const queue: string = 'nodepy';

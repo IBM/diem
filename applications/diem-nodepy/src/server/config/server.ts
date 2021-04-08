@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { IntInternal, IntEnv } from '@interfaces';
-import { utils } from '@common/utils';
+import { utils } from '@config/utils';
 import { etl_subscriber } from '../routes/etl/etl_subscriber';
 import { services_subscriber } from '../routes/services/services_subscriber';
 import { publisher } from './nats_publisher';

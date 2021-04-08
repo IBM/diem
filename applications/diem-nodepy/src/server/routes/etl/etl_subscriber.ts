@@ -1,6 +1,6 @@
 import { NatsConnection, ServerInfo, Subscription } from 'nats';
 import { NC, IPayload, fromBuff, toBuff } from '@config/nats_connect';
-import { utils } from '@common/utils';
+import { utils } from '@config/utils';
 import { IntJob } from '@config/interfaces';
 import { handler } from './etl.handler';
 import { stopWorker } from './etl.workers';

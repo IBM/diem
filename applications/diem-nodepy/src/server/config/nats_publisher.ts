@@ -1,4 +1,4 @@
-import { utils } from '@common/utils';
+import { utils } from '@config/utils';
 import { createInbox, ErrorCode, NatsConnection, ServerInfo } from 'nats';
 import { NC, toBuff } from './nats_connect';
 

@@ -1,6 +1,7 @@
 /*jshint esversion: 8 */
 import { connect, NatsConnection, JSONCodec, StringCodec, nkeyAuthenticator } from 'nats';
-import { Credentials } from '../common/cfenv';
+import { Credentials } from './cfenv';
+import { utils } from './utils';
 
 const jc = JSONCodec();
 const sc = StringCodec();
@@ -83,7 +84,7 @@ class NCConnection {
 
             return Promise.resolve(this.nc);
         } catch (err) {
-            console.error('$nats_connect (connect): error', err);
+            void utils.logError('$nats_connect (connect): error', err);
 
             return Promise.reject({ message: 'could not connect' });
         }
@@ -91,12 +92,21 @@ class NCConnection {
 
     private events = () => {
         void (async () => {
-            console.info(`$nats_connect (connect): connected to nats - ${this.nc.getServer()}`);
+            if (this.nc.info) {
+                const info = this.nc.info;
+                utils.logInfo(
+                    `$nats_connect (connect): connected - ${this.nc.getServer()} - cluster: ${info.cluster} - server: ${
+                        info.server_name
+                    }`
+                );
+            } else {
+                utils.logInfo(`$nats_connect (connect): connected - ${this.nc.getServer()}`);
+            }
             for await (const s of this.nc.status()) {
                 if (s.type === 'update') {
-                    console.info(`$connect (events): ${s.type}`, s.data);
+                    utils.logInfo(`$connect (events): ${s.type} - data: ${JSON.stringify(s.data)}`);
                 } else {
-                    console.info(`$connect (events): ${s.type} - data: ${s.data}`);
+                    utils.logInfo(`$connect (events): ${s.type} - data: ${s.data}`);
                 }
             }
         })();
