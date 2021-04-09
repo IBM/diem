@@ -3,7 +3,7 @@ import { IRequest, IFile, EStoreActions, IntServerPayload, IError } from '@inter
 import { cosFunctions, ICos, IPutObject } from '@common/cos.functions';
 import { IFilesBody, FaIcons } from '@models';
 import { pubSub } from '@config/pubsub';
-import { addTrace } from '../shared/functions';
+import { addTrace } from '@functions';
 import { getName, getBucket } from './files';
 
 interface ICosFileMeta {

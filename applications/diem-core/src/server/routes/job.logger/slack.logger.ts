@@ -6,7 +6,7 @@ import { slackMsg } from '@common/slack/slack';
 import { ISlack, utils } from '@common/utils';
 import { IModel, EJobTypes, IWebhooksSchema } from '@models';
 import { IError } from '@interfaces';
-import { addTrace, fmtTime, makeUrl } from '../shared/functions';
+import { addTrace, fmtTime, makeUrl } from '@functions';
 import { getwebhook } from '../webhooks/webhooks';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -1,7 +1,7 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
 import { IUserSchema, UserModel, ProfilePayloadValues, IQuery, FaIcons } from '@models';
-import { addTrace } from '../shared/functions';
+import { addTrace } from '@functions';
 import { userProfile } from './profile.actions';
 
 export const getProfiles: (body: IQuery) => Promise<any> = async (body: IQuery) => {

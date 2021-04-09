@@ -3,7 +3,7 @@ import { IRequest, EStoreActions, IntPayload } from '@interfaces';
 import { format } from 'sql-formatter';
 import { publisher } from '@config/nats_publisher';
 import { DataModel, IJobBody, IModel, ITemplatesModel, TemplatesModel, ISocketPayload, EJobTypes } from '@models';
-import { addTrace } from '../shared/functions';
+import { addTrace } from '@functions';
 
 export const lookupTemplate: (id: string) => Promise<ITemplatesModel | null> = async (
     id: string

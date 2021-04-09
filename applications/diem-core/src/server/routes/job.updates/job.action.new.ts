@@ -1,6 +1,6 @@
 import { EStoreActions, IntPayload, IntServerPayload } from '@interfaces';
 import { DataModel, IJobBody, IModel, IJobSchema } from '@models';
-import { extract__, expand, addTrace } from '../shared/functions';
+import { extract__, expand, addTrace } from '@functions';
 
 const detail_store: string = 'jobdetail.store';
 

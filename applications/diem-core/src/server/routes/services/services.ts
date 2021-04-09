@@ -3,7 +3,7 @@
 import { utils } from '@common/utils';
 import { IRequest, IError, INatsPayload } from '@interfaces';
 import { publisher } from '@config/nats_publisher';
-import { base64encode, addTrace } from '../shared/functions';
+import { base64encode, addTrace } from '@functions';
 import { npcodefileservices, IServices } from '../executors/nodepy/np.codefile.services';
 
 interface IServicesReturn {

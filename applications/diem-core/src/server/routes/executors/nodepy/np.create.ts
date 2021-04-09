@@ -1,6 +1,6 @@
 import { IError } from '@interfaces';
 import { ECodeLanguage, IETLJob, IModel } from '@models';
-import { addTrace } from '../../shared/functions';
+import { addTrace } from '@functions';
 import { javascriptHandler } from './javascript/javascript.handler';
 import { INodePyJob } from './np.interfaces';
 import { nodePyRequestJob } from './np.publish';

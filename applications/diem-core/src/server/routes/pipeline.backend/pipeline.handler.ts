@@ -10,7 +10,7 @@ import { EJobStatus, IJobResponse, IModel } from '@models';
 
 import { pubSub } from '@config/pubsub';
 
-import { addTrace } from '../shared/functions';
+import { addTrace } from '@functions';
 import {
     findOne,
     makePlPayload,

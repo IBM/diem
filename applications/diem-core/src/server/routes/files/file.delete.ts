@@ -2,7 +2,7 @@ import { utils } from '@common/utils';
 import { EStoreActions, IError, IntServerPayload, IRequest } from '@interfaces';
 import { cosFunctions } from '@common/cos.functions';
 import { pubSub } from '@config/pubsub';
-import { addTrace } from '../shared/functions';
+import { addTrace } from '@functions';
 import { getBucket } from './files';
 
 export const filedelete: (req: IRequest) => Promise<IRequest | any> = async (

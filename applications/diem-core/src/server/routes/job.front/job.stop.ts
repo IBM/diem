@@ -2,8 +2,8 @@ import { utils } from '@common/utils';
 import { EJobStatus, IETLJob, ExecutorTypes, IJobResponse } from '@models';
 import { pubSub } from '@config/pubsub';
 import { publisher } from '@config/nats_publisher';
+import { addTrace } from '@functions';
 import { deleteJob } from '../executors/spark/spark.job';
-import { addTrace } from '../shared/functions';
 
 const stopSparkJob: (job: IETLJob) => Promise<boolean | Error> = async (job: IETLJob): Promise<boolean | Error> => {
     utils.logInfo(`$job.actions (jobStop): spark delete request - job: ${job.id}`, job.transid);

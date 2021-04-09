@@ -3,10 +3,10 @@
 import { utils } from '@common/utils';
 import { IRequest, EStoreActions, IntPayload, IntServerPayload, IError, IResponse } from '@interfaces';
 import { parse, stringify } from 'yaml';
-import { newUser } from '../profiles/profile.actions';
 import { IOrgsBody, IOrgsModel, OrgsModel, FaIcons, IProfileBody } from '@models';
-import { addTrace } from '../shared/functions';
+import { addTrace } from '@functions';
 import { login } from '@config/authorization';
+import { newUser } from '../profiles/profile.actions';
 
 /**
  * Nothing will be rejected here, in case of an error we log the error but return an empty [] to the user

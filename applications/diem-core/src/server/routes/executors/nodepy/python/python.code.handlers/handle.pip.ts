@@ -1,5 +1,5 @@
 import { IJobSchema } from '@models';
-import { addTrace } from '../../../../shared/functions';
+import { addTrace } from '@functions';
 
 const py_pipinstall: (id: string, pip: string[]) => string = (_id: string, pip: string[]): string => String.raw`
 

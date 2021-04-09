@@ -2,8 +2,8 @@
 import jwt from 'jsonwebtoken';
 import { IntPassportUser, IProfile, IRequest, IXorg } from '@interfaces';
 import { utils } from '@common/utils';
+import { addTrace } from '@functions';
 import { getProfile } from '../routes/profiles/profile';
-import { addTrace } from '../routes/shared/functions';
 
 const makeToken: (user: IntPassportUser, maxAge: number, transid: string) => Promise<any> = async (
     user: IntPassportUser,

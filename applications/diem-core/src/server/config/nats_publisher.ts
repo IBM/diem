@@ -1,7 +1,7 @@
 import { utils } from '@common/utils';
 import { INatsPayload } from '@interfaces';
 import { ErrorCode, NatsConnection, ServerInfo } from 'nats';
-import { addTrace } from '../routes/shared/functions';
+import { addTrace } from '@functions';
 import { NC, fromBuff, toBuff, INatsError } from './nats_connect';
 
 class Publisher {

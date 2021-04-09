@@ -2,7 +2,7 @@
 import { utils } from '@common/utils';
 import { IRequest, EStoreActions, IntPayload, IntSharedAction } from '@interfaces';
 import axios from 'axios';
-import { base64encode, addTrace } from '../shared/functions';
+import { base64encode, addTrace } from '@functions';
 
 export interface IntInteractivePayload {
     actions?: IntSharedAction[];

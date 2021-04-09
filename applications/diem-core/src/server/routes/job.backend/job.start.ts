@@ -1,6 +1,6 @@
 import { utils } from '@common/utils';
 import { EJobStatus, IModel } from '@models';
-import { addTrace } from '../shared/functions';
+import { addTrace } from '@functions';
 import { jobStartHandler } from './job.start.handler';
 
 export const jobStart: (doc: IModel) => Promise<void> = async (doc: IModel): Promise<void> => {

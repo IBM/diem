@@ -2,7 +2,7 @@ import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
 import { publisher } from '@config/nats_publisher';
 import { IJobBody, ISocketPayload } from '@models';
-import { addTrace } from '../shared/functions';
+import { addTrace } from '@functions';
 import { actionClone } from './job.action.clone';
 import { actionUpdate } from './job.action.update';
 import { actionDelete } from './job.action.delete';

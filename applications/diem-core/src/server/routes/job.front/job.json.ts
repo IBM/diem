@@ -1,6 +1,6 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
-import { addTrace } from '../shared/functions';
+import { addTrace } from '@functions';
 import { DataModel, IJobDetails, IModel, IJobSchema } from '@models';
 import { getNodes } from './job.detail';
 

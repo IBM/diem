@@ -2,10 +2,10 @@
 import { utils } from '@common/utils';
 import { EJobStatus, IJobResponse, IModel } from '@models';
 import { pubSub } from '@config/pubsub';
+import { addTrace } from '@functions';
 import { crdconfig, ICrdConfig } from '../../spark-operator/base.crd';
 import { spark, sparkCredentials } from '../../spark-operator/spark.base';
 import { caclCap } from '../../spark-operator/spark.capacity';
-import { addTrace } from '../../shared/functions';
 import { sparkWatcher } from '../../spark-operator/spark.watcher';
 import { getConfigmap } from '../nodepy/python/python.code.handlers/handle.configmaps';
 import { addVolume, getCosCredentials, ICos } from './spark.job';

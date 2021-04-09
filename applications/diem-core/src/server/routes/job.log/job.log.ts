@@ -1,6 +1,6 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
-import { addTrace } from '../shared/functions';
+import { addTrace } from '@functions';
 import { IQuery, JobLogModel, IJobLogModel, IJobLog } from '@models';
 import { StatusConfig } from '../job.backend/job.functions';
 

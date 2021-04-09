@@ -1,9 +1,9 @@
 import { utils } from '@common/utils';
 import { IError } from '@interfaces';
 import { IModel, IJob, ExecutorTypes } from '@models';
+import { addTrace } from '@functions';
 import { deleteJob } from '../executors/spark/spark.job';
 import { jobLogger } from '../job.logger/job.logger';
-import { addTrace } from '../shared/functions';
 
 export const finishJob: (doc: IModel) => Promise<any> = async (doc: IModel): Promise<any> => {
     if (doc.job.executor === ExecutorTypes.pyspark) {

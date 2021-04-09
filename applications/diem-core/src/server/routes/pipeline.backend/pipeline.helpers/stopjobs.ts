@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { utils } from '@common/utils';
-import { jobStop } from '../../job.front/job.stop';
 import { IModel, DataModel, EJobTypes } from '@models';
+import { jobStop } from '../../job.front/job.stop';
 import { findAndUpdatePlJob } from './helpers';
 
 // eslint-disable-next-line sonarjs/cognitive-complexity

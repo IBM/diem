@@ -5,7 +5,7 @@ import * as Api from 'kubernetes-client';
 import { IError } from '@interfaces';
 import { pubSub } from '@config/pubsub';
 import { ExecutorTypes, EJobStatus } from '@models';
-import { addTrace } from '../shared/functions';
+import { addTrace } from '@functions';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const JSONStream: any = require('json-stream');

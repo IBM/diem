@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/quotes */
 /* eslint-disable max-len */
 
-import { addTrace } from '../../../../shared/functions';
+import { addTrace } from '@functions';
 import { IntPythonTransferJob } from '../../np.interfaces';
 import { py_transfer } from '../python.code/py';
 

@@ -5,7 +5,7 @@ import { utils } from '@common/utils';
 import { Credentials } from '@common/cfenv';
 import { IModel, IConfigmapsModel } from '@models';
 import { INatsMessage } from '@interfaces';
-import { addTrace } from '../../shared/functions';
+import { addTrace } from '@functions';
 import { spark } from '../../spark-operator/spark.base';
 import { getConfigmap } from '../nodepy/python/python.code.handlers/handle.configmaps';
 

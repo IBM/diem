@@ -1,7 +1,7 @@
 import { utils } from '@common/utils';
 import { IRequest, EStoreActions, IntPayload, IntServerPayload, IResponse, IError } from '@interfaces';
 import { FaIcons, IProfileModel, ProfileModel, IProfileBody, IUserModel, UserModel, IProfilesBody } from '@models';
-import { addTrace } from '../shared/functions';
+import { addTrace } from '@functions';
 
 export const newUser: (body: IProfileBody) => Promise<any> = async (body: IProfileBody) => {
     const doc: IUserModel = new UserModel({

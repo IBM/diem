@@ -2,7 +2,7 @@ import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
 import { pubSub } from '@config/pubsub';
 import { IJobResponse } from '@models';
-import { addTrace } from '../shared/functions';
+import { addTrace } from '@functions';
 
 export const spark_callback: (req: IRequest) => Promise<any> = async (req: IRequest) => {
     const response: IJobResponse = { ...req.body };

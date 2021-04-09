@@ -1,5 +1,5 @@
 import { utils } from '@common/utils';
-import { addTrace } from '../shared/functions';
+import { addTrace } from '@functions';
 import { ClientResponse, sendmail } from './sendmail';
 import { IMailBody, IMailAttachment, IPreparedMail } from './mail.interfaces';
 

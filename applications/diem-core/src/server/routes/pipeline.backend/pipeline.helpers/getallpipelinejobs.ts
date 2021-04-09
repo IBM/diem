@@ -1,6 +1,6 @@
 import { utils } from '@common/utils';
 import { IJobSchema, DataModel, EJobTypes } from '@models';
-import { addTrace } from '../../shared/functions';
+import { addTrace } from '@functions';
 
 export const allPipelineJobs: (id: string) => Promise<string[]> = async (id: string): Promise<string[]> => {
     // let's find if this jobs is part of a pipeline

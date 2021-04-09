@@ -2,7 +2,7 @@
 import { IModel, EJobTypes } from '@models';
 import { utils } from '@common/utils';
 import { IError } from '@interfaces';
-import { addTrace } from '../shared/functions';
+import { addTrace } from '@functions';
 import { handleMail } from '../mail/handle.mail';
 import { toSlack } from './slack.logger';
 import { logLogger } from './log.logger';

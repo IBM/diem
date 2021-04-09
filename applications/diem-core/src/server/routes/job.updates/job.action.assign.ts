@@ -1,6 +1,6 @@
 import { EStoreActions, IntPayload, IntServerPayload, IntSharedAction } from '@interfaces';
 import { DataModel, IJobBody, IModel } from '@models';
-import { addTrace } from '../shared/functions';
+import { addTrace } from '@functions';
 import { makePayload } from '../job.front/job.detail';
 
 const detail_store: string = 'jobdetail.store';

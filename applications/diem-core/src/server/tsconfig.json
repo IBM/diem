@@ -9,7 +9,8 @@
             "@common/*": ["./common/*"],
             "@interfaces": ["./interfaces/"],
             "@config/*": ["./config/*"],
-            "@models": ["./routes/models/"]
+            "@models": ["./routes/models/"],
+            "@functions": ["./routes/shared/"]
         }
     },
     "filesGlob": ["../../node_modules/@types/***/**.d.ts", "**/**.ts"]

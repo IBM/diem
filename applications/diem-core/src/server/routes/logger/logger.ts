@@ -1,7 +1,7 @@
 import { IntMQLog, IRequest } from '@interfaces';
 import { utils } from '@common/utils';
 import { ILoggerModel, loggerModel } from '@models';
-import { addTrace } from '../shared/functions';
+import { addTrace } from '@functions';
 
 const logger: (log: IntMQLog, transid: string) => Promise<void> = async (
     log: IntMQLog,

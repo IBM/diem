@@ -1,9 +1,9 @@
 import { utils } from '@common/utils';
 import { IntEnv } from '@interfaces';
 import { IJobResponse, IUserPayload, ISocketPayload } from '@models';
+import { addTrace } from '@functions';
 import { servicesOutHandler } from '../routes/services/getservice';
 import { jobHandler } from '../routes/job.backend/job.handler';
-import { addTrace } from '../routes/shared/functions';
 import { publisher } from './nats_publisher';
 
 export class Server {

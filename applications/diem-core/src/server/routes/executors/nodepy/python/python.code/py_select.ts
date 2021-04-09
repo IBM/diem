@@ -1,6 +1,6 @@
 import { IConnSchema } from '@models';
+import { addTrace } from '@functions';
 import { getConnection, jdbc_config } from '../../../spark/spark.job.handlers/hendle.spark.common';
-import { addTrace } from '../../../../shared/functions';
 import { IntPythonStmtJob } from '../../np.interfaces';
 
 export const py_select: (job: IntPythonStmtJob) => Promise<string> = async (job: IntPythonStmtJob): Promise<string> => {

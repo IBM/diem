@@ -1,4 +1,4 @@
-import { addTrace } from '../../../../shared/functions';
+import { addTrace } from '@functions';
 import { IJobSchema } from '@models';
 
 const py_end: () => string = (): string => String.raw`

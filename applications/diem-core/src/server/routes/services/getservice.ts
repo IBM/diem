@@ -5,7 +5,7 @@ import { IRequest, IError, EStoreActions } from '@interfaces';
 import { pubSub } from '@config/pubsub';
 import { publisher } from '@config/nats_publisher';
 import { IJobResponse } from '@models';
-import { base64encode, addTrace } from '../shared/functions';
+import { base64encode, addTrace } from '@functions';
 import { npcodefileservices, IServices } from '../executors/nodepy/np.codefile.services';
 
 const jobdetail: string = 'jobdetail.store';

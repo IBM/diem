@@ -2,17 +2,8 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 import { utils } from '@common/utils';
 import { parseExpression } from 'cron-parser';
-import {
-    IJobSchema,
-    DataModel,
-    IQuery,
-    IModel,
-    IntPayloadValues,
-    EJobTypes,
-    IScheduleSchema,
-    FaIcons,
-} from '@models';
-import { fmtTime, addTrace } from '../shared/functions';
+import { IJobSchema, DataModel, IQuery, IModel, IntPayloadValues, EJobTypes, IScheduleSchema, FaIcons } from '@models';
+import { fmtTime, addTrace } from '@functions';
 
 export const StatusConfig: any = {
     Completed: {

@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { utils } from '@common/utils';
 import { IError } from '@interfaces';
-import { addTrace } from '../../shared/functions';
+import { addTrace } from '@functions';
 import { IModel } from '@models';
 import { findOne, findOneAndUpdate } from './findone';
 

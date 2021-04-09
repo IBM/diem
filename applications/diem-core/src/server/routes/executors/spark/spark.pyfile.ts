@@ -1,7 +1,7 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
 import { DataModel, EJobTypes, IJobSchema, ECodeLanguage } from '@models';
-import { addTrace } from '../../shared/functions';
+import { addTrace } from '@functions';
 import { handleWithConfig } from './spark.job.handlers/handle.spark.config';
 import { handleWithCustom } from './spark.job.handlers/handle.spark.custom';
 

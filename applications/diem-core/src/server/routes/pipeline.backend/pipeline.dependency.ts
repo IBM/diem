@@ -1,8 +1,8 @@
 import { utils } from '@common/utils';
 import { IRequest, EStoreActions, IntPayload, IntServerPayload } from '@interfaces';
-import { getGraphLinks } from '../job.front/job.grapht';
 import { DataModel, IModel, IntPayloadValues } from '@models';
-import { addTrace } from '../shared/functions';
+import { addTrace } from '@functions';
+import { getGraphLinks } from '../job.front/job.grapht';
 
 interface IDependencyBody {
     id: string;

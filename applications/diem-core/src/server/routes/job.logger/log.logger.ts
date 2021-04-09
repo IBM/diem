@@ -2,7 +2,7 @@
 import { utils } from '@common/utils';
 import { IModel, IJob, JobLogModel, IJobLog } from '@models';
 import { IError } from '@interfaces';
-import { addTrace } from '../shared/functions';
+import { addTrace } from '@functions';
 
 export const logLogger: (doc: IModel) => Promise<void> = async (doc: IModel): Promise<void> => {
     const id: string = doc._id.toString();

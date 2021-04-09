@@ -2,7 +2,7 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 
 import { IETLJob, EJobTypes, IJobSchema, ECodeLanguage } from '@models';
-import { base64encode, addTrace } from '../../../shared/functions';
+import { base64encode, addTrace } from '@functions';
 import { INodePyJob } from '../np.interfaces';
 import { py_start_services } from './python.code/py';
 import { handleNodePyServicesCustomJob } from './python.handlers/handle.nodepy.services.custom';

@@ -1,7 +1,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ .Values.core.config.volume.volumeClaimName }}
+  name: { { .Values.core.config.volume.volumeClaimName } }
   annotations:
     "helm.sh/resource-policy": keep
     "helm.sh/hook": "pre-install"
@@ -9,7 +9,7 @@ metadata:
     helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 8Gi

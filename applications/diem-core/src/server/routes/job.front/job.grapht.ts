@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable sonarjs/cognitive-complexity */
 import moment, { Moment } from 'moment';
-import { addTrace } from '../shared/functions';
 import { IJobDetails, IJobDetail, EJobTypes, DataModel, IntPayloadValues, IJobSchema } from '@models';
+import { addTrace } from '@functions';
 import { handlePayloadValues } from '../job.backend/job.functions';
 
 export const getGraphLinks: (pldoc: IJobSchema) => Promise<[string, string, IntPayloadValues[]]> = async (
@@ -11,10 +11,29 @@ export const getGraphLinks: (pldoc: IJobSchema) => Promise<[string, string, IntP
     const jobs: IJobDetails = pldoc.jobs;
     const plid: string = pldoc._id.toString();
 
+    const rounds: number[] = [];
+    const getTree = (root: string, round: number) => {
+        const level = [];
+        for (const [key, value] of Object.entries(jobs)) {
+            if (value.from && value.from.includes(root)) {
+                level.push(key);
+            }
+        }
+        if (level.length > 0) {
+            round += 1;
+            level.forEach((l) => {
+                rounds.push(round);
+                getTree(l, round);
+            });
+        }
+    };
+    getTree(plid, 1);
+    const rounds_nbr: number = Math.max(...rounds);
+
     // let's replace this for a while and make the chart always LR
     // const l: number = Object.keys(jobs).length;
     // const gl: string = l > 4 ? 'TD' : 'LR';
-    const gl: string = 'LR';
+    const gl: string = rounds_nbr > 6 ? 'TD' : 'LR';
 
     let graph: string = `%%{init: {'themeVariables': { 'fontSize': '12px'}}}%%\ngraph ${gl};linkStyle default interpolate basis;`;
 

@@ -5,7 +5,7 @@ import { IError } from '@interfaces';
 import { EJobStatus, IETLJob } from '@models';
 import { pubSub } from '@config/pubsub';
 import { publisher } from '@config/nats_publisher';
-import { addTrace } from '../../shared/functions';
+import { addTrace } from '@functions';
 
 export interface INodePyJob extends IETLJob {
     code: string;
