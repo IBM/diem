@@ -33,7 +33,7 @@ export const getGraphLinks: (pldoc: IJobSchema) => Promise<[string, string, IntP
     // let's replace this for a while and make the chart always LR
     // const l: number = Object.keys(jobs).length;
     // const gl: string = l > 4 ? 'TD' : 'LR';
-    const gl: string = rounds_nbr > 6 ? 'TD' : 'LR';
+    const gl: string = rounds_nbr > 7 ? 'TD' : 'LR';
 
     let graph: string = `%%{init: {'themeVariables': { 'fontSize': '12px'}}}%%\ngraph ${gl};linkStyle default interpolate basis;`;
 
