@@ -4,6 +4,8 @@ import { IntInternal } from '../interfaces/shared';
 import { Credentials } from '../common/cfenv';
 import { utils } from '../common/utils';
 
+export { RedisClient };
+
 const source: string = '@leap-common/$redis';
 
 interface IRedisOptions {
@@ -113,7 +115,7 @@ export class Redis {
                 message: 'Redis Connection Error',
                 pid: process.pid,
                 source,
-                trace: ['@at $redis (err'],
+                trace: ['@at $redis (error)'],
             };
 
             utils.emit('internal', internal);
@@ -131,9 +133,15 @@ export class Redis {
             unavailable: millisToMinutesAndSeconds(options.total_retry_time),
         };
 
+        if (options.error && options.error.code) {
+            // End reconnecting on a specific error and flush all commands with
+            // a individual error
+            console.error('$redis (redisRetryStrategy): error', redisError);
+        }
+
         /* error logging not needed as will be done by the application */
 
-        if (redisError.retries > 2) {
+        if (redisError.retries > 5) {
             // one more then 2
             const internal: IntInternal = {
                 err: redisError,
@@ -144,7 +152,11 @@ export class Redis {
                 trace: ['@at $redis (retries'],
             };
 
-            utils.emit('internal', internal);
+            return utils.emit('internal', internal);
+        } else {
+            console.info(
+                `$redis (redisRetryStrategy): Redis connection retry: ${redisError.retries} - pid: ${process.pid}`
+            );
         }
 
         return 10000;

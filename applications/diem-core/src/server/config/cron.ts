@@ -1,6 +1,5 @@
-import { RedisClient } from 'redis';
 import { utils } from '@common/utils';
-import { redisc } from '@common/redis';
+import { redisc, RedisClient } from '@common/redis';
 import { slackMsg } from '@common/slack/slack';
 import { getQueue } from './cron.jobs';
 

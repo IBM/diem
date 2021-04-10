@@ -36,8 +36,9 @@ export class Server {
             .on('uncaughtException', async (err: IError) => {
                 await utils.logError('$server.ts (uncaught): uncaughtException', {
                     message: err.message,
-                    name: 'uncaught excemption',
+                    name: 'uncaught exception',
                     stack: err.stack,
+                    code: err.code || 'n/a',
                     trace: addTrace(err.trace, '@at $server (uncaughtException)'),
                     caller: '$server',
                 });
