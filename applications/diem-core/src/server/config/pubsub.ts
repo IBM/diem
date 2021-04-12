@@ -17,7 +17,6 @@ export class Server {
         try {
             // setTimeout(async () => {
             const pl: ISocketPayload | void = await jobHandler(job);
-            /* pass the message to redis for global handling */
 
             utils.logInfo(`$pubsub (publish): publishing payload - job: ${job.id}`);
 
@@ -36,9 +35,7 @@ export class Server {
 
     public publishService: (job: IJobResponse) => Promise<void> = async (job: IJobResponse): Promise<void> => {
         try {
-            // setTimeout(async () => {
             const results: ISocketPayload | void = await servicesOutHandler(job);
-            /* pass the message to redis for global handling */
 
             utils.logInfo(`$pubsub (publishservice): publishing payload - job: ${job.id}`);
 
@@ -62,8 +59,6 @@ export class Server {
     };
 
     public publishUserPayload: (userPayload: IUserPayload) => void = (userPayload: IUserPayload) => {
-        /* pass the message to redis for global handling */
-
         void publisher.publish('global.core.user', userPayload);
     };
 

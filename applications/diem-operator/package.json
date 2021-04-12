@@ -28,8 +28,8 @@
         "@types/rimraf": "^3.0.0",
         "@types/webpack": "^5.28.0",
         "@types/webpack-env": "^1.16.0",
-        "@typescript-eslint/eslint-plugin": "^4.15.1",
-        "@typescript-eslint/parser": "^4.21.0",
+        "@typescript-eslint/eslint-plugin": "^4.22.0",
+        "@typescript-eslint/parser": "^4.22.0",
         "core-js": "^3.10.1",
         "eslint": "^7.20.0",
         "eslint-config-prettier": "^8.0.0",
@@ -49,7 +49,7 @@
         "webpack-cli": "^4.6.0"
     },
     "scripts": {
-        "build": "./node_modules/.bin/npm-run-all lock build-webpack webpack:node",
+        "build": "./node_modules/.bin/npm-run-all lock webpack:build webpack:node",
         "start": "node --max-old-space-size=8192 ./server/server.js",
         "eslint": "eslint -c ./src/server/.eslintrc.js ./src/server/ --ext .ts",
         "docker:push": "docker push $npm_package_config_containername",

@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: {{ .Values.core.deployment.name }}
-          image: {{ .Values.core.deployment.image }}
+          image: {{ .Values.core.deployment.image }}:{{ .Values.core.deployment.version }}
           envFrom:
             - configMapRef:
                 name: {{ .Values.common.config.configmapref }}

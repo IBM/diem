@@ -17,7 +17,7 @@ maintainers:
     email: guy_huinen#be.ibm.com
 
 ##  There are 3 optional and 1 mandatory dependency
-##  mongo redis and minio can be disabled or enabled via the values, they are by default enabled
+##  mongo minio can be disabled or enabled via the values, they are by default enabled
 dependencies:
   - name: spark-operator
     repository: https://googlecloudplatform.github.io/spark-on-k8s-operator
@@ -26,10 +26,6 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
     version: 10.0.5
     condition: mongodb.createservice
-  - name: redis
-    repository: https://charts.bitnami.com/bitnami
-    version: 12.1.1
-    condition: redis.createservice
   - name: minio
     repository: https://helm.min.io/
     version: 8.0.10

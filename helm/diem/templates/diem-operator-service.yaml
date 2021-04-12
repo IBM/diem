@@ -1,0 +1,22 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.operator.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.operator.name }}
+    tier: {{ .Values.operator.tier }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.operator.port }}
+      targetPort: {{ .Values.operator.targetPort }}
+  selector:
+    app: {{ .Values.operator.name }}
+    tier: {{ .Values.operator.tier }}
+  type: ClusterIP
+  sessionAffinity: None
+status:
+  loadBalancer: {}

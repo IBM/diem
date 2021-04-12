@@ -28,7 +28,6 @@ common:
     ## secretmapref is the name of the common secret map ref
     secretmapref: diem-common-secret
     SLACKHOOK: ""
-    REDIS_URI: ""
 
 ## these are the settings for Diem Core
 core:
@@ -42,8 +41,8 @@ core:
     socketName: etl-socket-server
 
     tier: backend
-    version: 0.1.0
-    image: quay.io/diem/core:1.0.0
+    version: 1.0.0
+    image: quay.io/diem/core
     replicas: 1
     port: 8080
 
@@ -114,15 +113,28 @@ nodepy:
   secretmapref: diem-nodepy-config
 
   ## image is the the name of the nodepy image
-  image: quay.io/diem/nodepy:1.0.0
-  name: nodepy
+  image: quay.io/diem/nodepy
+  name: diem-nodepy
   port: 8080
   replicas: 1
   targetPort: 8192
   tier: backend
-  version: 4.4.1
+  version: 1.0.0
 
-  nats:
+## cnfiguration for the operator
+operator:
+  ## configmapref is the name of the nodepy config map ref
+  configmapref: diem-operator-config
+  secretmapref: diem-operator-config
+
+  ## image is the the name of the nodepy image
+  image: quay.io/diem/operator
+  name: diem-operator
+  port: 8080
+  replicas: 1
+  targetPort: 8192
+  tier: backend
+  version: 1.0.0
 
 ## enable the spark Operator
 ## for more details see
@@ -169,6 +181,7 @@ nats:
   ##
   auth:
     user: nats_client
+    unencrypted_password: ""
     password: ""
     token: ""
   clusterAuth:
@@ -191,10 +204,6 @@ nats:
   extraFlags:
     cluster_name: diem-nats-cluster
     no_advertise: true
-
-redis:
-  createservice: true
-  password: diempassword
 
 minio:
   createservice: true

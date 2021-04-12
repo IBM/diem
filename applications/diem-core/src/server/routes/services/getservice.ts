@@ -76,7 +76,6 @@ export const getservice: (req: IRequest) => Promise<any> = async (req: IRequest)
         void utils.logError(`$services (servicesPostJob): error for job: ${id}`, err);
 
         const results: any = await servicesOutHandler({ id: body.id, out: err });
-        /* pass the message to redis for global handling */
 
         utils.logInfo(`$getservice (getservice): publishing payload - job: ${body.id}`);
         pubSub.publishUserPayload({
