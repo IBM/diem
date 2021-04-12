@@ -4,6 +4,14 @@ import moment from 'moment';
 import { IntEnv } from '../interfaces/env';
 import { IError } from '../interfaces/shared';
 
+export interface ISlack {
+    emoji: string;
+    deploy: { channel?: string; username?: string };
+    internal: { channel?: string; username?: string };
+    user: { channel?: string; username?: string };
+    url: string;
+}
+
 class Utils {
     public ev: EventEmitter;
 

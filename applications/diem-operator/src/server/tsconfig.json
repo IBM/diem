@@ -1,0 +1,15 @@
+{
+    "extends": "../webpack/tsconfig.base.json",
+    "compilerOptions": {
+        "outDir": "../../server",
+        "resolveJsonModule": true,
+        "typeRoots": ["../../node_modules/@types"],
+        "baseUrl": "./",
+        "paths": {
+            "@common/*": ["./common/*"],
+            "@interfaces": ["./interfaces/"],
+            "@config/*": ["./config/*"],
+        }
+    },
+    "filesGlob": ["../../node_modules/@types/***/**.d.ts", "**/**.ts"]
+}
