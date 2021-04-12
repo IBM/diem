@@ -8,8 +8,7 @@ const TerserPlugin: any = require('terser-webpack-plugin');
 const ngToolsWebpack: any = require('@ngtools/webpack');
 const CopyWebpackPlugin: any = require('copy-webpack-plugin');
 const MiniCssExtractPlugin: any = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin: any = require('optimize-css-assets-webpack-plugin');
-const cssnano: any = require('cssnano');
+const CssMinimizerPlugin: any = require('css-minimizer-webpack-plugin');
 const WebpackAssetsManifest: any = require('webpack-assets-manifest');
 const { InjectManifest }: any = require('workbox-webpack-plugin');
 /** const Ba = require('webpack-bundle-analyzer'); */
@@ -67,18 +66,7 @@ module.exports = {
                     mangle: true,
                 },
             }),
-            new OptimizeCSSAssetsPlugin({
-                canPrint: false,
-                cssProcessor: cssnano,
-                cssProcessorOptions: {
-                    discardComments: {
-                        removeAll: true,
-                    },
-                    // Run cssnano in safe mode to avoid
-                    // potentially unsafe transformations.
-                    safe: true,
-                },
-            }),
+            new CssMinimizerPlugin(),
         ],
     },
 
