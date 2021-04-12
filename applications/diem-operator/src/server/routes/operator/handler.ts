@@ -6,15 +6,7 @@ class Watcher {
         console.info('starting...');
         const operator = new Operator();
 
-        await operator.watchResource('', 'v1', 'pods', 'default');
-
-        const exit = (reason: string) => {
-            console.info(reason);
-            operator.stop();
-            process.exit(0);
-        };
-
-        process.on('SIGTERM', () => exit('SIGTERM')).on('SIGINT', () => exit('SIGINT'));
+        await operator.Informer('', 'v1', 'pods', 'default');
     };
 }
 

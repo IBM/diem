@@ -8,13 +8,14 @@ import {
     KubernetesObject,
     V1beta1CustomResourceDefinitionVersion,
     V1CustomResourceDefinitionVersion,
-    Watch,
     KubeConfig,
     CoreV1Api,
     V1beta1CustomResourceDefinition,
     V1CustomResourceDefinition,
     ApiextensionsV1Api,
     ApiextensionsV1beta1Api,
+    makeInformer,
+    V1Pod,
 } from '@kubernetes/client-node';
 
 export enum ResourceEventType {
@@ -37,35 +38,35 @@ export interface ResourceEvent {
  */
 export interface ResourceMeta {
     apiVersion: string;
-    id: string;
     kind: string;
     name: string;
     namespace?: string;
     node: string;
+    ready?: boolean;
     reason: string;
     resourceVersion: string;
+    state?: string;
     status: string;
-    state: string;
-    ready: boolean;
 }
 
-export const MetaMapper = (id: string, object: any, reason: any): ResourceMeta => {
-    if (!object.metadata?.name || !object.metadata?.resourceVersion || !object.apiVersion || !object.kind) {
-        throw Error(`Malformed event object for '${id}'`);
+export const MetaMapper = (kind: string, object: V1Pod, version: string, reason: string): ResourceMeta => {
+    if (!object.metadata?.name || !object.metadata?.resourceVersion) {
+        throw Error(`Malformed event object for '${kind}'`);
     }
 
+    object.apiVersion = version;
+    object.kind = kind;
+
     return {
-        id,
+        reason,
         name: object.metadata.name,
         namespace: object.metadata.namespace,
         resourceVersion: object.metadata.resourceVersion,
         apiVersion: object.apiVersion,
         kind: object.kind,
-        status: object.metadata.deletionTimestamp ? 'Terminating' : object.status.phase,
-        node: object.spec.nodeName,
-        reason,
-        state: object.status.containerStatuses[0]?.state,
-        ready: object.status.containerStatuses[0]?.ready,
+        status: object.metadata.deletionTimestamp ? 'Terminating' : object.status?.phase ? object.status.phase : '',
+        node: object?.spec?.nodeName || '',
+        ready: object.status?.containerStatuses ? object.status.containerStatuses[0].ready : false,
     };
 };
 
@@ -83,7 +84,6 @@ export default class Operator {
     public k8sApi: CoreV1Api;
 
     public resourcePathBuilders: Record<string, (meta: ResourceMeta) => string> = {};
-    private watchRequests: Record<string, { abort(): void }> = {};
 
     /**
      * Constructs an this.
@@ -94,82 +94,63 @@ export default class Operator {
         this.k8sApi = this.kc.makeApiClient(CoreV1Api);
     }
 
-    public stop(): void {
-        for (const req of Object.values(this.watchRequests)) {
-            req.abort();
-        }
-    }
-
     /**
      * Get uri to the API for your custom resource.
      *
      * @param group The group of the custom resource
      * @param version The version of the custom resource
-     * @param plural The plural name of the custom resource
+     * @param kind The kind name of the custom resource
      * @param namespace Optional namespace to include in the uri
      */
-    public getCustomResourceApiUri(group: string, version: string, plural: string, namespace?: string): string {
+    public getCustomResourceApiUri(group: string, version: string, kind: string, namespace?: string): string {
         let path = group ? `/apis/${group}/${version}/` : `/api/${version}/`;
         if (namespace) {
             path += `namespaces/${namespace}/`;
         }
-        path += plural;
+        path += kind;
 
         return this.k8sApi.basePath + path;
     }
 
-    public watchResource = async (
-        group: string,
-        version: string,
-        plural: string,
-        namespace?: string
-    ): Promise<void> => {
+    public Informer = async (group: string, version: string, kind: string, namespace?: string): Promise<void> => {
         const apiVersion = group ? `${group}/${version}` : `${version}`;
-        const id = `${plural}.${apiVersion}`;
+        const id = `${kind}.${apiVersion}`;
 
         this.resourcePathBuilders[id] = (meta: ResourceMeta): string =>
-            this.getCustomResourceApiUri(group, version, plural, meta.namespace);
+            this.getCustomResourceApiUri(group, version, kind, meta.namespace);
 
         let uri = group ? `/apis/${group}/${version}/` : `/api/${version}/`;
         if (namespace) {
             uri += `namespaces/${namespace}/`;
         }
-        uri += plural;
+        uri += kind;
 
-        const watch = new Watch(this.kc);
+        console.info(uri);
 
-        const startWatch = async (): Promise<void> =>
-            watch
-                .watch(
-                    uri,
-                    {},
-                    (reason, apiObj) => {
-                        //console.info(phase, MetaMapper(plural, apiObj));
-                        const meta = {
-                            meta: MetaMapper(plural, apiObj, reason),
-                            object: apiObj,
-                            type: reason as ResourceEventType,
-                        };
-                        console.info(meta.meta);
-                    },
-                    (err) => {
-                        if (err) {
-                            console.error(`watch on resource ${id} failed: ${errorToJson(err)}`);
-                            process.exit(1);
-                        }
-                        console.debug(`restarting watch on resource ${id}`);
-                        setTimeout(startWatch, 200);
-                    }
-                )
-                .catch((reason) => {
-                    console.error(`watch on resource ${id} failed: ${errorToJson(reason)}`);
-                    process.exit(1);
-                })
-                .then((req) => (this.watchRequests[id] = req));
+        const listFn = async () => this.k8sApi.listNamespacedPod('default');
 
-        await startWatch();
+        const informer = makeInformer(this.kc, uri, listFn);
 
-        console.info(`watching resource ${id}`);
+        informer.on('add', (obj: V1Pod) => {
+            console.info(MetaMapper(kind, obj, version, 'Added'));
+        });
+        informer.on('update', (obj: V1Pod) => {
+            console.info(MetaMapper(kind, obj, version, 'Updated'));
+        });
+        informer.on('delete', (obj: V1Pod) => {
+            console.info(MetaMapper(kind, obj, version, 'Deleted'));
+        });
+        informer.on('error', (err: V1Pod) => {
+            console.error(err);
+            // Restart informer after 5sec
+            setTimeout(() => {
+                void informer.start();
+            }, 5000);
+        });
+
+        console.info(`starting informer ${id}...`);
+
+        await informer.start();
     };
 
     /**
@@ -177,12 +158,12 @@ export default class Operator {
      *
      * @param crdFile The path to the custom resource definition's YAML file
      */
-    protected async registerCustomResourceDefinition(
+    public async registerCustomResourceDefinition(
         crdFile: string
     ): Promise<{
         group: string;
         versions: V1CustomResourceDefinitionVersion[] | V1beta1CustomResourceDefinitionVersion[] | undefined;
-        plural: string;
+        kind: string;
     }> {
         const crd: V1CustomResourceDefinition | V1beta1CustomResourceDefinition = YAML.load(
             FS.readFileSync(crdFile, 'utf8')
@@ -204,7 +185,7 @@ export default class Operator {
                 return {
                     group: crd.spec.group,
                     versions: crd.spec.versions,
-                    plural: crd.spec.names.plural,
+                    kind: crd.spec.names.kind,
                 };
             } else {
                 await this.kc
@@ -214,7 +195,7 @@ export default class Operator {
                 return {
                     group: crd.spec.group,
                     versions: crd.spec.versions,
-                    plural: crd.spec.names.plural,
+                    kind: crd.spec.names.kind,
                 };
             }
         } catch (err) {
@@ -233,7 +214,7 @@ export default class Operator {
      * @param meta The resource to update
      * @param status The status body to set
      */
-    protected async setResourceStatus(meta: ResourceMeta, status: unknown): Promise<ResourceMeta | null> {
+    public async setResourceStatus(meta: ResourceMeta, status: unknown): Promise<ResourceMeta | null> {
         return this.resourceStatusRequest('PUT', meta, status);
     }
 
@@ -243,7 +224,7 @@ export default class Operator {
      * @param meta The resource to update
      * @param status The status body to set in JSON Merge Patch format (https://tools.ietf.org/html/rfc7386)
      */
-    protected async patchResourceStatus(meta: ResourceMeta, status: unknown): Promise<ResourceMeta | null> {
+    public async patchResourceStatus(meta: ResourceMeta, status: unknown): Promise<ResourceMeta | null> {
         return this.resourceStatusRequest('PATCH', meta, status);
     }
 
@@ -258,7 +239,7 @@ export default class Operator {
      * @param deleteAction An async action that will be called before your resource is deleted.
      * @returns True if no further action is needed, false if you still need to process the added or modified event yourself.
      */
-    protected async handleResourceFinalizer(
+    public async handleResourceFinalizer(
         event: ResourceEvent,
         finalizer: string,
         deleteAction: (event: ResourceEvent) => Promise<void>
@@ -296,10 +277,10 @@ export default class Operator {
      * @param meta The resource to update
      * @param finalizers The array of finalizers for this resource
      */
-    protected async setResourceFinalizers(meta: ResourceMeta, finalizers: string[]): Promise<void> {
+    private async setResourceFinalizers(meta: ResourceMeta, finalizers: string[]): Promise<void> {
         const request: AxiosRequestConfig = {
             method: 'PATCH',
-            url: `${this.resourcePathBuilders[meta.id](meta)}/${meta.name}`,
+            url: `${this.resourcePathBuilders[meta.kind](meta)}/${meta.name}`,
             data: {
                 metadata: {
                     finalizers,
@@ -326,7 +307,7 @@ export default class Operator {
      *
      * @param request the axios request config
      */
-    protected async applyAxiosKubeConfigAuth(request: AxiosRequestConfig): Promise<void> {
+    private async applyAxiosKubeConfigAuth(request: AxiosRequestConfig): Promise<void> {
         const opts: https.RequestOptions = {};
         await this.kc.applytoHTTPSOptions(opts);
         if (opts.headers?.Authorization) {
@@ -369,7 +350,7 @@ export default class Operator {
         }
         const request: AxiosRequestConfig = {
             method,
-            url: `${this.resourcePathBuilders[meta.id](meta)}/${meta.name}/status`,
+            url: `${this.resourcePathBuilders[meta.kind](meta)}/${meta.name}/status`,
             data: body,
         };
         if (method === 'patch' || method === 'PATCH') {
@@ -381,7 +362,7 @@ export default class Operator {
         try {
             const response = await Axios.request<KubernetesObject>(request);
 
-            return response ? MetaMapper(meta.id, response.data, method) : null;
+            return response ? MetaMapper(meta.kind, response.data, meta.apiVersion, meta.kind) : null;
         } catch (err) {
             console.error(errorToJson(err));
 
