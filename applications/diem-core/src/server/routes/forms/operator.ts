@@ -1,10 +1,9 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
-import { redisf } from '@common/redis.functions';
 import { addTrace } from '@functions';
 import { FormsModel } from '@models';
 
-const app: string = utils.Env.app;
+const cache: any = {};
 
 const operator: string = '@at $operator (getFormQuestions)';
 
@@ -17,24 +16,22 @@ export const getFormQuestions: (req: IRequest) => Promise<any> = async (req: IRe
 
     const form_name: string = req.query.form;
 
-    const cache: any = await redisf.getAsync(`${app}-${form_name}`);
-
-    if (cache) {
+    if (cache[req.query.form]) {
         utils.logInfo(
             '$operator (getFormQuestions) - using redis cache',
             `form: ${req.query.form} - ti: ${req.transid}`,
             process.hrtime(hrstart)
         );
 
-        return Promise.resolve(cache);
+        return Promise.resolve(cache[req.query.form]);
     }
 
     try {
-        const form: any = await FormsModel.findOne({ _id: form_name });
+        const doc: any = await FormsModel.findOne({ _id: form_name });
         utils.logInfo(operator, `form: ${req.query.form} - ti: ${req.transid}`, process.hrtime(hrstart));
-        await redisf.setAsync(`${app}-${req.query.form}`, form);
+        cache[req.query.form] = doc;
 
-        return Promise.resolve(form);
+        return Promise.resolve(doc);
     } catch (err) {
         err.trace = addTrace(err.trace, operator);
         err.form = req.query.form;
@@ -56,7 +53,7 @@ export const getFormQuestionsUpdate: (req: IRequest) => Promise<any> = async (re
         const form: string = typeof req.query.form === 'string' ? req.query.form : '';
         const doc: any = await FormsModel.findOne({ _id: form_name });
         utils.logInfo('$operator (getFormQuestionsUpdate)', form, process.hrtime(hrstart));
-        await redisf.setAsync(`${app}-${form}`, doc);
+        cache[req.query.form] = doc;
 
         return Promise.resolve(doc);
     } catch (err) {
@@ -82,7 +79,7 @@ export const refreshallforms: () => Promise<any> = async (): Promise<any> => {
         for (const form of forms) {
             const doc: any = await FormsModel.findOne({ _id: form._id });
             utils.logInfo('$operator (getFormQuestionsUpdate)', form.id, process.hrtime(hrstart));
-            await redisf.setAsync(`${app}-${form.id}`, doc);
+            cache[form.id] = doc;
             resp.push({
                 id: doc._id.toString(),
                 rev: doc._rev,

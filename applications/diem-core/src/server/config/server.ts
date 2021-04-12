@@ -342,10 +342,10 @@ export class Server {
 
         if (req.headers.authorization) {
             token = req.headers.authorization.split(' ')[1];
-            method = 'OIC';
+            method = 'JWT';
         } else if (req.cookies && req.cookies[utils.Env.appcookie]) {
             token = req.cookies[utils.Env.appcookie];
-            method = 'Application';
+            method = 'OIC';
         }
 
         /* Continue with verification */

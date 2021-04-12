@@ -1,17 +1,17 @@
 import path from 'path';
 import express, { Request } from 'express';
 import session from 'express-session';
-import redisStore from 'connect-redis';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import nocache from 'nocache';
 import rateLimit from 'express-rate-limit';
 import passport from 'passport';
+import MongoStore from 'connect-mongo';
 import { IXorg } from '../interfaces/env';
 import { IResponse } from '../interfaces';
+import { mongoose } from './mongo';
 import { Credentials } from './cfenv';
 import { utils } from './utils';
-import { redisc } from './redis';
 import { Strategy } from './authorisation';
 
 export const limiter = rateLimit({
@@ -113,10 +113,6 @@ export class Express {
             const sess: any = this.getSession();
 
             this.app
-                .use(this.checkSession())
-                .use(session(sess))
-                .use(passport.initialize())
-                .use(passport.session())
                 .use(helmet())
                 .use(helmet.referrerPolicy({ policy: 'strict-origin-when-cross-origin' }))
                 .use(`${utils.Env.apppath}/public`, express.static('./public'))
@@ -129,10 +125,14 @@ export class Express {
                 .use(`${utils.Env.apppath}/tinymce/icons`, express.static('./node_modules/tinymce/icons'))
                 .use(`${utils.Env.apppath}/tinymce/skins`, express.static('./node_modules/tinymce/skins'))
                 .use(`${utils.Env.apppath}/tinymce/themes`, express.static('./node_modules/tinymce/themes'))
-                .get('/login', limiter, passport.authenticate('openidconnect', {}))
                 .get('/favicon.png', limiter, (_req: IRequest, res: IResponse) => {
                     res.sendFile('/public/images/favicon.png', { root: path.resolve() });
                 })
+                .use(this.checkSession())
+                .use(session(sess))
+                .use(passport.initialize())
+                .use(passport.session())
+                .get('/login', limiter, passport.authenticate('openidconnect', {}))
                 .get(
                     '/sso/callback',
                     limiter,
@@ -255,29 +255,24 @@ export class Express {
         next();
     };
 
-    private getSession = (): any => {
-        const redisstore: any = redisStore(session);
-
-        const redisClient: any = redisc;
-
-        return {
-            cookie: {
-                httpOnly: true,
-                maxAge: 86400000,
-                path: '/',
-                secure: true,
-            },
-            genid: (): string => utils.guid(),
-            name: this.session ? this.session.name : undefined,
-            proxy: true,
-            resave: false,
-            saveUninitialized: false,
-            secret: this.session ? this.session.secret : undefined,
-            store: new redisstore({
-                client: redisClient,
-            }),
-        };
-    };
+    private getSession = (): any => ({
+        cookie: {
+            httpOnly: true,
+            maxAge: 86400000,
+            path: '/',
+            secure: true,
+        },
+        genid: (): string => utils.guid(),
+        name: this.session ? this.session.name : undefined,
+        proxy: true,
+        resave: false,
+        saveUninitialized: false,
+        secret: this.session ? this.session.secret : undefined,
+        store: MongoStore.create({
+            client: mongoose.connection.getClient(),
+            stringify: false,
+        }),
+    });
 
     private checkSession = () => (_req: IRequest, res: IResponse, next: () => any): any => {
         const lookupSession: any = (error: Error) => {
