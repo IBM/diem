@@ -12,6 +12,15 @@ export const etlNodepy: (job: IntJob) => any = (job: IntJob) => {
     if (workers[id]) {
         console.warn(green, `$np ${process.pid} ${id}: worker already running`);
 
+        publisher.publish('job', {
+            ...job,
+            count: null,
+            error: `job ${id} is already running, please stop it and try again`,
+            status: 'Failed',
+            jobend: new Date(),
+            runtime: null,
+        });
+
         return;
     }
 
