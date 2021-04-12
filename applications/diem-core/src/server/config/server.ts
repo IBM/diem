@@ -21,7 +21,6 @@ import { css, expressConfig } from './config';
 import { login } from './authorization';
 import assets from './assets.json';
 import { WSS } from './socket';
-import { cron } from './cron';
 import { subscriber } from './nats_subscriber';
 
 export class Server {
@@ -200,7 +199,6 @@ export class Server {
         });
 
         await WSS.start(httpServer);
-        cron.start();
 
         try {
             await NC.connect();
