@@ -16,30 +16,30 @@ ingress:
   host: bizops.ibm.com
 
 common:
+  ## name is the name of the deployment
+  name: diem-common
+
   config:
     diemAdminRbac: diem-rbac
     diemAdmin: diem-admin
-    configmapref: diem-common-config
     K8_SYSTEM_NAME: "Diem on CRC UAT"
     K8_SYSTEM: uat
     K8_INSTANCE: US
 
   secrets:
     ## secretmapref is the name of the common secret map ref
-    secretmapref: diem-common-secret
     SLACKHOOK: ""
 
 ## these are the settings for Diem Core
 core:
+  ## name is the name of the deployment
+  name: diem-core
+
   ## this relates to the diem-core deployment
   deployment:
-    ## name is the name of the deployment
-    name: diem-core
-
     ## socketName is the url the client ui socket will connect to
     ## for the moment Do Not Change this
     socketName: etl-socket-server
-
     tier: backend
     version: 1.0.0
     image: quay.io/diem/core
@@ -50,9 +50,6 @@ core:
     targetPort: 8192
 
   config:
-    ## configmapref is the name of the common config map ref
-    configmapref: diem-core-config
-
     ## important, the path the application will run under
     APPPATH: /etl-mgr
 
@@ -108,13 +105,11 @@ core:
     callbackUrl: sso/callback
 
 nodepy:
-  ## configmapref is the name of the nodepy config map ref
-  configmapref: diem-nodepy-config
-  secretmapref: diem-nodepy-config
+  ## name of the deployment
+  name: diem-nodepy
 
   ## image is the the name of the nodepy image
   image: quay.io/diem/nodepy
-  name: diem-nodepy
   port: 8080
   replicas: 1
   targetPort: 8192
@@ -123,13 +118,11 @@ nodepy:
 
 ## cnfiguration for the operator
 operator:
-  ## configmapref is the name of the nodepy config map ref
-  configmapref: diem-operator-config
-  secretmapref: diem-operator-config
+  ## name of the deployment
+  name: diem-operator
 
   ## image is the the name of the nodepy image
   image: quay.io/diem/operator
-  name: diem-operator
   port: 8080
   replicas: 1
   targetPort: 8192

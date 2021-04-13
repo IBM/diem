@@ -24,32 +24,32 @@ spec:
       http:
         paths:
           - backend:
-              serviceName: {{ .Values.core.deployment.name }}
+              serviceName: {{ .Values.core.name }}
               servicePort: {{ .Values.core.deployment.port }}
             pathType: Prefix
             path: /
           - backend:
-              serviceName: {{ .Values.core.deployment.name }}
+              serviceName: {{ .Values.core.name }}
               servicePort: {{ .Values.core.deployment.port }}
             pathType: Prefix
             path: "/sso/callback"
           - backend:
-              serviceName: {{ .Values.core.deployment.name }}
+              serviceName: {{ .Values.core.name }}
               servicePort: {{ .Values.core.deployment.port }}
             pathType: Prefix
             path: "/login"
           - backend:
-              serviceName: {{ .Values.core.deployment.name }}
+              serviceName: {{ .Values.core.name }}
               servicePort: {{ .Values.core.deployment.port }}
             pathType: Prefix
             path: "{{ .Values.core.config.APPPATH }}"
           - backend:
-              serviceName: {{ .Values.core.deployment.name }}
+              serviceName: {{ .Values.core.name }}
               servicePort: {{ .Values.core.deployment.port }}
             pathType: Prefix
             path: "/favicon.png"
           - backend:
-              serviceName: {{ .Values.core.deployment.name }}
+              serviceName: {{ .Values.core.name }}
               servicePort: {{ .Values.core.deployment.port }}
             pathType: Prefix
             path: "/{{ .Values.core.deployment.socketName }}"

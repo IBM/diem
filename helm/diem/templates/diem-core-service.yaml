@@ -1,10 +1,10 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: {{ .Values.core.deployment.name }}
+  name: {{ .Values.core.name }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ .Values.core.deployment.name }}
+    app: {{ .Values.core.name }}
     tier: {{ .Values.core.deployment.tier }}
     helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
 spec:
@@ -14,7 +14,7 @@ spec:
       port: {{ .Values.core.deployment.port }}
       targetPort: {{ .Values.core.deployment.targetPort }}
   selector:
-    app: {{ .Values.core.deployment.name }}
+    app: {{ .Values.core.name }}
     tier: {{ .Values.core.deployment.tier }}
   type: ClusterIP
   sessionAffinity: None

@@ -259,12 +259,12 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
         }
 
         // incomplete means that there are still pending jobs
-        const [incomplete, isfailed]: [boolean, boolean, boolean] = await checkPlCompleted(job, plid);
+        const [incomplete, isfailed, isstopped]: [boolean, boolean, boolean] = await checkPlCompleted(job, plid);
 
         if (!incomplete) {
             // means Complete
             // set the pipeline to complete and save the pipeline
-            pldoc.job.status = isfailed ? EJobStatus.failed : job.status;
+            pldoc.job.status = isfailed ? EJobStatus.failed : isstopped ? EJobStatus.stopped : job.status;
 
             await finishPl(job, pldoc).catch(async (err: any) => {
                 err.trace = addTrace(err.trace, '$pipeline.handler (pipelineHandler) - pipeline save');
@@ -279,7 +279,7 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
 
             if (pldoc.job.jobid !== plid) {
                 utils.logInfo(
-                    `$pipeline.handler (pipelineHandler): publishing calling pl - pl: ${job.jobid} - job: ${job.id} - status: ${job.status}`,
+                    `$pipeline.handler (pipelineHandler): publishing calling pl - pl: ${job.jobid} - job: ${job.id} - status: ${pldoc.job.status}`,
                     job.transid
                 );
                 await pubSub.publish({
@@ -293,7 +293,7 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
                     name: pldoc.name,
                     runby: job.runby,
                     runtime: pldoc.job.runtime,
-                    status: job.status,
+                    status: pldoc.job.status,
                     transid: job.transid,
                     org: job.org,
                 });

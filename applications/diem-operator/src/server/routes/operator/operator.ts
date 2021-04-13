@@ -141,14 +141,13 @@ export default class Operator {
             console.info(MetaMapper(kind, obj, version, 'Deleted'));
         });
         informer.on('error', (err: V1Pod) => {
-            console.error(err);
-            // Restart informer after 5sec
+            console.info(`$operator (Informer): restarting informer ${id} - reason: ${errorToJson(err)}`);
             setTimeout(() => {
                 void informer.start();
             }, 5000);
         });
 
-        console.info(`starting informer ${id}...`);
+        console.info(`$operator (Informer): starting informer ${id}...`);
 
         await informer.start();
     };

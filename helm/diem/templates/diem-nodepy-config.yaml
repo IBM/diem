@@ -1,12 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Values.nodepy.configmapref }}
+  name: {{ .Values.nodepy.name }}-config
   namespace: {{ .Release.Namespace }}
   labels:
     helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
 data:
   PORT: {{ .Values.nodepy.targetPort | quote }}
-  {{- if .Values.nats.auth.user }}
-  NATS__USER: {{ .Values.nats.auth.user | quote }}
-  {{- end }}

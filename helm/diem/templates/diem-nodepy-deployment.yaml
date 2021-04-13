@@ -26,11 +26,11 @@ spec:
           image: {{ .Values.nodepy.image }}:{{ .Values.operator.version }}
           envFrom:
             - configMapRef:
-                name: {{ .Values.common.config.configmapref }}
+                name: {{ .Values.common.name }}-config
             - secretRef:
-                name: {{ .Values.common.secrets.secretmapref }}
+                name: {{ .Values.common.name }}-secrets
             - configMapRef:
-                name: {{ .Values.nodepy.configmapref }}
+                name: {{ .Values.nodepy.name }}-config
           resources: {}
           terminationMessagePath: "/dev/termination-log"
           terminationMessagePolicy: File

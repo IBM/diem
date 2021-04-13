@@ -26,11 +26,11 @@ spec:
           image: {{ .Values.operator.image }}:{{ .Values.operator.version }}
           envFrom:
             - configMapRef:
-                name: {{ .Values.common.config.configmapref }}
+                name: {{ .Values.common.name }}-config
             - secretRef:
-                name: {{ .Values.common.secrets.secretmapref }}
+                name: {{ .Values.common.name }}-secrets
             - configMapRef:
-                name: {{ .Values.operator.configmapref }}
+                name: {{ .Values.operator.name }}-config
           resources: {}
           terminationMessagePath: "/dev/termination-log"
           terminationMessagePolicy: File

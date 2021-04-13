@@ -35,9 +35,10 @@ export const checkPlCompleted: (job: IJobResponse, plid: string) => Promise<[boo
     const isstopped: boolean = Object.values(pldoc.jobs).some((obj: any) => [EJobStatus.stopped].includes(obj.status));
 
     utils.logInfo(
-        `$checkpipelinecompleted (checkPlCompleted): status: '${
-            incomplete ? 'Not Completed' : 'Completed'
-        }' - pl: ${pldoc._id.toString()} - job: ${job.id}`,
+        // eslint-disable-next-line max-len
+        `$checkplcompleted (checkPlCompleted): incomplete: ${incomplete} - stopped: ${isstopped} - failed: ${isfailed} - pl: ${pldoc._id.toString()} - job: ${
+            job.id
+        }`,
         job.transid
     );
 

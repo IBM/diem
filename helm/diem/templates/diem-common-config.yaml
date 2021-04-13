@@ -3,7 +3,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Values.common.config.configmapref }}
+  name: {{ .Values.common.name }}-config
   namespace: {{ .Release.Namespace }}
   annotations:
     helm.sh/hook-weight: "5"
