@@ -22,3 +22,4 @@ data:
   NATS__CLUSTERUSER: {{ .Values.nats.clusterAuth.user | quote }}
   {{- end }}
   NATS__IP: {{ printf "%s-%s-client" .Release.Name .Values.nats.name }}
+  targetPort: {{ .Values.common.config.targetPort }}

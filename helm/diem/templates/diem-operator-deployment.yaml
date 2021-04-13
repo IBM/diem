@@ -29,8 +29,6 @@ spec:
                 name: {{ .Values.common.name }}-config
             - secretRef:
                 name: {{ .Values.common.name }}-secrets
-            - configMapRef:
-                name: {{ .Values.operator.name }}-config
           resources: {}
           terminationMessagePath: "/dev/termination-log"
           terminationMessagePolicy: File

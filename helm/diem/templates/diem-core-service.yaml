@@ -12,7 +12,7 @@ spec:
     - name: http
       protocol: TCP
       port: {{ .Values.core.deployment.port }}
-      targetPort: {{ .Values.core.deployment.targetPort }}
+      targetPort: {{ .Values.common.config.targetPort }}
   selector:
     app: {{ .Values.core.name }}
     tier: {{ .Values.core.deployment.tier }}

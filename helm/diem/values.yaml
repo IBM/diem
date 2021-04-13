@@ -26,6 +26,9 @@ common:
     K8_SYSTEM: uat
     K8_INSTANCE: US
 
+    ## the targetport all pods will be running under
+    targetPort: 8192
+
   secrets:
     ## secretmapref is the name of the common secret map ref
     SLACKHOOK: ""
@@ -45,9 +48,6 @@ core:
     image: quay.io/diem/core
     replicas: 1
     port: 8080
-
-    ## targetPort is the port diem-core pod will run under
-    targetPort: 8192
 
   config:
     ## important, the path the application will run under
@@ -112,7 +112,6 @@ nodepy:
   image: quay.io/diem/nodepy
   port: 8080
   replicas: 1
-  targetPort: 8192
   tier: backend
   version: 1.0.0
 
@@ -125,7 +124,6 @@ operator:
   image: quay.io/diem/operator
   port: 8080
   replicas: 1
-  targetPort: 8192
   tier: backend
   version: 1.0.0
 

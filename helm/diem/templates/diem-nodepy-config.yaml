@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ .Values.nodepy.name }}-config
-  namespace: {{ .Release.Namespace }}
-  labels:
-    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
-data:
-  PORT: {{ .Values.nodepy.targetPort | quote }}

@@ -12,7 +12,7 @@ spec:
     - name: http
       protocol: TCP
       port: {{ .Values.nodepy.port }}
-      targetPort: {{ .Values.nodepy.targetPort }}
+      targetPort: {{ .Values.common.config.targetPort }}
   selector:
     app: {{ .Values.nodepy.name }}
     tier: {{ .Values.nodepy.tier }}
