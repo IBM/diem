@@ -6,7 +6,6 @@ metadata:
   labels:
     helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
 data:
-  PORT: {{ .Values.common.config.targetPort | quote }}
   APPPATH: {{ .Values.core.config.APPPATH | quote }}
   {{- if .Values.core.config.slack.enabled }}
   {{- with .Values.core.config.slack }}

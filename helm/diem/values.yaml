@@ -26,8 +26,8 @@ common:
     K8_SYSTEM: uat
     K8_INSTANCE: US
 
-    ## the targetport all pods will be running under
-    targetPort: 8192
+    ## the port all pods will be running under
+    PORT: 8192
 
   secrets:
     ## secretmapref is the name of the common secret map ref
@@ -90,10 +90,10 @@ core:
 
   ##
   secrets:
-    secretmapref: diem-core-secret
     SESSION_NAME: etl.sid
     SESSION_SECRET: ETLSECRETPW
     MONGO_URL: ""
+    MONGO_CA: ""
     SENDGRID_API: ""
     JWTTOKEN: ""
 
