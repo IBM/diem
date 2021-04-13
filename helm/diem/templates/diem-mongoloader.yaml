@@ -14,6 +14,6 @@ spec:
           image: quay.io/diem/mongoloader:1.0.0
           envFrom:
             - secretRef:
-                name: {{ .Values.core.name }}-secrets
+                name: {{ .Values.core.name }}-secret
       restartPolicy: OnFailure
   backoffLimit: 4

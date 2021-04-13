@@ -22,7 +22,7 @@ common:
   config:
     diemAdminRbac: diem-rbac
     diemAdmin: diem-admin
-    K8_SYSTEM_NAME: "Diem on CRC UAT"
+    K8_SYSTEM_NAME: "Diem on CRC"
     K8_SYSTEM: uat
     K8_INSTANCE: US
 

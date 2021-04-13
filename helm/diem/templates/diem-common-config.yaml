@@ -5,16 +5,13 @@ kind: ConfigMap
 metadata:
   name: {{ .Values.common.name }}-config
   namespace: {{ .Release.Namespace }}
-  annotations:
-    helm.sh/hook-weight: "5"
-    helm.sh/hook: post-install,post-upgrade
   labels:
     helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
 data:
-  K8_INSTANCE: {{ .Values.common.config.K8_INSTANCE }}
-  K8_SYSTEM: {{ .Values.common.config.K8_SYSTEM }}
-  K8_SYSTEM_NAME: {{ .Values.common.config.K8_SYSTEM_NAME }}
-  K8_APPURLSHORT: {{ .Values.ingress.host }}
+  K8_INSTANCE: {{ .Values.common.config.K8_INSTANCE | quote }}
+  K8_SYSTEM: {{ .Values.common.config.K8_SYSTEM | quote }}
+  K8_SYSTEM_NAME: {{ .Values.common.config.K8_SYSTEM_NAME | quote }}
+  K8_APPURLSHORT: {{ .Values.ingress.host | quote }}
   {{- if .Values.nats.auth.user }}
   NATS__USER: {{ .Values.nats.auth.user | quote }}
   {{- end }}
@@ -22,4 +19,4 @@ data:
   NATS__CLUSTERUSER: {{ .Values.nats.clusterAuth.user | quote }}
   {{- end }}
   NATS__IP: {{ printf "%s-%s-client" .Release.Name .Values.nats.name }}
-  PORT: {{ .Values.common.config.PORT }}
+  PORT: {{ .Values.common.config.PORT | quote }}
