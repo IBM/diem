@@ -10,6 +10,6 @@ dependencies:
   version: 8.0.10
 - name: nats
   repository: https://charts.bitnami.com/bitnami
-  version: 6.2.3
-digest: sha256:498229e0d266a3bd20e3785bd44f61e54a3107edca8fdd38e81b2b03e6ec8787
-generated: "2021-04-12T16:31:46.724423+02:00"
+  version: 6.2.5
+digest: sha256:7b8baf924e688cb5df351a226efc43c5fe167f5d701f35cb95a98477a0a2baa8
+generated: "2021-04-14T09:14:36.713689+02:00"
