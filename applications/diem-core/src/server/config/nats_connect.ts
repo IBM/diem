@@ -1,8 +1,12 @@
 /*jshint esversion: 8 */
 import { utils } from '@common/utils';
-import { INatsCredentials, INatsPayload } from '@interfaces';
+import { INatsCredentials, INatsPayload, IntInternal } from '@interfaces';
 import { connect, NatsConnection, JSONCodec, StringCodec, nkeyAuthenticator, NatsError } from 'nats';
 import { Credentials } from '../common/cfenv';
+import { publisher } from './nats_publisher';
+import { subscriber } from './nats_subscriber';
+
+let retry: number = 0;
 
 export interface INatsError extends NatsError {
     trace: string[];
@@ -38,7 +42,7 @@ export const fromBuff = (buf: Uint8Array): INatsPayload | undefined => {
 class NCConnection {
     private nc!: NatsConnection;
 
-    public connect = async (): Promise<NatsConnection> => {
+    public connect = async (): Promise<NatsConnection | void> => {
         if (this.nc) {
             return this.nc;
         }
@@ -47,14 +51,14 @@ class NCConnection {
 
         try {
             if (credentials.seed) {
-                console.error('$nats_connect (connect): connecting using seed...');
+                console.info('$nats_connect (connect): connecting using seed...');
                 this.nc = await connect({
                     servers: `${credentials.ip}:4222`,
                     authenticator: nkeyAuthenticator(Buffer.from(credentials.seed)),
                     name: 'Diem Nodepy',
                 });
             } else if (credentials.user && credentials.password) {
-                console.error('$nats_connect (connect): connecting using user & pass...');
+                console.info('$nats_connect (connect): connecting using user & pass...');
                 this.nc = await connect({
                     servers: `${credentials.ip}:4222`,
                     user: credentials.user,
@@ -67,11 +71,41 @@ class NCConnection {
 
             this.events();
 
+            await subscriber.connect(this.nc);
+            await publisher.connect(this.nc);
+
+            if (retry > 0) {
+                const internal: IntInternal = {
+                    fatal: false,
+                    message: 'Nats Reconnected',
+                    pid: process.pid,
+                    source: '$nats_connect',
+                    trace: ['$nats_connect (connect)'],
+                };
+
+                utils.emit('internal', internal);
+            }
+
             return Promise.resolve(this.nc);
         } catch (err) {
-            void utils.logError('$nats_connect (connect): error', err);
+            retry += 1;
 
-            return Promise.reject({ message: 'could not connect' });
+            // return Promise.reject({ message: 'could not connect' });
+            setTimeout(() => {
+                void this.connect();
+            }, 10000);
+
+            const internal: IntInternal = {
+                retry,
+                err: err.code,
+                fatal: true,
+                message: 'Nats Connection Error',
+                pid: process.pid,
+                source: '$nats_connect',
+                trace: ['$nats_connect (connect)'],
+            };
+
+            utils.emit('internal', internal);
         }
     };
 

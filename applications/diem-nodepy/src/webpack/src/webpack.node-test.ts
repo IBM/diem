@@ -44,7 +44,6 @@ process.env = { ...process.env, ...Json2Dot() };
 const pack: any = require(`${(global as any).__basedir}/package.json`);
 
 const env: any = {
-    APPCOOKIE: pack.config.appcookie,
     APPNAME: pack.config.appname,
     DESCRIPTION: pack.description,
     NAME: pack.name,

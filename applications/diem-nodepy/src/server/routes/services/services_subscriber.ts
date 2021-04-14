@@ -1,5 +1,5 @@
 import { NatsConnection, ServerInfo, Subscription } from 'nats';
-import { NC, IPayload, fromBuff, toBuff } from '@config/nats_connect';
+import { IPayload, fromBuff, toBuff } from '@config/nats_connect';
 import { utils } from '@config/utils';
 import { handler } from './services.handler';
 
@@ -16,9 +16,9 @@ class Subscriber {
         this.client = process.env.HOSTNAME || 'diem-nodepy';
     }
 
-    public connect = async () => {
+    public connect = async (nc: NatsConnection) => {
         try {
-            this.nc = await NC.connect();
+            this.nc = nc;
         } catch (err) {
             console.error('$nats_subscriber (publish): connect error:', err);
 

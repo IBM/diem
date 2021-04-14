@@ -1,7 +1,7 @@
 import { spawn } from 'child_process';
 import path from 'path';
 import { publisher } from '@config/nats_publisher';
-import { IntJob, green, red, ECodeLanguage } from '@config/interfaces';
+import { IntJob, green, red, ECodeLanguage } from '@interfaces';
 import { IError } from 'interfaces';
 import { workers, deleteWorker } from './etl.workers';
 import { addToBuffer, addToErrorBuffer } from './etl.buffer';

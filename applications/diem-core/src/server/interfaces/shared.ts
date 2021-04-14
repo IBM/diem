@@ -41,6 +41,7 @@ export interface IntInternal {
     fatal: boolean;
     pid: number;
     trace: string[];
+    retry?: number;
 }
 
 /**

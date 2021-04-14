@@ -1,10 +1,13 @@
 /*jshint esversion: 8 */
 import { connect, NatsConnection, JSONCodec, StringCodec, nkeyAuthenticator } from 'nats';
 import { Credentials } from './cfenv';
+import { publisher } from './nats_publisher';
 import { utils } from './utils';
 
 const jc = JSONCodec();
 const sc = StringCodec();
+
+let retry: number = 0;
 
 export interface IPayload {
     inbox?: string;
@@ -53,7 +56,7 @@ export const fromBuff = (buf: Uint8Array): IPayload | string | undefined => {
 class NCConnection {
     private nc!: NatsConnection;
 
-    public connect = async (): Promise<NatsConnection> => {
+    public connect = async (): Promise<NatsConnection | void> => {
         if (this.nc) {
             return this.nc;
         }
@@ -62,19 +65,19 @@ class NCConnection {
 
         try {
             if (credentials.seed) {
-                console.error('$nats_connect (connect): connecting using seed...');
+                console.info('$nats_connect (connect): connecting using seed...');
                 this.nc = await connect({
                     servers: `${credentials.ip}:4222`,
                     authenticator: nkeyAuthenticator(Buffer.from(credentials.seed)),
-                    name: 'Diem Nodepy',
+                    name: 'Diem Operator',
                 });
             } else if (credentials.user && credentials.password) {
-                console.error('$nats_connect (connect): connecting using user & pass...');
+                console.info('$nats_connect (connect): connecting using user & pass...');
                 this.nc = await connect({
                     servers: `${credentials.ip}:4222`,
                     user: credentials.user,
                     pass: credentials.password,
-                    name: 'Diem Nodepy',
+                    name: 'Diem Operator',
                 });
             } else {
                 return Promise.reject({ message: 'No Authentication' });
@@ -82,11 +85,23 @@ class NCConnection {
 
             this.events();
 
+            await publisher.connect(this.nc);
+
             return Promise.resolve(this.nc);
         } catch (err) {
-            void utils.logError('$nats_connect (connect): error', err);
+            void utils.logError('nats_connect (connect): error', {
+                retry,
+                message: err.message,
+                caller: '$nats_connect',
+                code: err.code,
+                name: 'Nats connection error',
+            });
 
-            return Promise.reject({ message: 'could not connect' });
+            setTimeout(() => {
+                void this.connect();
+            }, 10000);
+
+            retry += 1;
         }
     };
 

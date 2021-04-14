@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { IntInternal, IntEnv } from '@interfaces';
 import { utils } from '@config/utils';
-import { etl_subscriber } from '../routes/etl/etl_subscriber';
-import { services_subscriber } from '../routes/services/services_subscriber';
 import { publisher } from './nats_publisher';
 import { NC } from './nats_connect';
 
@@ -65,10 +63,6 @@ export class Server {
         } catch (err) {
             return console.error(err);
         }
-
-        await etl_subscriber.connect();
-        await services_subscriber.connect();
-        await publisher.connect();
 
         const msg: string =
             `👽 $server (start): ${this.pack.packname}@${this.pack.version}` +

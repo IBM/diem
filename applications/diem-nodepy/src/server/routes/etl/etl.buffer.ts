@@ -1,4 +1,4 @@
-import { green, red, blue } from '@config/interfaces';
+import { green, red, blue } from '@interfaces';
 import { publisher } from '@config/nats_publisher';
 import { workers } from './etl.workers';
 

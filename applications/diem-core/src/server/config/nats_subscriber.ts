@@ -2,7 +2,7 @@ import { utils } from '@common/utils';
 import { INatsPayload } from '@interfaces';
 import { NatsConnection, Subscription, ServerInfo, Msg } from 'nats';
 import { slackMsg } from '@common/slack/slack';
-import { NC, toBuff, fromBuff } from './nats_connect';
+import { toBuff, fromBuff } from './nats_connect';
 import { pubSub } from './pubsub';
 import { WSS } from './socket';
 import { getQueue } from './cron.jobs';
@@ -22,9 +22,9 @@ class Subscriber {
         this.client = process.env.HOSTNAME || 'diem-core';
     }
 
-    public connect = async () => {
+    public connect = async (nc: NatsConnection) => {
         try {
-            this.nc = await NC.connect();
+            this.nc = nc;
         } catch (err) {
             void utils.logError('$nats_subscriber (connect): connect error:', err);
 

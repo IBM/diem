@@ -66,8 +66,6 @@ export class Server {
             return console.error(err);
         }
 
-        await publisher.connect();
-
         const msg: string =
             `👽 $server (start): ${this.pack.packname}@${this.pack.version}` +
             ` started up on ${this.pack.K8_SYSTEM_NAME} - pid: ${process.pid} (node ${process.version})`;

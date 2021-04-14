@@ -1,6 +1,6 @@
 import { utils } from '@config/utils';
 import { createInbox, ErrorCode, NatsConnection, ServerInfo } from 'nats';
-import { NC, toBuff } from './nats_connect';
+import { toBuff } from './nats_connect';
 
 class Publisher {
     private nc!: NatsConnection;
@@ -13,9 +13,9 @@ class Publisher {
         this.inbox = createInbox();
     }
 
-    public connect = async (): Promise<void> => {
+    public connect = async (nc: NatsConnection): Promise<void> => {
         try {
-            this.nc = await NC.connect();
+            this.nc = nc;
         } catch (err) {
             switch (err.code) {
                 case ErrorCode.NoResponders:

@@ -1,8 +1,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import { utils } from '@config/utils';
-import { IError } from '@interfaces';
-import { IntJob, ECodeLanguage } from '@config/interfaces';
+import { IError, IntJob, ECodeLanguage } from '@interfaces';
 import { publisher } from '@config/nats_publisher';
 import { etlNodepy } from './etl.nodepy';
 

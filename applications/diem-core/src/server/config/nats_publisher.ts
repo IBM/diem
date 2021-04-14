@@ -2,7 +2,7 @@ import { utils } from '@common/utils';
 import { INatsPayload } from '@interfaces';
 import { ErrorCode, NatsConnection, ServerInfo } from 'nats';
 import { addTrace } from '@functions';
-import { NC, fromBuff, toBuff, INatsError } from './nats_connect';
+import { fromBuff, toBuff, INatsError } from './nats_connect';
 
 class Publisher {
     private nc!: NatsConnection;
@@ -13,9 +13,9 @@ class Publisher {
         this.client = process.env.HOSTNAME || 'diem-core';
     }
 
-    public connect = async (): Promise<boolean> => {
+    public connect = async (nc: NatsConnection): Promise<boolean> => {
         try {
-            this.nc = await NC.connect();
+            this.nc = nc;
         } catch (err) {
             switch (err.code) {
                 case ErrorCode.NoResponders:

@@ -15,7 +15,6 @@ const nodeModules: { [index: string]: any } = {};
 const pack: any = require(`${(global as any).__basedir}/package.json`);
 
 const env: any = {
-    APPCOOKIE: pack.config.appcookie,
     APPNAME: pack.config.appname,
     DESCRIPTION: pack.description,
     NAME: pack.name,
@@ -94,7 +93,6 @@ module.exports = {
             '@common': `${(global as any).__basedir}/src/server/common`,
             '@interfaces': `${(global as any).__basedir}/src/server/interfaces`,
             '@config': `${(global as any).__basedir}/src/server/config`,
-
         },
         extensions: ['.ts', '.js'],
         modules: [path.join(__dirname, 'src/server'), 'node_modules'],

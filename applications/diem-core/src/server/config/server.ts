@@ -15,13 +15,11 @@ import { getOrg, getRole, getRoleNbr, addTrace } from '@functions';
 import { jwtCheck } from '../routes/webapikeys/webapikeys.jwtcheck';
 import * as routes from '../routes/routes';
 import { toMQ } from '../routes/logger/logger';
-import { publisher } from './nats_publisher';
 import { NC } from './nats_connect';
 import { css, expressConfig } from './config';
 import { login } from './authorization';
 import assets from './assets.json';
 import { WSS } from './socket';
-import { subscriber } from './nats_subscriber';
 
 export class Server {
     public pack: IntEnv;
@@ -69,6 +67,7 @@ export class Server {
             if (internal.err) {
                 this.fatal = internal.fatal;
                 await utils.logError('$server.ts (internal): Notification of Error', {
+                    ...internal,
                     application: utils.Env.app,
                     error: JSON.stringify(internal.err, undefined, 2),
                     message: internal.message,
@@ -201,12 +200,12 @@ export class Server {
         await WSS.start(httpServer);
 
         try {
-            await NC.connect();
+            await NC.connect().catch(async (err) => {
+                void utils.logError('$server (start): failed to connect to nats', err);
+            });
         } catch (err) {
             return console.error(err);
         }
-        await subscriber.connect();
-        await publisher.connect();
         // spark.startWatcher().catch((err: Error) => console.error(err));
     };
 
