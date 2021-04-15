@@ -14,6 +14,11 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-buffer-size: 8k
     nginx.org/client-max-body-size: 200m
     nginx.org/websocket-services: {{ .Values.core.deployment.socketName }}
+    {{- if .Values.controller.podAnnotations }}
+    {{- with .Values.controller.podAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- end }}
   name: {{ .Values.ingress.name }}
   namespace: {{ .Release.Namespace }}
   labels:

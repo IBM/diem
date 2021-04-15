@@ -227,3 +227,10 @@ minio:
   resources:
     requests:
       memory: 1Gi
+
+## encode all secrets base64
+base64: true
+
+## pod annotations
+controller:
+  podAnnotations:

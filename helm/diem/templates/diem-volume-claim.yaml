@@ -5,6 +5,11 @@ metadata:
   annotations:
     "helm.sh/resource-policy": keep
     "helm.sh/hook": "pre-install"
+    {{- if .Values.controller.podAnnotations }}
+    {{- with .Values.controller.podAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- end }}
   labels:
     helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
 spec:
