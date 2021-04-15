@@ -160,6 +160,8 @@ nats:
   ## the name of the service
   name: nats
 
+  nameOverride: diem-nats
+
   ## authentication
   ## it4s recommended you create your own long encrypted password
   ## follow the instructions here https://docs.nats.io/nats-tools/natscli
@@ -171,14 +173,9 @@ nats:
   ##    password: $2a$11$4X.WN5r4PeaB4vYMtbFsEOKJTSxEiWuCq/FV25RsWZvLFSEeDOrf6
   ##
   auth:
-    user: nats_client
-    unencrypted_password: ""
-    password: ""
-    token: ""
-  clusterAuth:
+    enabled: false
     user: ""
     password: ""
-    token: ""
 
   ## enable external access, this will create a load balancer
   ## you can get your ip from >_ kubectl get svc diem-nats-lb -o wide
@@ -192,9 +189,20 @@ nats:
 
   replicaCount: 1
 
-  extraFlags:
-    cluster_name: diem-nats-cluster
-    no_advertise: true
+  nats:
+    image: nats:2.2.1-alpine3.13
+    pullPolicy: IfNotPresent
+  cluster:
+    enabled: true
+    replicas: 3
+    noAdvertise: true
+  natsbox:
+    enabled: false
+  reloader:
+    enabled: false
+  # Prometheus NATS Exporter configuration.
+  exporter:
+    enabled: false
 
 minio:
   createservice: true

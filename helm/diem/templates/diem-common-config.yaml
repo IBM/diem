@@ -15,8 +15,5 @@ data:
   {{- if .Values.nats.auth.user }}
   NATS__USER: {{ .Values.nats.auth.user | quote }}
   {{- end }}
-  {{- if .Values.nats.clusterAuth.user }}
-  NATS__CLUSTERUSER: {{ .Values.nats.clusterAuth.user | quote }}
-  {{- end }}
-  NATS__IP: {{ printf "%s-%s-client" .Release.Name .Values.nats.name }}
+  NATS__IP: {{ printf "%s-%s" .Release.Name .Values.nats.name }}
   PORT: {{ .Values.common.config.PORT | quote }}

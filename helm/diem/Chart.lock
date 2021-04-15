@@ -9,7 +9,7 @@ dependencies:
   repository: https://helm.min.io/
   version: 8.0.10
 - name: nats
-  repository: https://charts.bitnami.com/bitnami
-  version: 6.2.5
-digest: sha256:7b8baf924e688cb5df351a226efc43c5fe167f5d701f35cb95a98477a0a2baa8
-generated: "2021-04-14T09:14:36.713689+02:00"
+  repository: https://nats-io.github.io/k8s/helm/charts/
+  version: 0.7.4
+digest: sha256:3ee79fa570bb53f385c2296d651ec3cd90b37e4ebead52ae47305b83f9a41ed0
+generated: "2021-04-15T09:44:07.110131+02:00"
