@@ -124,6 +124,9 @@ operator:
   ## name of the deployment
   name: diem-operator
 
+  ## any service accountname
+  serviceAccountName: ""
+
   ## image is the the name of the nodepy image
   image: quay.io/diem/operator
   port: 80

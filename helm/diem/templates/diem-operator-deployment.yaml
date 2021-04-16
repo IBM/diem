@@ -27,6 +27,9 @@ spec:
         app: {{ .Values.operator.name }}
         tier: {{ .Values.operator.tier }}
     spec:
+      {{- if .Values.operator.serviceAccountName }}
+      serviceAccountName: {{ .Values.operator.serviceAccountName }}
+      {{- end }}
       containers:
         - name: {{ .Values.operator.name }}
           image: {{ .Values.operator.image }}:{{ .Values.operator.version }}
