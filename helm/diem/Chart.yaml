@@ -14,7 +14,7 @@ icon: https://raw.githubusercontent.com/IBM/diem/main/applications/diem-help/doc
 maintainers:
   - name: Guy Huinen
     github: https://github.com/huineng
-    email: guy_huinen#be.ibm.com
+    email: guy_huinen@be.ibm.com
 
 annotations:
   category: Data Integration Engine Multipurpose
