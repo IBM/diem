@@ -55,7 +55,7 @@ core:
 
     spark:
       SPARK_IMAGE: quay.io/diem/pyspark:3.1.1-rc1
-      SPARK_IMAGEPULLSECRETS: regsecret
+      SPARK_IMAGEPULLSECRETS: []
       OPERATOR_DRIVER_CORES: "2"
       OPERATOR_DRIVER_MEMORY: 1024m
       OPERATOR_EXECUTOR_CORES: 8
