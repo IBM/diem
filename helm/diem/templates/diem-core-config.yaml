@@ -29,12 +29,14 @@ data:
   SPARK__FILE_URL: {{ printf "http://%s/internal/pyfile" .Values.ingress.host }}
   {{- with .Values.core.config.spark }}
   SPARK__IMAGE: {{ .SPARK_IMAGE }}
-  SPARK__IMAGEPULLSECRETS: {{ .SPARK_IMAGEPULLSECRETS }}
   OPERATOR__DRIVER_CORES: {{ .OPERATOR_DRIVER_CORES  | quote}}
   OPERATOR__DRIVER_MEMORY: {{ .OPERATOR_DRIVER_MEMORY  | quote}}
   OPERATOR__EXECUTOR_CORES: {{ .OPERATOR_EXECUTOR_CORES  | quote }}
   OPERATOR__EXECUTOR_INSTANCES: {{ .OPERATOR_EXECUTOR_INSTANCES  | quote}}
   OPERATOR__EXECUTOR_MEMORY: {{ .OPERATOR_EXECUTOR_MEMORY | quote }}
+  {{- end }}
+  {{- if .Values.core.config.spark.SPARK_IMAGEPULLSECRETS }}
+  SPARK__IMAGEPULLSECRETS: {{ .Values.core.config.spark.SPARK_IMAGEPULLSECRETS }}
   {{- end }}
   {{- if .Values.core.auth.discoveryUrl }}
   DISCOVERY_URL: {{ .Values.core.auth.discoveryUrl }}
