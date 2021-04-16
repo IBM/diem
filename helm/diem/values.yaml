@@ -237,3 +237,7 @@ base64: true
 ## pod annotations
 controller:
   podAnnotations:
+
+## Other specific implementations
+## This will tell the plugin where to find vault values
+avp_path: ""
