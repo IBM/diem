@@ -42,5 +42,5 @@ data:
   DISCOVERY_URL: {{ .Values.core.auth.discoveryUrl }}
   {{- end }}
   {{- if .Values.core.auth.callbackUrl }}
-  CALLBACK_URL: {{ printf "https://%s/%s" .Values.ingress.host .Values.core.auth.callbackUrl }}
+  CALLBACK_URL: {{ printf "https://%s" .Values.core.auth.callbackUrl }}
   {{- end }}
