@@ -69,6 +69,7 @@ core:
       volumeName: spark-data
       volumeMountPath: /shared
       volumeClaimName: spark-shared-data
+      storageClassName: ""
 
     ## Slack integration, enable it by putting the enabled to true
     slack:

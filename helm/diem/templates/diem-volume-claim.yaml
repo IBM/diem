@@ -15,6 +15,9 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
+  {{- if .Values.core.config.volume.storageClassName }}
+  storageClassName: ibmc-file-gold
+  {{- end }}
   resources:
     requests:
       storage: 8Gi
