@@ -47,7 +47,7 @@ core:
     version: 1.0.0
     image: quay.io/diem/core
     replicas: 1
-    port: 8080
+    port: 80
 
   config:
     ## important, the path the application will run under
@@ -113,7 +113,7 @@ nodepy:
 
   ## image is the the name of the nodepy image
   image: quay.io/diem/nodepy
-  port: 8080
+  port: 80
   replicas: 1
   tier: backend
   version: 1.0.0
@@ -125,7 +125,7 @@ operator:
 
   ## image is the the name of the nodepy image
   image: quay.io/diem/operator
-  port: 8080
+  port: 80
   replicas: 1
   tier: backend
   version: 1.0.0
