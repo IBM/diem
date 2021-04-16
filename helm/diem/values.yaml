@@ -53,6 +53,9 @@ core:
     ## important, the path the application will run under
     APPPATH: /etl-mgr
 
+    ## if core runs with a dedicated service account
+    serviceAccountName: ""
+
     spark:
       SPARK_IMAGE: quay.io/diem/pyspark:3.1.1-rc1
       SPARK_IMAGEPULLSECRETS: []

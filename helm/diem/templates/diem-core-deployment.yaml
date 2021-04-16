@@ -27,6 +27,9 @@ spec:
         app: {{ .Values.core.name }}
         tier: {{ .Values.core.deployment.tier }}
     spec:
+      {{- if .Values.core.config.serviceAccountName }}
+      serviceAccountName: {{ .Values.core.config.serviceAccountName }}
+      {{- end }}
       containers:
         - name: {{ .Values.core.name }}
           image: {{ .Values.core.deployment.image }}:{{ .Values.core.deployment.version }}
