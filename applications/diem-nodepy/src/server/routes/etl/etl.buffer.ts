@@ -14,11 +14,16 @@ export const addToBuffer: (id: string, buffer: Buffer) => void = (id: string, bu
     if (data.endsWith('\n')) {
         workers[id].buffer = workers[id]?.buffer ? (workers[id].buffer += data) : data;
 
-        console.info(green, `$np ${process.pid} ${id}: processing data`, '');
-
         const resp: string | undefined = workers[id].buffer;
+
         if (resp) {
-            void publisher.publish('job', resp);
+            const json_array: string[] = resp.split('\n').filter((s: string) => s);
+            const size: number = json_array.length;
+
+            console.info(green, `$np ${process.pid} ${id}: processing data: length: ${size}`, '');
+            void publisher.publish('job', resp, size);
+        } else {
+            console.info(green, `$np ${process.pid} ${id}: nothing to process}`, '');
         }
 
         workers[id].buffer = undefined;

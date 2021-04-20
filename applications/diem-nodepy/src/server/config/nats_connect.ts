@@ -16,6 +16,7 @@ export interface IPayload {
     client: string;
     data?: any;
     sid?: number; // number used when the message has an id
+    size?: number;
 }
 
 interface INatsCredentials {
