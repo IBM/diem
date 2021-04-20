@@ -53,7 +53,7 @@ export const orgupdate: (req: IRequest, res: IResponse) => Promise<IRequest | an
             transid: body.transid,
         };
 
-        doc.org = body.org;
+        doc.org = body.org.toLowerCase();
 
         id = doc._id.toString();
     } else {
