@@ -227,7 +227,7 @@ class SparkLib {
 
             // it's not for us
             if (obj.id !== id) {
-                await this.abort(id, 'watcher');
+                await this.abort(id, `watcher - wrong id: ${id}`);
 
                 return;
             }
@@ -329,7 +329,7 @@ class SparkLib {
                     `$spark.watcher (watcher): closing stream - id: ${obj.id} - type: ${data.type} - status: ${applicationState.state}`
                 );
 
-                await this.abort(id, 'watcher');
+                await this.abort(id, 'watcher - deleted');
             }
         });
 

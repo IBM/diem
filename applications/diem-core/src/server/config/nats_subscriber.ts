@@ -104,7 +104,7 @@ class Subscriber {
                 if (data && typeof data === 'string' && data.endsWith('\n')) {
                     const json_array: string[] = data.split('\n').filter((s: string) => s);
                     utils.logInfo(
-                        `$nats_subscriber (${msg_type}): client: ${payload.client} - incomming buffered data: ${json_array.length}`
+                        `$nats_subscriber (${msg_type}): client: ${payload.client} - incoming buffered data: ${json_array.length}`
                     );
                     for await (const json of json_array) {
                         let valid: boolean = true;
@@ -130,7 +130,7 @@ class Subscriber {
                         }
                     }
                 } else {
-                    utils.logInfo(`$nats_subscriber (${msg_type}): client: ${payload.client} - incomming data`);
+                    utils.logInfo(`$nats_subscriber (${msg_type}): client: ${payload.client} - incoming data`);
                     await pubSub.publish(payload.data);
                 }
                 break;
