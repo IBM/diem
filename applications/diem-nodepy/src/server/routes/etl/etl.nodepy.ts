@@ -49,7 +49,7 @@ export const etlNodepy: (job: IntJob) => any = (job: IntJob) => {
 
     workers[id].stdout.setEncoding('utf8');
     workers[id].stdout.on('data', (buffer: Buffer) => {
-        addToBuffer(job.id, buffer);
+        void addToBuffer(job.id, buffer);
     });
 
     // here comes the error part

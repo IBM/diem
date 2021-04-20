@@ -40,8 +40,8 @@ class Publisher {
         return Promise.resolve();
     };
 
-    public publish = (channel: string, event: any) => {
-        this.nc.publish(`core.${channel}`, toBuff({ client: this.client, data: event }));
+    public publish = (channel: string, event: any, size: number = 0) => {
+        this.nc.publish(`core.${channel}`, toBuff({ client: this.client, data: event, size }));
     };
 
     public publish_global = (channel: string, event: any) => {
