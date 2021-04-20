@@ -148,8 +148,11 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
         let payload: IntPayload[] = [];
 
         // if it's just an out message and it's not the end then handle it as just an out
-        if (job.out && !job.status) {
-            return await jobOutHandler(doc, job);
+
+        if (job.out !== undefined && !job.status) {
+            const load: any = await jobOutHandler(doc, job);
+
+            return Promise.resolve(load);
         } else if (job.out) {
             payload = await jobDocOutHandler(payload, doc, job);
         }

@@ -14,6 +14,9 @@ ingress:
 
   ## host is the hostname of your application
   host: example.com
+  ## proxy is the name of your proxy host
+  ## this can happen when you run in a cluster and have a proxy url
+  proxy: ""
 
 common:
   ## name is the name of the deployment
@@ -106,7 +109,7 @@ core:
     clientId: ""
     clientSecret: ""
     discoveryUrl: ""
-    callbackUrl: sso/callback
+    callbackUrl: /sso/callback
 
 nodepy:
   ## name of the deployment
@@ -190,7 +193,7 @@ nats:
 
   ## only if external is enabled (will be your loadbalancer ip)
   ## you might need to reapply the helm chart twice once you have it
-  ip: 0.0.0.0
+  ip: diem-nats
 
   priorityClassName: system-node-critical
 

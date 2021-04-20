@@ -52,7 +52,14 @@ class Subscriber {
             const payload: INatsPayload | string | undefined = fromBuff(msg.data);
 
             if (payload && typeof payload === 'object' && payload.client) {
+                const wait: number = 10 + (payload.size || 25) * 10;
+                utils.logInfo(
+                    `$nats_subscriber (sub): client: ${payload.client} - new data: ${
+                        payload.size || 0
+                    } - next wait: ${wait}`
+                );
                 void this.subs_handler(msg, payload);
+                await new Promise((resolve) => setTimeout(resolve, wait));
             }
         }
     };
@@ -66,6 +73,28 @@ class Subscriber {
                 void this.global_subs_handler(msg, payload);
             }
         }
+    };
+
+    private json_handler = async (json_array: any) => {
+        let i: number = -10;
+        json_array.forEach(async (json: any) => {
+            let parsed_json: any;
+            i = i + 10;
+
+            try {
+                parsed_json = JSON.parse(json);
+                if (parsed_json.serviceid) {
+                    await pubSub.publishService(parsed_json);
+                } else {
+                    // let's add a timeout so that the messages have sufficient time to be processed
+                    setTimeout(async () => {
+                        await pubSub.publish(parsed_json);
+                    }, i);
+                }
+            } catch (err) {
+                utils.logInfo('$nats_subscriber (subs): job - unparsable json');
+            }
+        });
     };
 
     private subs_handler = async (msg: Msg, payload: INatsPayload) => {
@@ -106,29 +135,8 @@ class Subscriber {
                     utils.logInfo(
                         `$nats_subscriber (${msg_type}): client: ${payload.client} - incoming buffered data: ${json_array.length}`
                     );
-                    for await (const json of json_array) {
-                        let valid: boolean = true;
-                        let parsed_json;
-
-                        try {
-                            parsed_json = JSON.parse(json);
-                        } catch (err) {
-                            utils.logInfo('$nats_subscriber (subs): job - unparsable json');
-                            valid = false;
-                        }
-
-                        if (valid) {
-                            try {
-                                if (parsed_json.serviceid) {
-                                    await pubSub.publishService(parsed_json);
-                                } else {
-                                    await pubSub.publish(parsed_json);
-                                }
-                            } catch (err) {
-                                utils.logInfo('$nats_subscriber (subs): job - publishing failed');
-                            }
-                        }
-                    }
+                    // await new Promise((resolve) => setTimeout(resolve, 50));
+                    void this.json_handler(json_array);
                 } else {
                     utils.logInfo(`$nats_subscriber (${msg_type}): client: ${payload.client} - incoming data`);
                     await pubSub.publish(payload.data);

@@ -3,6 +3,7 @@ export interface INatsPayload {
     client: string;
     data?: any;
     sid?: number; // number used when the message has an id
+    size?: number;
 }
 
 export interface INatsCredentials {

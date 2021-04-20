@@ -14,16 +14,16 @@ metadata:
     {{- end }}
 spec:
   type: LoadBalancer
+  externalTrafficPolicy: Local
   selector:
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/name: {{ .Values.nats.name }}
+    app: {{ .Release.Name }}-nats
   ports:
     - protocol: TCP
       port: 4222
       targetPort: 4222
-      name: {{ .Values.nats.name }}
+      name: client
     - protocol: TCP
       port: 6222
       targetPort: 6222
-      name: {{ .Values.nats.name }}-cluster
+      name: cluster
 {{- end }}

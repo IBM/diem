@@ -30,8 +30,18 @@ export const orgupdate: (req: IRequest, res: IResponse) => Promise<IRequest | an
     let isnew: boolean = false;
     let doc: IOrgsModel | null = null;
 
+    let org: string | undefined = body.org;
+
+    if (!org) {
+        return Promise.reject({
+            displayerr: 'Sorry, this request has no organisation',
+        });
+    }
+
+    org = org.toLocaleLowerCase();
+
     if (!body.id) {
-        doc = await OrgsModel.findOne({ org: body.org }, {}).exec();
+        doc = await OrgsModel.findOne({ org }, {}).exec();
 
         if (doc) {
             return Promise.reject({
@@ -53,7 +63,7 @@ export const orgupdate: (req: IRequest, res: IResponse) => Promise<IRequest | an
             transid: body.transid,
         };
 
-        doc.org = body.org.toLowerCase();
+        doc.org = org;
 
         id = doc._id.toString();
     } else {
@@ -104,7 +114,7 @@ export const orgupdate: (req: IRequest, res: IResponse) => Promise<IRequest | an
         const profile: IProfileBody = {
             user: body.email,
             username: body.username,
-            org: body.org,
+            org,
             transid: body.transid,
             role: 'admin',
             rolenbr: 100,

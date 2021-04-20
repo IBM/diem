@@ -17,7 +17,11 @@ data:
   K8_INSTANCE: {{ .Values.common.config.K8_INSTANCE | quote }}
   K8_SYSTEM: {{ .Values.common.config.K8_SYSTEM | quote }}
   K8_SYSTEM_NAME: {{ .Values.common.config.K8_SYSTEM_NAME | quote }}
-  K8_APPURLSHORT: {{ .Values.ingress.host | quote }}
+  {{- if .Values.ingress.proxy }}
+  K8_APPURLSHORT: {{  .Values.ingress.proxy | quote }}
+  {{ else }}
+  K8_APPURLSHORT: {{  .Values.ingress.host | quote }}
+  {{- end }}
   {{- if .Values.nats.auth.user }}
   NATS__USER: {{ .Values.nats.auth.user | quote }}
   {{- end }}

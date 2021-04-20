@@ -20,7 +20,7 @@ export class Server {
 
             utils.logInfo(`$pubsub (publish): publishing payload - job: ${job.id}`);
 
-            void publisher.publish('global.core.users', pl);
+            await publisher.publish('global.core.users', pl);
 
             return Promise.resolve();
             // }, 1);

@@ -1,3 +1,4 @@
+{{- if .Values.mongodb.createservice }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -23,3 +24,4 @@ spec:
                 name: {{ .Values.core.name }}-secret
       restartPolicy: OnFailure
   backoffLimit: 4
+{{- end }}
