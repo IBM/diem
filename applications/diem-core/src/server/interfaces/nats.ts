@@ -3,7 +3,14 @@ export interface INatsPayload {
     client: string;
     data?: any;
     sid?: number; // number used when the message has an id
-    size?: number;
+    meta?: {
+        cycle: number;
+        size: number; // current size of the batch
+        ts: number; // timestamp
+        s_ts: number; // suggested timestamp
+        acc_ts: number;
+        acc_size: number;
+    };
 }
 
 export interface INatsCredentials {

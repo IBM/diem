@@ -52,14 +52,13 @@ class Subscriber {
             const payload: INatsPayload | string | undefined = fromBuff(msg.data);
 
             if (payload && typeof payload === 'object' && payload.client) {
-                const wait: number = 10 + (payload.size || 25) * 10;
                 utils.logInfo(
-                    `$nats_subscriber (sub): client: ${payload.client} - new data: ${
-                        payload.size || 0
-                    } - next wait: ${wait}`
+                    `$nats_subscriber (sub): client: ${payload.client} - new data: ${payload.meta?.size || 0}`
                 );
                 void this.subs_handler(msg, payload);
-                await new Promise((resolve) => setTimeout(resolve, wait));
+                if (payload.meta && payload.meta.size === 0) {
+                    await new Promise((resolve) => setTimeout(resolve, 25));
+                }
             }
         }
     };
