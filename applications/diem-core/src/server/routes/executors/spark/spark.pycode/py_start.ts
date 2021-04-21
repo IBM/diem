@@ -23,10 +23,7 @@ config.__transid = env.get('TRANSID', '37e1c542-bb41-4e78-e085-6ad891f46d94')
 config.__org = env.get('ORG', 'noop')
 config.__starttime = time.time()
 config.__jobstart = UtcNow()
-config.__nats = True
-config.natsurl = env.get('NATSURL')
-config.natsclient = env.get('NATSCLIENT')
-config.natschannel = env.get('NATSCHANNEL')
+config.__url = env.get('SPARK__CALLBACK_URL','noop')
 
 def diem_except_hook(exctype, value, traceback):
     error(value)

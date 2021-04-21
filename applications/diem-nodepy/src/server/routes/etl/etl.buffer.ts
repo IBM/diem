@@ -44,9 +44,9 @@ export const addToBuffer: (id: string, buffer: Buffer) => Promise<void> = async 
 
                 if (p_s_ts > acc_ts) {
                     delay = p_s_ts - acc_ts;
-                    s_ts = p_s_ts + size * 10 + 50;
+                    s_ts = p_s_ts + size * 15 + 50;
                 } else {
-                    s_ts = acc_ts + size * 10 + 50;
+                    s_ts = acc_ts + size * 15 + 50;
                 }
 
                 workers[id].meta = {

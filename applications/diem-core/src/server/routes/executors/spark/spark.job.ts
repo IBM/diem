@@ -4,7 +4,6 @@ import { ICrdConfig } from 'routes/spark-operator/base.crd';
 import { utils } from '@common/utils';
 import { Credentials } from '@common/cfenv';
 import { IModel, IConfigmapsModel } from '@models';
-import { INatsMessage } from '@interfaces';
 import { addTrace } from '@functions';
 import { spark } from '../../spark-operator/spark.base';
 import { getConfigmap } from '../nodepy/python/python.code.handlers/handle.configmaps';
@@ -27,23 +26,6 @@ export interface ICapacity {
     executor_memory: string;
     nodes: number;
 }
-
-interface INats {
-    password: string;
-    user: string;
-    ip: string;
-    port?: string;
-}
-
-export const getNatsConfig: () => Promise<INatsMessage> = async (): Promise<INatsMessage> => {
-    const nats: INats = Credentials('nats');
-
-    return {
-        url: `${nats.user}:${nats.password}@${nats.ip}:${nats.port || '4222'}`,
-        channel: 'core.job',
-        client: 'pyspark',
-    };
-};
 
 export const getCosCredentials: (doc: IModel) => Promise<Partial<ICos>> = async (
     doc: IModel

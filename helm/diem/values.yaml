@@ -47,8 +47,8 @@ core:
     ## for the moment Do Not Change this
     socketName: etl-socket-server
     tier: backend
-    version: 1.0.0
     image: quay.io/diem/core
+    version: 1.0.1
     replicas: 1
     port: 80
 
@@ -60,13 +60,14 @@ core:
     serviceAccountName: ""
 
     spark:
-      SPARK_IMAGE: quay.io/diem/pyspark:3.1.1-rc1
+      SPARK_IMAGE: quay.io/diem/pyspark:3.1.1-rc2
       SPARK_IMAGEPULLSECRETS: ""
       OPERATOR_DRIVER_CORES: "2"
       OPERATOR_DRIVER_MEMORY: 1024m
       OPERATOR_EXECUTOR_CORES: 8
       OPERATOR_EXECUTOR_INSTANCES: 2
       OPERATOR_EXECUTOR_MEMORY: 8G
+      CALLBACK_URL: /internal/spark_callback
 
     volume:
       volumeName: spark-data
@@ -120,7 +121,7 @@ nodepy:
   port: 80
   replicas: 1
   tier: backend
-  version: 1.0.0
+  version: 1.0.1
 
 ## cnfiguration for the operator
 operator:

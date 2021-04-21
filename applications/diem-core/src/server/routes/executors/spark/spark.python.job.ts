@@ -7,7 +7,7 @@ import { crdconfig, ICrdConfig } from '../../spark-operator/base.crd';
 import { spark, sparkCredentials } from '../../spark-operator/spark.base';
 import { caclCap } from '../../spark-operator/spark.capacity';
 import { sparkWatcher } from '../../spark-operator/spark.watcher';
-import { addVolume, getCosCredentials, ICos, getNatsConfig } from './spark.job';
+import { addVolume, getCosCredentials, ICos } from './spark.job';
 
 const stocator: string = '/opt/cos/stocator-1.1.3.jar';
 const encoder: string = '-Ddb2.jcc.charsetDecoderEncoder=3';
@@ -47,8 +47,6 @@ export const createSparkPythonJob: (doc: IModel) => Promise<ICapacity> = async (
     crdjob.spec.mainApplicationFile = `${sparkCredentials.file_url}/${id}.py`;
     crdjob.spec.pythonVersion = '3';
 
-    const nats = await getNatsConfig();
-
     // environmental variables
     crdjob.spec.driver.envVars = {
         EMAIL: doc.job.email,
@@ -57,9 +55,7 @@ export const createSparkPythonJob: (doc: IModel) => Promise<ICapacity> = async (
         ID: id,
         TRANSID: doc.job.transid,
         JOBID: doc.job.jobid ? doc.job.jobid : id,
-        NATSCLIENT: nats.client,
-        NATSCHANNEL: nats.channel,
-        NATSURL: nats.url,
+        SPARK__CALLBACK_URL: sparkCredentials.callback_url,
     };
 
     if (doc.job.params?.files) {

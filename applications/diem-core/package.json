@@ -1,7 +1,7 @@
 {
     "name": "diem-core",
     "description": "Diem Data Integration Engine Multipurpose",
-    "version": "1.0.0-rc.3",
+    "version": "1.0.0-rc.5",
     "author": "guy_huinen@be.ibm.com",
     "config": {
         "appname": "Diem",

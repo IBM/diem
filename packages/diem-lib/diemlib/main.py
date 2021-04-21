@@ -15,8 +15,7 @@ import sys
 from sys import exit
 import traceback
 import diemlib.config as config
-from diemlib.natshandler import NatsService
-import asyncio
+import requests
 
 __all__ = ["UtcNow", "runTime", "printl",
            "mq", "out", "endJob", "endjob", "error"]
@@ -39,14 +38,6 @@ def printl(msg):
 
 
 def mq(data):
-
-    # check if we are going to use nats
-    if config.__nats:
-
-        # check if nats is already present if not create the service
-        if not hasattr(config, 'nats_service'):
-            print("nats: Creating nats_service")
-            config.nats_service = NatsService()
 
     # Returns job data back to the main application
     data["id"] = config.__id
@@ -71,11 +62,8 @@ def mq(data):
     except Exception as e:
         error(e)
         raise
-    if hasattr(config, 'nats_service'):
-        config.nats_service.publish({
-            "client": config.natsclient,
-            "data" : data,
-        })
+    if config.__url != 'noop':
+        requests.post(url=config.__url, data=data)
     else:
         print(json.dumps(data))
 
