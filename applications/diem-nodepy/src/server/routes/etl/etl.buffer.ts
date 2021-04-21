@@ -38,12 +38,15 @@ export const addToBuffer: (id: string, buffer: Buffer) => Promise<void> = async 
                 const diff: number = ts - p_ts;
                 const acc_ts: number = p_acc_ts + diff;
                 const p_s_ts: number = meta.s_ts;
-                const s_ts: number = acc_ts + size * 10;
+                let s_ts: number;
 
                 let delay: number = 0;
 
                 if (p_s_ts > acc_ts) {
                     delay = p_s_ts - acc_ts;
+                    s_ts = p_s_ts + size * 10 + 50;
+                } else {
+                    s_ts = acc_ts + size * 10 + 50;
                 }
 
                 workers[id].meta = {
