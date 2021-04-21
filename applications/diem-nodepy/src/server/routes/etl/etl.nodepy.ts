@@ -1,8 +1,7 @@
 import { spawn } from 'child_process';
 import path from 'path';
 import { publisher } from '@config/nats_publisher';
-import { IntJob, green, red, ECodeLanguage } from '@interfaces';
-import { IError } from 'interfaces';
+import { IntJob, green, red, ECodeLanguage, IError } from '@interfaces';
 import { workers, deleteWorker } from './etl.workers';
 import { addToBuffer, addToErrorBuffer } from './etl.buffer';
 
@@ -45,6 +44,14 @@ export const etlNodepy: (job: IntJob) => any = (job: IntJob) => {
         });
     }
 
+    workers[id].meta = {
+        cycle: 0,
+        acc_size: 0,
+        acc_ts: 0,
+        size: 0,
+        ts: new Date().getTime(),
+        s_ts: 0,
+    };
     // collect data from script
 
     workers[id].stdout.setEncoding('utf8');

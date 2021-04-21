@@ -12,6 +12,8 @@
  * $TRANSID
  */
 
+import { ChildProcessByStdio } from 'child_process';
+
 export enum ECodeLanguage {
     python = 'python',
     spark = 'pyspark',
@@ -90,4 +92,64 @@ export interface IHandler {
     id: string;
     message?: string;
     error?: Error;
+}
+
+export interface IWorker {
+    [index: string]: IChildProcess;
+}
+
+export interface IChildProcess extends ChildProcessByStdio<any, any, any> {
+    buffer?: string;
+    errbuffer?: string;
+    meta?: IMeta;
+}
+
+export interface IMeta {
+    cycle: number;
+    size: number; // current size of the batch
+    ts: number; // timestamp
+    s_ts: number; // suggested timestamp
+    acc_ts: number;
+    acc_size: number;
+}
+
+export interface IPayload {
+    inbox?: string;
+    client: string;
+    data?: any;
+    sid?: number; // number used when the message has an id
+    meta?: IMeta;
+}
+
+export interface INatsCredentials {
+    clusterpassword: string;
+    clustertoken?: string;
+    clusteruser: string;
+    ip: string;
+    password?: string;
+    token?: string;
+    user?: string;
+    seed?: string;
+}
+
+export interface IError extends Error {
+    [index: string]: any;
+    email?: string;
+    endpoint?: string;
+    location?: string;
+    log?: Record<string, unknown>;
+    time?: string;
+    transid?: string;
+    url?: string;
+    blocks?: any;
+    caller: string;
+}
+
+export interface IntInternal {
+    source: string;
+    err?: Error;
+    message: string;
+    fatal: boolean;
+    pid: number;
+    trace: string[];
 }

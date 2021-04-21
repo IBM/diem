@@ -1,5 +1,6 @@
 /*jshint esversion: 8 */
 import { connect, NatsConnection, JSONCodec, StringCodec, nkeyAuthenticator } from 'nats';
+import { IPayload, INatsCredentials } from '@interfaces';
 import { etl_subscriber } from '../routes/etl/etl_subscriber';
 import { services_subscriber } from '../routes/services/services_subscriber';
 import { Credentials } from './cfenv';
@@ -10,25 +11,6 @@ const jc = JSONCodec();
 const sc = StringCodec();
 
 let retry: number = 0;
-
-export interface IPayload {
-    inbox?: string;
-    client: string;
-    data?: any;
-    sid?: number; // number used when the message has an id
-    size?: number;
-}
-
-interface INatsCredentials {
-    clusterpassword: string;
-    clustertoken?: string;
-    clusteruser: string;
-    ip: string;
-    password?: string;
-    token?: string;
-    user?: string;
-    seed?: string;
-}
 
 export const toBuff = (msg: IPayload) => {
     if (typeof msg === 'string') {

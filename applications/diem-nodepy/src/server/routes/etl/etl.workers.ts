@@ -1,17 +1,8 @@
-import { ChildProcessByStdio } from 'child_process';
 import path from 'path';
 import * as rimraf from 'rimraf';
 import { publisher } from '@config/nats_publisher';
 import { IntJob, green, red } from '@interfaces';
-
-interface IChildProcess extends ChildProcessByStdio<any, any, any> {
-    buffer?: string;
-    errbuffer?: string;
-}
-
-interface IWorker {
-    [index: string]: IChildProcess;
-}
+import { IWorker } from 'interfaces/interfaces';
 
 export const workers: IWorker = {};
 

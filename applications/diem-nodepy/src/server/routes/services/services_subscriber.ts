@@ -1,5 +1,6 @@
 import { NatsConnection, ServerInfo, Subscription } from 'nats';
-import { IPayload, fromBuff, toBuff } from '@config/nats_connect';
+import { fromBuff, toBuff } from '@config/nats_connect';
+import { IPayload } from '@interfaces';
 import { utils } from '@config/utils';
 import { handler } from './services.handler';
 

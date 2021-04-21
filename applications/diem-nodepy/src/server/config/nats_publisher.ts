@@ -1,5 +1,6 @@
 import { utils } from '@config/utils';
 import { createInbox, ErrorCode, NatsConnection, ServerInfo } from 'nats';
+import { IMeta } from '@interfaces';
 import { toBuff } from './nats_connect';
 
 class Publisher {
@@ -40,8 +41,12 @@ class Publisher {
         return Promise.resolve();
     };
 
-    public publish = (channel: string, event: any, size: number = 0) => {
-        this.nc.publish(`core.${channel}`, toBuff({ client: this.client, data: event, size }));
+    public publish = (
+        channel: string,
+        event: any,
+        meta: IMeta = { cycle: 0, size: 0, ts: 0, acc_size: 0, acc_ts: 0, s_ts: 0 }
+    ) => {
+        this.nc.publish(`core.${channel}`, toBuff({ client: this.client, data: event, meta }));
     };
 
     public publish_global = (channel: string, event: any) => {

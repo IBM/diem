@@ -1,8 +1,8 @@
 import { EventEmitter } from 'events';
 import { printHRTime } from 'print-hrtime';
 import moment from 'moment';
+import { IError } from '@interfaces';
 import { IntEnv } from '../interfaces/env';
-import { IError } from '../interfaces/shared';
 
 class Utils {
     public ev: EventEmitter;
