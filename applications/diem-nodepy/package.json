@@ -1,6 +1,6 @@
 {
     "name": "diem-nodepy",
-    "version": "1.0.0-rc.5",
+    "version": "1.0.1",
     "description": "ETL- Manager NodePy",
     "config": {
         "appname": "diem-nodepy",
@@ -24,7 +24,7 @@
         "@types/webpack-env": "^1.16.0",
         "@typescript-eslint/eslint-plugin": "^4.22.0",
         "@typescript-eslint/parser": "^4.22.0",
-        "core-js": "^3.10.2",
+        "core-js": "^3.11.0",
         "eslint": "^7.24.0",
         "eslint-config-prettier": "^8.2.0",
         "eslint-plugin-import": "^2.22.1",
