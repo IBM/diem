@@ -11,8 +11,9 @@ ingress:
 
   # -- hostname of your application
   host: example.com
-  # -- proxy is the name of your proxy host
-  # this can happen when you run in a cluster and have a proxy url
+  ## proxy is the name of your proxy host
+  ## this can happen when you run in a cluster and have a proxy url
+  # -- proxy of your host
   proxy: ""
 
 common:
@@ -38,15 +39,20 @@ core:
   # -- name is the name of the deployment
   name: diem-core
 
-  # -- this relates to the diem-core deployment
+  ## this relates to the diem-core deployment
   deployment:
-    # -- socketName is the url the client ui socket will connect to
-    # -- for the moment Do Not Change this
+    ## socketName is the url the client ui socket will connect to
+    ## Reccomended not to change this
+    # -- socket endpoint
     socketName: etl-socket-server
     tier: backend
+    # -- image location
     image: quay.io/diem/core
+    # -- image version
     version: 1.0.1
+    # -- number of replicas
     replicas: 1
+    # -- port to listen
     port: 80
 
   config:
@@ -56,6 +62,7 @@ core:
     # -- if core runs with a dedicated service account
     serviceAccountName: ""
 
+    ## spark configuration Values
     spark:
       SPARK_IMAGE: quay.io/diem/pyspark:3.1.1-rc2
       SPARK_IMAGEPULLSECRETS: ""
@@ -66,13 +73,14 @@ core:
       OPERATOR_EXECUTOR_MEMORY: 8G
       CALLBACK_URL: /internal/spark_callback
 
+    ## shared volume
     volume:
       volumeName: spark-data
       volumeMountPath: /shared
       volumeClaimName: spark-shared-data
       storageClassName: ""
 
-    # -- Slack integration, enable it by putting the enabled to true
+    ## Slack integration
     slack:
       enabled: false
       SLACK_EMOJI: ":diem:"
@@ -83,9 +91,9 @@ core:
       SLACK_USER_CHANNEL: "#diem-bugs-uat"
       SLACK_USER_USERNAME: "diem - (User)"
 
-    # -- Integrate your own cloud object storage
-    # -- leave this blank if you want to use minio integrated as a dependency
-    # -- if these value are going to be used, disable minio
+    ## Integrate your own cloud object storage
+    ## leave this blank if you want to use minio integrated as a dependency
+    ## if these value are going to be used, disable minio
     s3:
       enabled: false
       apiKeyId: ""
@@ -93,20 +101,31 @@ core:
       serviceInstanceId: ""
       signatureVersion: ""
 
-  ##
+  ## Core Secrets 
   secrets:
+    # -- session name
     SESSION_NAME: etl.sid
+    # -- session secret
     SESSION_SECRET: ETLSECRETPW
+    ## will be filled in by the system unless specified
+    # -- mongo url 
     MONGO_URL: ""
+    # -- mongo certifcate 
     MONGO_CA: ""
+    # -- sendgrid api
     SENDGRID_API: ""
+    # -- unique token used for signing apis
     JWTTOKEN: ""
 
-  # -- OpenId authentication
+  ## OpenId authentication
   auth:
+    # -- client id
     clientId: ""
+    # -- client secret
     clientSecret: ""
+    # -- discovery url
     discoveryUrl: ""
+    # -- openid callback
     callbackUrl: /sso/callback
 
 nodepy:
@@ -155,11 +174,15 @@ mongodb:
   # -- create the mongo service
   createservice: true
 
-  # -- mongo authentication settings
+  ## mongo authentication settings
   auth:
+    # -- username for the client
     username: diemadmin
+    # -- root password
     rootPassword: diemadmin
+    # -- client password
     password: diempassword
+    # -- mongo database to be created
     database: ibmclouddb
 
 ## Nats
@@ -204,12 +227,12 @@ nats:
   # -- number of replicas
   replicaCount: 1
 
-  # -- nats config settings
+  ## nats config settings
   nats:
     image: nats:2.2.1-alpine3.13
     pullPolicy: IfNotPresent
 
-  # -- Nats cluster settings
+  ## Nats cluster settings
   cluster:
     # -- the name of the cluster
     name: diem-cluster
@@ -219,11 +242,14 @@ nats:
     replicas: 3
     noAdvertise: true
   natsbox:
+    # -- enable nats box
     enabled: false
   reloader:
+    # -- enable nats reloader
     enabled: false
   # Prometheus NATS Exporter configuration.
   exporter:
+    # -- enable exporter
     enabled: false
 
 ## Minio Configuration

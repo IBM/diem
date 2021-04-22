@@ -41,11 +41,25 @@ $ helm install diem diem/diem -f myvalues.yaml
 | common.name | string | `"diem-common"` |  |
 | common.secrets.SLACKHOOK | string | `""` | secretmapref is the name of the common secret map ref |
 | controller | object | `{"podAnnotations":null}` | pod annotations |
-| core.auth | object | `{"callbackUrl":"/sso/callback","clientId":"","clientSecret":"","discoveryUrl":""}` | OpenId authentication |
+| core.auth.callbackUrl | string | `"/sso/callback"` | openid callback |
+| core.auth.clientId | string | `""` | client id |
+| core.auth.clientSecret | string | `""` | client secret |
+| core.auth.discoveryUrl | string | `""` | discovery url |
 | core.config.APPPATH | string | `"/etl-mgr"` | important, the path the application will run under |
-| core.config.s3 | object | `{"apiKeyId":"","enabled":false,"endpoint":"","serviceInstanceId":"","signatureVersion":""}` | Integrate your own cloud object storage -- leave this blank if you want to use minio integrated as a dependency -- if these value are going to be used, disable minio |
+| core.config.s3.apiKeyId | string | `""` |  |
+| core.config.s3.enabled | bool | `false` |  |
+| core.config.s3.endpoint | string | `""` |  |
+| core.config.s3.serviceInstanceId | string | `""` |  |
+| core.config.s3.signatureVersion | string | `""` |  |
 | core.config.serviceAccountName | string | `""` | if core runs with a dedicated service account |
-| core.config.slack | object | `{"SLACK_DEPLOY_CHANNEL":"#diem-deploy-uat","SLACK_DEPLOY_USERNAME":"diem- (Notification)","SLACK_EMOJI":":diem:","SLACK_INTERNAL_CHANNEL":"#diem-bugs-uat","SLACK_INTERNAL_USERNAME":"diem - (Internal)","SLACK_USER_CHANNEL":"#diem-bugs-uat","SLACK_USER_USERNAME":"diem - (User)","enabled":false}` | Slack integration, enable it by putting the enabled to true |
+| core.config.slack.SLACK_DEPLOY_CHANNEL | string | `"#diem-deploy-uat"` |  |
+| core.config.slack.SLACK_DEPLOY_USERNAME | string | `"diem- (Notification)"` |  |
+| core.config.slack.SLACK_EMOJI | string | `":diem:"` |  |
+| core.config.slack.SLACK_INTERNAL_CHANNEL | string | `"#diem-bugs-uat"` |  |
+| core.config.slack.SLACK_INTERNAL_USERNAME | string | `"diem - (Internal)"` |  |
+| core.config.slack.SLACK_USER_CHANNEL | string | `"#diem-bugs-uat"` |  |
+| core.config.slack.SLACK_USER_USERNAME | string | `"diem - (User)"` |  |
+| core.config.slack.enabled | bool | `false` |  |
 | core.config.spark.CALLBACK_URL | string | `"/internal/spark_callback"` |  |
 | core.config.spark.OPERATOR_DRIVER_CORES | string | `"2"` |  |
 | core.config.spark.OPERATOR_DRIVER_MEMORY | string | `"1024m"` |  |
@@ -58,19 +72,23 @@ $ helm install diem diem/diem -f myvalues.yaml
 | core.config.volume.volumeClaimName | string | `"spark-shared-data"` |  |
 | core.config.volume.volumeMountPath | string | `"/shared"` |  |
 | core.config.volume.volumeName | string | `"spark-data"` |  |
-| core.deployment | object | `{"image":"quay.io/diem/core","port":80,"replicas":1,"socketName":"etl-socket-server","tier":"backend","version":"1.0.1"}` | this relates to the diem-core deployment |
-| core.deployment.socketName | string | `"etl-socket-server"` | socketName is the url the client ui socket will connect to -- for the moment Do Not Change this |
+| core.deployment.image | string | `"quay.io/diem/core"` | image location |
+| core.deployment.port | int | `80` | port to listen |
+| core.deployment.replicas | int | `1` | number of replicas |
+| core.deployment.socketName | string | `"etl-socket-server"` |  |
+| core.deployment.tier | string | `"backend"` |  |
+| core.deployment.version | string | `"1.0.1"` | image version |
 | core.name | string | `"diem-core"` | name is the name of the deployment |
-| core.secrets.JWTTOKEN | string | `""` |  |
-| core.secrets.MONGO_CA | string | `""` |  |
+| core.secrets.JWTTOKEN | string | `""` | unique token used for signing apis |
+| core.secrets.MONGO_CA | string | `""` | mongo certifcate  |
 | core.secrets.MONGO_URL | string | `""` |  |
-| core.secrets.SENDGRID_API | string | `""` |  |
-| core.secrets.SESSION_NAME | string | `"etl.sid"` |  |
-| core.secrets.SESSION_SECRET | string | `"ETLSECRETPW"` |  |
+| core.secrets.SENDGRID_API | string | `""` | sendgrid api |
+| core.secrets.SESSION_NAME | string | `"etl.sid"` | session name |
+| core.secrets.SESSION_SECRET | string | `"ETLSECRETPW"` | session secret |
 | ingress.createtls | bool | `true` | diem-tls-secret terminates example.com |
 | ingress.host | string | `"example.com"` | hostname of your application |
 | ingress.name | string | `"diem-ingress"` | name of your ingress |
-| ingress.proxy | string | `""` | proxy is the name of your proxy host this can happen when you run in a cluster and have a proxy url |
+| ingress.proxy | string | `""` |  |
 | ingress.tls | string | `"diem-tls-secret"` |  |
 | ingress.version | string | `"v1"` | K8 api version (v1 or v1beta) |
 | minio.accessKey | string | `"diemadmin"` |  |
@@ -80,25 +98,29 @@ $ helm install diem diem/diem -f myvalues.yaml
 | minio.resources.requests.memory | string | `"1Gi"` |  |
 | minio.secretKey | string | `"diempassword"` |  |
 | minio.securityContext.enabled | bool | `false` |  |
-| mongodb.auth | object | `{"database":"ibmclouddb","password":"diempassword","rootPassword":"diemadmin","username":"diemadmin"}` | mongo authentication settings |
+| mongodb.auth.database | string | `"ibmclouddb"` | mongo database to be created |
+| mongodb.auth.password | string | `"diempassword"` | client password |
+| mongodb.auth.rootPassword | string | `"diemadmin"` | root password |
+| mongodb.auth.username | string | `"diemadmin"` | username for the client |
 | mongodb.createservice | bool | `true` | create the mongo service |
 | nats.auth.enabled | bool | `false` |  |
 | nats.auth.password | string | `""` |  |
 | nats.auth.user | string | `""` |  |
-| nats.cluster | object | `{"enabled":true,"name":"diem-cluster","noAdvertise":true,"replicas":3}` | Nats cluster settings |
 | nats.cluster.enabled | bool | `true` | enable clustering |
 | nats.cluster.name | string | `"diem-cluster"` | the name of the cluster |
+| nats.cluster.noAdvertise | bool | `true` |  |
 | nats.cluster.replicas | int | `3` | number of replicas to start |
 | nats.createservice | bool | `true` |  |
-| nats.exporter.enabled | bool | `false` |  |
+| nats.exporter.enabled | bool | `false` | enable exporter |
 | nats.external | bool | `false` |  |
 | nats.ip | string | `"diem-nats"` |  |
 | nats.name | string | `"nats"` | the name of the service |
 | nats.nameOverride | string | `"diem-nats"` |  |
-| nats.nats | object | `{"image":"nats:2.2.1-alpine3.13","pullPolicy":"IfNotPresent"}` | nats config settings |
-| nats.natsbox.enabled | bool | `false` |  |
+| nats.nats.image | string | `"nats:2.2.1-alpine3.13"` |  |
+| nats.nats.pullPolicy | string | `"IfNotPresent"` |  |
+| nats.natsbox.enabled | bool | `false` | enable nats box |
 | nats.priorityClassName | string | `"system-node-critical"` | install nats before others |
-| nats.reloader.enabled | bool | `false` |  |
+| nats.reloader.enabled | bool | `false` | enable nats reloader |
 | nats.replicaCount | int | `1` | number of replicas |
 | nodepy.image | string | `"quay.io/diem/nodepy"` | image is the the name of the nodepy image |
 | nodepy.name | string | `"diem-nodepy"` | name of the deployment |
