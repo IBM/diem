@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
         - name: {{ .Values.nodepy.name }}
-          image: {{ .Values.nodepy.image }}:{{ .Values.operator.version }}
+          image: {{ .Values.nodepy.image }}:{{ .Values.nodepy.version }}
           envFrom:
             - configMapRef:
                 name: {{ .Values.common.name }}-config
