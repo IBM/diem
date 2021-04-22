@@ -38,7 +38,7 @@ export const finishJob: (doc: IModel) => Promise<any> = async (doc: IModel): Pro
     }
 
     await jobLogger(doc).catch(async (err: any) => {
-        err.trace = addTrace(err.trace, '@at $job.stop (jobStop)');
+        err.trace = addTrace(err.trace, '@at $job.finish (jobStop)');
 
         // we just log the error here
         void utils.logError('$job.start.handler (saveDoc): error', err);

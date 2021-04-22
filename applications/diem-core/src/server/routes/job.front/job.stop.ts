@@ -85,6 +85,7 @@ export const jobStop: (job: IETLJob) => Promise<boolean | Error> = async (job: I
         return Promise.resolve(true);
     } catch (err) {
         err.trace = addTrace(err.trace, '@at $job.stop (jobStop)');
+        err.id = job.id;
 
         return Promise.reject(err);
     }
