@@ -36,7 +36,7 @@ export const createSparkPythonJob: (doc: IModel) => Promise<ICapacity> = async (
 
     crdjob.spec.sparkConf = {
         'spark.sql.execution.arrow.pyspark.enabled': 'true',
-        'spark.sql.execution.arrow.fallback.enabled': 'true',
+        'spark.sql.execution.arrow.pyspark.fallback.enabled': 'true',
         'spark.driver.extraClassPath': stocator,
         'spark.task.maxFailures': '1',
         'spark.executor.extraClassPath': stocator,
