@@ -75,8 +75,12 @@ export class MailHandler {
         }));
     };
 
-    private difference = (cc: string[], to: string[]): string[] =>
-        cc.filter((element: string) => !to.includes(element));
+    private difference = (cc: string[], to: string[]): string[] => {
+        // map all to lowercase
+        const c: string[] = to.map((name) => name.toLowerCase());
+
+        return cc.filter((element: string) => !c.includes(element.toLowerCase()));
+    };
 
     private makeRecipients: (input: any[]) => any[] = (input: any[]): any[] => {
         if (input.length === 0) {

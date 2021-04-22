@@ -141,7 +141,7 @@ export const handleMail: (doc: IModel) => Promise<any> = async (doc: IModel): Pr
     }
 
     const uniq: (a: string[], b: string[]) => string[] = (a: string[], b: string[]): string[] => {
-        const c: string[] = a.concat(b);
+        const c: string[] = a.concat(b).map((name: string) => name.toLowerCase());
 
         return c.filter((item, pos) => c.indexOf(item) === pos);
     };
