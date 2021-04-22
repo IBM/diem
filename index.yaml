@@ -5,7 +5,7 @@ entries:
       category: Data Integration Engine Multipurpose
     apiVersion: v2
     appVersion: 1.0.1
-    created: "2021-04-22T09:18:20.273189+02:00"
+    created: "2021-04-22T15:37:43.645102+02:00"
     dependencies:
     - name: spark-operator
       repository: https://googlecloudplatform.github.io/spark-on-k8s-operator
@@ -23,7 +23,7 @@ entries:
       repository: https://nats-io.github.io/k8s/helm/charts/
       version: 0.7.4
     description: A Helm chart for Diem
-    digest: 03206c73e1f3a7b0deaec6f35a5f1a9105bcbde643efac45fe7ed283316b9aa2
+    digest: f3371502c77c9c4ad1adfa11149a20f18396eb4611ab5786cf862a263eacdfd5
     home: https://github.com/IBM/DIEM
     icon: https://raw.githubusercontent.com/IBM/diem/main/applications/diem-help/docs/images/diem/diem_s.png
     maintainers:
@@ -32,12 +32,12 @@ entries:
     name: diem
     type: application
     urls:
-    - https://huineng.github.io/diem/diem-1.0.2.tgz
-    version: 1.0.2
+    - https://ibm.github.io/diem/diem-1.0.1.tgz
+    version: 1.0.1
   minio:
   - apiVersion: v1
     appVersion: master
-    created: "2021-04-22T09:18:20.274745+02:00"
+    created: "2021-04-22T15:37:43.646976+02:00"
     description: High Performance, Kubernetes Native Object Storage
     digest: 0bac6eea54eb93de4e97a4961f592f652a1738ea584982015480222dd2e8d841
     home: https://min.io
@@ -53,14 +53,14 @@ entries:
     sources:
     - https://github.com/minio/minio
     urls:
-    - https://huineng.github.io/diem/charts/minio-8.0.10.tgz
+    - https://ibm.github.io/diem/charts/minio-8.0.10.tgz
     version: 8.0.10
   mongodb:
   - annotations:
       category: Database
     apiVersion: v2
     appVersion: 4.4.2
-    created: "2021-04-22T09:18:20.277988+02:00"
+    created: "2021-04-22T15:37:43.650683+02:00"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -86,12 +86,12 @@ entries:
     - https://github.com/bitnami/bitnami-docker-mongodb
     - https://mongodb.org
     urls:
-    - https://huineng.github.io/diem/charts/mongodb-10.0.5.tgz
+    - https://ibm.github.io/diem/charts/mongodb-10.0.5.tgz
     version: 10.0.5
   nats:
   - apiVersion: v2
     appVersion: 2.1.9
-    created: "2021-04-22T09:18:20.27912+02:00"
+    created: "2021-04-22T15:37:43.651999+02:00"
     description: A Helm chart for the NATS.io High Speed Cloud Native Distributed Communications Technology.
     digest: f65d10a6e6ba8209340dda5490d8247b9ecf6febe49448428eaa8c0fd9a677da
     home: http://github.com/nats-io/k8s
@@ -107,12 +107,12 @@ entries:
       name: Colin Sullivan
     name: nats
     urls:
-    - https://huineng.github.io/diem/charts/nats-0.7.4.tgz
+    - https://ibm.github.io/diem/charts/nats-0.7.4.tgz
     version: 0.7.4
   spark-operator:
   - apiVersion: v2
     appVersion: v1beta2-1.2.0-3.0.0
-    created: "2021-04-22T09:18:20.281588+02:00"
+    created: "2021-04-22T15:37:43.654644+02:00"
     description: A Helm chart for Spark on Kubernetes operator
     digest: 1d2b84700a70f5bf6c2df198a298b592d07693cfc50246b035fc6797a3c1b105
     home: https://github.com/GoogleCloudPlatform/spark-on-k8s-operator
@@ -123,6 +123,6 @@ entries:
       name: yuchaoran2011
     name: spark-operator
     urls:
-    - https://huineng.github.io/diem/charts/spark-operator-1.0.8.tgz
+    - https://ibm.github.io/diem/charts/spark-operator-1.0.8.tgz
     version: 1.0.8
-generated: "2021-04-22T09:18:20.263098+02:00"
+generated: "2021-04-22T15:37:43.632935+02:00"
