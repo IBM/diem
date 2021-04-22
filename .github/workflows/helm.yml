@@ -8,11 +8,11 @@ on:
   push:
     branches: [nats]
     paths:
-      - "helm/chart/**"
+      - "helm/diem/**"
   pull_request:
     branches: [main]
     paths:
-      - "helm/chart/**"
+      - "helm/diem/**"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
