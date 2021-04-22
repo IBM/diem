@@ -1,0 +1,24 @@
+{{ template "chart.header" . }}
+{{ template "chart.description" . }}
+
+{{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+
+
+## Installing the Chart
+
+1. install [helm 3](https://helm.sh/docs/intro/install/)
+
+2. Create a values.yaml file if needed and modify it with your own values
+
+3. To install the chart with the release name `diem`:
+
+```console
+$ helm repo add diem https://ibm.github.io/diemm
+$ helm install diem diem/diem -f myvalues.yaml
+```
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSection" . }}
+
+{{ template "helm-docs.versionFooter" . }}
