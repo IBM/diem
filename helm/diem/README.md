@@ -1,8 +1,19 @@
+
 # diem
 
 A Helm chart for Diem
 
-![Version: 1.0.2](https://img.shields.io/badge/Version-1.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.1](https://img.shields.io/badge/AppVersion-1.0.1-informational?style=flat-square)
+![Version: 1.0.1](https://img.shields.io/badge/Version-1.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.1](https://img.shields.io/badge/AppVersion-1.0.1-informational?style=flat-square)
+
+```
+  _____  _               
+ |  __ \(_)              
+ | |  | |_  ___ _ __ ___ 
+ | |  | | |/ _ \ '_ ` _ \
+ | |__| | |  __/ | | | | |
+ |_____/|_|\___|_| |_| |_|
+                         
+```
 
 ## Installing the Chart
 
@@ -134,7 +145,7 @@ $ helm install diem diem/diem -f myvalues.yaml
 | operator.replicas | int | `1` |  |
 | operator.serviceAccountName | string | `""` | any service accountname |
 | operator.tier | string | `"backend"` |  |
-| operator.version | string | `"1.0.0"` |  |
+| operator.version | string | `"1.0.1"` |  |
 | spark-operator.enableWebhook | bool | `true` | enables the spark webhoob |
 | spark-operator.image.repository | string | `"quay.io/diem/spark-operator"` |  |
 | spark-operator.image.tag | string | `"2.0.0"` |  |

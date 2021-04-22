@@ -151,7 +151,7 @@ operator:
   port: 80
   replicas: 1
   tier: backend
-  version: 1.0.0
+  version: 1.0.1
 
 ## enable the spark Operator
 ## for more details see
