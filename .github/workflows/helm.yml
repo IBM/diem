@@ -1,12 +1,12 @@
 # This is a basic workflow to help you get started with Actions
 
-name: "CI mongoloader"
+name: "Helm Publisher"
 
 # Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [main]
+    branches: [nats]
     paths:
       - "helm/chart/**"
   pull_request:
@@ -30,20 +30,10 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
-      - uses: azure/setup-helm@v1
-
-      - name: Install quay plugin
-        run: |
-          helm plugin install https://github.com/app-registry/quay-helmv3-plugin
-          helm quay --help
-
-      - name: Login to quay.io
-        run: helm quay login -u diem+ibm_deploy_robot -p ${{secrets.DOCKER_QUAY}} quay.io/diem/diem
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-
-      - name: Push the Helm Chart
-        run: helm quay push quay.io/diem
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      - name: Publish Helm chart
+        uses: stefanprodan/helm-gh-pages@master
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          charts_dir: ./helm/diem
+          branch: helm
