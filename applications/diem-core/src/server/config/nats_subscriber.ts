@@ -76,7 +76,10 @@ class Subscriber {
 
     private json_handler = async (json_array: any) => {
         let i: number = -10;
-        json_array.forEach(async (json: any) => {
+
+        let out: any[] = [];
+        let base: any;
+        for (const json of json_array) {
             let parsed_json: any;
             i = i + 10;
 
@@ -86,14 +89,37 @@ class Subscriber {
                     await pubSub.publishService(parsed_json);
                 } else {
                     // let's add a timeout so that the messages have sufficient time to be processed
-                    setTimeout(async () => {
+
+                    if (!base && parsed_json.out && !parsed_json.status) {
+                        base = { ...parsed_json };
+                        out.push(parsed_json.out);
+                    } else if (parsed_json.out && !parsed_json.status) {
+                        out.push(parsed_json.out);
+                    }
+
+                    if (parsed_json.status) {
+                        if (base) {
+                            base.out = out.map((_out: any) => ({ out: _out }));
+                            base.outl = true;
+                            await pubSub.publish(base);
+                            base = undefined;
+                            out = [];
+                        }
                         await pubSub.publish(parsed_json);
-                    }, i);
+                    }
                 }
             } catch (err) {
                 utils.logInfo('$nats_subscriber (subs): job - unparsable json');
             }
-        });
+        }
+
+        if (base) {
+            base.out = out.map((_out: any) => ({ out: _out }));
+            base.outl = true;
+            await pubSub.publish(base);
+            base = undefined;
+            out = [];
+        }
     };
 
     private subs_handler = async (msg: Msg, payload: INatsPayload) => {

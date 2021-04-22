@@ -13,6 +13,7 @@ import { finishJob } from './job.finish';
 interface IOut {
     out: string;
     special?: string;
+    outl?: boolean;
 }
 
 const jobdetail: string = 'jobdetail.store';
@@ -38,7 +39,9 @@ export const jobOutHandler: (doc: IModel, job: IJobResponse) => Promise<ISocketP
         special: job.special,
     };
 
-    if (Array.isArray(doc.out)) {
+    if (job.outl) {
+        doc.out = doc.out.concat(job.out);
+    } else if (Array.isArray(doc.out)) {
         doc.out.push(obj);
     } else {
         doc.out = [obj];
@@ -64,7 +67,7 @@ export const jobOutHandler: (doc: IModel, job: IJobResponse) => Promise<ISocketP
                 options: {
                     field: 'out',
                 },
-                type: EStoreActions.ADD_STORE_TABLE_RCD,
+                type: job.outl ? EStoreActions.APPEND_STORE_TABLE_RCD : EStoreActions.ADD_STORE_TABLE_RCD,
                 values: {
                     out: job.out,
                     special: job.special,

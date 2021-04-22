@@ -527,6 +527,7 @@ export interface IJobResponse {
     log?: IJob[];
     name: string;
     out?: any;
+    outl?: any;
     runby: string;
     runtime: number | null;
     status: EJobStatusCodes;

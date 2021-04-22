@@ -25,7 +25,7 @@ const mq = (data) => {
         }
     }
     if(process.send){
-        process.send(data);
+        process.stdout.write(JSON.stringify(data)+ '\n');
     }
 };
 
