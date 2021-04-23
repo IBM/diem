@@ -27,7 +27,7 @@ export const toMQ = async (
         annotations: {
             execution: utils.hrTime(hrstart),
             profile: req.token,
-            time: utils.time(),
+            time: new Date(),
             transid: req.transid || utils.guid(),
         },
         browser: utils.browser(req),

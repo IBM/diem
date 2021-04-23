@@ -13,7 +13,7 @@ export interface IntMQLog {
             email: string;
             name: string;
         };
-        time: string;
+        time: Date;
         transid: string;
         execution?: {
             msec: number;

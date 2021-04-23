@@ -238,7 +238,7 @@ export class Server {
             } catch (err) {
                 err.transid = req.transid;
                 err.pid = process.pid;
-                await toMQ(req, 401, '$server (api error)', err, hrstart, this.pack);
+                void toMQ(req, 401, '$server (api error)', err, hrstart, this.pack);
 
                 return res.status(404).send('Your request could not be completed, incorrect parsing');
             }
@@ -369,7 +369,7 @@ export class Server {
                         `$server (secAuth): requiring profile error - email: ${email} - name: ${name} - ti: ${req.transid}`,
                         err
                     );
-                    await toMQ(req, 401, `$server : failed login by ${email}`, err, hrstart, this.pack);
+                    void toMQ(req, 401, `$server : failed login by ${email}`, err, hrstart, this.pack);
 
                     return res.sendFile('/public/501.html', { root: path.resolve() });
                 });
