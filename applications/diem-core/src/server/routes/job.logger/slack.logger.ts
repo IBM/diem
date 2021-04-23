@@ -52,7 +52,7 @@ export const toSlack: (doc: IModel) => Promise<void> = async (doc: IModel): Prom
 
     const customSlack: Partial<ISlack> = {
         deploy: {
-            channel: `etl-mgr-${utils.Env.K8_SYSTEM}`,
+            channel: `${utils.slack.user.channel}`,
             username: 'ETL Manager (Notification)',
         },
     };
