@@ -3,6 +3,7 @@ import { IntInternal, IntEnv } from '@interfaces';
 import { utils } from '@config/utils';
 import { publisher } from './nats_publisher';
 import { NC } from './nats_connect';
+import { stats } from './stats';
 
 export class Server {
     public pack: IntEnv;
@@ -73,6 +74,8 @@ export class Server {
             'info',
             `${this.pack.packname}@${this.pack.version} connected - env: ${this.pack.K8_SYSTEM_NAME} - pid: ${process.pid}`
         );
+
+        stats();
     };
 
     // private ensureAuthenticated = (_req: IRequest, _res: IResponse, next: () => any): any => next();

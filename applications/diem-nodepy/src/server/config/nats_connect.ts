@@ -106,9 +106,9 @@ class NCConnection {
             }
             for await (const s of this.nc.status()) {
                 if (s.type === 'update') {
-                    utils.logInfo(`$connect (events): ${s.type} - data: ${JSON.stringify(s.data)}`);
+                    utils.logInfo(`$nats_connect (events): ${s.type} - data: ${JSON.stringify(s.data)}`);
                 } else {
-                    utils.logInfo(`$connect (events): ${s.type} - data: ${s.data}`);
+                    utils.logInfo(`$nats_connect (events): ${s.type} - data: ${s.data}`);
                 }
             }
         })();
