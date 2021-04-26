@@ -1,14 +1,10 @@
-import { IntMQLog, IRequest } from '@interfaces';
+import { IntMQLog, IRequest, ELogEvent } from '@interfaces';
 import { utils } from '@common/utils';
 import { ILoggerModel, loggerModel } from '@models';
 import { addTrace } from '@functions';
 
-const logger: (log: IntMQLog, transid: string) => Promise<void> = async (
-    log: IntMQLog,
-    transid: string
-): Promise<void> => {
+const logger: (log: IntMQLog, transid: string) => Promise<void> = async (log: IntMQLog): Promise<void> => {
     const doc: ILoggerModel = new loggerModel(log);
-    doc._id = transid || utils.guid();
     await doc.save().catch(async (err) => {
         err.trace = addTrace(err.trace, '@at $logger (logger) - save');
         void utils.logError('$logger (logger): save error', err);
@@ -19,16 +15,19 @@ export const toMQ = async (
     req: IRequest,
     status: number,
     event: string,
+    type: ELogEvent,
     err?: Error,
     hrstart: [number, number] = [0, 0],
     pack: any = {}
 ): Promise<void> => {
+    const transid: string = req.transid || utils.guid();
     const log: IntMQLog = {
+        logid: transid,
         annotations: {
             execution: utils.hrTime(hrstart),
             profile: req.token,
             time: new Date(),
-            transid: req.transid || utils.guid(),
+            org: req.user?.org || 'Anonymous',
         },
         browser: utils.browser(req),
         err,
@@ -41,6 +40,7 @@ export const toMQ = async (
             url: `${req.hostname}${req.path}`,
         },
         status,
+        type,
     };
 
     await logger(log, req.transid);

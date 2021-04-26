@@ -166,6 +166,7 @@ export class Server {
                     req,
                     201,
                     `$server (*) : authenticated request from ${req.user?.email}`,
+                    'resource',
                     undefined,
                     hrstart,
                     this.pack
@@ -177,6 +178,7 @@ export class Server {
                     req,
                     400,
                     `$server (*) : authenticated but invalid request from ${req.user?.email}`,
+                    'resource',
                     undefined,
                     hrstart,
                     this.pack
@@ -238,7 +240,7 @@ export class Server {
             } catch (err) {
                 err.transid = req.transid;
                 err.pid = process.pid;
-                void toMQ(req, 401, '$server (api error)', err, hrstart, this.pack);
+                void toMQ(req, 401, '$server (api error)', 'error', err, hrstart, this.pack);
 
                 return res.status(404).send('Your request could not be completed, incorrect parsing');
             }
@@ -268,6 +270,7 @@ export class Server {
                     req,
                     200,
                     `$server : api request from ${req.user ? req.user.email : 'anonymous'}`,
+                    'api',
                     undefined,
                     hrstart,
                     this.pack
@@ -302,6 +305,7 @@ export class Server {
                         req,
                         500,
                         `$server : api request error from ${req.user ? req.user.email : 'internal'}`,
+                        'error',
                         msg,
                         hrstart,
                         this.pack
@@ -313,7 +317,15 @@ export class Server {
                 }
             }
         } else {
-            void toMQ(req, 404, `$server (api): not found - ${req.params.function}`, undefined, hrstart, this.pack);
+            void toMQ(
+                req,
+                404,
+                `$server (api): not found - ${req.params.function}`,
+                'error',
+                undefined,
+                hrstart,
+                this.pack
+            );
 
             return res.status(404).send({ message: 'resouce cannot be found' });
         }
@@ -356,6 +368,16 @@ export class Server {
         const Login: any = () => {
             login(req, res)
                 .then(async () => {
+                    void toMQ(
+                        req,
+                        200,
+                        `$server (secAuth): aquired profile - email: ${email} - name: ${name} - ti: ${req.transid}`,
+                        'login',
+                        undefined,
+                        hrstart,
+                        this.pack
+                    );
+
                     utils.logInfo(
                         `$server (secAuth): aquired profile - email: ${email} - name: ${name} - ti: ${req.transid}`
                     );
@@ -369,7 +391,7 @@ export class Server {
                         `$server (secAuth): requiring profile error - email: ${email} - name: ${name} - ti: ${req.transid}`,
                         err
                     );
-                    void toMQ(req, 401, `$server : failed login by ${email}`, err, hrstart, this.pack);
+                    void toMQ(req, 401, `$server : failed login by ${email}`, 'error', err, hrstart, this.pack);
 
                     return res.sendFile('/public/501.html', { root: path.resolve() });
                 });
@@ -460,7 +482,7 @@ export class Server {
         const errMsg: string = '$server (logErrors)';
 
         void utils.logError(errMsg, err);
-        void toMQ(req, 401, errMsg, err, undefined, this.pack);
+        void toMQ(req, 401, errMsg, 'error', err, undefined, this.pack);
 
         res.status(500).end(`An internal error happened. It has been logged - transid: ${req.transid || 'none'}`);
     };
