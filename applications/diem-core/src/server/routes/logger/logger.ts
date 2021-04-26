@@ -23,10 +23,10 @@ export const toMQ = async (
     const transid: string = req.transid || utils.guid();
     const log: IntMQLog = {
         logid: transid,
+        created: new Date(),
         annotations: {
             execution: utils.hrTime(hrstart),
             profile: req.token,
-            time: new Date(),
             org: req.user?.org || 'Anonymous',
         },
         browser: utils.browser(req),

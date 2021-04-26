@@ -10,6 +10,7 @@ export type ELogEvent = 'resource' | 'login' | 'error' | 'api';
  */
 export interface IntMQLog {
     logid: string;
+    created: Date;
     annotations: {
         profile: {
             [key: string]: any;
@@ -17,7 +18,6 @@ export interface IntMQLog {
             name: string;
         };
         org: string;
-        time: Date;
         execution?: {
             msec: number;
             sec: number;

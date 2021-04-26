@@ -4,18 +4,18 @@ import { Schema } from 'mongoose';
 
 const loggerSchema: Schema = new Schema(
     {
-        _id: { type: String, auto: false, required: true },
+        logid: { type: String, required: true, index: true },
+        created: { type: Date, required: true, index: true },
         annotations: {
             profile: {
                 email: String,
                 name: String,
             },
-            time: String,
-            transid: String,
             execution: {
                 msec: Number,
                 sec: Number,
             },
+            org: String,
         },
         browser: {
             agent: String,
@@ -31,6 +31,7 @@ const loggerSchema: Schema = new Schema(
             url: String,
         },
         status: Number,
+        type: String,
     },
     {
         collection: 'logger',
