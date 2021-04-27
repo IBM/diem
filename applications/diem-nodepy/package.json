@@ -16,7 +16,7 @@
         "jsonwebtoken": "^8.5.1",
         "moment": "^2.29.1",
         "print-hrtime": "^2.0.0",
-        "redis": "^3.0.2",
+        "redis": "^3.1.1",
         "rimraf": "^3.0.2"
     },
     "keywords": [
