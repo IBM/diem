@@ -4,7 +4,7 @@
         "baseUrl": ".",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "module": "esnext",
+        "module": "es2020",
         "moduleResolution": "node",
         "noImplicitAny": true,
         "noImplicitReturns": true,
@@ -18,7 +18,7 @@
         "strictFunctionTypes": true,
         "strictNullChecks": true,
         "strictPropertyInitialization": true,
-        "target": "esnext",
+        "target": "es2020",
         "version": true,
         "types": ["node", "core-js", "webpack-env"],
         "lib": ["es2020"]

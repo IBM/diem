@@ -1,5 +1,5 @@
 {
-    "extends": "./node_modules/@mydiem/diem-util/tsconfig.base.json",
+    "extends": "./webpack/tsconfig.base.json",
     "compilerOptions": {
         "declaration": true,
         "outDir": "./lib",
