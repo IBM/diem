@@ -21,6 +21,13 @@ export const limiter = rateLimit({
     headers: true,
 });
 
+export const limiterl = rateLimit({
+    windowMs: 1 * 60 * 250, // 1 minute
+    max: 250,
+    message: 'You have exceeded the 1000 requests per minute limit!',
+    headers: true,
+});
+
 interface ISession extends session.Session {
     originalUrl?: string;
 }
@@ -159,7 +166,6 @@ export class Express {
                 .get(`${utils.Env.apppath}/robots.txt`, limiter, (_req: IRequest, res: IResponse) => {
                     res.sendFile('/public/robots.txt', { root: path.resolve() });
                 })
-                .use(limiter)
                 .use((req, res, next) =>
                     !hasSome(req, this.config ? this.config.cspExcluded : []) ? csp(req, res, next) : next()
                 )

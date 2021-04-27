@@ -5,7 +5,7 @@ import path from 'path';
 import * as http from 'http';
 import jwt from 'jsonwebtoken';
 import pug from 'pug';
-import { Express, limiter } from '@common/express';
+import { Express, limiter, limiterl } from '@common/express';
 import { IntInternal, IntEnv, IError, IProfile, IRequest, IResponse } from '@interfaces';
 import { utils } from '@common/utils';
 import { slackMsg } from '@common/slack/slack';
@@ -148,11 +148,11 @@ export class Server {
         /*** here we start actually handling the requests */
 
         app.use(this.logErrors)
-            .all(`${this.pack.apppath}/api/:function`, jwtCheck, this.api)
-            .all(`${this.pack.apppath}/user/:function/:pyfile`, this.secAuth, this.api)
-            .all(`${this.pack.apppath}/user/:function`, this.secAuth, this.api)
-            .all('/internal/:function', this.api)
-            .all('/internal/:function/:pyfile', this.api)
+            .all(`${this.pack.apppath}/api/:function`, limiter, jwtCheck, this.api)
+            .all(`${this.pack.apppath}/user/:function/:pyfile`, limiter, this.secAuth, this.api)
+            .all(`${this.pack.apppath}/user/:function`, limiter, this.secAuth, this.api)
+            .all('/internal/:function', limiterl, this.api)
+            .all('/internal/:function/:pyfile', limiterl, this.api)
             .get('*', this.secAuth, limiter, (req: IRequest, res: IResponse) => {
                 const hrstart: [number, number] = process.hrtime();
                 res.setHeader('Last-Modified', new Date().toUTCString());
