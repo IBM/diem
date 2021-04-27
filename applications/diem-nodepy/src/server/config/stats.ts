@@ -22,7 +22,8 @@ const memory = () => {
 };
 
 export const stats = () => {
-    setInterval(() => {
-        memory();
+    memory();
+    setTimeout(() => {
+        stats();
     }, 60000);
 };

@@ -4,7 +4,7 @@ import { publisher } from '@config/nats_publisher';
 import { IntJob, green, red } from '@interfaces';
 import { IWorker } from 'interfaces/interfaces';
 
-export const workers: IWorker = {};
+export const workers: IWorker = Object.create(null);
 
 const getCount: () => number = () => Object.keys(workers).length;
 
