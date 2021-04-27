@@ -62,7 +62,7 @@ def mq(data):
     except Exception as e:
         error(e)
         raise
-    if config.__url != 'noop':
+    if config.__nats:
         requests.post(url=config.__url, data=data)
     else:
         print(json.dumps(data))

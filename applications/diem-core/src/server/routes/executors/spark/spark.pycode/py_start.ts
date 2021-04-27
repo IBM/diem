@@ -24,6 +24,7 @@ config.__org = env.get('ORG', 'noop')
 config.__starttime = time.time()
 config.__jobstart = UtcNow()
 config.__url = env.get('SPARK__CALLBACK_URL','noop')
+config.__nats = False
 
 def diem_except_hook(exctype, value, traceback):
     error(value)
