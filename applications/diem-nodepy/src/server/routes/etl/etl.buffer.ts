@@ -1,4 +1,4 @@
-import { green, red, blue, IMeta, IChildProcess } from '@interfaces';
+import { green, red, blue, IMeta } from '@interfaces';
 import { publisher } from '@config/nats_publisher';
 import { workers } from './etl.workers';
 
@@ -19,12 +19,10 @@ export const addToBuffer: (id: string, buffer: Buffer) => Promise<void> = async 
         if (resp) {
             const json_array: string[] = resp.split('\n').filter((s: string) => s);
 
-            const worker: IChildProcess = workers[id];
+            const meta: IMeta | undefined = workers[id].meta;
 
-            if (worker && worker.meta) {
+            if (meta) {
                 const ts: number = new Date().getTime();
-
-                const meta: IMeta = worker.meta;
 
                 // info
                 const cycle = meta.cycle || 0;
@@ -67,7 +65,7 @@ export const addToBuffer: (id: string, buffer: Buffer) => Promise<void> = async 
                 );
 
                 setTimeout(() => {
-                    void publisher.publish('job', resp, worker.meta);
+                    void publisher.publish('job', resp, meta);
                 }, delay);
             } else {
                 void publisher.publish('job', resp);
