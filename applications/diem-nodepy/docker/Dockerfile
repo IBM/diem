@@ -1,4 +1,4 @@
-FROM nikolaik/python-nodejs:python3.8-nodejs15
+FROM nikolaik/python-nodejs:python3.8-nodejs16
 
 LABEL   maintainer=guy_huinen@be.ibm.com \
     org.label-schema.description="Diem Nodepy Application" \

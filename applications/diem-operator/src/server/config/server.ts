@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { setTimeout } from 'timers/promises';
 import { IntInternal, IntEnv } from '@interfaces';
 import { utils } from '@config/utils';
 import { timer } from '../routes/timer/timer';
@@ -29,11 +30,10 @@ export class Server {
                 };
                 void utils.logError('$server.ts (unhandledRejection):', msg);
             })
-            .on('exit', (code: any) => {
+            .on('exit', async (code: any) => {
                 utils.logInfo(`$server.ts (exit): fatal error, system shutting down : ${code}`);
-                setTimeout(() => {
-                    process.exit(1);
-                }, 1000);
+                await setTimeout(1000);
+                process.exit(1);
             });
 
         utils.ev.on('internal', (internal: IntInternal) => {

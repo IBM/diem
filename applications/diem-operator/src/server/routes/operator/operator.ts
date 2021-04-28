@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/indent */
+import { setTimeout } from 'timers/promises';
 import * as FS from 'fs';
 import * as https from 'https';
 import * as YAML from 'js-yaml';
@@ -140,11 +141,10 @@ export default class Operator {
         informer.on('delete', (obj: V1Pod) => {
             console.info(MetaMapper(kind, obj, version, 'Deleted'));
         });
-        informer.on('error', (err: V1Pod) => {
+        informer.on('error', async (err: V1Pod) => {
             console.info(`$operator (Informer): restarting informer ${id} - reason: ${errorToJson(err)}`);
-            setTimeout(() => {
-                void informer.start();
-            }, 5000);
+            await setTimeout(5000);
+            void informer.start();
         });
 
         console.info(`$operator (Informer): starting informer ${id}...`);

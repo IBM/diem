@@ -1,4 +1,5 @@
 /*jshint esversion: 8 */
+import { setTimeout } from 'timers/promises';
 import { connect, NatsConnection, JSONCodec, StringCodec, nkeyAuthenticator } from 'nats';
 import { Credentials } from './cfenv';
 import { publisher } from './nats_publisher';
@@ -97,9 +98,8 @@ class NCConnection {
                 name: 'Nats connection error',
             });
 
-            setTimeout(() => {
-                void this.connect();
-            }, 10000);
+            await setTimeout(10000);
+            void this.connect();
 
             retry += 1;
         }
