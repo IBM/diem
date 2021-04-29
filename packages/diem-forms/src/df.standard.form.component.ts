@@ -116,7 +116,7 @@ export class DFStandardFormComponent implements OnInit, OnChanges, OnDestroy {
         if (this.FSStore !== undefined) {
             this.FSStore.unsubscribe();
         }
-        console.info(`$df.standard.form.component (ngOnDestroy) => destroying subscription ${this.locals.formName}`);
+        console.info(`$df.standard.form.component (ngOnDestroy) => destroying subscription ${this.locals?.formName || ''}`);
     }
 
     private check = (from: string) => {
