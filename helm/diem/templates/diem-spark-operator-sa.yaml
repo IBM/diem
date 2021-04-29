@@ -1,0 +1,14 @@
+{{- if not (index .Values "spark-operator" "serviceAccounts" "sparkoperator" "create") }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ index .Values "spark-operator" "serviceAccounts" "sparkoperator" "name" }}
+  annotations:
+    {{- if .Values.controller.podAnnotations }}
+    {{- with .Values.controller.podAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- end }}
+  labels:
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
+{{- end }}

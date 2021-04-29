@@ -101,16 +101,16 @@ core:
       serviceInstanceId: ""
       signatureVersion: ""
 
-  ## Core Secrets 
+  ## Core Secrets
   secrets:
     # -- session name
     SESSION_NAME: etl.sid
     # -- session secret
     SESSION_SECRET: ETLSECRETPW
     ## will be filled in by the system unless specified
-    # -- mongo url 
+    # -- mongo url
     MONGO_URL: ""
-    # -- mongo certifcate 
+    # -- mongo certifcate
     MONGO_CA: ""
     # -- sendgrid api
     SENDGRID_API: ""
@@ -166,6 +166,10 @@ spark-operator:
   serviceAccounts:
     spark:
       name: spark
+    sparkoperator:
+      create: false
+      name: "diem-spark-operator"
+
   image:
     repository: quay.io/diem/spark-operator
     tag: 2.0.0
