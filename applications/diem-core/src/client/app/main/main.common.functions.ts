@@ -127,7 +127,7 @@ export class MainCommonFunctions implements OnDestroy {
                     return this.dataSubj.next({ err: true });
                 }
 
-                if (data && data.values !== undefined) {
+                if (data?.values) {
                     /** in case of direct loading or only one element in store
                      * check if we have records
                      */
