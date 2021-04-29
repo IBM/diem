@@ -118,7 +118,7 @@ export class JobDetailComponent implements OnInit, OnDestroy {
                 filter((d: IData) => d !== undefined)
             )
             .subscribe((v: IData) => {
-                if (v.values) {
+                if (v?.values) {
                     this.records = v.values;
                     if (Object.keys(this.orgrecords).length === 0) {
                         this.orgrecords = { ...v.values };
@@ -379,7 +379,7 @@ export class JobDetailComponent implements OnInit, OnDestroy {
 
             await this.MCF.getFromStore(store)
                 .then((storeRecords: any) => {
-                    if (storeRecords.values) {
+                    if (storeRecords?.values) {
                         values = { ...values, ...storeRecords.values };
                     }
                 })
@@ -536,7 +536,7 @@ export class JobDetailComponent implements OnInit, OnDestroy {
         return current;
     };
 
-    public compare = (values: { [key: string]: any }) => {
+    private compare = (values: { [key: string]: any }) => {
         const diff: { [key: string]: any } = {};
 
         for (const [key, value] of Object.entries(values)) {
