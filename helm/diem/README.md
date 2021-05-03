@@ -91,7 +91,7 @@ $ helm install diem diem/diem -f myvalues.yaml
 | core.deployment.version | string | `"1.0.1"` | image version |
 | core.name | string | `"diem-core"` | name is the name of the deployment |
 | core.secrets.JWTTOKEN | string | `""` | unique token used for signing apis |
-| core.secrets.MONGO_CA | string | `""` | mongo certifcate  |
+| core.secrets.MONGO_CA | string | `""` | mongo certifcate |
 | core.secrets.MONGO_URL | string | `""` |  |
 | core.secrets.SENDGRID_API | string | `""` | sendgrid api |
 | core.secrets.SESSION_NAME | string | `"etl.sid"` | session name |
@@ -150,6 +150,8 @@ $ helm install diem diem/diem -f myvalues.yaml
 | spark-operator.image.repository | string | `"quay.io/diem/spark-operator"` |  |
 | spark-operator.image.tag | string | `"2.0.0"` |  |
 | spark-operator.serviceAccounts.spark.name | string | `"spark"` |  |
+| spark-operator.serviceAccounts.sparkoperator.create | bool | `false` |  |
+| spark-operator.serviceAccounts.sparkoperator.name | string | `"diem-spark-operator"` |  |
 | spark-operator.sparkJobNamespace | string | `""` | overwrite the spark job namespace if needed, otherwise it will |
 
 ----------------------------------------------
