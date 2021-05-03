@@ -5,7 +5,7 @@ entries:
       category: Data Integration Engine Multipurpose
     apiVersion: v2
     appVersion: 1.1.0
-    created: "2021-05-03T14:12:27.070076+02:00"
+    created: "2021-05-03T15:34:12.572758+02:00"
     dependencies:
     - name: spark-operator
       repository: https://googlecloudplatform.github.io/spark-on-k8s-operator
@@ -23,7 +23,7 @@ entries:
       repository: https://nats-io.github.io/k8s/helm/charts/
       version: 0.7.4
     description: A Helm chart for Diem
-    digest: 78c32863ad147f25f5713ecd8d0fb59af250cb702c7286e9b212f4f0a86bde59
+    digest: d62befccd861aefea574b630a74ab9a8c98c7fc701fd4f84c20cf038eb3ae310
     home: https://github.com/IBM/DIEM
     icon: https://raw.githubusercontent.com/IBM/diem/main/applications/diem-help/docs/images/diem/diem_s.png
     maintainers:
@@ -37,7 +37,7 @@ entries:
   minio:
   - apiVersion: v1
     appVersion: master
-    created: "2021-05-03T14:12:27.071638+02:00"
+    created: "2021-05-03T15:34:12.574167+02:00"
     description: High Performance, Kubernetes Native Object Storage
     digest: 0bac6eea54eb93de4e97a4961f592f652a1738ea584982015480222dd2e8d841
     home: https://min.io
@@ -60,7 +60,7 @@ entries:
       category: Database
     apiVersion: v2
     appVersion: 4.4.2
-    created: "2021-05-03T14:12:27.074672+02:00"
+    created: "2021-05-03T15:34:12.577118+02:00"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -91,7 +91,7 @@ entries:
   nats:
   - apiVersion: v2
     appVersion: 2.1.9
-    created: "2021-05-03T14:12:27.075819+02:00"
+    created: "2021-05-03T15:34:12.578269+02:00"
     description: A Helm chart for the NATS.io High Speed Cloud Native Distributed Communications Technology.
     digest: f65d10a6e6ba8209340dda5490d8247b9ecf6febe49448428eaa8c0fd9a677da
     home: http://github.com/nats-io/k8s
@@ -112,7 +112,7 @@ entries:
   spark-operator:
   - apiVersion: v2
     appVersion: v1beta2-1.2.3-3.1.1
-    created: "2021-05-03T14:12:27.078226+02:00"
+    created: "2021-05-03T15:34:12.57996+02:00"
     description: A Helm chart for Spark on Kubernetes operator
     digest: 0ca29532dca156ea57b2dd6e492fa065c468d1e2338a5cf685d56a6f3f717045
     home: https://github.com/GoogleCloudPlatform/spark-on-k8s-operator
@@ -125,4 +125,4 @@ entries:
     urls:
     - https://ibm.github.io/diem/charts/spark-operator-1.1.0.tgz
     version: 1.1.0
-generated: "2021-05-03T14:12:27.059935+02:00"
+generated: "2021-05-03T15:34:12.563432+02:00"
