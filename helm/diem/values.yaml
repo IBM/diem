@@ -79,6 +79,7 @@ core:
       volumeMountPath: /shared
       volumeClaimName: spark-shared-data
       storageClassName: ""
+      size: 8Gi
 
     ## Slack integration
     slack:

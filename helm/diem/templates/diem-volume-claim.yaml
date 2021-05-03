@@ -18,4 +18,4 @@ spec:
   {{- end }}
   resources:
     requests:
-      storage: 8Gi
+      storage: {{ .Values.core.config.volume.size }}
