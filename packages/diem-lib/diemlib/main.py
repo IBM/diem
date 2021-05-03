@@ -62,6 +62,15 @@ def mq(data):
     except Exception as e:
         error(e)
         raise
+
+    if config.__logcount >= config.__loglimit:
+        # set the logcount back to 0 so that the error can pass
+        config.__logcount = 0
+        error(f"Rate limit of {config.__loglimit} exceeded")
+        raise
+
+    config.__logcount += 1
+
     if config.__nats is False:
         requests.post(url=config.__url, data=data)
     else:

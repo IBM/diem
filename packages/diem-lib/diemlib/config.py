@@ -22,3 +22,5 @@ __transid = None
 __isservice = False
 __nats = False
 __url = None
+__loglimit = 1000
+__logcount = 0
