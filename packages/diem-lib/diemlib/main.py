@@ -63,7 +63,7 @@ def mq(data):
         error(e)
         raise
 
-    if config.__logcount >= config.__loglimit:
+    if config.__logcount > config.__loglimit:
         # set the logcount back to 0 so that the error can pass
         config.__logcount = 0
         error(f"Rate limit of {config.__loglimit} exceeded")
