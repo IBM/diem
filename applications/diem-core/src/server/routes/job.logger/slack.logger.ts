@@ -4,8 +4,9 @@
 
 import { slackMsg } from '@common/slack/slack';
 import { ISlack, utils } from '@common/utils';
-import { IModel, EJobTypes, IWebhooksSchema } from '../models/models';
-import { fmtTime, makeUrl } from '../shared/functions';
+import { IModel, EJobTypes, IWebhooksSchema } from '@models';
+import { IError } from '@interfaces';
+import { addTrace, fmtTime, makeUrl } from '@functions';
 import { getwebhook } from '../webhooks/webhooks';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -17,7 +18,7 @@ export const toSlack: (doc: IModel) => Promise<void> = async (doc: IModel): Prom
     const jobkind: string = isPl ? 'pipeline' : 'job';
 
     if (doc.job && doc.job.params && doc.job.params.slack && doc.job.params.slack.disabled) {
-        utils.logInfo(`$slack.logger (toSlack): slack disabled by param - ${jobkind}: ${id}`);
+        utils.logInfo(`$slack.logger (toSlack): slack disabled by params - ${jobkind}: ${id}`);
 
         return Promise.resolve();
     }
@@ -51,7 +52,7 @@ export const toSlack: (doc: IModel) => Promise<void> = async (doc: IModel): Prom
 
     const customSlack: Partial<ISlack> = {
         deploy: {
-            channel: `etl-mgr-${utils.Env.K8_SYSTEM}`,
+            channel: `${utils.slack.user.channel}`,
             username: 'ETL Manager (Notification)',
         },
     };
@@ -184,7 +185,11 @@ export const toSlack: (doc: IModel) => Promise<void> = async (doc: IModel): Prom
         ],
     };
 
-    await slackMsg(msg, customSlack);
+    await slackMsg(msg, customSlack).catch(async (err: IError) => {
+        err.trace = addTrace(err.trace, '@at $slack.logger (slackMsg)');
+
+        return Promise.reject(err);
+    });
 
     return Promise.resolve();
 };

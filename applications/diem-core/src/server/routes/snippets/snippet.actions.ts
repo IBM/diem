@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import { utils } from '@common/utils';
 import { IRequest, EStoreActions, IntPayload, IntServerPayload, IError } from '@interfaces';
-import { ISnippetsBody, ISnippetsModel, SnippetsModel, FaIcons, EIdType } from '../models/models';
+import { ISnippetsBody, ISnippetsModel, SnippetsModel, FaIcons, EIdType } from '@models';
 
 export const snippetupdate: (req: IRequest) => Promise<IRequest | any> = async (
     req: IRequest

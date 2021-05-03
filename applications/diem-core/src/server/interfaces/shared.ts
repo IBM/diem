@@ -41,6 +41,7 @@ export interface IntInternal {
     fatal: boolean;
     pid: number;
     trace: string[];
+    retry?: number;
 }
 
 /**
@@ -129,6 +130,7 @@ export enum EStoreActions {
     UPD_STORE_RECORDS = 'UPD_STORE_RECORDS',
     UPD_STORE_VALUES = 'UPD_STORE_VALUES',
     ADD_STORE_TABLE_RCD = 'ADD_STORE_TABLE_RCD',
+    APPEND_STORE_TABLE_RCD = 'APPEND_STORE_TABLE_RCD',
     UPD_STORE_TABLE_RCD = 'UPD_STORE_TABLE_RCD',
     REM_STORE_TABLE_RCD = 'REM_STORE_TABLE_RCD',
     RESET_FORM_STORE = 'RESET_FORM_STORE',

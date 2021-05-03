@@ -1,6 +1,6 @@
 import { utils } from '@common/utils';
 import { IRequest, EStoreActions, IntPayload, IntServerPayload, IntSharedAction } from '@interfaces';
-import { ITagsBody, ITagsModel, TagsModel } from '../models/models';
+import { ITagsBody, ITagsModel, TagsModel } from '@models';
 
 /**
  * Nothing will be rejected here, in case of an error we log the error but return an empty [] to the user

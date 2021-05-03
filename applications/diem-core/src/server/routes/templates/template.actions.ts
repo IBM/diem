@@ -1,6 +1,6 @@
 import { utils } from '@common/utils';
 import { IRequest, EStoreActions, IntPayload, IntServerPayload, IError } from '@interfaces';
-import { ITemplatesBody, ITemplatesModel, TemplatesModel, FaIcons } from '../models/models';
+import { ITemplatesBody, ITemplatesModel, TemplatesModel, FaIcons } from '@models';
 
 export const templateupdate: (req: IRequest) => Promise<IRequest | any> = async (
     req: IRequest

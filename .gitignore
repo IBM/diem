@@ -16,6 +16,7 @@ local/
 build/
 certs/
 /local
+workdir/
 # Ignore Mac DS_Store files
 **/.DS_Store
 keys.txt

@@ -1,11 +1,11 @@
 /* eslint-disable max-len */
 import { utils } from '@common/utils';
-import { EJobStatus, IJobResponse, IJobSchema, IModel } from '../../models/models';
-import { pubSub } from '../../../config/pubsub';
+import { EJobStatus, IJobResponse, IJobSchema, IModel } from '@models';
+import { pubSub } from '@config/pubsub';
+import { addTrace } from '@functions';
 import { crdconfig, ICrdConfig } from '../../spark-operator/base.crd';
 import { spark, sparkCredentials } from '../../spark-operator/spark.base';
 import { caclCap } from '../../spark-operator/spark.capacity';
-import { addTrace } from '../../shared/functions';
 import { sparkWatcher } from '../../spark-operator/spark.watcher';
 import { addVolume, getCosCredentials, ICos } from './spark.job';
 
@@ -36,7 +36,7 @@ export const createSparkPythonJob: (doc: IModel) => Promise<ICapacity> = async (
 
     crdjob.spec.sparkConf = {
         'spark.sql.execution.arrow.pyspark.enabled': 'true',
-        'spark.sql.execution.arrow.fallback.enabled': 'true',
+        'spark.sql.execution.arrow.pyspark.fallback.enabled': 'true',
         'spark.driver.extraClassPath': stocator,
         'spark.task.maxFailures': '1',
         'spark.executor.extraClassPath': stocator,
@@ -103,7 +103,7 @@ export const createSparkPythonJob: (doc: IModel) => Promise<ICapacity> = async (
         err.trace = addTrace(err.trace, '@at $spark.job (jobStart)');
         err.id = id;
         err.org = org;
-        void utils.logError('$spark (createSparkPythonJob): error', err);
+        void utils.emit('error', err);
 
         const pjob: IJobResponse = {
             ...doc.toObject().job,
@@ -123,7 +123,7 @@ export const createSparkPythonJob: (doc: IModel) => Promise<ICapacity> = async (
     await sparkWatcher.startWatcher(id).catch(async (err) => {
         err.trace = addTrace(err.trace, '@at $spark.job (startWatcher)');
 
-        void utils.logError('$spark (createSparkPythonJob): error', err);
+        void utils.emit('error', err);
     });
 
     utils.logInfo(
@@ -169,12 +169,5 @@ export const publishSparkJob: (doc: IJobSchema) => Promise<void> = async (doc: I
             fsGroup: 0,
             privileged: true,
             runAsUser: 0, // spark needs to run as root , natbe to be fixed
-        };
-
-        crdjob.spec.driver.envSecretKeyRefs = {
-            CLOUDAMQP_URL: {
-                key: 'RABBITMQ__URL',
-                name: 'k8-bizops-secret',
-            },
         };
         */

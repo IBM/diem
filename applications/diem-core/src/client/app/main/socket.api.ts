@@ -94,7 +94,7 @@ export class SocketService {
                         store,
                         type: load.type,
                         unshift: load.unshift,
-                        values: load.values,
+                        values: load?.values,
                     };
                     this.dispatch({
                         payload,

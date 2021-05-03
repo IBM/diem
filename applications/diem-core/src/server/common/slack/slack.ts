@@ -42,7 +42,7 @@ export const slackMsg: (m: any, slackConfig?: Partial<ISlack>) => Promise<void> 
     if (!slack.url || !slack || !slack.deploy || !slack.deploy.channel) {
         utils.logInfo(`$slack (slackMsg): no deploy channel on ${utils.Env.K8_SYSTEM_NAME}`);
 
-        return;
+        return Promise.resolve();
     }
 
     const sl: string | IntSlackMsg = getOptions(m);
@@ -66,15 +66,13 @@ export const slackMsg: (m: any, slackConfig?: Partial<ISlack>) => Promise<void> 
         options.data.text = sl;
     }
 
-    if (!process.env.disableslack) {
-        const response: any = await postMsg(options).catch(async (err: IAxiosError) => {
-            err.trace = utils.addTrace(err.trace, '@at $slack (slackMsg)');
+    const response: any = await postMsg(options).catch(async (err: IAxiosError) => {
+        err.trace = utils.addTrace(err.trace, '@at $slack (slackMsg)');
 
-            return utils.logError('$slack (slackMsg)', err);
-        });
+        return Promise.reject(err);
+    });
 
-        utils.logInfo(`$slack (slackMsg): caller: ${m.caller || 'n/a'} - status: ${response}`);
-    } else {
-        utils.logErr(`$slack: disabledslack - caller: ${m.caller || 'n/a'}`);
-    }
+    utils.logInfo(`$slack (slackMsg): caller: ${m.caller || 'n/a'} - status: ${response}`);
+
+    return Promise.resolve();
 };

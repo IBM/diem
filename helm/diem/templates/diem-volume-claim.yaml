@@ -1,0 +1,21 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Values.core.config.volume.volumeClaimName }}
+  annotations:
+    {{- if .Values.controller.podAnnotations }}
+    {{- with .Values.controller.podAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- end }}
+  labels:
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
+spec:
+  accessModes:
+    - ReadWriteMany
+  {{- if .Values.core.config.volume.storageClassName }}
+  storageClassName: ibmc-file-gold
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.core.config.volume.size }}

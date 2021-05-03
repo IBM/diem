@@ -1,19 +1,10 @@
-import { ChildProcessWithoutNullStreams } from 'child_process';
 import path from 'path';
 import * as rimraf from 'rimraf';
-import { postJob } from '../../config/axios';
-import { IntJob, green, red } from '../../config/interfaces';
+import { publisher } from '@config/nats_publisher';
+import { IntJob, green, red } from '@interfaces';
+import { IWorker } from 'interfaces/interfaces';
 
-interface IChildProcess extends ChildProcessWithoutNullStreams {
-    buffer?: string;
-    errbuffer?: string;
-}
-
-interface IWorker {
-    [index: string]: IChildProcess;
-}
-
-export const workers: IWorker = {};
+export const workers: IWorker = Object.create(null);
 
 const getCount: () => number = () => Object.keys(workers).length;
 
@@ -46,7 +37,7 @@ export const deleteWorker: (job: IntJob, code: number | null, action: string) =>
         // there is an error reported that has not yet been traced back to the etl manager
 
         try {
-            void postJob({
+            void publisher.publish('job', {
                 ...job,
                 count: null,
                 error: workers[id].errbuffer,

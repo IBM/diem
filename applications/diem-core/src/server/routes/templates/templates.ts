@@ -1,6 +1,6 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
-import { IQuery, TemplatesModel, FaIcons, ITemplateSchema } from '../models/models';
+import { IQuery, TemplatesModel, FaIcons, ITemplateSchema } from '@models';
 import { parseFilter } from '../jobs/jobs';
 
 const viewSecurity: number = 5;

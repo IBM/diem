@@ -1,9 +1,9 @@
 import { utils } from '@common/utils';
 import { IError } from '@interfaces';
-import { IModel, IJob, ExecutorTypes } from '../models/models';
+import { IModel, IJob, ExecutorTypes } from '@models';
+import { addTrace } from '@functions';
 import { deleteJob } from '../executors/spark/spark.job';
 import { jobLogger } from '../job.logger/job.logger';
-import { addTrace } from '../shared/functions';
 
 export const finishJob: (doc: IModel) => Promise<any> = async (doc: IModel): Promise<any> => {
     if (doc.job.executor === ExecutorTypes.pyspark) {
@@ -17,7 +17,9 @@ export const finishJob: (doc: IModel) => Promise<any> = async (doc: IModel): Pro
     }
 
     if (doc.job.jobstart) {
-        doc.job.runtime = Math.round(Math.abs(doc.job.jobend.getTime() - doc.job.jobstart.getTime()) / 1000) || 0;
+        // a zero never displays as equal to false.. so the minimum is one second
+        const runtime: number = Math.round(Math.abs(doc.job.jobend.getTime() - doc.job.jobstart.getTime()) / 1000) || 1;
+        doc.job.runtime = runtime === 0 ? 1 : runtime;
     }
 
     const log: IJob = {
@@ -36,7 +38,7 @@ export const finishJob: (doc: IModel) => Promise<any> = async (doc: IModel): Pro
     }
 
     await jobLogger(doc).catch(async (err: any) => {
-        err.trace = addTrace(err.trace, '@at $job.stop (jobStop)');
+        err.trace = addTrace(err.trace, '@at $job.finish (jobStop)');
 
         // we just log the error here
         void utils.logError('$job.start.handler (saveDoc): error', err);

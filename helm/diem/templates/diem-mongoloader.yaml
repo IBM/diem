@@ -1,0 +1,27 @@
+{{- if .Values.mongodb.createservice }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: diem-mongohelper
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-delete-policy: hook-succeeded
+    helm.sh/hook-weight: "10"
+  annotations:
+    {{- if .Values.controller.podAnnotations }}
+    {{- with .Values.controller.podAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- end }}
+spec:
+  template:
+    spec:
+      containers:
+        - name: diem-mongohelper
+          image: quay.io/diem/mongoloader:1.0.0
+          envFrom:
+            - secretRef:
+                name: {{ .Values.core.name }}-secret
+      restartPolicy: OnFailure
+  backoffLimit: 4
+{{- end }}

@@ -1,0 +1,29 @@
+{{- $service := printf "%s-%s-lb" .Release.Name .Values.nats.name -}}
+{{- $ip := printf "%s-%s-lb" .Release.Name .Values.nats.name -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.common.name }}-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
+  annotations:
+    {{- if .Values.controller.podAnnotations }}
+    {{- with .Values.controller.podAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- end }}
+data:
+  K8_INSTANCE: {{ .Values.common.config.K8_INSTANCE | quote }}
+  K8_SYSTEM: {{ .Values.common.config.K8_SYSTEM | quote }}
+  K8_SYSTEM_NAME: {{ .Values.common.config.K8_SYSTEM_NAME | quote }}
+  {{- if .Values.ingress.proxy }}
+  K8_APPURLSHORT: {{  .Values.ingress.proxy | quote }}
+  {{ else }}
+  K8_APPURLSHORT: {{  .Values.ingress.host | quote }}
+  {{- end }}
+  {{- if .Values.nats.auth.user }}
+  NATS__USER: {{ .Values.nats.auth.user | quote }}
+  {{- end }}
+  NATS__IP: {{ .Values.nats.ip }}
+  PORT: {{ .Values.common.config.PORT | quote }}

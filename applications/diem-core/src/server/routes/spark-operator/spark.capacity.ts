@@ -4,7 +4,7 @@
 
 import { utils } from '@common/utils';
 import * as Api from 'kubernetes-client';
-import { EJobTypes, IJobParams, IModel } from '../models/models';
+import { EJobTypes, IJobParams, IModel } from '@models';
 import { ICrdConfig } from './base.crd';
 
 export interface ICapacity {

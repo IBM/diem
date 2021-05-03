@@ -1,8 +1,9 @@
 import { utils } from '@common/utils';
-import { EJobStatus, IETLJob, ExecutorTypes } from '../models/models';
+import { EJobStatus, IETLJob, ExecutorTypes, IJobResponse } from '@models';
+import { pubSub } from '@config/pubsub';
+import { publisher } from '@config/nats_publisher';
+import { addTrace } from '@functions';
 import { deleteJob } from '../executors/spark/spark.job';
-import { pubSub } from '../../config/pubsub';
-import { addTrace } from '../shared/functions';
 
 const stopSparkJob: (job: IETLJob) => Promise<boolean | Error> = async (job: IETLJob): Promise<boolean | Error> => {
     utils.logInfo(`$job.actions (jobStop): spark delete request - job: ${job.id}`, job.transid);
@@ -37,17 +38,7 @@ const stopSparkJob: (job: IETLJob) => Promise<boolean | Error> = async (job: IET
 export const stopNodePyJob: (job: IETLJob) => Promise<void> = async (job: IETLJob): Promise<void> => {
     utils.logInfo(`$job.actions (jobStop): NodePy stop request - job: ${job.id}`, job.transid);
 
-    // instruct nodepy to stop all running processes
-    pubSub.publishNodePy('np_worker', {
-        action: 'stop',
-        job: {
-            ...job,
-            status: EJobStatus.stopped,
-        },
-    });
-
-    // we must assume nodepy cleans it up
-    await pubSub.publish({
+    const response_job: IJobResponse = {
         ...job,
         count: null,
         jobend: null,
@@ -55,7 +46,13 @@ export const stopNodePyJob: (job: IETLJob) => Promise<void> = async (job: IETLJo
         runtime: null,
         status: EJobStatus.stopped,
         transid: job.transid,
-    });
+    };
+
+    // instruct nodepy to stop all running processes
+    void publisher.publish('global.nodepy.stop', response_job);
+
+    // we must assume nodepy cleans it up
+    await pubSub.publish(response_job);
 };
 
 export const stopPlJob: (job: IETLJob) => Promise<boolean | Error> = async (job: IETLJob): Promise<boolean | Error> => {
@@ -88,6 +85,7 @@ export const jobStop: (job: IETLJob) => Promise<boolean | Error> = async (job: I
         return Promise.resolve(true);
     } catch (err) {
         err.trace = addTrace(err.trace, '@at $job.stop (jobStop)');
+        err.id = job.id;
 
         return Promise.reject(err);
     }

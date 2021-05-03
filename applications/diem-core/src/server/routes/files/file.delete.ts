@@ -1,8 +1,8 @@
 import { utils } from '@common/utils';
 import { EStoreActions, IError, IntServerPayload, IRequest } from '@interfaces';
 import { cosFunctions } from '@common/cos.functions';
-import { pubSub } from '../../config/pubsub';
-import { addTrace } from '../shared/functions';
+import { pubSub } from '@config/pubsub';
+import { addTrace } from '@functions';
 import { getBucket } from './files';
 
 export const filedelete: (req: IRequest) => Promise<IRequest | any> = async (
@@ -50,8 +50,8 @@ export const filedelete: (req: IRequest) => Promise<IRequest | any> = async (
         success: true /** just display a success message */,
     };
 
-    pubSub.publishClientPayload({
-        clientEmail: req.user.email,
+    pubSub.publishUserPayload({
+        email: req.user.email,
         payload,
     });
 

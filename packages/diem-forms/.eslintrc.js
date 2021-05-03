@@ -39,6 +39,6 @@ module.exports = {
         'plugin:@typescript-eslint/recommended',
         'plugin:sonarjs/recommended',
         'prettier',
-        './node_modules/@mydiem/diem-util/eslintrc-base.js',
+        './src/webpack/eslintrc-base.js'
     ],
 };

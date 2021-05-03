@@ -3,8 +3,8 @@
 import { ICrdConfig } from 'routes/spark-operator/base.crd';
 import { utils } from '@common/utils';
 import { Credentials } from '@common/cfenv';
-import { IModel, IConfigmapsModel } from 'routes/models/models';
-import { addTrace } from '../../shared/functions';
+import { IModel, IConfigmapsModel } from '@models';
+import { addTrace } from '@functions';
 import { spark } from '../../spark-operator/spark.base';
 import { getConfigmap } from '../nodepy/python/python.code.handlers/handle.configmaps';
 

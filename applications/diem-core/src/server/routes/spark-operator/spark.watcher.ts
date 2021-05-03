@@ -3,9 +3,9 @@ import { utils } from '@common/utils';
 import { Credentials } from '@common/cfenv';
 import * as Api from 'kubernetes-client';
 import { IError } from '@interfaces';
-import { pubSub } from '../../config/pubsub';
-import { ExecutorTypes, EJobStatus } from '../models/models';
-import { addTrace } from '../shared/functions';
+import { pubSub } from '@config/pubsub';
+import { ExecutorTypes, EJobStatus } from '@models';
+import { addTrace } from '@functions';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const JSONStream: any = require('json-stream');
@@ -70,7 +70,6 @@ export const sparkCredentials: {
     namespace: string;
     image: string;
     file_url: string;
-    callback_url: string;
 } = Credentials('spark');
 
 class SparkLib {
@@ -228,7 +227,7 @@ class SparkLib {
 
             // it's not for us
             if (obj.id !== id) {
-                await this.abort(id, 'watcher');
+                await this.abort(id, `watcher - wrong id: ${id}`);
 
                 return;
             }
@@ -330,7 +329,7 @@ class SparkLib {
                     `$spark.watcher (watcher): closing stream - id: ${obj.id} - type: ${data.type} - status: ${applicationState.state}`
                 );
 
-                await this.abort(id, 'watcher');
+                await this.abort(id, 'watcher - deleted');
             }
         });
 

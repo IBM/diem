@@ -1,6 +1,6 @@
 import moment, { Moment } from 'moment';
-import { addTrace } from '../shared/functions';
-import { IJobDetails, IJobDetail, IModel, DataModel } from '../models/models';
+import { IJobDetails, IJobDetail, IModel, DataModel } from '@models';
+import { addTrace } from '@functions';
 
 export const getGantt: (pldoc: IModel) => Promise<string> = async (pldoc: IModel): Promise<string> => {
     const jobs: IJobDetails = pldoc.jobs;

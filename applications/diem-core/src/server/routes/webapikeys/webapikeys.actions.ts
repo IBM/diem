@@ -1,8 +1,8 @@
 import { utils } from '@common/utils';
 import { IRequest, EStoreActions, IntPayload, IntServerPayload, IError } from '@interfaces';
 import { parse, stringify } from 'yaml';
-import { addTrace } from '../shared/functions';
-import { IWebApikeysBody, IWebApikeysModel, WebApikeysModel, FaIcons, EIdType } from '../models/models';
+import { addTrace } from '@functions';
+import { IWebApikeysBody, IWebApikeysModel, WebApikeysModel, FaIcons, EIdType } from '@models';
 import { createJWT } from './webapikeys.jwt';
 
 export const webapikeyupdate: (req: IRequest) => Promise<IRequest | any> = async (

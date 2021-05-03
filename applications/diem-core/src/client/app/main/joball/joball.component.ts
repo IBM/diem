@@ -227,7 +227,7 @@ export class JobAllComponent implements OnInit, OnDestroy {
             ? options.values[0]
             : undefined;
 
-        if (options.params && options.params.route) {
+        if (options.params?.route) {
             route =
                 options.params.key && options.values /** && options.values.length > 0 */
                     ? options.params.route + options.values[options.params.key]

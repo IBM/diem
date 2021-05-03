@@ -19,6 +19,6 @@ pymongo[tls]==3.11.3
 fastparquet==0.5.0
 pyarrow==3.0.0
 sendgrid==6.5.0
-diemlib==0.0.9
+diemlib==0.0.15
 JPype1==1.2.1
 boxsdk[jwt]==2.11.0

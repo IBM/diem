@@ -122,6 +122,7 @@
                     { "title": "Local Setup", "name": "localsetup", "location": "installing/localsetup.md" },
                     { "title": "Spark", "name": "spark", "location": "installing/spark.md" },
                     { "title": "Spark Operator", "name": "spark-operator", "location": "installing/spark-operator.md" },
+                    { "title": "Openshift", "name": "openshift", "location": "installing/openshift.md" },
                     { "title": "Yalm Files", "name": "yamlfiles", "location": "installing/yaml/readme.md" }
                 ]
             }

@@ -1,0 +1,57 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ .Values.nodepy.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.nodepy.name }}
+    tier: {{ .Values.nodepy.tier }}
+    version: {{ .Values.nodepy.version }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
+  annotations:
+    {{- if .Values.controller.podAnnotations }}
+    {{- with .Values.controller.podAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.nodepy.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.nodepy.name }}
+      tier: {{ .Values.nodepy.tier }}
+  template:
+    metadata:
+      name: {{ .Values.nodepy.name }}
+      labels:
+        app: {{ .Values.nodepy.name }}
+        tier: {{ .Values.nodepy.tier }}
+    spec:
+      containers:
+        - name: {{ .Values.nodepy.name }}
+          image: {{ .Values.nodepy.image }}:{{ .Values.nodepy.version }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.common.name }}-config
+            - secretRef:
+                name: {{ .Values.common.name }}-secret
+          resources: {}
+          terminationMessagePath: "/dev/termination-log"
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+          securityContext:
+            privileged: false
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sleep", "15"]
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1

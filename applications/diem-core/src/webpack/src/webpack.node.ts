@@ -93,6 +93,9 @@ module.exports = {
         alias: {
             '@common': `${(global as any).__basedir}/src/server/common`,
             '@interfaces': `${(global as any).__basedir}/src/server/interfaces`,
+            '@config': `${(global as any).__basedir}/src/server/config`,
+            '@models': `${(global as any).__basedir}/src/server/routes/models`,
+            '@functions': `${(global as any).__basedir}/src/server/routes/shared`,
         },
         extensions: ['.ts', '.js'],
         modules: [path.join(__dirname, 'src/server'), 'node_modules'],

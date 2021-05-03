@@ -13,10 +13,14 @@ __email = None
 __filepath = None
 __id = None
 __jobid = None
+__serviceid = None
 __jobstart: None
 __name = None
 __org: None
 __starttime: None
 __transid = None
-__url = None
 __isservice = False
+__nats = False
+__url = None
+__loglimit = 1000
+__logcount = 0

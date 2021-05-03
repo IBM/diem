@@ -1,0 +1,15 @@
+{
+    "singleQuote": true,
+    "printWidth": 120,
+    "tabWidth": 4,
+    "eslintIntegration": true,
+    "useTabs": false,
+    "overrides": [
+        {
+            "files": "*.md",
+            "options": {
+                "tabWidth": 1
+            }
+        }
+    ]
+}

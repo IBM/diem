@@ -1,6 +1,6 @@
 import { utils } from '@common/utils';
 import { IRequest, EStoreActions, IntPayload, IntServerPayload, IError } from '@interfaces';
-import { IWebhooksBody, IWebhooksModel, WebhooksModel, FaIcons, EIdType } from '../models/models';
+import { IWebhooksBody, IWebhooksModel, WebhooksModel, FaIcons, EIdType } from '@models';
 
 export const webhookupdate: (req: IRequest) => Promise<IRequest | any> = async (
     req: IRequest

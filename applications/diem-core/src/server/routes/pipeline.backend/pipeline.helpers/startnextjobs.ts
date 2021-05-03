@@ -1,9 +1,9 @@
 /* eslint-disable max-len */
 /* eslint-disable sonarjs/cognitive-complexity */
 import { utils } from '@common/utils';
+import { IJobResponse, IModel, IJobDetails, EJobStatus } from '@models';
+import { addTrace } from '@functions';
 import { jobStartHandler } from '../../job.backend/job.start.handler';
-import { IJobResponse, IModel, IJobDetails, EJobStatus } from '../../models/models';
-import { addTrace } from '../../shared/functions';
 import { findOne } from './findone';
 
 const getNextInQueue: (pldid: string, nodeIds: string[], id: string) => Promise<string[]> = async (

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/quotes */
 /* eslint-disable max-len */
 
-import { addTrace } from '../../../../shared/functions';
+import { addTrace } from '@functions';
+import { IConnSchema } from '@models';
 import { getConnection } from '../../../spark/spark.job.handlers/hendle.spark.common';
-import { IConnSchema } from '../../../../models/models';
 import { IntPythonTransferJob } from '../../np.interfaces';
 import { py_truncate, py_jdbc } from './py';
 

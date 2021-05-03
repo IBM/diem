@@ -2,7 +2,7 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable no-useless-escape */
 /* eslint-disable max-len */
-import { IJobSchema } from '../../../models/models';
+import { IJobSchema } from '@models';
 import { handleConnectionParams } from '../../nodepy/python/python.code.handlers/handle.connection.params';
 import { handleConfigmaps } from '../../nodepy/python/python.code.handlers/handle.configmaps';
 import { py_start, py_session } from '../spark.pycode/py';

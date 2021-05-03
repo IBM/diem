@@ -1,0 +1,289 @@
+ingress:
+  # -- name of your ingress
+  name: diem-ingress
+
+  # -- K8 api version (v1 or v1beta)
+  version: v1
+
+  # -- diem-tls-secret terminates example.com
+  createtls: true
+  tls: diem-tls-secret
+
+  # -- hostname of your application
+  host: example.com
+  ## proxy is the name of your proxy host
+  ## this can happen when you run in a cluster and have a proxy url
+  # -- proxy of your host
+  proxy: ""
+
+common:
+  # - name of the common config map
+  name: diem-common
+
+  # - common configuration values
+  config:
+    diemAdminRbac: diem-rbac
+    diemAdmin: diem-admin
+    K8_SYSTEM_NAME: "Diem on CRC"
+    K8_SYSTEM: uat
+    K8_INSTANCE: US
+
+    # -- the port all pods will be running under
+    PORT: 8192
+
+  secrets:
+    # -- secretmapref is the name of the common secret map ref
+    SLACKHOOK: ""
+
+core:
+  # -- name is the name of the deployment
+  name: diem-core
+
+  ## this relates to the diem-core deployment
+  deployment:
+    ## socketName is the url the client ui socket will connect to
+    ## Reccomended not to change this
+    # -- socket endpoint
+    socketName: etl-socket-server
+    tier: backend
+    # -- image location
+    image: quay.io/diem/core
+    # -- image version
+    version: 1.0.1
+    # -- number of replicas
+    replicas: 1
+    # -- port to listen
+    port: 80
+
+  config:
+    # -- important, the path the application will run under
+    APPPATH: /etl-mgr
+
+    # -- if core runs with a dedicated service account
+    serviceAccountName: ""
+
+    ## spark configuration Values
+    spark:
+      SPARK_IMAGE: quay.io/diem/pyspark:3.1.1-rc2
+      SPARK_IMAGEPULLSECRETS: ""
+      OPERATOR_DRIVER_CORES: "2"
+      OPERATOR_DRIVER_MEMORY: 1024m
+      OPERATOR_EXECUTOR_CORES: 8
+      OPERATOR_EXECUTOR_INSTANCES: 2
+      OPERATOR_EXECUTOR_MEMORY: 8G
+      CALLBACK_URL: /internal/spark_callback
+
+    ## shared volume
+    volume:
+      volumeName: spark-data
+      volumeMountPath: /shared
+      volumeClaimName: spark-shared-data
+      storageClassName: ""
+      size: 8Gi
+
+    ## Slack integration
+    slack:
+      enabled: false
+      SLACK_EMOJI: ":diem:"
+      SLACK_DEPLOY_CHANNEL: "#diem-deploy-uat"
+      SLACK_DEPLOY_USERNAME: "diem- (Notification)"
+      SLACK_INTERNAL_CHANNEL: "#diem-bugs-uat"
+      SLACK_INTERNAL_USERNAME: "diem - (Internal)"
+      SLACK_USER_CHANNEL: "#diem-bugs-uat"
+      SLACK_USER_USERNAME: "diem - (User)"
+
+    ## Integrate your own cloud object storage
+    ## leave this blank if you want to use minio integrated as a dependency
+    ## if these value are going to be used, disable minio
+    s3:
+      enabled: false
+      apiKeyId: ""
+      endpoint: ""
+      serviceInstanceId: ""
+      signatureVersion: ""
+
+  ## Core Secrets
+  secrets:
+    # -- session name
+    SESSION_NAME: etl.sid
+    # -- session secret
+    SESSION_SECRET: ETLSECRETPW
+    ## will be filled in by the system unless specified
+    # -- mongo url
+    MONGO_URL: ""
+    # -- mongo certifcate
+    MONGO_CA: ""
+    # -- sendgrid api
+    SENDGRID_API: ""
+    # -- unique token used for signing apis
+    JWTTOKEN: ""
+
+  ## OpenId authentication
+  auth:
+    # -- client id
+    clientId: ""
+    # -- client secret
+    clientSecret: ""
+    # -- discovery url
+    discoveryUrl: ""
+    # -- openid callback
+    callbackUrl: /sso/callback
+
+nodepy:
+  # -- name of the deployment
+  name: diem-nodepy
+
+  # -- image is the the name of the nodepy image
+  image: quay.io/diem/nodepy
+  port: 80
+  replicas: 1
+  tier: backend
+  version: 1.0.1
+
+operator:
+  # -- name of the deployment
+  name: diem-operator
+
+  # -- any service accountname
+  serviceAccountName: ""
+
+  # -- image is the the name of the nodepy image
+  image: quay.io/diem/operator
+  port: 80
+  replicas: 1
+  tier: backend
+  version: 1.0.1
+
+## enable the spark Operator
+## for more details see
+## https://github.com/GoogleCloudPlatform/spark-on-k8s-operator
+spark-operator:
+  # -- overwrite the spark job namespace if needed, otherwise it will
+  #run in the default namespace
+  sparkJobNamespace: ""
+
+  # -- enables the spark webhoob
+  enableWebhook: true
+  serviceAccounts:
+    spark:
+      name: spark
+    sparkoperator:
+      create: false
+      name: "diem-spark-operator"
+
+  image:
+    repository: quay.io/diem/spark-operator
+    tag: 3.1.1
+
+mongodb:
+  # -- create the mongo service
+  createservice: true
+
+  ## mongo authentication settings
+  auth:
+    # -- username for the client
+    username: diemadmin
+    # -- root password
+    rootPassword: diemadmin
+    # -- client password
+    password: diempassword
+    # -- mongo database to be created
+    database: ibmclouddb
+
+## Nats
+## see https://github.com/bitnami/charts/tree/master/bitnami/nats
+
+nats:
+  createservice: true
+  # -- the name of the service
+  name: nats
+
+  nameOverride: diem-nats
+
+  ## authentication
+  ## it4s recommended you create your own long encrypted password
+  ## follow the instructions here https://docs.nats.io/nats-tools/natscli
+  ## either fill in the password in plain text or
+  ## encrypt your password and fill in your plain password in the unencrypted_password
+  ## if you do not want to use an encrypted password leave the unencrypted_password blank
+  ## example
+  ##    unencrypted_password: natsuserauthorisationpassword
+  ##    password: $2a$11$4X.WN5r4PeaB4vYMtbFsEOKJTSxEiWuCq/FV25RsWZvLFSEeDOrf6
+
+  # -- Nats Authentication
+  auth:
+    enabled: false
+    user: ""
+    password: ""
+
+  ## enable external access, this will create a load balancer
+  ## you can get your ip from >_ kubectl get svc diem-nats-lb -o wide
+  # -- enable external access
+  external: false
+
+  ## if external is enabled this will be your loadbalancer ip
+  ## internaly this is the name of the nats service to make connections
+  # -- nats ip
+  ip: diem-nats
+
+  # -- install nats before others
+  priorityClassName: system-node-critical
+
+  # -- number of replicas
+  replicaCount: 1
+
+  ## nats config settings
+  nats:
+    image: nats:2.2.1-alpine3.13
+    pullPolicy: IfNotPresent
+
+  ## Nats cluster settings
+  cluster:
+    # -- the name of the cluster
+    name: diem-cluster
+    # -- enable clustering
+    enabled: true
+    # -- number of replicas to start
+    replicas: 3
+    noAdvertise: true
+  natsbox:
+    # -- enable nats box
+    enabled: false
+  reloader:
+    # -- enable nats reloader
+    enabled: false
+  # Prometheus NATS Exporter configuration.
+  exporter:
+    # -- enable exporter
+    enabled: false
+
+## Minio Configuration
+minio:
+  createservice: true
+  accessKey: diemadmin
+  secretKey: diempassword
+
+  persistence:
+    ## use an existing claim , comment out
+    # existingClaim: spark-shared-data
+    # VolumeName: spark-data
+
+    # -- Persistant Volume size
+    size: 20Gi
+
+  mountPath: /minio
+  securityContext:
+    enabled: false
+  resources:
+    requests:
+      memory: 1Gi
+
+# -- encode all secrets base64
+base64: true
+
+# -- pod annotations
+controller:
+  podAnnotations:
+
+# -- This will tell the plugin where to find vault values
+avp_path: ""

@@ -2,7 +2,6 @@ JPype1==1.2.1
 PyJwt==2.0.1
 SciPy==1.6.0
 cython==0.29.21
-diemlib==0.0.7
 ibm-cos-sdk==2.9.0
 ibm_db==3.0.3
 jaydebeapi==1.2.3
@@ -17,3 +16,5 @@ scikit-learn==0.24.1
 seaborn==0.11.1
 sendgrid==6.4.8
 statsmodels==0.12.2
+diemlib==0.0.15
+pyarrow==3.0.0

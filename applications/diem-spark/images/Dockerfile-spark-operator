@@ -1,5 +1,5 @@
-# v2.0.0_2021-03-01_1
-FROM gcr.io/spark-operator/spark-operator:v1beta2-1.2.0-3.0.0
+# 02-05-2021
+FROM gcr.io/spark-operator/spark-operator:v1beta2-1.2.3-3.1.1
 
 LABEL   maintainer=guy_huinen@be.ibm.com \
         org.label-schema.description="Spark Operator Image for Diem" \

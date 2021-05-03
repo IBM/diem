@@ -1,8 +1,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
-import { utils } from '@common/utils';
-import { IError } from '@interfaces';
-import { ServicesJob, IHandler } from '../../config/interfaces';
+import { utils } from '@config/utils';
+import { IError, ServicesJob, IHandler } from '@interfaces';
 import { addTrace } from '../shared/functions';
 import { servicesNodepy } from './services.nodepy';
 

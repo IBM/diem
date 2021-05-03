@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 import { utils } from '@common/utils';
 import { IError } from '@interfaces';
-import { addTrace } from '../../shared/functions';
-import { IModel } from '../../models/models';
+import { addTrace } from '@functions';
+import { IModel } from '@models';
 import { findOne, findOneAndUpdate } from './findone';
 
 export const updatePlJobStatus: (plid: string, job: { id: string; status: string }) => Promise<IModel> = async (
