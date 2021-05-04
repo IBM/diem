@@ -12,7 +12,7 @@ import glob
 
 cols = df_tgt.columns  # list of all columns
 
-__logdir = f"{__filepath}/{config.__id}/"  # the working directory
+__logdir = f"{config.__filepath}/{config.__id}/"  # the working directory
 
 for col_name in cols:
 

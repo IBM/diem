@@ -1,12 +1,10 @@
 import { EventEmitter } from 'events';
 import { printHRTime } from 'print-hrtime';
 import moment from 'moment';
-import { IntMQLogBase } from '@interfaces';
 import { IntEnv } from '../interfaces/env';
-import { IError, IRequest } from '../interfaces/shared';
+import { IError } from '../interfaces/shared';
 import { slackMsgInt } from './slack/error-int';
 import { Credentials } from './cfenv';
-import { pubSub } from './redis.pubsub';
 
 export interface ISlack {
     emoji: string;
@@ -21,8 +19,8 @@ class Utils {
 
     public Env: IntEnv = {
         NODE_ENV: process.env.NODE_ENV || 'local',
-        app: process.env.APP || process.env.NAME || 'rfb',
-        appcookie: process.env.APPCOOKIE || 'leap-rfb',
+        app: process.env.APP || process.env.NAME || 'diem',
+        appcookie: process.env.APPCOOKIE || 'diem-app',
         apppath: process.env.APPPATH || '',
         appurl: `//${process.env.K8_APPURLSHORT}${process.env.APPPATH}` || 'https://blueboard.ibm.com',
         description: process.env.DESCRIPTION || '',
@@ -157,32 +155,11 @@ class Utils {
                 {
                     ...err,
                     log: msg,
+                    message: err.message,
                 },
                 slackConfig
             );
         }
-    };
-
-    public logMQError = async (
-        msg: any,
-        req: IRequest,
-        status: number,
-        event: string,
-        err: IError,
-        hrstart: [number, number] = [0, 0],
-        pack: any = {}
-    ) => {
-        console.error('\x1b[31m%s\x1b[0m', `${msg} - ${this.time()} - ti: ${req.transid} - pid (${process.pid})`, '\n');
-
-        if (err) {
-            await slackMsgInt({
-                ...err,
-                log: msg,
-                transid: req.transid,
-            });
-        }
-
-        this.toMQ(req, status, event, err, hrstart, pack);
     };
 
     public time = (date?: Date, format?: string): string => {
@@ -236,40 +213,6 @@ class Utils {
         }
 
         return [msg];
-    };
-
-    public toMQ = (
-        req: IRequest,
-        status: number,
-        event: string,
-        err?: Error,
-        hrstart: [number, number] = [0, 0],
-        pack: any = {}
-    ): void => {
-        const mqm: IntMQLogBase = {
-            channel: 'logger',
-            log: {
-                annotations: {
-                    execution: this.hrTime(hrstart),
-                    profile: req.token,
-                    time: this.time(),
-                    transid: req.transid || this.guid(),
-                },
-                browser: this.browser(req),
-                err,
-                event,
-                module: pack,
-                request: {
-                    body: req.body,
-                    params: req.params,
-                    query: typeof req.query === 'string' ? req.query : '',
-                    url: `${req.hostname}${req.path}`,
-                },
-                status,
-            },
-        };
-
-        pubSub.publish(mqm.channel, mqm.log);
     };
 }
 

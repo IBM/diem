@@ -1,9 +1,9 @@
 /* eslint-disable complexity */
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
+import { addTrace } from '@functions';
+import { DataModel, IJobSchema, IModel, IQuery } from '@models';
 import { countByFilter } from '../job.backend/job.functions';
-import { addTrace } from '../shared/functions';
-import { DataModel, IJobSchema, IModel, IQuery } from '../models/models';
 import { allPipelineIds } from '../pipeline.backend/pipeline.helpers/getallpipelinejobs';
 
 interface IId {

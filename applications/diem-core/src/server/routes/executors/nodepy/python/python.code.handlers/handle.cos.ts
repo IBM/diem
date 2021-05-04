@@ -1,5 +1,5 @@
 import { Credentials } from '@common/cfenv';
-import { IParamsFiles } from '../../../../models/models';
+import { IParamsFiles } from '@models';
 import { getBucketOrg } from '../../../../files/files';
 import { getConfigmap } from './handle.configmaps';
 

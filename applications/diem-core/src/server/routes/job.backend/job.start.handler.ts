@@ -5,12 +5,12 @@
 
 import { utils } from '@common/utils';
 import { IError } from '@interfaces';
-import { DataModel, EJobTypes, IModel, IETLJob, EJobStatus, ExecutorTypes } from '../models/models';
+import { DataModel, EJobTypes, IModel, IETLJob, EJobStatus, ExecutorTypes } from '@models';
+import { pubSub } from '@config/pubsub';
+import { addTrace } from '@functions';
 import { createSparkPythonJob, ICapacity, publishSparkJob } from '../executors/spark/spark.python.job';
 import { createSparkScalaJob } from '../executors/spark/spark.scala.job';
 import { createNodePyJob } from '../executors/nodepy/np.create';
-import { pubSub } from '../../config/pubsub';
-import { addTrace } from '../shared/functions';
 import { mergeDeep } from '../job.updates/job.action.update';
 import { plStartHandler } from '../pipeline.backend/pipeline.start.handler';
 import { jobLogger } from '../job.logger/job.logger';
@@ -228,8 +228,9 @@ export const jobStartHandler: (job: IETLJob, caller: ICaller) => Promise<void> =
     );
 
     await createNodePyJob(doc, job).catch(async (err: any) => {
-        err.trace = addTrace(err.trace, '@at $job.start.handler (jobStartHandler) - createNodePyJob');
+        err.trace = addTrace(err.trace, '@at $job.start.handler ( createNodePyJob)');
 
+        // we just log the error here
         return errHandler(err);
     });
 

@@ -1,6 +1,6 @@
+import { IConnSchema } from '@models';
+import { addTrace } from '@functions';
 import { getConnection, jdbc_config } from '../../../spark/spark.job.handlers/hendle.spark.common';
-import { IConnSchema } from '../../../../models/models';
-import { addTrace } from '../../../../shared/functions';
 import { IntPythonStmtJob } from '../../np.interfaces';
 
 export const py_select_services: (job: IntPythonStmtJob) => Promise<string> = async (
@@ -39,7 +39,7 @@ def main():
 
     try:
         load = pd.read_sql(sql, conn)
-        printl(load.to_json(orient ='records'))
+        print(load.to_json(orient ='records'))
         conn.close()
 
     except Exception as e:

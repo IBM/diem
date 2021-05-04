@@ -1,7 +1,7 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
-import { addTrace } from '../shared/functions';
-import { DataModel, IModel } from '../models/models';
+import { addTrace } from '@functions';
+import { DataModel, IModel } from '@models';
 import { jobStart } from '../job.backend/job.start';
 
 interface IApiJob {

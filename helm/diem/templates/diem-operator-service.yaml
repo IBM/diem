@@ -1,0 +1,28 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.operator.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.operator.name }}
+    tier: {{ .Values.operator.tier }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
+  annotations:
+    {{- if .Values.controller.podAnnotations }}
+    {{- with .Values.controller.podAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- end }}
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.operator.port }}
+      targetPort: {{ .Values.common.config.PORT }}
+  selector:
+    app: {{ .Values.operator.name }}
+    tier: {{ .Values.operator.tier }}
+  type: ClusterIP
+  sessionAffinity: None
+status:
+  loadBalancer: {}

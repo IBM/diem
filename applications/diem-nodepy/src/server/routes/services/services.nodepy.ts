@@ -1,8 +1,8 @@
 import { spawnSync, SpawnSyncReturns } from 'child_process';
 import path from 'path';
-import { utils } from '@common/utils';
+import { utils } from '@config/utils';
 import * as rimraf from 'rimraf';
-import { ServicesJob, red, ECodeLanguage } from '../../config/interfaces';
+import { ServicesJob, red, ECodeLanguage } from '@interfaces';
 
 export const servicesNodepy: (job: ServicesJob) => Promise<any> = async (job: ServicesJob): Promise<any> => {
     const cleanup: () => void = (): void => {

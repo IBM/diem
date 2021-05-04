@@ -51,12 +51,12 @@ export const slackMsgError: (req: IRequest, slackConfig?: Partial<ISlack>) => Pr
         const response: any = await postMsg(options).catch(async (err: IAxiosError) => {
             err.trace = utils.addTrace(err.trace, '@at $error (slackMsgError)');
 
-            await utils.logError('$error (slackrMsgErro)', err);
+            await utils.logError('$error (slackrMsgError)', err);
 
             return Promise.resolve('Something went wrong posting to slack');
         });
 
-        utils.logInfo(`$error (slackrMsgErro): caller: external - transid: ${body.transid} - status: ${response}`);
+        utils.logInfo(`$error (slackrMsgError): caller: external - transid: ${body.transid} - status: ${response}`);
 
         return Promise.resolve({ status: 200 });
     } else {

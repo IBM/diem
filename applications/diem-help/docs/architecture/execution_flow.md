@@ -17,7 +17,7 @@ graph TD
   N7(Node)
   N8(Node)
   N9(Node)
-  R1(Redis)
+  R1(Nats)
   U1 -->|Job Start| N1
   U1 -.- N2
   U1 -.- N3
@@ -25,7 +25,7 @@ graph TD
   C -->|Run Code| D[Python]
   D -.- N4
   D -.- N5
-  D -->|Callback| N6
+  D -->|Publish| N6
   N6 -->|Broadcast| R1
   R1 <--> N7
   R1 <-->|Subscribe| N8
@@ -54,7 +54,7 @@ graph TD
   N9(Node)
   P1(Spark Driver)
   P2(Spark Executor)
-  R1(Redis)
+  R1(Nats)
   U1 -->|Job Start| N1
   U1 -.- N2
   U1 -.- N3
@@ -75,3 +75,18 @@ graph TD
   linkStyle 7 display:none;
   linkStyle 8 display:none;
 ```
+
+## Messages in Nats
+
+### local
+
+-- | --
+core.info | info to single core worker
+core.error | Error message to single worker
+
+### global
+
+-- | --
+global.core.info | info to all core workers
+global.core.error | Error message to all workers
+global.core.user | Message to user

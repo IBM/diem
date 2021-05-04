@@ -1,7 +1,7 @@
 import { spawn } from 'child_process';
 import path from 'path';
-import { postJob } from '../../config/axios';
-import { IntJob, green, red, ECodeLanguage } from '../../config/interfaces';
+import { publisher } from '@config/nats_publisher';
+import { IntJob, green, red, ECodeLanguage, IError } from '@interfaces';
 import { workers, deleteWorker } from './etl.workers';
 import { addToBuffer, addToErrorBuffer } from './etl.buffer';
 
@@ -11,33 +11,52 @@ export const etlNodepy: (job: IntJob) => any = (job: IntJob) => {
     if (workers[id]) {
         console.warn(green, `$np ${process.pid} ${id}: worker already running`);
 
+        publisher.publish('job', {
+            ...job,
+            count: null,
+            error: `job ${id} is already running, please stop it and try again`,
+            status: 'Failed',
+            jobend: new Date(),
+            runtime: null,
+        });
+
         return;
     }
 
     if (job.language === ECodeLanguage.javascript) {
-        workers[id] = spawn('node', [`${path.resolve()}/workdir/${id}/${id}.js`, job.params], {
+        workers[id] = spawn('node', [`${path.resolve()}/workdir/${id}/${id}.js`, job.params || {}], {
             env: {
                 PATH: `/home/app/.local/bin:${process.env.PATH}`,
-                APPPATH: process.env.APPPATH,
             },
             cwd: `${path.resolve()}/workdir/${id}/workdir`,
+            stdio: ['pipe', 'pipe', 'pipe', 'ipc'],
         });
     } else {
         workers[id] = spawn('python3', ['-u', `${path.resolve()}/workdir/${id}/${id}.py`, job.params], {
             env: {
                 PATH: `/home/app/.local/bin:${process.env.PATH}`,
-                APPPATH: process.env.APPPATH,
+                PYTHONPATH: `${path.resolve()}/workdir/${id}/workdir/`,
+                APPPATH: `${process.env.PATH}/workdir`,
                 CLASSPATH: '/opt/spark/jars/*',
             },
-            cwd: `${path.resolve()}/workdir/${id}/workdir`,
+            cwd: `${path.resolve()}/workdir/${id}`,
+            stdio: ['pipe', 'pipe', 'pipe'],
         });
     }
 
+    workers[id].meta = {
+        cycle: 0,
+        acc_size: 0,
+        acc_ts: 0,
+        size: 0,
+        ts: new Date().getTime(),
+        s_ts: 0,
+    };
     // collect data from script
 
     workers[id].stdout.setEncoding('utf8');
     workers[id].stdout.on('data', (buffer: Buffer) => {
-        addToBuffer(job.id, buffer);
+        void addToBuffer(job.id, buffer);
     });
 
     // here comes the error part
@@ -58,18 +77,14 @@ export const etlNodepy: (job: IntJob) => any = (job: IntJob) => {
         // console.error(red, `$np ${process.pid} ${id}: incoming error)`, '\n', response);
         console.error(red, `$np ${process.pid} ${id}: incoming error`);
 
-        try {
-            void postJob({
-                ...job,
-                count: null,
-                error: response,
-                status: 'Failed',
-                jobend: new Date(),
-                runtime: null,
-            });
-        } catch (err) {
-            console.error(red, `$np ${process.pid} ${id}: error posting file (stderr)`, err);
-        }
+        publisher.publish('job', {
+            ...job,
+            count: null,
+            error: response,
+            status: 'Failed',
+            jobend: new Date(),
+            runtime: null,
+        });
     });
 
     /**
@@ -85,5 +100,21 @@ export const etlNodepy: (job: IntJob) => any = (job: IntJob) => {
 
     workers[id].on('close', async (code: number | null) => {
         await deleteWorker(job, code, 'close');
+    });
+
+    workers[id].on('error', async (err: IError) => {
+        console.error(red, `$np ${process.pid} ${id}: error creating process`, err);
+        void publisher.publish('job', {
+            ...job,
+            count: null,
+            error: err.message,
+            status: 'Failed',
+            jobend: new Date(),
+            runtime: null,
+        });
+    });
+
+    workers[id].on('message', (data: any) => {
+        void publisher.publish('job', data);
     });
 };

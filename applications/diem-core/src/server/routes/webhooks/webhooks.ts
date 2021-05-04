@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
-import { IQuery, IWebhookPayload, IWebhooksSchema, WebhooksModel, FaIcons, EIdType } from '../models/models';
+import { IQuery, IWebhookPayload, IWebhooksSchema, WebhooksModel, FaIcons, EIdType } from '@models';
 import { parseFilter } from '../jobs/jobs';
 
 const viewSecurity: number = 60;

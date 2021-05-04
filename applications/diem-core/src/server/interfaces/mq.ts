@@ -1,5 +1,7 @@
 import { IntEnv } from '../interfaces/env';
 
+export type ELogEvent = 'resource' | 'login' | 'error' | 'api';
+
 /**
  * Shared MQ Log
  *
@@ -7,22 +9,24 @@ import { IntEnv } from '../interfaces/env';
  * @interface IntMQLog
  */
 export interface IntMQLog {
+    logid: string;
+    created: Date;
     annotations: {
-        profile: {
+        profile?: {
             [key: string]: any;
             email: string;
             name: string;
         };
-        time: string;
-        transid: string;
+        org: string;
         execution?: {
             msec: number;
             sec: number;
         };
     };
     browser: {
-        agent: string;
-        ip: string;
+        [index: string]: any;
+        agent?: string;
+        ip?: string;
     };
     err?: Error;
     event: string;
@@ -34,6 +38,7 @@ export interface IntMQLog {
         url: string;
     };
     status: number;
+    type: ELogEvent;
 }
 
 /**

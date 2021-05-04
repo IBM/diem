@@ -5,8 +5,8 @@ Could be used later in previewing the job
 
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
-import { DataModel, ECodeLanguage, IETLJob, IJobSchema, ExecutorTypes } from '../../models/models';
-import { base64decode, addTrace } from '../../shared/functions';
+import { DataModel, ECodeLanguage, IETLJob, IJobSchema, ExecutorTypes } from '@models';
+import { base64decode, addTrace } from '@functions';
 import { javascriptHandler } from './javascript/javascript.handler';
 import { INodePyJob } from './np.interfaces';
 import { pythonHandler } from './python/python.handler';

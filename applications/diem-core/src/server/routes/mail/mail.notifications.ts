@@ -1,5 +1,5 @@
 import { utils } from '@common/utils';
-import { addTrace } from '../shared/functions';
+import { addTrace } from '@functions';
 import { mailTemplates } from './mail.options';
 import { mailhandler } from './mail.handler';
 import { IPreparedMail, IMailContent, IMailElements } from './mail.interfaces';

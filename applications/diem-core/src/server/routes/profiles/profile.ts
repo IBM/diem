@@ -1,7 +1,6 @@
 import { utils } from '@common/utils';
 import { IXorg } from '@interfaces';
-import { IUserModel, UserModel, EUserRolesNbr } from '../models/model.profiles';
-import { IProfileModel, ProfileModel } from '../models/model.profile';
+import { IUserModel, UserModel, EUserRolesNbr, IProfileModel, ProfileModel } from '@models';
 
 const calcRoleNbr: (role: string) => number = (role: string) => EUserRolesNbr[role as keyof typeof EUserRolesNbr] || 0;
 

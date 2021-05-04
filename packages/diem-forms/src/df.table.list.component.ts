@@ -111,7 +111,7 @@ export class DFTableListComponent implements OnInit, OnDestroy {
         if (this.FSStore !== undefined) {
             this.FSStore.unsubscribe();
         }
-        console.info(`$df.table.list.component (ngOnDestroy) => destroying subscription ${this.locals.formName}`);
+        console.info(`$df.table.list.component (ngOnDestroy) => destroying subscription ${this.locals?.formName || ''}`);
     }
 
     private check = (from: string) => {

@@ -4,15 +4,16 @@
 
 import { EStoreActions, IntPayload } from '@interfaces';
 import { utils } from '@common/utils';
-import { DataModel, EJobTypes, IJobResponse, IModel, EJobStatus, ISocketPayload } from '../models/models';
+import { DataModel, EJobTypes, IJobResponse, IModel, EJobStatus, ISocketPayload } from '@models';
+import { addTrace } from '@functions';
 import { pipelineHandler } from '../pipeline.backend/pipeline.handler';
-import { addTrace } from '../shared/functions';
 import { PayloadValues } from './job.functions';
 import { finishJob } from './job.finish';
 
 interface IOut {
     out: string;
     special?: string;
+    outl?: boolean;
 }
 
 const jobdetail: string = 'jobdetail.store';
@@ -28,7 +29,7 @@ const runTime: (doc: IModel) => number = (doc: IModel): number => {
 export const updateOne: (doc: IModel, obj: any) => any = async (doc: IModel, obj: any) =>
     Promise.resolve(await doc.updateOne(obj));
 
-const jobOutHandler: (doc: IModel, job: IJobResponse) => Promise<ISocketPayload> = async (
+export const jobOutHandler: (doc: IModel, job: IJobResponse) => Promise<ISocketPayload> = async (
     doc: IModel,
     job: IJobResponse
 ): Promise<ISocketPayload> => {
@@ -38,15 +39,20 @@ const jobOutHandler: (doc: IModel, job: IJobResponse) => Promise<ISocketPayload>
         special: job.special,
     };
 
-    if (Array.isArray(doc.out)) {
+    if (job.outl) {
+        doc.out = doc.out.concat(job.out);
+    } else if (Array.isArray(doc.out)) {
         doc.out.push(obj);
     } else {
         doc.out = [obj];
     }
 
     await doc.save().catch(async (err: any) => {
-        err.caller = '$job.handler';
-        void utils.logError(`$job.handler (jobHandler): save failed - doc: ${id}`, err);
+        err.trace = addTrace(err.trace, '@at $job.handler (jobHandler)');
+
+        err.id = id;
+
+        void utils.emit('error', err);
     });
 
     utils.logInfo(`$job.handler (jobHandler): out payload - job: ${job.id}`, job.transid);
@@ -61,7 +67,7 @@ const jobOutHandler: (doc: IModel, job: IJobResponse) => Promise<ISocketPayload>
                 options: {
                     field: 'out',
                 },
-                type: EStoreActions.ADD_STORE_TABLE_RCD,
+                type: job.outl ? EStoreActions.APPEND_STORE_TABLE_RCD : EStoreActions.ADD_STORE_TABLE_RCD,
                 values: {
                     out: job.out,
                     special: job.special,
@@ -89,7 +95,7 @@ const jobDocOutHandler: (payload: IntPayload[], doc: IModel, job: IJobResponse) 
         doc.out = [obj];
     }
 
-    utils.logInfo(`$job.handler (jobHandler): out payload - job: ${job.id}`, job.transid);
+    utils.logInfo(`$job.handler (jobDocOutHandler): out payload - job: ${job.id}`, job.transid);
 
     payload.push({
         loaded: true,
@@ -145,8 +151,11 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
         let payload: IntPayload[] = [];
 
         // if it's just an out message and it's not the end then handle it as just an out
-        if (job.out && !job.status) {
-            return await jobOutHandler(doc, job);
+
+        if (job.out !== undefined && !job.status) {
+            const load: any = await jobOutHandler(doc, job);
+
+            return Promise.resolve(load);
         } else if (job.out) {
             payload = await jobDocOutHandler(payload, doc, job);
         }

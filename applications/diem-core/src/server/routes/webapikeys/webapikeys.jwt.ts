@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
-import { IWebApiKey } from 'routes/models/models';
+import { IWebApiKey } from '@models';
 import { utils } from '@common/utils';
-import { addTrace } from '../shared/functions';
+import { addTrace } from '@functions';
 
 export const createJWT: (params: IWebApiKey) => Promise<string> = async (params: IWebApiKey): Promise<string> => {
     let webapikey: string;

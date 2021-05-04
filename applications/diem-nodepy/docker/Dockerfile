@@ -1,4 +1,4 @@
-FROM nikolaik/python-nodejs:python3.8-nodejs15
+FROM nikolaik/python-nodejs:python3.8-nodejs16
 
 LABEL   maintainer=guy_huinen@be.ibm.com \
     org.label-schema.description="Diem Nodepy Application" \
@@ -27,6 +27,8 @@ ENV LANG=en_US.UTF-8 HOME=/home/app NODE_ENV=production
 COPY package.json package-lock.json $HOME/
 
 RUN cd $HOME && npm ci --production
+
+# RUN python3 -m pip install --index-url https://test.pypi.org/simple/ diemlib==0.0.11b3
 
 WORKDIR $HOME
 COPY server $HOME/server

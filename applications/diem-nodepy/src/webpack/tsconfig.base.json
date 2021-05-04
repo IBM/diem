@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+        "alwaysStrict": true,
+        "baseUrl": ".",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "module": "es2020",
+        "moduleResolution": "node",
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "removeComments": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "sourceMap": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
+        "strictPropertyInitialization": true,
+        "target": "es2020",
+        "version": true,
+        "types": ["node", "webpack-env"],
+        "lib": ["es2020"]
+    }
+}

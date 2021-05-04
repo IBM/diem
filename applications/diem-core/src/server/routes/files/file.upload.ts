@@ -1,9 +1,9 @@
 import { utils } from '@common/utils';
 import { IRequest, IFile, EStoreActions, IntServerPayload, IError } from '@interfaces';
 import { cosFunctions, ICos, IPutObject } from '@common/cos.functions';
-import { IFilesBody, FaIcons } from '../models/models';
-import { pubSub } from '../../config/pubsub';
-import { addTrace } from '../shared/functions';
+import { IFilesBody, FaIcons } from '@models';
+import { pubSub } from '@config/pubsub';
+import { addTrace } from '@functions';
 import { getName, getBucket } from './files';
 
 interface ICosFileMeta {
@@ -61,8 +61,8 @@ const uploadFiles: (req: IRequest) => Promise<void> = async (req: IRequest): Pro
 
             utils.logInfo(`$file.upload (uploadFiles) - email: ${body.email}`, err);
 
-            return pubSub.publishClientPayload({
-                clientEmail: req.user.email,
+            return pubSub.publishUserPayload({
+                email: req.user.email,
                 payload: [{ message: 'file upload failed', email: req.user.email, success: false }],
             });
         }
@@ -96,8 +96,8 @@ const uploadFiles: (req: IRequest) => Promise<void> = async (req: IRequest): Pro
             success: true /** just display a success message */,
         };
 
-        pubSub.publishClientPayload({
-            clientEmail: req.user.email,
+        pubSub.publishUserPayload({
+            email: req.user.email,
             payload,
         });
     });

@@ -8,7 +8,6 @@
    It contains generic functions that can be used within the jobs
 """
 
-import requests
 import time
 import json
 import datetime
@@ -16,6 +15,7 @@ import sys
 from sys import exit
 import traceback
 import diemlib.config as config
+import requests
 
 __all__ = ["UtcNow", "runTime", "printl",
            "mq", "out", "endJob", "endjob", "error"]
@@ -34,17 +34,18 @@ def runTime():
 
 
 def printl(msg):
-    print(msg)
+    mq({"out": msg})
 
 
 def mq(data):
+
     # Returns job data back to the main application
     data["id"] = config.__id
     data["jobid"] = config.__jobid
     data["transid"] = config.__transid
+    data["serviceid"] = config.__serviceid
     data["email"] = config.__email
     data["name"] = config.__name
-
     try:
         if "out" in data:
             res = data.get("out")
@@ -58,12 +59,22 @@ def mq(data):
                     data["out"] = str(res)
                 except Exception:
                     data["out"] = "Response must be booleam, number, string or json"
-
     except Exception as e:
         error(e)
         raise
 
-    requests.post(url=config.__url, data=data)
+    if config.__logcount > config.__loglimit:
+        # set the logcount back to 0 so that the error can pass
+        config.__logcount = 0
+        error(f"Rate limit of {config.__loglimit} exceeded")
+        raise
+
+    config.__logcount += 1
+
+    if config.__nats is False:
+        requests.post(url=config.__url, data=data)
+    else:
+        print(json.dumps(data))
 
 
 def out(data):
@@ -114,9 +125,6 @@ def endJob(kwargs):
 
         mq(data)
 
-        msg = f"--- job {config.__id} finished at {UtcNow()} --- running time: {runTime()} ---"
-
-        printl(msg)
         exit()
 
     except Exception as e:
@@ -146,12 +154,11 @@ def error(err):
             "error": msg,
             "id": config.__id,
             "jobid": config.__jobid,
+            "serviceid": config.__serviceid,
             "jobend": time.strftime("%Y-%m-%d %H:%M:%S"),
             "name": config.__name,
             "status": "Failed",
         }
         mq(data)
 
-    msg = f"Job {config.__id} failed - time: {UtcNow()} - runtime: {runTime()}"
-    printl(msg)
     exit(1)

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/quotes */
 
-import { IETLJob, IUrlSchema, IJobConfig, IStmtSchema, ECodeLanguage } from '../../models/models';
+import { IETLJob, IUrlSchema, IJobConfig, IStmtSchema, ECodeLanguage } from '@models';
 
 // basically the job that will be sent to nodepy
 export interface INodePyJob extends IETLJob {

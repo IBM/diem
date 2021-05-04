@@ -1,15 +1,7 @@
 import { utils } from '@common/utils';
 import { IRequest, EStoreActions, IntPayload, IntServerPayload, IError, IResponse } from '@interfaces';
-import { login } from '../../config/authorization';
-import {
-    IOrgsBody,
-    IOrgsModel,
-    IProfileSchema,
-    IUserSchema,
-    OrgsModel,
-    ProfileModel,
-    UserModel,
-} from '../models/models';
+import { login } from '@config/authorization';
+import { IOrgsBody, IOrgsModel, IProfileSchema, IUserSchema, OrgsModel, ProfileModel, UserModel } from '@models';
 
 export const orgdelete: (req: IRequest, res: IResponse) => Promise<IRequest | any> = async (
     req: IRequest,

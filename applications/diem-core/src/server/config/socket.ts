@@ -4,7 +4,7 @@ import { utils } from '@common/utils';
 import { IntEnv } from '@interfaces';
 import { slackMsg } from '@common/slack/slack';
 import jwt from 'jsonwebtoken';
-import { IClientPayload } from '../routes/models/models';
+import { IUserPayload } from '@models';
 import { IntInteractivePayload } from '../routes/interactive/interactive';
 import { pubSub } from './pubsub';
 
@@ -170,35 +170,17 @@ export class Server {
     /**
      * Sent a message to the client
      *
-     * @param {Object} msg IClientPayload
+     * @param {Object} msg IUserPayload
      */
-    public bcClient: (msg: IClientPayload) => void = async (msg: IClientPayload) => {
-        if (msg && msg.clientEmail) {
+    public bcUser: (msg: IUserPayload) => void = async (msg: IUserPayload) => {
+        if (msg && msg.email) {
             this.wss.clients.forEach((ws: any) => {
-                if (ws.id === msg.clientEmail) {
+                if (ws.id === msg.email) {
                     ws.send(pubSub.toString({ ...msg.payload }));
                 }
             });
         } else {
             utils.logInfo('$socket (message) cannot sent message as mo email');
-        }
-    };
-
-    /* you can equally sent a message as email message*/
-    /**
-     *
-     * @param {Object} msg { email: string; message: string }
-     * @memberof Server
-     */
-    public message: (msg: { email: string; message: string }) => void = async (msg: {
-        email: string;
-        message: string;
-    }) => {
-        if (msg) {
-            this.bcClient({
-                clientEmail: msg.email,
-                payload: msg.message,
-            });
         }
     };
 

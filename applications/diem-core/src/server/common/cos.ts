@@ -1,7 +1,7 @@
 import AWS from 'ibm-cos-sdk';
 import { Credentials } from './cfenv';
 
-interface ICfg {
+interface ICosCfg {
     accessKeyId?: string;
     apiKeyId?: string;
     endpoint: string;
@@ -14,9 +14,9 @@ class Cos {
     public cos: AWS.S3;
 
     public constructor() {
-        const cosCfg: ICfg = Credentials('COS');
+        const cosCfg: ICosCfg = Credentials('COS');
 
-        if (cosCfg.serviceInstanceId) {
+        if (cosCfg.serviceInstanceId && !cosCfg.signatureVersion) {
             cosCfg.signatureVersion = 'iam';
         }
 

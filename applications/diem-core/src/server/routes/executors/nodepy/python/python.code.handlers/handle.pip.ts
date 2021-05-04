@@ -1,14 +1,14 @@
-import { addTrace } from '../../../../shared/functions';
-import { IJobSchema } from '../../../../models/models';
+import { IJobSchema } from '@models';
+import { addTrace } from '@functions';
 
-const py_pipinstall: (id: string, pip: string[]) => string = (id: string, pip: string[]): string => String.raw`
+const py_pipinstall: (id: string, pip: string[]) => string = (_id: string, pip: string[]): string => String.raw`
 
 ### py_pipinstall ###
 
 for __pip in ['${pip.join("','")}']:
     try:
-        os.system(f"python3 -m pip install {__pip} -q --disable-pip-version-check --target=/home/app/workdir/${id}/")
-        mq({"out": f"{__pip} installed"})
+        os.system(f"python3 -m pip install {__pip} -q --disable-pip-version-check --prefer-binary --target=./workdir/")
+        mq({"out": f"pip: {__pip} installed"})
     except subprocess.CalledProcessError as e:
         error(e)
 ######`;

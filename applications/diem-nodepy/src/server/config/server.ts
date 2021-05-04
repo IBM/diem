@@ -1,15 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import * as http from 'http';
-import express from 'express';
-import { slackMsg } from '@common/slack/slack';
-import { slackMsgInt } from '@common/slack/error-int';
-import bodyParser from 'body-parser';
-import helmet from 'helmet';
-import { IntInternal, IntEnv, IResponse } from '@interfaces';
-import { utils } from '@common/utils';
-import { etlHandler } from '../routes/etl/etl.handler';
-import { servicesHandler } from '../routes/services/services.handler';
-import { interactiveHandler } from '../routes/interactive/interactive.handler';
+import { setTimeout } from 'timers/promises';
+import { IntInternal, IntEnv } from '@interfaces';
+import { utils } from '@config/utils';
+import { publisher } from './nats_publisher';
+import { NC } from './nats_connect';
+import { stats } from './stats';
 
 export class Server {
     public pack: IntEnv;
@@ -34,12 +29,10 @@ export class Server {
                 };
                 void utils.logError('$server.ts (unhandledRejection):', msg);
             })
-            .on('exit', (code: any) => {
+            .on('exit', async (code: any) => {
                 utils.logInfo(`$server.ts (exit): fatal error, system shutting down : ${code}`);
-                void slackMsgInt(code);
-                setTimeout(() => {
-                    process.exit(1);
-                }, 1000);
+                await setTimeout(1000);
+                process.exit(1);
             });
 
         utils.ev.on('internal', (internal: IntInternal) => {
@@ -65,43 +58,29 @@ export class Server {
         });
     }
 
-    public start = (): void => {
-        const app: any = express()
-            .set('port', process.env.PORT || 8192)
-            .set('trust proxy', 1)
-            .use(helmet())
-            .use(
-                bodyParser.urlencoded({
-                    limit: '15mb',
-                    extended: false,
-                })
-            )
-            .use(
-                bodyParser.json({
-                    limit: '15mb',
-                })
-            )
-            .all('/api/', etlHandler)
-            .all('/services/', servicesHandler)
-            .all('/interactive', interactiveHandler)
-            .all('/nodepy/interactive', interactiveHandler)
-            .all('*', (_req: any, res: IResponse) => res.status(400).json({ message: 'Not allowed' }));
+    public start = async (): Promise<void> => {
+        try {
+            await NC.connect();
+        } catch (err) {
+            return console.error(err);
+        }
 
-        const httpServer: http.Server = http.createServer(app);
+        const msg: string =
+            `👽 $server (start): ${this.pack.packname}@${this.pack.version}` +
+            ` started up on ${this.pack.K8_SYSTEM_NAME} - pid: ${process.pid} (node ${process.version})`;
+        utils.logInfo(msg);
 
-        httpServer.listen(app.get('port'), () => {
-            const msg: string =
-                `👽 $server (start): ${this.pack.packname}@${this.pack.version}` +
-                ` started up on ${this.pack.K8_SYSTEM_NAME} - port:${app.get('port')} - pid: ${process.pid} (node ${
-                    process.version
-                })`;
-            utils.logInfo(msg);
-            void slackMsg(msg);
-        });
+        void publisher.publish_global(
+            'info',
+            `${this.pack.packname}@${this.pack.version} connected - env: ${this.pack.K8_SYSTEM_NAME} - pid: ${process.pid}`
+        );
+
+        void stats();
     };
 
     // private ensureAuthenticated = (_req: IRequest, _res: IResponse, next: () => any): any => next();
 }
 
 const server: Server = new Server();
-server.start();
+
+void server.start();

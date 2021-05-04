@@ -1,8 +1,8 @@
 /* eslint-disable complexity */
 /* eslint-disable sonarjs/cognitive-complexity */
 
-import { ECodeLanguage, IETLJob, IJobSchema } from '../../../models/models';
-import { base64encode, addTrace } from '../../../shared/functions';
+import { ECodeLanguage, IETLJob, IJobSchema } from '@models';
+import { base64encode, addTrace } from '@functions';
 import { INodePyJob } from '../np.interfaces';
 import { javascript_start, javascript_end } from './javascript.code/js';
 

@@ -1,9 +1,9 @@
 import { IError } from '@interfaces';
-import { ECodeLanguage, IETLJob, IModel } from '../../models/models';
-import { addTrace } from '../../shared/functions';
+import { ECodeLanguage, IETLJob, IModel } from '@models';
+import { addTrace } from '@functions';
 import { javascriptHandler } from './javascript/javascript.handler';
 import { INodePyJob } from './np.interfaces';
-import { nodePyPostJob } from './np.postjob';
+import { nodePyRequestJob } from './np.publish';
 import { pythonHandler } from './python/python.handler';
 
 export const createNodePyJob: (doc: IModel, job: IETLJob) => Promise<void> = async (
@@ -33,8 +33,8 @@ export const createNodePyJob: (doc: IModel, job: IETLJob) => Promise<void> = asy
     }
 
     if (nodepyJob?.language) {
-        void nodePyPostJob(nodepyJob); // don't do anything here.. errors are handled via socket
-
-        return Promise.resolve();
+        void nodePyRequestJob(nodepyJob); // don't do anything here.. errors are handled via socket
     }
+
+    return Promise.resolve();
 };

@@ -1,4 +1,4 @@
-import { IConfigmapsModel, ConfigmapsModel } from '../../../../models/models';
+import { IConfigmapsModel, ConfigmapsModel } from '@models';
 import { json } from './handle.params.util';
 
 export const getConfigmap: (id: string, org: string) => Promise<IConfigmapsModel | null> = async (

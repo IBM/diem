@@ -1,7 +1,7 @@
 import * as Api from 'kubernetes-client';
 import { Credentials } from '@common/cfenv';
 import { utils } from '@common/utils';
-import { addTrace } from '../shared/functions';
+import { addTrace } from '@functions';
 import { sparkWatcher } from './spark.watcher';
 
 interface IApis extends Api.Apis {

@@ -1,7 +1,7 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
-import { addTrace } from '../shared/functions';
-import { DataModel, IJobDetails, IModel, IJobSchema } from '../models/models';
+import { addTrace } from '@functions';
+import { DataModel, IJobDetails, IModel, IJobSchema } from '@models';
 import { getNodes } from './job.detail';
 
 interface IModelPayload extends IModel {

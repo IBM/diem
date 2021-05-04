@@ -1,8 +1,8 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
-import { IJobBody, ISocketPayload } from '../models/models';
-import { pubSub } from '../../config/pubsub';
-import { addTrace } from '../shared/functions';
+import { publisher } from '@config/nats_publisher';
+import { IJobBody, ISocketPayload } from '@models';
+import { addTrace } from '@functions';
 import { actionClone } from './job.action.clone';
 import { actionUpdate } from './job.action.update';
 import { actionDelete } from './job.action.delete';
@@ -46,11 +46,15 @@ export const jobupdates: (req: IRequest) => Promise<any> = async (req: IRequest)
 
     try {
         const serverPayload: ISocketPayload = await actions[body.action]({ ...body });
-        utils.logInfo(`$job.update (jobupdates) document ${body.id} saved`, req.transid, process.hrtime(hrstart));
+        utils.logInfo(
+            `$job.update (jobupdates) document ${body.id} saved - email: ${body.email}`,
+            req.transid,
+            process.hrtime(hrstart)
+        );
 
         serverPayload.org = body.org;
 
-        pubSub.publishmsg(JSON.stringify(serverPayload));
+        void publisher.publish('global.core.users', serverPayload);
 
         return Promise.resolve(true);
     } catch (err) {

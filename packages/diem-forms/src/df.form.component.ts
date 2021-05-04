@@ -727,7 +727,7 @@ export class DFComponent implements AfterViewInit, OnInit, OnDestroy {
 
         // this.removeBodyClass('editmode');
 
-        console.info(`$df.form.component (ngOnDestroy) => destroying ${this.locals.formName}`);
+        console.info(`$df.form.component (ngOnDestroy) => destroying ${this.locals?.formName || ''}`);
     }
 
     private patchValues = (values: any): void => {

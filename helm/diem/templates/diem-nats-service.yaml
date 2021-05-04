@@ -1,0 +1,29 @@
+{{- if .Values.nats.external }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.nats.name }}-lb
+  namespace: {{ .Release.Namespace }}
+  labels:
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
+  annotations:
+    {{- if .Values.controller.podAnnotations }}
+    {{- with .Values.controller.podAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- end }}
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  selector:
+    app: {{ .Release.Name }}-nats
+  ports:
+    - protocol: TCP
+      port: 4222
+      targetPort: 4222
+      name: client
+    - protocol: TCP
+      port: 6222
+      targetPort: 6222
+      name: cluster
+{{- end }}

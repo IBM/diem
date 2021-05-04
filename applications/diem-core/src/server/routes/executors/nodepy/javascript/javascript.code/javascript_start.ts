@@ -1,18 +1,13 @@
-import { sparkCredentials } from '../../../../spark-operator/spark.base';
-import { IETLJob } from '../../../../models/models';
+import { IETLJob } from '@models';
 
 // ideal is to make this an env variable as it's the same path as spark in spark operator uses
 const filepath: string = '/tmp/spark-local-dir';
 
-export const javascript_start: (job: IETLJob) => string = (job: IETLJob): string => {
-    const callback_url: string = sparkCredentials.callback_url;
-
-    return String.raw`
+export const javascript_start: (job: IETLJob) => string = (job: IETLJob): string => String.raw`
 /* javascript_start */
 
 /*jshint esversion: 6 */
 
-const axios = require('axios');
 const moment = require('moment');
 
 const mq = (data) => {
@@ -29,7 +24,9 @@ const mq = (data) => {
             /* nothing */
         }
     }
-    axios.post(config.__url, data);
+    if(process.send){
+        process.stdout.write(JSON.stringify(data)+ '\n');
+    }
 };
 
 const out = (data) => {
@@ -63,7 +60,6 @@ const TimeNow = () => {
 }
 
 const config = {
-    __url : '${callback_url}',
     __id : '${job.id}',
     __email : '${job.email}',
     __jobid : '${job.jobid}',
@@ -88,4 +84,3 @@ mq(data)
 console.log = function() {}
 
 /* ###### */`;
-};

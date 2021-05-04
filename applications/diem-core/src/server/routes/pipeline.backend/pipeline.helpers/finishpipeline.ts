@@ -1,5 +1,5 @@
 import { utils } from '@common/utils';
-import { IModel, IJob, IJobResponse } from '../../models/models';
+import { IModel, IJob, IJobResponse } from '@models';
 
 export const finishPl: (job: IJobResponse, pldoc: IModel) => Promise<void> = async (
     job: IJobResponse,

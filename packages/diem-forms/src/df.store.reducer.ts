@@ -19,6 +19,7 @@ const ADD_STORE_RCD: string = 'ADD_STORE_RCD';
 const ADD_STORE_FIELD_RCD: string = 'ADD_STORE_FIELD_RCD';
 const UPD_STORE_FIELD_RCD: string = 'UPD_STORE_FIELD_RCD';
 const ADD_STORE_TABLE_RCD: string = 'ADD_STORE_TABLE_RCD';
+const APPEND_STORE_TABLE_RCD: string = 'APPEND_STORE_TABLE_RCD';
 const REM_STORE_TABLE_RCD: string = 'REM_STORE_TABLE_RCD';
 const UPD_STORE_TABLE_RCD: string = 'UPD_STORE_TABLE_RCD';
 const REM_STORE_FIELD_RCD: string = 'REM_STORE_FIELD_RCD';
@@ -375,6 +376,38 @@ export function StoreReducer(state: IDefaultState = initState, action: Action): 
                 states: {
                     ...state.states,
                     [results.store]: t18,
+                },
+            };
+
+        case APPEND_STORE_TABLE_RCD:
+            if (
+                !results ||
+                !results.store ||
+                !results.values ||
+                !results.options ||
+                !results.options.field ||
+                !state.states ||
+                !state.states[results.store]
+            ) {
+                return state;
+            }
+
+            const t19: IStoreResults = cloneDeep(state.states[results.store]);
+
+            const field19: string = results.options.field;
+
+            /** If no store or if store but no values or store and values but no field */
+            if (!t19 || !t19.values || !t19.values[field19]) {
+                return state;
+            }
+
+            t19.values[field19] = t19.values[field19].concat(results.values[field19]);
+
+            return {
+                ...state,
+                states: {
+                    ...state.states,
+                    [results.store]: t19,
                 },
             };
 

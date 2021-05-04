@@ -2,7 +2,7 @@ import { Credentials } from '@common/cfenv';
 import { utils } from '@common/utils';
 import sgMail from '@sendgrid/mail';
 import { ClientResponse } from '@sendgrid/client/src/response';
-import { addTrace } from '../shared/functions';
+import { addTrace } from '@functions';
 
 export { ClientResponse };
 

@@ -3,10 +3,10 @@
 import { utils } from '@common/utils';
 import { IRequest, EStoreActions, IntPayload, IntServerPayload, IError, IResponse } from '@interfaces';
 import { parse, stringify } from 'yaml';
+import { IOrgsBody, IOrgsModel, OrgsModel, FaIcons, IProfileBody } from '@models';
+import { addTrace } from '@functions';
+import { login } from '@config/authorization';
 import { newUser } from '../profiles/profile.actions';
-import { IOrgsBody, IOrgsModel, OrgsModel, FaIcons, IProfileBody } from '../models/models';
-import { addTrace } from '../shared/functions';
-import { login } from '../../config/authorization';
 
 /**
  * Nothing will be rejected here, in case of an error we log the error but return an empty [] to the user
@@ -30,8 +30,18 @@ export const orgupdate: (req: IRequest, res: IResponse) => Promise<IRequest | an
     let isnew: boolean = false;
     let doc: IOrgsModel | null = null;
 
+    let org: string | undefined = body.org;
+
+    if (!org) {
+        return Promise.reject({
+            displayerr: 'Sorry, this request has no organisation',
+        });
+    }
+
+    org = org.toLocaleLowerCase();
+
     if (!body.id) {
-        doc = await OrgsModel.findOne({ org: body.org }, {}).exec();
+        doc = await OrgsModel.findOne({ org }, {}).exec();
 
         if (doc) {
             return Promise.reject({
@@ -53,7 +63,7 @@ export const orgupdate: (req: IRequest, res: IResponse) => Promise<IRequest | an
             transid: body.transid,
         };
 
-        doc.org = body.org;
+        doc.org = org;
 
         id = doc._id.toString();
     } else {
@@ -104,7 +114,7 @@ export const orgupdate: (req: IRequest, res: IResponse) => Promise<IRequest | an
         const profile: IProfileBody = {
             user: body.email,
             username: body.username,
-            org: body.org,
+            org,
             transid: body.transid,
             role: 'admin',
             rolenbr: 100,
@@ -123,7 +133,7 @@ export const orgupdate: (req: IRequest, res: IResponse) => Promise<IRequest | an
         await login(req, res);
     }
 
-    utils.logInfo(`$Orgs (Orgsupdate): Orgs updated - email: ${body.email}`, req.transid, process.hrtime(hrstart));
+    utils.logInfo(`$org.update (Orgupdate): Org updated - email: ${body.email}`, req.transid, process.hrtime(hrstart));
 
     // when doing an update for a single document, return the action to put the document in read mode
     const actions: any =

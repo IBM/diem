@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { ConnModel, IConnSchema } from '../../../models/models';
+import { ConnModel, IConnSchema } from '@models';
 
 // not used : traceDirectory=/opt/spark/;traceLevel=TRACE_DIAGNOSTICS;traceFile=jcctrace.log;
 

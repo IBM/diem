@@ -4,8 +4,8 @@ Could be used later in previewing the job
 */
 
 import { utils } from '@common/utils';
-import { DataModel, ExecutorTypes, IJobSchema } from '../../models/models';
-import { base64decode, addTrace } from '../../shared/functions';
+import { DataModel, ExecutorTypes, IJobSchema } from '@models';
+import { base64decode, addTrace } from '@functions';
 import { INodePyJob } from './np.interfaces';
 import { pythonServicesHandler } from './python/python.services.handler';
 
@@ -13,24 +13,27 @@ export interface IServices {
     email: string;
     id: string;
     jobid?: string;
+    serviceid?: string;
     token: string;
     transid: string;
     params?: any;
 }
 
 export const npcodefileservices: (body: IServices) => Promise<string> = async (body: IServices): Promise<string> => {
-    if (body.id === null) {
+    if (!body.serviceid) {
         return Promise.reject({
             message: 'no id provided',
             trace: ['@at $nodepy.services.pyfile (npcodefileservices) - nodid'],
         });
     }
 
-    // a job can be called via url or via body
     const id: string = body.id;
+
+    // a job can be called via url or via body
+    const serviceid: string = body.serviceid;
     const params: any = body.params || {};
 
-    const doc: IJobSchema | null = await DataModel.findOne({ _id: id })
+    const doc: IJobSchema | null = await DataModel.findOne({ _id: serviceid })
         .lean()
         .exec()
         .catch(async (err: any) => {
@@ -51,6 +54,7 @@ export const npcodefileservices: (body: IServices) => Promise<string> = async (b
         executor: ExecutorTypes.nodepy,
         id,
         jobid: body.jobid || id,
+        serviceid: body.serviceid,
         jobstart: doc.job.jobstart,
         name: doc.name,
         runby: body.email,

@@ -12,8 +12,8 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 
 import { utils } from '@common/utils';
-import { EJobStatus, IModel } from '../models/models';
-import { fmtTime, addTrace } from '../shared/functions';
+import { EJobStatus, IModel } from '@models';
+import { fmtTime, addTrace } from '@functions';
 import { sendMail } from './mail.notifications';
 import { IMailMeta, IMailInput, IMailParams } from './mail.interfaces';
 import { EMailTemplates } from './mail.options';
@@ -111,7 +111,7 @@ export const handleMail: (doc: IModel) => Promise<any> = async (doc: IModel): Pr
             `$handle.mail (handleMail): No Mail Setting - Completed : doc: ${id} - name: ${doc.name} - ti: ${doc.job.transid}`
         );
 
-        return;
+        return Promise.resolve();
     }
 
     if (doc.mail && doc.mail.enabled === false) {
@@ -119,7 +119,7 @@ export const handleMail: (doc: IModel) => Promise<any> = async (doc: IModel): Pr
             `$handle.mail (handleMail): mail disabled - doc: ${id} - name: ${doc.name} - ti: ${doc.job.transid}`
         );
 
-        return;
+        return Promise.resolve();
     }
 
     // here we can now continue with the mail sending
@@ -137,11 +137,11 @@ export const handleMail: (doc: IModel) => Promise<any> = async (doc: IModel): Pr
             `$handle.mail (handleMail): No Mail Set - doc: ${id} - name: ${doc.name} - ti: ${doc.job.transid}`
         );
 
-        return;
+        return Promise.resolve();
     }
 
     const uniq: (a: string[], b: string[]) => string[] = (a: string[], b: string[]): string[] => {
-        const c: string[] = a.concat(b);
+        const c: string[] = a.concat(b).map((name: string) => name.toLowerCase());
 
         return c.filter((item, pos) => c.indexOf(item) === pos);
     };

@@ -1,4 +1,4 @@
-import { DataModel, IModel } from '../../models/models';
+import { DataModel, IModel } from '@models';
 
 export const findOne: (id: string) => Promise<IModel | null> = async (id: string): Promise<IModel | null> => {
     const doc: IModel | null = await DataModel.findOne({ _id: id }).exec();

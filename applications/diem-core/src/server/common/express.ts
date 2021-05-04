@@ -1,22 +1,30 @@
 import path from 'path';
 import express, { Request } from 'express';
 import session from 'express-session';
-import redisStore from 'connect-redis';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import nocache from 'nocache';
 import rateLimit from 'express-rate-limit';
+import passport from 'passport';
+import MongoStore from 'connect-mongo';
 import { IXorg } from '../interfaces/env';
 import { IResponse } from '../interfaces';
+import { mongoose } from './mongo';
 import { Credentials } from './cfenv';
 import { utils } from './utils';
-import { redisc } from './redis';
 import { Strategy } from './authorisation';
 
 export const limiter = rateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute
     max: 100,
     message: 'You have exceeded the 100 requests per minute limit!',
+    headers: true,
+});
+
+export const limiterl = rateLimit({
+    windowMs: 1 * 60 * 250, // 1 minute
+    max: 250,
+    message: 'You have exceeded the 1000 requests per minute limit!',
     headers: true,
 });
 
@@ -66,7 +74,6 @@ export class Express {
         },
     };
 
-    private passport!: any;
     private config: IExpressConfig = {
         BODYPARSER_JSON_LIMIT: '15mb',
         BODYPARSER_URLENCODED_LIMIT: '15mb',
@@ -76,10 +83,9 @@ export class Express {
     };
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    public constructor(passport: any, assets: IAsserts, config?: IExpressConfig) {
+    public constructor(assets: IAsserts, config?: IExpressConfig) {
         this.assets = assets;
-        this.passport = passport;
-        this.passport.use(Strategy);
+        passport.use(Strategy);
         this.config = { ...this.config, ...config };
 
         utils.ev.on('fatalError', async (status: boolean) => {
@@ -114,10 +120,6 @@ export class Express {
             const sess: any = this.getSession();
 
             this.app
-                .use(this.checkSession())
-                .use(session(sess))
-                .use(this.passport.initialize())
-                .use(this.passport.session())
                 .use(helmet())
                 .use(helmet.referrerPolicy({ policy: 'strict-origin-when-cross-origin' }))
                 .use(`${utils.Env.apppath}/public`, express.static('./public'))
@@ -130,24 +132,37 @@ export class Express {
                 .use(`${utils.Env.apppath}/tinymce/icons`, express.static('./node_modules/tinymce/icons'))
                 .use(`${utils.Env.apppath}/tinymce/skins`, express.static('./node_modules/tinymce/skins'))
                 .use(`${utils.Env.apppath}/tinymce/themes`, express.static('./node_modules/tinymce/themes'))
-                .get('/login', limiter, this.passport.authenticate('openidconnect', {}))
-                .get('/sso/callback', limiter, (req: IRequest, res: IResponse, next: any) => {
-                    const redirect_url = req.session.originalUrl;
-                    this.passport.authenticate('openidconnect', {
-                        successRedirect: redirect_url,
-                        failureRedirect: '/failure',
-                    })(req, res, next);
+                .get('/favicon.png', limiter, (_req: IRequest, res: IResponse) => {
+                    res.sendFile('/public/images/favicon.png', { root: path.resolve() });
                 })
+                .use(this.checkSession())
+                .use(session(sess))
+                .use(passport.initialize())
+                .use(passport.session())
+                .get('/login', limiter, passport.authenticate('openidconnect', {}))
+                .get(
+                    '/sso/callback',
+                    limiter,
+                    passport.authenticate('openidconnect'),
+                    (req: IRequest, res: IResponse) => {
+                        if (req.session) {
+                            return res.redirect(req.session.originalUrl || '/');
+                        }
+                    },
+                    (err: Error, _req: IRequest, res: IResponse, _next: any) => {
+                        if (err) {
+                            // maybe an old sso callback, let's return to the login
+                            return res.redirect('/login');
+                            // return res.sendFile('/public/501.html', { root: path.resolve() });
+                        }
+                    }
+                )
                 .get(`${utils.Env.apppath}/service-worker.js`, limiter, (_req: IRequest, res: IResponse) => {
                     res.sendFile('/public/js/service-worker.js', { root: path.resolve() });
-                })
-                .get(`${utils.Env.apppath}/workbox-*`, limiter, (req: IRequest, res: IResponse) => {
-                    res.sendFile(`/public/js/workbox-${req.params['0']}`, { root: path.resolve() });
                 })
                 .get(`${utils.Env.apppath}/robots.txt`, limiter, (_req: IRequest, res: IResponse) => {
                     res.sendFile('/public/robots.txt', { root: path.resolve() });
                 })
-                .use(limiter)
                 .use((req, res, next) =>
                     !hasSome(req, this.config ? this.config.cspExcluded : []) ? csp(req, res, next) : next()
                 )
@@ -188,11 +203,11 @@ export class Express {
             console.error('$express (start)', err);
         }
 
-        this.passport.serializeUser((user: any, done: any) => {
+        passport.serializeUser((user: any, done: any) => {
             done(undefined, user);
         });
 
-        this.passport.deserializeUser((obj: any, done: any) => {
+        passport.deserializeUser((obj: any, done: any) => {
             done(undefined, obj);
         });
     };
@@ -243,29 +258,24 @@ export class Express {
         next();
     };
 
-    private getSession = (): any => {
-        const redisstore: any = redisStore(session);
-
-        const redisClient: any = redisc;
-
-        return {
-            cookie: {
-                httpOnly: true,
-                maxAge: 86400000,
-                path: '/',
-                secure: true,
-            },
-            genid: (): string => utils.guid(),
-            name: this.session ? this.session.name : undefined,
-            proxy: true,
-            resave: false,
-            saveUninitialized: false,
-            secret: this.session ? this.session.secret : undefined,
-            store: new redisstore({
-                client: redisClient,
-            }),
-        };
-    };
+    private getSession = (): any => ({
+        cookie: {
+            httpOnly: true,
+            maxAge: 86400000,
+            path: '/',
+            secure: true,
+        },
+        genid: (): string => utils.guid(),
+        name: this.session ? this.session.name : undefined,
+        proxy: true,
+        resave: false,
+        saveUninitialized: false,
+        secret: this.session ? this.session.secret : undefined,
+        store: MongoStore.create({
+            client: mongoose.connection.getClient(),
+            stringify: false,
+        }),
+    });
 
     private checkSession = () => (_req: IRequest, res: IResponse, next: () => any): any => {
         const lookupSession: any = (error: Error) => {

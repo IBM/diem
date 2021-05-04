@@ -1,7 +1,7 @@
 import { utils } from '@common/utils';
 import { EStoreActions, IError, IntPayload, IntServerPayload, IRequest } from '@interfaces';
-import { ConnModel, IConnBody, IConnModel, IConnSchema, FaIcons } from '../models/models';
-import { addTrace } from '../shared/functions';
+import { ConnModel, IConnBody, IConnModel, IConnSchema, FaIcons } from '@models';
+import { addTrace } from '@functions';
 
 export const connnew: (body: IConnBody) => Promise<any> = async (body: IConnBody) => {
     const input: IConnSchema = {

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { IConfigmapsModel, ConfigmapsModel } from '../../../../models/models';
+import { IConfigmapsModel, ConfigmapsModel } from '@models';
 import { regEx } from './handle.params.util';
 
 const replace: (code: string, configmap: string, org: string) => Promise<string> = async (

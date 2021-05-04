@@ -4,23 +4,22 @@ import fs from 'fs';
 import path from 'path';
 import * as http from 'http';
 import jwt from 'jsonwebtoken';
-import passport from 'passport';
 import pug from 'pug';
-import { Express, limiter } from '@common/express';
+import { Express, limiter, limiterl } from '@common/express';
 import { IntInternal, IntEnv, IError, IProfile, IRequest, IResponse } from '@interfaces';
 import { utils } from '@common/utils';
 import { slackMsg } from '@common/slack/slack';
 import { slackMsgInt } from '@common/slack/error-int';
 import { multipart } from '@common/busboy';
+import { getOrg, getRole, getRoleNbr, addTrace } from '@functions';
 import { jwtCheck } from '../routes/webapikeys/webapikeys.jwtcheck';
 import * as routes from '../routes/routes';
-import { getOrg, getRole, getRoleNbr, addTrace } from '../routes/shared/functions';
 import { toMQ } from '../routes/logger/logger';
+import { NC } from './nats_connect';
 import { css, expressConfig } from './config';
 import { login } from './authorization';
 import assets from './assets.json';
 import { WSS } from './socket';
-import { cron } from './cron';
 
 export class Server {
     public pack: IntEnv;
@@ -34,8 +33,9 @@ export class Server {
             .on('uncaughtException', async (err: IError) => {
                 await utils.logError('$server.ts (uncaught): uncaughtException', {
                     message: err.message,
-                    name: 'uncaught excemption',
+                    name: 'uncaught exception',
                     stack: err.stack,
+                    code: err.code || 'n/a',
                     trace: addTrace(err.trace, '@at $server (uncaughtException)'),
                     caller: '$server',
                 });
@@ -67,6 +67,7 @@ export class Server {
             if (internal.err) {
                 this.fatal = internal.fatal;
                 await utils.logError('$server.ts (internal): Notification of Error', {
+                    ...internal,
                     application: utils.Env.app,
                     error: JSON.stringify(internal.err, undefined, 2),
                     message: internal.message,
@@ -82,12 +83,22 @@ export class Server {
                 utils.logInfo(`$server.ts (internal): fatal removed by ${internal.source}`);
             }
         });
+
+        utils.ev.on('error', async (err: IError) => {
+            void utils.logError('$server.ts (error)', err);
+        });
     }
 
     public start = async (): Promise<void> => {
+        // we suppress console error
+        // eslint-disable-next-line no-console
+        // console.error = () => {
+        // no console.log
+        // };
+
         /*** The require packages */
 
-        const app: any = new Express(passport, assets, expressConfig).app;
+        const app: any = new Express(assets, expressConfig).app;
 
         /*** variables that are moved to the index.html */
         const env: { path: string; css: any; description: string; script: any[] } = {
@@ -137,11 +148,11 @@ export class Server {
         /*** here we start actually handling the requests */
 
         app.use(this.logErrors)
-            .all(`${this.pack.apppath}/api/:function`, jwtCheck, this.api)
-            .all(`${this.pack.apppath}/user/:function/:pyfile`, this.secAuth, this.api)
-            .all(`${this.pack.apppath}/user/:function`, this.secAuth, this.api)
-            .all('/internal/:function', this.api)
-            .all('/internal/:function/:pyfile', this.api)
+            .all(`${this.pack.apppath}/api/:function`, limiter, jwtCheck, this.api)
+            .all(`${this.pack.apppath}/user/:function/:pyfile`, limiter, this.secAuth, this.api)
+            .all(`${this.pack.apppath}/user/:function`, limiter, this.secAuth, this.api)
+            .all('/internal/:function', limiterl, this.api)
+            .all('/internal/:function/:pyfile', limiterl, this.api)
             .get('*', this.secAuth, limiter, (req: IRequest, res: IResponse) => {
                 const hrstart: [number, number] = process.hrtime();
                 res.setHeader('Last-Modified', new Date().toUTCString());
@@ -155,6 +166,7 @@ export class Server {
                     req,
                     201,
                     `$server (*) : authenticated request from ${req.user?.email}`,
+                    'resource',
                     undefined,
                     hrstart,
                     this.pack
@@ -166,6 +178,7 @@ export class Server {
                     req,
                     400,
                     `$server (*) : authenticated but invalid request from ${req.user?.email}`,
+                    'resource',
                     undefined,
                     hrstart,
                     this.pack
@@ -183,11 +196,18 @@ export class Server {
                     process.version
                 })`;
             utils.logInfo(msg);
-            await slackMsg(msg);
+            void slackMsg(msg);
         });
 
         await WSS.start(httpServer);
-        cron.start();
+
+        try {
+            await NC.connect().catch(async (err) => {
+                void utils.logError('$server (start): failed to connect to nats', err);
+            });
+        } catch (err) {
+            return console.error(err);
+        }
         // spark.startWatcher().catch((err: Error) => console.error(err));
     };
 
@@ -218,17 +238,12 @@ export class Server {
             try {
                 await multipart.parseMulti(req);
             } catch (err) {
+                if (!req.transid) {
+                    req.transid = utils.guid();
+                }
                 err.transid = req.transid;
                 err.pid = process.pid;
-                await utils.logMQError(
-                    '$server (api) Busboy Error',
-                    req,
-                    401,
-                    '$server (api error)',
-                    err,
-                    hrstart,
-                    this.pack
-                );
+                void toMQ(req, 401, '$server (api error)', 'error', err, hrstart, this.pack);
 
                 return res.status(404).send('Your request could not be completed, incorrect parsing');
             }
@@ -258,6 +273,7 @@ export class Server {
                     req,
                     200,
                     `$server : api request from ${req.user ? req.user.email : 'anonymous'}`,
+                    'api',
                     undefined,
                     hrstart,
                     this.pack
@@ -292,6 +308,7 @@ export class Server {
                         req,
                         500,
                         `$server : api request error from ${req.user ? req.user.email : 'internal'}`,
+                        'error',
                         msg,
                         hrstart,
                         this.pack
@@ -303,7 +320,15 @@ export class Server {
                 }
             }
         } else {
-            void toMQ(req, 404, `$server (api): not found - ${req.params.function}`, undefined, hrstart, this.pack);
+            void toMQ(
+                req,
+                404,
+                `$server (api): not found - ${req.params.function}`,
+                'error',
+                undefined,
+                hrstart,
+                this.pack
+            );
 
             return res.status(404).send({ message: 'resouce cannot be found' });
         }
@@ -329,10 +354,10 @@ export class Server {
 
         if (req.headers.authorization) {
             token = req.headers.authorization.split(' ')[1];
-            method = 'OIC';
+            method = 'JWT';
         } else if (req.cookies && req.cookies[utils.Env.appcookie]) {
             token = req.cookies[utils.Env.appcookie];
-            method = 'Application';
+            method = 'OIC';
         }
 
         /* Continue with verification */
@@ -346,6 +371,16 @@ export class Server {
         const Login: any = () => {
             login(req, res)
                 .then(async () => {
+                    void toMQ(
+                        req,
+                        200,
+                        `$server (secAuth): aquired profile - email: ${email} - name: ${name} - ti: ${req.transid}`,
+                        'login',
+                        undefined,
+                        hrstart,
+                        this.pack
+                    );
+
                     utils.logInfo(
                         `$server (secAuth): aquired profile - email: ${email} - name: ${name} - ti: ${req.transid}`
                     );
@@ -355,15 +390,11 @@ export class Server {
                 .catch(async (err: any) => {
                     err.caller = '$server';
                     err.trace = addTrace(err.trace, '@at $server (login)');
-                    await utils.logMQError(
+                    void utils.logError(
                         `$server (secAuth): requiring profile error - email: ${email} - name: ${name} - ti: ${req.transid}`,
-                        req,
-                        401,
-                        `$server : failed login by ${email}`,
-                        err,
-                        hrstart,
-                        this.pack
+                        err
                     );
+                    void toMQ(req, 401, `$server : failed login by ${email}`, 'error', err, hrstart, this.pack);
 
                     return res.sendFile('/public/501.html', { root: path.resolve() });
                 });
@@ -440,8 +471,11 @@ export class Server {
         res: IResponse,
         next: (err: IError) => any
     ): Promise<void> => {
+        if (!req.transid) {
+            req.transid = utils.guid();
+        }
         err.trace = addTrace(err.trace, '@at $server (logErrors)');
-        err.email = req.token ? req.token.email : '';
+        err.email = req.token ? req.token.email : req.user ? req.user.email : '';
         err.endpoint = req.params ? req.params.function : 'n/a';
         err.time = utils.time();
         err.transid = req.transid;
@@ -453,8 +487,8 @@ export class Server {
 
         const errMsg: string = '$server (logErrors)';
 
-        await slackMsgInt(err);
-        await utils.logMQError(errMsg, req, 401, errMsg, err, undefined, this.pack);
+        void utils.logError(errMsg, err);
+        void toMQ(req, 401, errMsg, 'error', err, undefined, this.pack);
 
         res.status(500).end(`An internal error happened. It has been logged - transid: ${req.transid || 'none'}`);
     };

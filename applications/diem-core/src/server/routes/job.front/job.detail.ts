@@ -5,7 +5,6 @@ import { IRequest } from '@interfaces';
 import { mongoose } from '@common/mongo';
 import { format } from 'sql-formatter';
 import { stringify } from 'yaml';
-import { StatusConfig } from '../job.backend/job.functions';
 import {
     DataModel,
     IJobDetail,
@@ -17,8 +16,9 @@ import {
     IntPayloadValues,
     IJobSchema,
     ExecutorTypes,
-} from '../models/models';
-import { flatten__, fmtTime, prePend, addTrace } from '../shared/functions';
+} from '@models';
+import { flatten__, fmtTime, prePend, addTrace } from '@functions';
+import { StatusConfig } from '../job.backend/job.functions';
 import { getGraphLinks } from './job.grapht';
 import { lookupTemplate } from './job.template';
 

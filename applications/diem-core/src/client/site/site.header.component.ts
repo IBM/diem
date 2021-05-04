@@ -29,13 +29,6 @@ export class SiteHeaderComponent {
 
     private httpService: HttpService;
 
-    @HostListener('focusout', ['$event'])
-    onFocusOut(event: MouseEvent): void {
-        if (!event.relatedTarget) {
-            this.closePanels();
-        }
-    }
-
     public constructor(env: Env, httpService: HttpService) {
         this.menus = menus;
         this.subMenus = subMenus;
@@ -50,6 +43,13 @@ export class SiteHeaderComponent {
         }
 
         this.httpService = httpService;
+    }
+
+    @HostListener('focusout', ['$event'])
+    onFocusOut(event: MouseEvent): void {
+        if (!event.relatedTarget) {
+            this.closePanels();
+        }
     }
 
     public evalStr: any = (str: string): any => Function(`"use strict";return (${str})`).call(this);

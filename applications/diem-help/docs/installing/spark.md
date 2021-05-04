@@ -69,8 +69,9 @@ The spark images can be pushed to any repository where you can use them directly
 Tagging an image (spark 3.1.0)
 
 ```cmd
-docker tag 127.0.0.1:30500/etl-mgr/spark-py:3.1.1 quay.io/diem/spark:base-spark-py-3.1.1
-docker tag 127.0.0.1:30500/etl-mgr/spark:3.1.1 quay.io/diem/spark:base-spark-3.1.1
+docker tag 127.0.0.1:30500/etl-mgr/spark-py:3.1.1 quay.io/diem/base-pyspark:3.1.1
+docker tag 127.0.0.1:30500/etl-mgr/spark:3.1.1 quay.io/diem/base-spark:3.1.1
+127.0.0.1:30500/etl-mgr/spark:3.1.1
 ```
 
 push the images to your repository

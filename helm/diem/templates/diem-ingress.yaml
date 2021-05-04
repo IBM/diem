@@ -1,0 +1,78 @@
+{{- if eq .Values.ingress.version "v1"}}
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  annotations:
+    ingress.bluemix.net/client-max-body-size: 200m
+    ingress.bluemix.net/proxy-body-size: 200m
+    ingress.bluemix.net/proxy-buffer-size: size=8k
+    ingress.bluemix.net/rewrite-path: service=sonarqube rewrite=/
+    ingress.kubernetes.io/client_max_body_size: 200m
+    ingress.kubernetes.io/ingress.allow-http: "false"
+    ingress.kubernetes.io/rewrite-target: /
+    ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 8k
+    nginx.org/client-max-body-size: 200m
+    nginx.org/websocket-services: {{ .Values.core.deployment.socketName }}
+    {{- if .Values.controller.podAnnotations }}
+    {{- with .Values.controller.podAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- end }}
+  name: {{ .Values.ingress.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
+spec:
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - backend:
+              service:
+                name: {{ .Values.core.name }}
+                port:
+                  number: {{ .Values.core.deployment.port }}
+            pathType: Prefix
+            path: /
+          - backend:
+              service:
+                name: {{ .Values.core.name }}
+                port:
+                  number: {{ .Values.core.deployment.port }}
+            pathType: Prefix
+            path: "/sso/callback"
+          - backend:
+              service:
+                name: {{ .Values.core.name }}
+                port:
+                  number: {{ .Values.core.deployment.port }}
+            pathType: Prefix
+            path: "/login"
+          - backend:
+              service:
+                name: {{ .Values.core.name }}
+                port:
+                  number: {{ .Values.core.deployment.port }}
+            pathType: Prefix
+            path: "{{ .Values.core.config.APPPATH }}"
+          - backend:
+              service:
+                name: {{ .Values.core.name }}
+                port:
+                  number: {{ .Values.core.deployment.port }}
+            pathType: Prefix
+            path: /favicon.png
+          - backend:
+              service:
+                name: {{ .Values.core.name }}
+                port:
+                  number: {{ .Values.core.deployment.port }}
+            pathType: Prefix
+            path: "/{{ .Values.core.deployment.socketName }}"
+
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host }}
+      secretName: {{ .Values.ingress.tls }}
+{{- end}}
