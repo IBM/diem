@@ -36,5 +36,5 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          charts_dir: helm
+          charts_dir: charts
           branch: helm
