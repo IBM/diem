@@ -4,10 +4,27 @@ import { IModel, IJob, ExecutorTypes } from '@models';
 import { addTrace } from '@functions';
 import { deleteJob } from '../executors/spark/spark.job';
 import { jobLogger } from '../job.logger/job.logger';
+import { sparkWatcher } from '../spark-operator/spark.watcher';
+
+export const getPySparkJobLog: (doc: IModel) => Promise<IModel> = async (doc: IModel): Promise<IModel> => {
+    const id: string = doc._id.toString();
+
+    const sparkLog: string | undefined = await sparkWatcher.getJobLog(id).catch(() => {
+        // nothing
+    });
+
+    if (sparkLog) {
+        doc.job.error = `${doc.job.error}\n\n*** Attaching Spark Log***\n\n${sparkLog}`;
+    }
+
+    return Promise.resolve(doc);
+};
 
 export const finishJob: (doc: IModel) => Promise<any> = async (doc: IModel): Promise<any> => {
+    const id: string = doc._id.toString();
+
     if (doc.job.executor === ExecutorTypes.pyspark) {
-        await deleteJob(doc._id.toString()).catch((err: IError) => {
+        await deleteJob(id).catch((err: IError) => {
             err.trace = addTrace(err.trace, '@at $job.finish (finishJob)');
         });
     }
