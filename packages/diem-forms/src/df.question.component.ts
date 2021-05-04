@@ -941,7 +941,7 @@ export class DFQuestionComponent implements OnDestroy, OnInit {
             this.subscriptions.push(
                 this.form.controls[field.watch].valueChanges
                     .pipe(debounceTime(200) /** changed to 200 */)
-                    .subscribe((data) => this.onValueChanged(data))
+                    .subscribe((data: any) => this.onValueChanged(data))
             );
         });
     }
