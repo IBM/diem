@@ -17,10 +17,7 @@ const loggerSchema: Schema = new Schema(
             },
             org: String,
         },
-        browser: {
-            agent: String,
-            ip: String,
-        },
+        browser: Object,
         err: Object,
         event: String,
         module: Object,

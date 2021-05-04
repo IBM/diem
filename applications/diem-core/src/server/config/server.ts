@@ -238,6 +238,9 @@ export class Server {
             try {
                 await multipart.parseMulti(req);
             } catch (err) {
+                if (!req.transid) {
+                    req.transid = utils.guid();
+                }
                 err.transid = req.transid;
                 err.pid = process.pid;
                 void toMQ(req, 401, '$server (api error)', 'error', err, hrstart, this.pack);
@@ -468,8 +471,11 @@ export class Server {
         res: IResponse,
         next: (err: IError) => any
     ): Promise<void> => {
+        if (!req.transid) {
+            req.transid = utils.guid();
+        }
         err.trace = addTrace(err.trace, '@at $server (logErrors)');
-        err.email = req.token ? req.token.email : '';
+        err.email = req.token ? req.token.email : req.user ? req.user.email : '';
         err.endpoint = req.params ? req.params.function : 'n/a';
         err.time = utils.time();
         err.transid = req.transid;

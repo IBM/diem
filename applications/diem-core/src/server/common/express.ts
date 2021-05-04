@@ -160,9 +160,6 @@ export class Express {
                 .get(`${utils.Env.apppath}/service-worker.js`, limiter, (_req: IRequest, res: IResponse) => {
                     res.sendFile('/public/js/service-worker.js', { root: path.resolve() });
                 })
-                .get(`${utils.Env.apppath}/workbox-*`, limiter, (req: IRequest, res: IResponse) => {
-                    res.sendFile(`/public/js/workbox-${req.params['0']}`, { root: path.resolve() });
-                })
                 .get(`${utils.Env.apppath}/robots.txt`, limiter, (_req: IRequest, res: IResponse) => {
                     res.sendFile('/public/robots.txt', { root: path.resolve() });
                 })
