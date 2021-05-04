@@ -1,7 +1,7 @@
 {
     "name": "diem-core",
     "description": "Diem Data Integration Engine Multipurpose",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "author": "guy_huinen@be.ibm.com",
     "config": {
         "appname": "Diem",
@@ -101,7 +101,7 @@
         "buffer": "^6.0.3",
         "carbon-components": "^10.29.0",
         "carbon-components-angular": "^4.48.2",
-        "codelyzer": "^6.0.1",
+        "codelyzer": "^6.0.2",
         "copy-webpack-plugin": "^8.1.1",
         "core.js": "^0.4.2",
         "cross-env": "^7.0.3",
@@ -119,7 +119,7 @@
         "file-loader": "^6.2.0",
         "file-saver": "^2.0.5",
         "font-awesome": "^4.7.0",
-        "fork-ts-checker-webpack-plugin": "^6.2.5",
+        "fork-ts-checker-webpack-plugin": "^6.2.6",
         "gulp": "^4.0.2",
         "gulp-shell": "^0.8.0",
         "json-loader": "^0.5.7",

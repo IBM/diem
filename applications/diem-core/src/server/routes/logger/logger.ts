@@ -26,10 +26,10 @@ export const toMQ = async (
         created: new Date(),
         annotations: {
             execution: utils.hrTime(hrstart),
-            profile: req.token,
-            org: req.user?.org || 'Anonymous',
+            profile: req.token ? req.token : req.user ? req.user : undefined,
+            org: req.user?.org || 'anonymous',
         },
-        browser: utils.browser(req),
+        browser: err ? req.headers : utils.browser(req),
         err,
         event,
         module: pack,

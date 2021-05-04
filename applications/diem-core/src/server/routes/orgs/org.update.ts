@@ -133,7 +133,7 @@ export const orgupdate: (req: IRequest, res: IResponse) => Promise<IRequest | an
         await login(req, res);
     }
 
-    utils.logInfo(`$Orgs (Orgsupdate): Orgs updated - email: ${body.email}`, req.transid, process.hrtime(hrstart));
+    utils.logInfo(`$org.update (Orgupdate): Org updated - email: ${body.email}`, req.transid, process.hrtime(hrstart));
 
     // when doing an update for a single document, return the action to put the document in read mode
     const actions: any =

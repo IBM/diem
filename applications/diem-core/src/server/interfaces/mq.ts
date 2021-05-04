@@ -12,7 +12,7 @@ export interface IntMQLog {
     logid: string;
     created: Date;
     annotations: {
-        profile: {
+        profile?: {
             [key: string]: any;
             email: string;
             name: string;
@@ -24,8 +24,9 @@ export interface IntMQLog {
         };
     };
     browser: {
-        agent: string;
-        ip: string;
+        [index: string]: any;
+        agent?: string;
+        ip?: string;
     };
     err?: Error;
     event: string;

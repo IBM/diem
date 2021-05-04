@@ -5,7 +5,7 @@ import { FormsModel } from '@models';
 
 const cache: any = {};
 
-const operator: string = '@at $operator (getFormQuestions)';
+const operator: string = '$operator (getFormQuestions)';
 
 export const getFormQuestions: (req: IRequest) => Promise<any> = async (req: IRequest): Promise<any> => {
     const hrstart: [number, number] = process.hrtime();
@@ -33,7 +33,7 @@ export const getFormQuestions: (req: IRequest) => Promise<any> = async (req: IRe
 
         return Promise.resolve(doc);
     } catch (err) {
-        err.trace = addTrace(err.trace, operator);
+        err.trace = addTrace(err.trace, `#at ${operator}`);
         err.form = req.query.form;
 
         return Promise.reject(err);
