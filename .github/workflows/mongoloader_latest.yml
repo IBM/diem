@@ -8,18 +8,18 @@ on:
   push:
     branches: [latest]
     paths:
-      - "helm/mongoloader/**"
+      - "charts/mongoloader/**"
   pull_request:
     branches: [latest]
     paths:
-      - "helm/mongoloader/**"
+      - "charts/mongoloader/**"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 defaults:
   run:
-    working-directory: helm/mongoloader
+    working-directory: charts/mongoloader
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
