@@ -1,7 +1,7 @@
 {
     "name": "diem-core",
     "description": "Diem Data Integration Engine Multipurpose",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "author": "guy_huinen@be.ibm.com",
     "config": {
         "appname": "Diem",
@@ -86,7 +86,7 @@
         "@types/jsonwebtoken": "^8.5.1",
         "@types/lodash-es": "^4.17.4",
         "@types/mermaid": "^8.2.5",
-        "@types/node": "^15.0.1",
+        "@types/node": "^15.0.2",
         "@types/passport": "^1.0.6",
         "@types/pug": "^2.0.4",
         "@types/request": "^2.48.5",

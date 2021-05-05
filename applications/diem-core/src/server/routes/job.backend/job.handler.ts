@@ -172,6 +172,10 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
 
         doc.job.runtime = runTime(doc);
 
+        if (doc.job.error && !job.error) {
+            doc.job.error = null;
+        }
+
         const values: IJobResponse = PayloadValues({
             id,
             status: doc.job.status,
@@ -179,9 +183,10 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
             jobstart: doc.job.jobstart,
             runtime: doc.job.runtime,
             count: doc.job.count,
+            error: doc.job.error || null,
         });
 
-        // es6 remove log from values for jobs
+        // remove log from values for jobs
         const { log, ...rest } = values;
 
         // update the all jobs
@@ -193,17 +198,9 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
             values: rest,
         });
 
+        // get the log of the sparkjob in case of an error
         if (doc.job.error && doc.job.executor === ExecutorTypes.pyspark) {
             await getPySparkJobLog(doc);
-        }
-
-        if (doc.job.error) {
-            if (!job.error) {
-                doc.job.error = null;
-                values.error = null;
-            } else {
-                values.error = doc.job.error;
-            }
         }
 
         // can i remove this
@@ -236,6 +233,9 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
             });
 
             // this is the payload for the pipeline table
+
+            // remove log from values for jobs
+
             payload.push({
                 key: 'id',
                 loaded: true,
@@ -245,7 +245,7 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
                 store: jobdetail,
                 targetid: job.jobid,
                 type: EStoreActions.UPD_STORE_TABLE_RCD,
-                values: rest,
+                values,
             });
         }
         values.log = doc.toObject().log;
@@ -255,7 +255,7 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
             store: jobdetail,
             targetid: job.id,
             type: EStoreActions.UPD_STORE_FORM_RCD,
-            values: ['Failed', 'Stopped', 'Completed'].includes(job.status) ? values : rest,
+            values,
         });
 
         // here we save the job as no more values of the document will be changed
