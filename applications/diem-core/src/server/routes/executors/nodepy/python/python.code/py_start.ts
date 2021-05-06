@@ -7,6 +7,9 @@ export const py_start: (job: IETLJob) => string = (job: IETLJob): string => Stri
 ### py_start ###
 
 import os
+import sys
+import time
+
 import diemlib.config as config
 from diemlib.main import *
 
