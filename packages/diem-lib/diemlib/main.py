@@ -16,9 +16,10 @@ from sys import exit
 import traceback
 import diemlib.config as config
 import requests
+import io
 
 __all__ = ["UtcNow", "runTime", "printl",
-           "mq", "out", "endJob", "endjob", "error"]
+           "mq", "out", "endJob", "endjob", "failjob","stopjob", "error", "startTimer"]
 
 
 def UtcNow():
@@ -84,6 +85,11 @@ def out(data):
 
 def endJob(kwargs):
     # Ends the Job
+
+    if config.__timer:
+        config.__timer.cancel()
+        config.__time = None
+
     try:
         Completed = "Completed"
         Failed = "Failed"
@@ -136,8 +142,24 @@ def endjob():
     data = {"status": "Completed", "count": config.__count}
     endJob(data)
 
+def stopjob(out = None):
+    data = {"status": "Stopped", "count": config.__count}
+    if not out == None:
+        data["out"] = out
+    endJob(data)
+
+def failjob(out = None):
+    data = {"status": "Failed", "count": config.__count}
+    if not out == None:
+        data["out"] = out
+    endJob(data)
+
 
 def error(err):
+
+    if config.__timer:
+        config.__timer.cancel()
+        config.__time = None
 
     etype, value, tb = sys.exc_info()
     if not tb is None:
@@ -162,3 +184,18 @@ def error(err):
         mq(data)
 
     exit(1)
+
+def startTimer():
+  from threading import Timer
+  sys.stdout = io.TextIOWrapper(io.BufferedWriter(sys.stdout.buffer, 1024 ))
+
+  class RepeatTimer(Timer):
+    def run(self):
+        while not self.finished.wait(self.interval):
+            self.function(*self.args, **self.kwargs)
+
+  def flushOut():
+    sys.stdout.flush()
+
+  config.__timer = RepeatTimer(1, flushOut)
+  config.__timer.start()

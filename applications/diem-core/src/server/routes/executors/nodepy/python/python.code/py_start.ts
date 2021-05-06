@@ -6,8 +6,6 @@ const filepath: string = '/tmp/spark-local-dir';
 export const py_start: (job: IETLJob) => string = (job: IETLJob): string => String.raw`
 ### py_start ###
 
-import sys
-import time
 import os
 import diemlib.config as config
 from diemlib.main import *
@@ -25,6 +23,8 @@ config.__count = 0
 config.__starttime = time.time()
 config.__jobstart = UtcNow()
 config.__nats = True
+
+os.remove(f"{config.__id}.py")
 
 def diem_except_hook(exctype, value, traceback):
     error(value)
