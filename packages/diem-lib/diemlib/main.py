@@ -138,8 +138,10 @@ def endJob(kwargs):
         error(e)
 
 
-def endjob():
+def endjob(out = None):
     data = {"status": "Completed", "count": config.__count}
+    if not out == None:
+        data["out"] = out
     endJob(data)
 
 def stopjob(out = None):
