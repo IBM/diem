@@ -40,5 +40,7 @@ data = {
 }
 mq(data)
 
+startTimer()
+
 ######
 `;
