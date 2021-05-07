@@ -4,11 +4,11 @@
 
 import { EStoreActions, IntPayload } from '@interfaces';
 import { utils } from '@common/utils';
-import { DataModel, EJobTypes, IJobResponse, IModel, EJobStatus, ISocketPayload } from '@models';
+import { DataModel, EJobTypes, IJobResponse, IModel, EJobStatus, ISocketPayload, ExecutorTypes } from '@models';
 import { addTrace } from '@functions';
 import { pipelineHandler } from '../pipeline.backend/pipeline.handler';
 import { PayloadValues } from './job.functions';
-import { finishJob } from './job.finish';
+import { finishJob, getPySparkJobLog } from './job.finish';
 
 interface IOut {
     out: string;
@@ -89,7 +89,9 @@ const jobDocOutHandler: (payload: IntPayload[], doc: IModel, job: IJobResponse) 
         special: job.special,
     };
 
-    if (Array.isArray(doc.out)) {
+    if (job.outl) {
+        doc.out = doc.out.concat(job.out);
+    } else if (Array.isArray(doc.out)) {
         doc.out.push(obj);
     } else {
         doc.out = [obj];
@@ -104,7 +106,7 @@ const jobDocOutHandler: (payload: IntPayload[], doc: IModel, job: IJobResponse) 
         options: {
             field: 'out',
         },
-        type: EStoreActions.ADD_STORE_TABLE_RCD,
+        type: job.outl ? EStoreActions.APPEND_STORE_TABLE_RCD : EStoreActions.ADD_STORE_TABLE_RCD,
         values: {
             out: job.out,
             special: job.special,
@@ -170,6 +172,10 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
 
         doc.job.runtime = runTime(doc);
 
+        if (doc.job.error && !job.error) {
+            doc.job.error = null;
+        }
+
         const values: IJobResponse = PayloadValues({
             id,
             status: doc.job.status,
@@ -177,27 +183,11 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
             jobstart: doc.job.jobstart,
             runtime: doc.job.runtime,
             count: doc.job.count,
+            error: doc.job.error || null,
         });
 
-        // just to make sure we have the right start moment
-        job.jobstart = doc.job.jobstart;
-
-        if (doc.job.error && !job.error) {
-            doc.job.error = null;
-        }
-
-        // always display the error or return null to clean the ui
-        values.error = doc.job.error || null;
-
-        // can i remove this
-        const isActivePl: boolean = isPl && doc.jobs && Object.keys(doc.jobs).length > 0; // has pipeline items
-        if (isActivePl && ['Running', 'Failed', 'Completed'].includes(doc.job.status)) {
-            values.jobs = job.jobs;
-        }
-
-        if (doc.out && doc.out.length === 0) {
-            values.out = doc.out;
-        }
+        // remove log from values for jobs
+        const { log, ...rest } = values;
 
         // update the all jobs
         payload.push({
@@ -205,8 +195,23 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
             loaded: true,
             store: 'jobs',
             type: EStoreActions.UPD_STORE_RCD, // update all jobs
-            values,
+            values: rest,
         });
+
+        // get the log of the sparkjob in case of an error
+        if (doc.job.error && doc.job.executor === ExecutorTypes.pyspark) {
+            await getPySparkJobLog(doc);
+        }
+
+        // can i remove this
+        const isActivePl: boolean = isPl && doc.jobs && Object.keys(doc.jobs).length > 0; // has pipeline items
+        if (isActivePl && ['Running', 'Failed', 'Completed'].includes(doc.job.status)) {
+            values.jobs = job.jobs;
+        }
+
+        if (doc.out?.length === 0) {
+            values.out = doc.out;
+        }
 
         // adding the job log
         if (['Failed', 'Stopped', 'Completed'].includes(job.status) && !isPl) {
@@ -228,6 +233,9 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
             });
 
             // this is the payload for the pipeline table
+
+            // remove log from values for jobs
+
             payload.push({
                 key: 'id',
                 loaded: true,

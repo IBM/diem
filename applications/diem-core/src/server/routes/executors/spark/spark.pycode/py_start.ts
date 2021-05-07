@@ -3,12 +3,13 @@ export const py_start: () => string = () => String.raw`
 
 ### py_start ###
 
+import os
 import sys
+import time
 
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
-import time
-import os
+
 import diemlib.config as config
 from diemlib.main import *
 
@@ -39,6 +40,8 @@ data = {
     "out": msg
 }
 mq(data)
+
+startTimer()
 
 ######
 `;
