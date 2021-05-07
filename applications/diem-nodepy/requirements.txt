@@ -22,3 +22,4 @@ sendgrid==6.5.0
 diemlib==1.0.1
 JPype1==1.2.1
 boxsdk[jwt]==2.11.0
+PyGithub == 1.55

@@ -18,3 +18,4 @@ sendgrid==6.4.8
 statsmodels==0.12.2
 diemlib==1.0.1
 pyarrow==3.0.0
+PyGithub == 1.55
