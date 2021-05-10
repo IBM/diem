@@ -19,10 +19,11 @@ module.exports = {
         'prettier',
         'import',
         'jsdoc',
-        'prototype-pollution-security-rules'
+        'prototype-pollution-security-rules',
     ],
     extends: [
         'plugin:@angular-eslint/recommended',
+        'prettier',
         '../../src/webpack/eslintrc-base.js',
     ],
     'rules': {
