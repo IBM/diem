@@ -157,9 +157,7 @@ export default class Operator {
      *
      * @param crdFile The path to the custom resource definition's YAML file
      */
-    public async registerCustomResourceDefinition(
-        crdFile: string
-    ): Promise<{
+    public async registerCustomResourceDefinition(crdFile: string): Promise<{
         group: string;
         versions: V1CustomResourceDefinitionVersion[] | V1beta1CustomResourceDefinitionVersion[] | undefined;
         kind: string;

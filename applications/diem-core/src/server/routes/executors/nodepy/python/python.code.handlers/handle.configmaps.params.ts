@@ -29,26 +29,23 @@ const replace: (code: string, configmap: string, org: string) => Promise<string>
     return Promise.resolve(code);
 };
 
-export const handleConfigmapsParams: (
-    code: string,
-    configmaps: string | string[],
-    org: string
-) => Promise<string> = async (
-    code: string,
-    configmaps: string | string[],
-    org: string
-    // eslint-disable-next-line sonarjs/cognitive-complexity
-): Promise<string> => {
-    if (typeof configmaps === 'string') {
-        code = await replace(code, configmaps, org);
-    }
-
-    // if there's only multiple confimaps
-    if (configmaps instanceof Array) {
-        for await (const configmap of configmaps) {
-            code = await replace(code, configmap, org);
+export const handleConfigmapsParams: (code: string, configmaps: string | string[], org: string) => Promise<string> =
+    async (
+        code: string,
+        configmaps: string | string[],
+        org: string
+        // eslint-disable-next-line sonarjs/cognitive-complexity
+    ): Promise<string> => {
+        if (typeof configmaps === 'string') {
+            code = await replace(code, configmaps, org);
         }
-    }
 
-    return Promise.resolve(code);
-};
+        // if there's only multiple confimaps
+        if (configmaps instanceof Array) {
+            for await (const configmap of configmaps) {
+                code = await replace(code, configmap, org);
+            }
+        }
+
+        return Promise.resolve(code);
+    };
