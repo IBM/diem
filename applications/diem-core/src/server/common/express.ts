@@ -277,21 +277,23 @@ export class Express {
         }),
     });
 
-    private checkSession = () => (_req: IRequest, res: IResponse, next: () => any): any => {
-        const lookupSession: any = (error: Error) => {
-            if (error) {
-                return res.sendFile('/public/503.html', { root: path.resolve() });
-            }
+    private checkSession =
+        () =>
+        (_req: IRequest, res: IResponse, next: () => any): any => {
+            const lookupSession: any = (error: Error) => {
+                if (error) {
+                    return res.sendFile('/public/503.html', { root: path.resolve() });
+                }
 
-            if (this.fatal) {
-                return res.sendFile('/public/503.html', { root: path.resolve() });
-            }
+                if (this.fatal) {
+                    return res.sendFile('/public/503.html', { root: path.resolve() });
+                }
 
-            next();
+                next();
+            };
+
+            lookupSession();
         };
-
-        lookupSession();
-    };
 
     private CSP: any = () => {
         const t: any[] = [];
