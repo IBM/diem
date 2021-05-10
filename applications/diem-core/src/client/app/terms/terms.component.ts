@@ -4,7 +4,4 @@ import { tmpl } from './templates/terms.pug.tmpl';
 @Component({
     template: tmpl,
 })
-
-export class TermsComponent {
-
-}
+export class TermsComponent {}

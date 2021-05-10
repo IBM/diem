@@ -4,5 +4,4 @@ import { tmpl } from './templates/help.pug.tmpl';
 @Component({
     template: tmpl,
 })
-
-export class HelpComponent { }
+export class HelpComponent {}

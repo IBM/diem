@@ -12,5 +12,5 @@ module.exports = {
         createDefaultProgram: true,
     },
     plugins: ['@typescript-eslint', 'sonarjs', 'prettier', 'import', 'jsdoc'],
-    extends: ['plugin:prettier/recommended', '../../src/webpack/eslintrc-base.js'],
+    extends: ['prettier', '../../src/webpack/eslintrc-base.js', 'plugin:prettier/recommended'],
 };

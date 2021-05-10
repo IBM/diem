@@ -25,4 +25,3 @@ export interface IError extends Error {
     blocks?: any;
     caller: string;
 }
-

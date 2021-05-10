@@ -24,21 +24,18 @@ const replaceParams: (code: string, connections: any, org: string) => Promise<st
     return regEx(code, connections, json(conn));
 };
 
-export const handleConnectionParams: (
-    code: string,
-    connections: string | string[],
-    org: string
-) => Promise<string> = async (code: string, connections: string | string[], org: string): Promise<string> => {
-    if (typeof connections === 'string') {
-        code = await replaceParams(code, connections, org);
-    }
-
-    // if there's only multiple connections
-    if (connections instanceof Array) {
-        for await (const connAlias of connections) {
-            code = await replaceParams(code, connAlias, org);
+export const handleConnectionParams: (code: string, connections: string | string[], org: string) => Promise<string> =
+    async (code: string, connections: string | string[], org: string): Promise<string> => {
+        if (typeof connections === 'string') {
+            code = await replaceParams(code, connections, org);
         }
-    }
 
-    return Promise.resolve(code);
-};
+        // if there's only multiple connections
+        if (connections instanceof Array) {
+            for await (const connAlias of connections) {
+                code = await replaceParams(code, connAlias, org);
+            }
+        }
+
+        return Promise.resolve(code);
+    };
