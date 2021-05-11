@@ -1,0 +1,28 @@
+{{- if .Values.help.createservice }}
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.help.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.help.name }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
+  annotations:
+    {{- if .Values.controller.podAnnotations }}
+    {{- with .Values.controller.podAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- end }}
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: {{ .Values.help.deployment.port }}
+      targetPort: {{ .Values.common.config.PORT }}
+  selector:
+    app: {{ .Values.help.name }}
+  type: ClusterIP
+  sessionAffinity: None
+status:
+  loadBalancer: {}
+{{- end }}

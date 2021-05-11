@@ -10,7 +10,6 @@ export interface ISlack {
     emoji: string;
     deploy: { channel?: string; username?: string };
     internal: { channel?: string; username?: string };
-    user: { channel?: string; username?: string };
     url: string;
 }
 
@@ -25,7 +24,7 @@ class Utils {
         appurl: `//${process.env.K8_APPURLSHORT}${process.env.APPPATH}` || 'https://blueboard.ibm.com',
         description: process.env.DESCRIPTION || '',
         K8_APP: process.env.APP || 'noname',
-        K8_APPURL: process.env.K8_APPURL || 'https://blueboard.ibm.com',
+        K8_APPURL: `https://${process.env.K8_APPURLSHORT}` || 'https://diem.ibm.com',
         K8_APPURLSHORT: process.env.K8_APPURLSHORT || 'blueboard.ibm.com',
         K8_SYSTEM: process.env.K8_SYSTEM || 'test',
         K8_SYSTEM_NAME: process.env.K8_SYSTEM_NAME || 'test',
@@ -34,14 +33,9 @@ class Utils {
     };
 
     private SLACK: ISlack = Credentials('slack');
-    private jwtToken: string;
     private slackHook: string;
 
     private sKey: string = 'as5HjIILYjdjet';
-
-    public get jwtTokenKey(): string {
-        return this.jwtToken;
-    }
 
     public get sessionKey(): string {
         const t: string | undefined = process.env.sessionKey;
@@ -66,10 +60,6 @@ class Utils {
                     username: this.SLACK.internal.username,
                 },
                 url: this.slackWebHook,
-                user: {
-                    channel: this.SLACK.user.channel,
-                    username: this.SLACK.user.username,
-                },
             };
         } else {
             return {
@@ -77,7 +67,6 @@ class Utils {
                 emoji: '',
                 internal: {},
                 url: '',
-                user: {},
             };
         }
     }
@@ -88,7 +77,6 @@ class Utils {
 
     public constructor() {
         this.ev = new EventEmitter();
-        this.jwtToken = Credentials('jwttoken') || `${this.Env.appcookie}`;
         this.slackHook = Credentials('slackhook') || false;
     }
 

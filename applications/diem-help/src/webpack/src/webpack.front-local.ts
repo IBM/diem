@@ -3,21 +3,15 @@
 /*  eslint-disable @typescript-eslint/no-var-requires */
 
 export {};
-const path: any = require('path');
 const webpack: any = require('webpack');
-const { GenerateSW }: any = require('workbox-webpack-plugin');
-const autoprefixer: any = require('autoprefixer');
-const DuplicatePackageCheckerPlugin: any = require('duplicate-package-checker-webpack-plugin');
+const ngToolsWebpack: any = require('@ngtools/webpack');
 const CopyWebpackPlugin: any = require('copy-webpack-plugin');
 const MiniCssExtractPlugin: any = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin: any = require('optimize-css-assets-webpack-plugin');
 const WebpackAssetsManifest: any = require('webpack-assets-manifest');
-const ForkTsCheckerWebpackPlugin: any = require('fork-ts-checker-webpack-plugin');
+const { InjectManifest }: any = require('workbox-webpack-plugin');
+/** const Ba = require('webpack-bundle-analyzer'); */
 
-const URL_LOADER: string = 'url-loader';
-const URL_LOADER_PATH: string = 'public/fonts/[name].[ext]';
-
-console.info(`$webpack.front-local: environment: ${process.env.webpackenv}`);
+console.info(`$webpack.front: environment: ${process.env.webpackenv}`);
 
 const assets: string = 'public/assets/[name].[hash].[ext]';
 
@@ -41,40 +35,43 @@ const env: IntEnv = {
     VERSION: process.env.npm_package_version,
 };
 
+const URL_LOADER: string = 'url-loader';
+const URL_LOADER_PATH: string = 'public/fonts/[name].[ext]';
+
 module.exports = {
-    context: `${(global as any).__basedir}/src/client`,
+    mode: 'production',
+
     cache: false,
 
-    devtool: 'inline-source-map',
-
     entry: {
-        app: [`${(global as any).__basedir}/src/config/vendor.ts`, `${(global as any).__basedir}/src/client/main.ts`],
+        app: [
+            `${(global as any).__basedir}/src/config/vendor.prod.ts`,
+            `${(global as any).__basedir}/src/client/main.ts`,
+        ],
     },
+
+    devtool: 'eval',
 
     optimization: {
         moduleIds: 'deterministic',
-        minimizer: [new OptimizeCSSAssetsPlugin({})],
+        minimize: false,
     },
 
     module: {
         rules: [
             {
-                use: [
-                    {
-                        loader: 'ts-loader',
-                    },
-                ],
+                loader: '@ngtools/webpack',
                 test: /\.ts$/,
             },
             {
                 test: /\.css/,
-                use: [MiniCssExtractPlugin.loader, 'css-loader'],
+                use: [{ loader: MiniCssExtractPlugin.loader }, { loader: 'css-loader' }],
             },
             {
                 test: /\.scss/,
                 use: [
-                    { loader: MiniCssExtractPlugin.loader },
-                    { loader: 'css-loader' },
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
                     {
                         loader: 'postcss-loader',
                         options: {
@@ -98,6 +95,7 @@ module.exports = {
                     },
                 ],
             },
+
             {
                 loader: 'file-loader',
                 options: {
@@ -144,7 +142,7 @@ module.exports = {
                 options: {
                     limit: 10000,
                     mimetype: 'image/svg+xml',
-                    name: assets,
+                    name: 'public/assets/[name].[hash].[ext]',
                 },
                 test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
             },
@@ -159,7 +157,7 @@ module.exports = {
         chunkFilename: 'public/js/[name][chunkhash].js',
         filename: 'public/js/bundle[chunkhash].js',
         path: `${(global as any).__basedir}/`,
-        publicPath: `${env.APPPATH ? env.APPPATH : undefined}/`,
+        publicPath: `${env.APPPATH}/`,
     },
 
     plugins: [
@@ -167,47 +165,43 @@ module.exports = {
             patterns: [
                 // {output}/file.txt
                 {
-                    from: `${(global as any).__basedir}/src/server/index.pug`,
-                    to: `${(global as any).__basedir}/server/index.pug`,
+                    from: 'src/server/index.pug',
+                    to: 'server/index.pug',
                 },
                 {
-                    from: `${(global as any).__basedir}/node_modules/tinymce/skins/`,
-                    to: `${(global as any).__basedir}/public/skins/`,
+                    from: `${(global as any).__basedir}/public/images/*.jpg`,
+                },
+                {
+                    from: `${(global as any).__basedir}/public/images/*.gif`,
+                },
+                {
+                    from: `${(global as any).__basedir}/public/images/favicon*.*`,
+                },
+                {
+                    from: `${(global as any).__basedir}/public/images/diem_logo.*`,
+                },
+                {
+                    from: `${(global as any).__basedir}/public/images/diem_s.*`,
                 },
             ],
         }),
 
-        new webpack.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)/, path.resolve(__dirname, './src')),
+        new ngToolsWebpack.AngularCompilerPlugin({
+            /** alias for skipCodeGeneration: false */
+            tsConfigPath: `${(global as any).__basedir}/src/client/tsconfig-aot.json`,
+        }),
 
-        new ForkTsCheckerWebpackPlugin(),
+        new webpack.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)/, `${(global as any).__basedir}/src`),
+
+        new webpack.EnvironmentPlugin(env),
 
         new MiniCssExtractPlugin({
             filename: 'public/css/[name].css',
         }),
 
-        new webpack.LoaderOptionsPlugin({
-            // test: /\.xxx$/, // may apply this only for some modules
-            options: {
-                postcss: (): any => [autoprefixer],
-                ts: {
-                    configFileName: './src/client/tsconfig.json',
-                },
-            },
-        }),
+        /** new Ba.BundleAnalyzerPlugin(), */
 
-        new webpack.EnvironmentPlugin(env),
-
-        new GenerateSW({
-            swDest: `${(global as any).__basedir}/public/js/service-worker.js`,
-            sourcemap: true,
-            mode: 'development',
-            offlineGoogleAnalytics: false,
-        }),
-
-        new DuplicatePackageCheckerPlugin({
-            // Also show module that is requiring each duplicate package
-            verbose: true,
-        }),
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
 
         new WebpackAssetsManifest({
             integrity: true,
@@ -218,7 +212,20 @@ module.exports = {
         new webpack.ProvidePlugin({
             process: 'process/browser',
         }),
+
+        new InjectManifest({
+            swSrc: `${(global as any).__basedir}/src/webpack/src/service-worker.js`,
+            swDest: `${(global as any).__basedir}/public/js/service-worker.js`,
+            exclude: [/\.pug$/, /\.ttf$/, /\.eot$/],
+        }),
     ],
+
+    resolve: {
+        alias: {
+            '@util': `${(global as any).__basedir}/src/webpack`,
+        },
+        extensions: ['.ts', '.js'],
+    },
 
     performance: {
         hints: false,

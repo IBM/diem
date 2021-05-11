@@ -49,7 +49,7 @@ core:
     # -- image location
     image: quay.io/diem/core
     # -- image version
-    version: 1.0.1
+    version: 1.0.7
     # -- number of replicas
     replicas: 1
     # -- port to listen
@@ -138,7 +138,7 @@ nodepy:
   port: 80
   replicas: 1
   tier: backend
-  version: 1.0.1
+  version: 1.0.5
 
 operator:
   # -- name of the deployment
@@ -174,6 +174,27 @@ spark-operator:
   image:
     repository: quay.io/diem/spark-operator
     tag: 3.1.1
+
+help:
+  createservice: true
+  name: diem-help
+  deployment:
+    replicas: 1
+    image: quay.io/diem/help
+    version: 1.0.0
+    path: /diem-help
+    port: 80
+  config:
+    # -- important, the path the application will run under
+    APPPATH: /diem-help
+
+    slack:
+      enabled: true
+      SLACK_EMOJI: ":diem:"
+      SLACK_DEPLOY_CHANNEL: "#diem-help-deploy-uat"
+      SLACK_DEPLOY_USERNAME: "diem help - (Notification)"
+      SLACK_INTERNAL_CHANNEL: "#diem-help-bugs-uat"
+      SLACK_INTERNAL_USERNAME: "diem help - (Internal)"
 
 mongodb:
   # -- create the mongo service
