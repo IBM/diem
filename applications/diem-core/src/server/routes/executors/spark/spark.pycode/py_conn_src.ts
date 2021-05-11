@@ -11,7 +11,7 @@ try:
     df_src = spark\
         .read\
         .format("jdbc")\
-        .option('driver', '${jdbc_config[src.type].driver}')\
+        .option('driver', '${jdbc_config(src.type).driver}')\
         .option("url", "${src.jdbc}")\
         .option("user", "${src.user}")\
         .option("password", "${src.password}")\

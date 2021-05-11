@@ -38,13 +38,15 @@ export const npcodefileservices: (body: IServices) => Promise<string> = async (b
         .exec()
         .catch(async (err: any) => {
             err.trace = addTrace(err.trace, '@at $nodepy.services.pyfile (npcodefileservices) - findOne');
+            err.serviceid = serviceid;
 
             return Promise.reject(err);
         });
 
     if (doc === null) {
         return Promise.reject({
-            message: 'doc not found',
+            message: `doc ${serviceid} not found`,
+            serviceid,
             trace: ['@at $nodepy.services.pyfile (npcodefileservices) - null document'],
         });
     }

@@ -10,7 +10,7 @@ try:
         .write\
         .format("jdbc")\
         .mode("${tgt.truncate ? 'overwrite' : 'append'}")\
-        .option('driver', '${jdbc_config[tgt.type].driver}')\
+        .option('driver', '${jdbc_config(tgt.type).driver}')\
         .option("url", "${tgt.jdbc}")\
         .option("user", "${tgt.user}")\
         .option("password", "${tgt.password}")\

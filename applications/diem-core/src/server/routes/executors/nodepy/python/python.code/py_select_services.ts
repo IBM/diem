@@ -18,8 +18,8 @@ export const py_select_services: (job: IntPythonStmtJob) => Promise<string> = as
         return Promise.reject(err);
     }
 
-    const driver: string = jdbc_config[connection.type].driver;
-    const jdbc: string = `${connection.jdbc}${jdbc_config[connection.type].jdbc}`.replace(';;', ';');
+    const driver: string = jdbc_config(connection.type).driver;
+    const jdbc: string = `${connection.jdbc}${jdbc_config(connection.type).jdbc}`.replace(';;', ';');
 
     return `
 ### py_select ###

@@ -20,7 +20,7 @@ export const handleNodePyTransferJob: (code: string, job: IntPythonTransferJob) 
     try {
         pytransfer = await py_transfer(job);
     } catch (err) {
-        err.trace = addTrace(err.trace, '@at $transfer (handleNodePyTransferJob)');
+        err.trace = addTrace(err.trace, '@at $handle_nodepy.transfer (handleNodePyTransferJob)');
 
         return Promise.reject(err);
     }
