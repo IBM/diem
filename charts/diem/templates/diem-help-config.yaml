@@ -14,6 +14,7 @@ metadata:
     {{- end }}
 data:
   APPPATH: {{ .Values.help.config.APPPATH | quote }}
+  K8_SYSTEM_NAME: {{ .Values.help.config.K8_SYSTEM_NAME | quote }}
   {{- if .Values.help.config.slack.enabled }}
   {{- with .Values.help.config.slack }}
   SLACK__EMOJI: {{ .SLACK_EMOJI | quote | indent 4}}
