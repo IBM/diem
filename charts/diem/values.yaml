@@ -24,7 +24,7 @@ common:
   config:
     diemAdminRbac: diem-rbac
     diemAdmin: diem-admin
-    K8_SYSTEM_NAME: "Diem on CRC"
+    K8_SYSTEM_NAME: "Development"
     K8_SYSTEM: uat
     K8_INSTANCE: US
 
@@ -187,6 +187,8 @@ help:
   config:
     # -- important, the path the application will run under
     APPPATH: /diem-help
+
+    K8_SYSTEM_NAME: "Development"
 
     slack:
       enabled: true
