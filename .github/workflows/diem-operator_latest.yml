@@ -43,12 +43,12 @@ jobs:
       - run: npm run build --if-present
 
       - name: Build the Docker image
-        run: docker build . --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') --file docker/Dockerfile --tag quay.io/diem/core:latest
+        run: docker build . --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') --file docker/Dockerfile --tag quay.io/diem/operator:latest
 
       - name: Login to quay.io
         run: echo "${{secrets.DOCKER_QUAY}}" | docker login -u="diem+ibm_deploy_robot" --password-stdin quay.io
         if: github.event_name == 'push' && github.ref == 'refs/heads/latest'
 
       - name: Push the Docker image
-        run: docker push quay.io/diem/core:latest
+        run: docker push quay.io/diem/operator:latest
         if: github.event_name == 'push' && github.ref == 'refs/heads/latest'
