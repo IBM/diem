@@ -6,6 +6,8 @@ diem-common:
   - packages/diem-common/**/*
 diem-util:
   - packages/diem-util/**/*
+diem-lib:
+  - packages/diem-lib/**/*
 diem-forms:
   - packages/diem-forms/**/*
 aot-fixer:
@@ -18,6 +20,8 @@ diem-core:
   - applications/diem-core/**/*
 diem-help:
   - applications/diem-help/**/*
+diem-operator:
+  - applications/diem-operator/**/*
 workflow:
   - .github/**/*
 repo:
