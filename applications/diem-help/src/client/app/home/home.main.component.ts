@@ -86,6 +86,38 @@ export class HomeMainComponent implements OnInit, OnDestroy, AfterViewChecked {
         };
     }
 
+    public ngAfterViewChecked(): void {
+        if (this.mermaid_pending) {
+            void this.renderMermaid();
+            this.mermaid_pending = false;
+        }
+    }
+
+    public renderMermaid = async (): Promise<void> => {
+        const elements: any = document.getElementsByClassName('mermaid');
+
+        if (elements && elements.length > 0) {
+            console.info(`$home.main.component (renderMermaid): mermaid rendering for ${elements.length} elements`);
+            let i: number = 0;
+            for await (const element of elements) {
+                mermaid.render(`graphDiv${i}`, element.innerText, (svgCode) => {
+                    element.innerHTML = svgCode;
+                });
+                i++;
+            }
+        }
+
+        return Promise.resolve();
+    };
+
+    public ngOnDestroy(): void {
+        if (this.routeData) {
+            this.routeData.unsubscribe();
+        }
+
+        console.info('$jobdetail.component (ngOnDestroy): removing class: editmode');
+    }
+
     private getPage = (id: string) => {
         this.doc_content = this.loading;
 
@@ -110,30 +142,6 @@ export class HomeMainComponent implements OnInit, OnDestroy, AfterViewChecked {
             });
 
         this.cd.markForCheck();
-    };
-
-    public ngAfterViewChecked(): void {
-        if (this.mermaid_pending) {
-            void this.renderMermaid();
-            this.mermaid_pending = false;
-        }
-    }
-
-    public renderMermaid = async (): Promise<void> => {
-        const elements: any = document.getElementsByClassName('mermaid');
-
-        if (elements && elements.length > 0) {
-            console.info(`$home.main.component (renderMermaid): mermaid rendering for ${elements.length} elements`);
-            let i: number = 0;
-            for await (const element of elements) {
-                mermaid.render(`graphDiv${i}`, element.innerText, (svgCode) => {
-                    element.innerHTML = svgCode;
-                });
-                i++;
-            }
-        }
-
-        return Promise.resolve();
     };
 
     /**
@@ -168,12 +176,4 @@ export class HomeMainComponent implements OnInit, OnDestroy, AfterViewChecked {
         console.info(`%c$jobdetail.component (check): called by => ${from}`, 'color:red');
         this.cd.markForCheck();
     };
-
-    public ngOnDestroy(): void {
-        if (this.routeData) {
-            this.routeData.unsubscribe();
-        }
-
-        console.info('$jobdetail.component (ngOnDestroy): removing class: editmode');
-    }
 }

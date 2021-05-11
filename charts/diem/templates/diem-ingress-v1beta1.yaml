@@ -58,6 +58,13 @@ spec:
               servicePort: {{ .Values.core.deployment.port }}
             pathType: Prefix
             path: "/{{ .Values.core.deployment.socketName }}"
+          {{- if .Values.help.createservice }}
+          - backend:
+              serviceName: {{ .Values.help.name }}
+              servicePort: {{ .Values.help.deployment.port }}
+            pathType: Prefix
+            path: {{ .Values.help.deployment.path }}
+          {{- end }}
   tls:
     - hosts:
         - {{ .Values.ingress.host }}

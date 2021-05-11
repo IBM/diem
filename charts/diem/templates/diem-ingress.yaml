@@ -70,6 +70,15 @@ spec:
                   number: {{ .Values.core.deployment.port }}
             pathType: Prefix
             path: "/{{ .Values.core.deployment.socketName }}"
+          {{- if .Values.help.createservice }}
+          - backend:
+              service:
+                name: {{ .Values.help.name }}
+                port:
+                  number: {{ .Values.help.deployment.port }}
+            pathType: Prefix
+            path: {{ .Values.help.deployment.path }}
+          {{- end }}
 
   tls:
     - hosts:

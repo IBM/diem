@@ -1,0 +1,56 @@
+{{- if .Values.help.createservice }}
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ .Values.help.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.help.name }}
+    version: {{ .Values.help.deployment.version }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
+  annotations:
+    {{- if .Values.controller.podAnnotations }}
+    {{- with .Values.controller.podAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.help.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.help.name }}
+  template:
+    metadata:
+      name: {{ .Values.help.name }}
+      labels:
+        app: {{ .Values.help.name }}
+    spec:
+      containers:
+        - name: {{ .Values.help.name }}
+          image: {{ .Values.help.deployment.image }}:{{ .Values.help.deployment.version }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.help.name }}-config
+            - secretRef:
+                name: {{ .Values.help.name }}-secret
+          resources: {}
+          terminationMessagePath: "/dev/termination-log"
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+          securityContext:
+            privileged: false
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sleep", "15"]
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+{{- end }}

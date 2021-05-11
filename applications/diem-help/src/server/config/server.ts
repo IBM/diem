@@ -81,7 +81,7 @@ export class Server {
         const app: any = new Express(assets).app;
 
         /*** variables that are moved to the index.html */
-        const env: any = {
+        const env: { path: string; css: any; description: string; script: any[] } = {
             path: this.pack.apppath,
             css: [],
             description: this.pack.description,
