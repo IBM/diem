@@ -534,6 +534,7 @@ export interface IJobResponse {
     special?: string;
     transid: string;
     org: string;
+    audit?: any;
 }
 
 export interface IDetailPayloadValues extends IJob {
