@@ -32,7 +32,7 @@ export const py_transfer: (job: IntPythonTransferJob) => Promise<string> = async
             await getConnection(job.config.target.connection),
         ]);
     } catch (err) {
-        err.trace = addTrace(err.trace, '@at $transfer (pyTransfer)');
+        err.trace = addTrace(err.trace, '@at $py_transfer (pyTransfer) - get connection');
 
         return Promise.reject(err);
     }
@@ -50,7 +50,7 @@ export const py_transfer: (job: IntPythonTransferJob) => Promise<string> = async
         batch_size = job.config.target.batchsize || 5000;
         truncate = py_truncate(job.config.target.truncate, job.config.target.target, tgt_conn);
     } catch (err) {
-        err.trace = addTrace(err.trace, '@at $transfer (pyTransfer)');
+        err.trace = addTrace(err.trace, '@at $py_transfer (pyTransfer) - make connection');
 
         return Promise.reject(err);
     }
@@ -76,6 +76,8 @@ src_conn.setReadOnly(True)
 ${isolationlevel}
 ${tgt}
 
+tgt_conn.setAutoCommit(False)
+
 msg = f"Job connected at {UtcNow()} - runtime: {time.time() - config.__starttime} - starting with fetch: ${fetch_size} and batch: ${batch_size}"
 out(msg)
 
@@ -96,14 +98,10 @@ resultSet.setFetchSize(${fetch_size})
 rsmd = resultSet.getMetaData()
 cc =rsmd.getColumnCount()
 
-# alter_stmt = tgt_conn.prepareStatement("alter table STAGING.DIM_OFFERG_SST activate not logged initially")
-# alter_stmt.executeUpdate();
-
 join = ','.join(['?' for s in range(cc)])
 cols = ','.join([str(rsmd.getColumnLabel(i+1)) for i in range(cc)])
 INSERT_STATEMENT = f"""INSERT INTO ${job.config.target.target} ({cols}) VALUES({join})"""
 
-tgt_conn.setAutoCommit(False)
 insert_stmt = tgt_conn.prepareStatement(INSERT_STATEMENT)
 
 loop = 0
