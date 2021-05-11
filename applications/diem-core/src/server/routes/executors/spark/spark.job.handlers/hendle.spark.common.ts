@@ -3,7 +3,7 @@ import { ConnModel, IConnSchema } from '@models';
 
 // not used : traceDirectory=/opt/spark/;traceLevel=TRACE_DIAGNOSTICS;traceFile=jcctrace.log;
 
-export const jdbc_config: any = {
+const jdbc_config_base: any = {
     db2: {
         truncate: 'TRUNCATE TABLE $TARGET IMMEDIATE',
         driver: 'com.ibm.db2.jcc.DB2Driver',
@@ -22,6 +22,25 @@ export const jdbc_config: any = {
         jdbc: '',
         connopt: '',
     },
+    mysql: {
+        truncate: 'TRUNCATE TABLE $TARGET',
+        driver: 'com.mysql.jdbc.Driver',
+        jdbc: '',
+        connopt: '',
+    },
+};
+
+export const jdbc_config: (type: string) => any = (type: string) => {
+    if (jdbc_config_base[type]) {
+        return jdbc_config_base[type];
+    } else {
+        return {
+            truncate: 'TRUNCATE TABLE $TARGET',
+            driver: '',
+            jdbc: '',
+            connopt: '',
+        };
+    }
 };
 
 /**

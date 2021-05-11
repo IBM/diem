@@ -200,4 +200,5 @@ def startTimer():
     sys.stdout.flush()
 
   config.__timer = RepeatTimer(1, flushOut)
+  config.__timer.daemon = True
   config.__timer.start()
