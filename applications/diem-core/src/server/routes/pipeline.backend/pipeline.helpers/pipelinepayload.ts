@@ -20,6 +20,9 @@ export const makePlPayload: (doc: IModel | boolean, job: IJobResponse, payload: 
                 values.log = pldoc.log;
             }
 
+            // remove the audit field
+            values.audit = null;
+
             // the payload for the pipeline in the all jobs
 
             payload.push({
