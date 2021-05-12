@@ -45,6 +45,10 @@ export const finishJob: (doc: IModel) => Promise<any> = async (doc: IModel): Pro
         name: doc.name,
     };
 
+    // don't archive the audit trail in the log
+    // we only keep it in the archiving
+    delete log.audit;
+
     if (Array.isArray(doc.log)) {
         if (doc.log.length > 9) {
             doc.log.pop();

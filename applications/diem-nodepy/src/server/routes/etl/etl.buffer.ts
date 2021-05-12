@@ -65,10 +65,10 @@ export const addToBuffer: (id: string, buffer: Buffer) => Promise<void> = async 
                 );
 
                 setTimeout(() => {
-                    void publisher.publish('job', resp, meta);
+                    void publisher.publish('job', id, resp, meta);
                 }, delay);
             } else {
-                void publisher.publish('job', resp);
+                void publisher.publish('job', id, resp);
             }
 
             //await new Promise((resolve) => setTimeout(resolve, wait));

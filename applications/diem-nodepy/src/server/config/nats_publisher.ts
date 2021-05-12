@@ -34,7 +34,7 @@ class Publisher {
         if (this.nc.info) {
             this.info = this.nc.info;
             utils.logInfo(
-                `$nats_publisher (connect): connected : nsid ${this.info.client_id} - nsc ${this.info.client_ip}`
+                `$nats_publisher (connect): connected : nsid ${this.info.client_id} - nsc ${this.info.client_ip} - max payload: ${this.info.max_payload}`
             );
         }
 
@@ -43,10 +43,30 @@ class Publisher {
 
     public publish = (
         channel: string,
+        id: string,
         event: any,
         meta: IMeta = { cycle: 0, size: 0, ts: 0, acc_size: 0, acc_ts: 0, s_ts: 0 }
     ) => {
-        this.nc.publish(`core.${channel}`, toBuff({ client: this.client, data: event, meta }));
+        try {
+            /* this is some code to ensure the maximum payload is not exceeded
+             * In that case we sent a message giving the exceeded payload
+             */
+            if (event.length && this.info.max_payload && event.length > this.info.max_payload) {
+                event = {
+                    id,
+                    jobid: id,
+                    out: `maximum payload of ${this.info.max_payload} exceeded - payload: ${event.length}`,
+                };
+            }
+            this.nc.publish(`core.${channel}`, toBuff({ client: this.client, data: event, meta }));
+        } catch (err) {
+            if (err.code && err.code === ErrorCode.MaxPayloadExceeded) {
+                return utils.logInfo(
+                    `$nats_publisher (publish): max payload of ${this.info.max_payload} exceeded - payload: ${event.length}`
+                );
+            }
+            utils.logInfo(`$nats_publisher (publish): error:`, err);
+        }
     };
 
     public publish_global = (channel: string, event: any) => {

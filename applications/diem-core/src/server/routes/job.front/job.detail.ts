@@ -187,8 +187,6 @@ export const makePayload: (doc: IJobSchema) => Promise<IModelPayload> = async (
         schedule.schedule__enabled = doc.schedule.enabled;
     }
 
-    delete doc.job.audit;
-
     return {
         ...annotations,
         ...config,

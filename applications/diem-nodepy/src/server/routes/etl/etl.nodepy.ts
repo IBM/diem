@@ -11,7 +11,7 @@ export const etlNodepy: (job: IntJob) => any = (job: IntJob) => {
     if (workers[id]) {
         console.warn(green, `$np ${process.pid} ${id}: worker already running`);
 
-        publisher.publish('job', {
+        publisher.publish('job', id, {
             ...job,
             count: null,
             error: `job ${id} is already running, please stop it and try again`,
@@ -77,7 +77,7 @@ export const etlNodepy: (job: IntJob) => any = (job: IntJob) => {
         // console.error(red, `$np ${process.pid} ${id}: incoming error)`, '\n', response);
         console.error(red, `$np ${process.pid} ${id}: incoming error`);
 
-        publisher.publish('job', {
+        publisher.publish('job', id, {
             ...job,
             count: null,
             error: response,
@@ -104,7 +104,7 @@ export const etlNodepy: (job: IntJob) => any = (job: IntJob) => {
 
     workers[id].on('error', async (err: IError) => {
         console.error(red, `$np ${process.pid} ${id}: error creating process`, err);
-        void publisher.publish('job', {
+        void publisher.publish('job', id, {
             ...job,
             count: null,
             error: err.message,
@@ -115,6 +115,6 @@ export const etlNodepy: (job: IntJob) => any = (job: IntJob) => {
     });
 
     workers[id].on('message', (data: any) => {
-        void publisher.publish('job', data);
+        void publisher.publish('job', id, data);
     });
 };
