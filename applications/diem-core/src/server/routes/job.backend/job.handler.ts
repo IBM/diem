@@ -187,7 +187,7 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
         });
 
         // remove log from values for jobs
-        const { log, ...rest } = values;
+        const { log, audit, ...rest } = values;
 
         // update the all jobs
         payload.push({
@@ -216,6 +216,10 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
         // adding the job log
         if (['Failed', 'Stopped', 'Completed'].includes(job.status) && !isPl) {
             await finishJob(doc);
+
+            // we don't now need the job audit anymore in the job itself
+            doc.job.audit = undefined;
+            doc.markModified('job.audit');
         }
 
         // if it's a regular job , make sure that the stop is really stopped, so this does not include pipelines

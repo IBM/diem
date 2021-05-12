@@ -32,7 +32,7 @@ export const handler: (job: IntJob) => any = async (job: IntJob): Promise<void> 
 
         void utils.logError(`$etl.handler (handler): mkdir - job: ${id}`, err);
 
-        publisher.publish('job', {
+        publisher.publish('job', id, {
             ...job,
             count: null,
             error: err.message,
@@ -53,7 +53,7 @@ export const handler: (job: IntJob) => any = async (job: IntJob): Promise<void> 
 
         void utils.logError(`$etl.handler (handler): savefile - job: ${id}`, err);
 
-        void publisher.publish('job', {
+        void publisher.publish('job', id, {
             ...job,
             count: null,
             error: err.message,

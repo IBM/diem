@@ -53,6 +53,7 @@ export interface IntJob {
     jobstart: Date;
     jobend: Date;
     runtime: number | null;
+    out?: any;
 }
 
 export interface ServicesJob {

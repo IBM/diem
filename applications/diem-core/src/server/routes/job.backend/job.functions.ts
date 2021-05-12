@@ -75,7 +75,7 @@ export const handlePayloadValues: (jdocs: IJobSchema[]) => IntPayloadValues[] = 
                 : '';
 
         // no audit traces here
-        delete row.job.audit;
+        row.job.audit = undefined;
 
         /* make sure the spread is at the top */
         payload[i] = PayloadValues({
