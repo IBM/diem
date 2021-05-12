@@ -61,11 +61,12 @@ class Publisher {
             this.nc.publish(`core.${channel}`, toBuff({ client: this.client, data: event, meta }));
         } catch (err) {
             if (err.code && err.code === ErrorCode.MaxPayloadExceeded) {
-                return utils.logInfo(
+                utils.logInfo(
                     `$nats_publisher (publish): max payload of ${this.info.max_payload} exceeded - payload: ${event.length}`
                 );
+            } else {
+                utils.logInfo(`$nats_publisher (publish): error:`, err);
             }
-            utils.logInfo(`$nats_publisher (publish): error:`, err);
         }
     };
 
