@@ -34,7 +34,7 @@ const parseFilter: (job: IQuery) => any = (job: IQuery) => {
             filter[job.search] = { $regex: ref, $options: 'i' };
         }
 
-        if (['status'].includes(job.search)) {
+        if (['status', 'jobid'].includes(job.search)) {
             filter[job.search] = job.reference;
         }
 
@@ -109,6 +109,8 @@ export const joblog: (req: IRequest) => Promise<any> = async (req: IRequest) => 
             row.statusicon = StatusConfig[row.status].statusicon || 'fa fa-question';
             row.erroricon = row.error ? 'far fa-file-code fa-lg c-red' : undefined;
             row.outicon = row.out ? 'far fa-file-code fa-lg c-green' : undefined;
+            row.auditicon = row.audit ? 'far fa-file-code fa-lg' : undefined;
+            row.audit = row.audit ? JSON.stringify(row.audit, undefined, 2).replace(/\\n/g, '\n') : undefined;
             row.out = row.out && Array.isArray(row.out) ? row.out.map((obj: any) => obj.out).join('\n') : undefined;
         });
 

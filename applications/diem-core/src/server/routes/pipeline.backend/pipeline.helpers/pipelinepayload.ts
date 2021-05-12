@@ -21,7 +21,7 @@ export const makePlPayload: (doc: IModel | boolean, job: IJobResponse, payload: 
             }
 
             // remove the audit field
-            values.audit = null;
+            values.audit = undefined;
 
             // the payload for the pipeline in the all jobs
 

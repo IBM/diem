@@ -25,6 +25,7 @@ export interface IUserPayload {
 export interface IQuery {
     email?: string;
     first?: number;
+    jobid?: string;
     id?: string;
     mine?: boolean;
     org?: string;

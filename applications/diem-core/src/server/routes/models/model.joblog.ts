@@ -27,6 +27,8 @@ export interface IJobLog {
     out?: any[] | string;
     outicon?: string;
     erroricon?: string;
+    audit?: any;
+    auditicon?: string;
 }
 
 const jobLogSchema: Schema = new Schema(

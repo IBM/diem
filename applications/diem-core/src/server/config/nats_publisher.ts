@@ -34,7 +34,7 @@ class Publisher {
         if (this.nc.info) {
             this.info = this.nc.info;
             utils.logInfo(
-                `$nats_publisher (connect): connected : nsid ${this.info.client_id} - nsc ${this.info.client_ip}`
+                `$nats_publisher (connect): connected : nsid ${this.info.client_id} - nsc ${this.info.client_ip} - max payload: ${this.info.max_payload}`
             );
         }
 
@@ -42,7 +42,16 @@ class Publisher {
     };
 
     public publish = async (channel: string, event: any) => {
-        this.nc.publish(channel, toBuff({ client: this.client, data: event }));
+        try {
+            this.nc.publish(channel, toBuff({ client: this.client, data: event }));
+        } catch (err) {
+            if (err.code && err.code === ErrorCode.MaxPayloadExceeded) {
+                return utils.logInfo(
+                    `$nats_publisher (publish): max payload of ${this.info.max_payload} exceeded - payload: ${event.length}`
+                );
+            }
+            utils.logInfo(`$nats_publisher (publish): error:`, err);
+        }
     };
 
     public request = async (channel: string, data: any): Promise<INatsPayload | undefined> => {
