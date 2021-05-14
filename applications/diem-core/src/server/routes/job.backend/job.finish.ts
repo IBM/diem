@@ -9,11 +9,15 @@ import { sparkWatcher } from '../spark-operator/spark.watcher';
 export const getPySparkJobLog: (doc: IModel) => Promise<IModel> = async (doc: IModel): Promise<IModel> => {
     const id: string = doc._id.toString();
 
-    const sparkLog: string | undefined = await sparkWatcher.getJobLog(id).catch(() => {
+    let sparkLog: string | undefined = await sparkWatcher.getJobLog(id).catch(() => {
         // nothing
     });
 
     if (sparkLog) {
+        if (sparkLog.length && sparkLog.length > 10000) {
+            sparkLog = `${sparkLog.slice(0, 1000)}\n\n....\n\n${sparkLog.slice(-9000)}`;
+        }
+
         doc.job.error = `${doc.job.error}\n\n*** Attaching Spark Log***\n\n${sparkLog}`;
     }
 
