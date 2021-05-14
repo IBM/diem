@@ -108,7 +108,8 @@ export const caclCap: (doc: IModel, crdjob: ICrdConfig) => ICrdConfig = (
 
         if (spark.executor?.instances) {
             // overwriting executor instances with a maximum of 5
-            crdjob.spec.executor.instances = spark.executor.instances > 6 ? spark.executor.instances : 6; // swap memory
+            const icap: number = capacity.nodes > 5 ? 5 : capacity.nodes;
+            crdjob.spec.executor.instances = spark.executor.instances > icap ? icap : spark.executor.instances; // swap memory
         }
 
         if (spark.local) {
