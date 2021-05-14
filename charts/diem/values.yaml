@@ -66,11 +66,6 @@ core:
     spark:
       SPARK_IMAGE: quay.io/diem/pyspark:3.1.1-rc2
       SPARK_IMAGEPULLSECRETS: ""
-      OPERATOR_DRIVER_CORES: "2"
-      OPERATOR_DRIVER_MEMORY: 1024m
-      OPERATOR_EXECUTOR_CORES: 8
-      OPERATOR_EXECUTOR_INSTANCES: 2
-      OPERATOR_EXECUTOR_MEMORY: 8G
       CALLBACK_URL: /internal/spark_callback
 
     ## shared volume
@@ -152,7 +147,7 @@ operator:
   port: 80
   replicas: 1
   tier: backend
-  version: 1.0.1
+  version: 1.0.3
 
 ## enable the spark Operator
 ## for more details see

@@ -64,8 +64,8 @@ export interface IJobParams {
         executor?: {
             cores?: number;
             memory?: string;
+            instances?: number;
         };
-        instances?: number;
         volume?: boolean;
         type?: 'scala' | 'pyspark' | 'git';
         location?: string;
@@ -198,8 +198,7 @@ export interface IDeletedFile {
 interface IJobOperator {
     driver_cores?: number;
     executor_cores?: number;
-    executor_instances?: number;
-    local?: number;
+    executor_instances?: string;
 }
 
 export interface IJobConfig {

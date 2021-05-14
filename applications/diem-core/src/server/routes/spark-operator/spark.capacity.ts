@@ -4,10 +4,10 @@
 
 import { utils } from '@common/utils';
 import * as Api from 'kubernetes-client';
-import { EJobTypes, IJobParams, IModel } from '@models';
+import { IJobParams, IModel } from '@models';
 import { ICrdConfig } from './base.crd';
 
-export interface ICapacity {
+export interface IBaseCapacity {
     nodes: number;
     cores: number;
     memory: string;
@@ -15,7 +15,7 @@ export interface ICapacity {
     mem_gb: number;
 }
 
-const capacity: ICapacity = {
+const capacity: IBaseCapacity = {
     cores: 0,
     memory: '',
     mem_mb: 0,
@@ -74,54 +74,46 @@ export const caclCap: (doc: IModel, crdjob: ICrdConfig) => ICrdConfig = (
 
     const id: string = doc._id.toString();
 
+    // set the default values for cores and memory
+    crdjob.spec.executor.cores = capacity.cores;
+    crdjob.spec.executor.memory = capacity.memory;
+
     utils.logInfo(
         `$spark.capacity (caclCap): current capacity - job:  ${id} - cores: ${capacity.cores} - memory: ${capacity.memory} - nodes: ${capacity.nodes}`,
         `ti: ${doc.job.transid}`
     );
 
-    crdjob.spec.driver.nodes = capacity.nodes;
-
     const spark: IJobParams['spark'] | undefined = doc.job.params?.spark;
 
     if (spark) {
         if (spark.driver?.cores) {
-            crdjob.spec.driver.cores = capacity.cores > spark.driver.cores ? spark.driver.cores : capacity.cores;
+            crdjob.spec.driver.cores = capacity.cores >= spark.driver.cores ? spark.driver.cores : capacity.cores;
 
             // swap the default memory for local
         }
 
         if (spark.executor?.cores) {
-            crdjob.spec.executor.cores = capacity.cores > spark.executor.cores ? spark.executor.cores : capacity.cores;
+            crdjob.spec.executor.cores = capacity.cores >= spark.executor.cores ? spark.executor.cores : capacity.cores;
         }
 
         if (spark.driver?.memory) {
             // overwriting driver memory
-            crdjob.spec.driver.memory = spark.driver.memory; // swap memory
+            crdjob.spec.driver.memory = spark.driver.memory.toLowerCase(); // swap memory
         }
 
         if (spark.executor?.memory) {
             // overwriting executor memory
-            crdjob.spec.executor.memory = spark.executor.memory; // swap memory
+            crdjob.spec.executor.memory = spark.executor.memory.toLowerCase(); // swap memory
         }
 
-        if (spark.instances) {
+        if (spark.executor?.instances) {
             // overwriting executor instances with a maximum of 5
-            crdjob.spec.executor.instances = spark.instances > 6 ? spark.instances : 6; // swap memory
+            crdjob.spec.executor.instances = spark.executor.instances > 6 ? spark.executor.instances : 6; // swap memory
         }
 
-        // if it's a custom job then we will stop here
-        if (doc.custom || doc.type === EJobTypes.params) {
-            // if it's not run with instances then it will run with local (see spark.pyfile) this is handles via the nodes flag
-            if (!spark.instances) {
-                crdjob.spec.driver.nodes = 1;
-                crdjob.spec.driver.memory = crdjob.spec.executor.memory;
-            }
-            utils.logInfo(
-                `$spark.capacity (caclCap): custom cap - job:  ${id} - drv_c: ${crdjob.spec.driver.cores} - inst: ${crdjob.spec.executor.instances} - exec_c: ${crdjob.spec.executor.cores} - drv_m: ${crdjob.spec.driver.memory} - exec_m: ${crdjob.spec.executor.memory}`,
-                `ti: ${doc.job.transid}`
-            );
-
-            return crdjob;
+        if (spark.local) {
+            // overwriting executor instances with a maximum of 5
+            crdjob.spec.executor.instances = 1; // swap memory
         }
     }
 
@@ -129,7 +121,7 @@ export const caclCap: (doc: IModel, crdjob: ICrdConfig) => ICrdConfig = (
 
     if (!doc.config) {
         utils.logInfo(
-            `$spark.capacity (caclCap): default custom:  ${id} - drv_c: ${crdjob.spec.driver.cores} - inst: ${crdjob.spec.executor.instances} - exec_c: ${crdjob.spec.executor.cores} - drv_m: ${crdjob.spec.driver.memory} - exec_m: ${crdjob.spec.executor.memory}`,
+            `$spark.capacity (caclCap): default custom:  ${id} - d_cores: ${crdjob.spec.driver.cores} - e_inst: ${crdjob.spec.executor.instances} - e_cores: ${crdjob.spec.executor.cores} - d_mem: ${crdjob.spec.driver.memory} - e_mem: ${crdjob.spec.executor.memory}`,
             `ti: ${doc.job.transid}`
         );
 
@@ -145,7 +137,7 @@ export const caclCap: (doc: IModel, crdjob: ICrdConfig) => ICrdConfig = (
     /** Should not happen as managed via nodepy */
     if (numpartitions === 0) {
         utils.logInfo(
-            `$spark.capacity (caclCap): no partitioning - job: ${id} - drv_c: ${crdjob.spec.driver.cores} - inst: ${crdjob.spec.executor.instances} - exec_c: ${crdjob.spec.executor.cores} - drv_m: ${crdjob.spec.driver.memory} - exec_m: ${crdjob.spec.executor.memory}`,
+            `$spark.capacity (caclCap): no partitioning - job: ${id} - d_cores: ${crdjob.spec.driver.cores} - e_inst: ${crdjob.spec.executor.instances} - e_cores: ${crdjob.spec.executor.cores} - d_mem: ${crdjob.spec.driver.memory} - e_mem: ${crdjob.spec.executor.memory}`,
             `ti: ${doc.job.transid}`
         );
 
@@ -164,12 +156,11 @@ export const caclCap: (doc: IModel, crdjob: ICrdConfig) => ICrdConfig = (
 
         /* we have less partitions requested then we have cores */
 
-        crdjob.spec.driver.cores = numpartitions <= capacity.cores ? numpartitions : capacity.cores;
-        // swap the default memory for local
-        crdjob.spec.driver.memory = crdjob.spec.executor.memory;
+        crdjob.spec.executor.cores =
+            numpartitions <= crdjob.spec.executor.cores ? numpartitions : crdjob.spec.executor.cores;
 
         utils.logInfo(
-            `$spark.capacity (caclCap): single node - job:  ${id} - drv_c: ${crdjob.spec.driver.cores} - inst: ${crdjob.spec.executor.instances} - exec_c: ${crdjob.spec.executor.cores}- drv_m: ${crdjob.spec.driver.memory} - exec_m: ${crdjob.spec.executor.memory}`,
+            `$spark.capacity (caclCap): running on single node - job:  ${id} - d_cores: ${crdjob.spec.driver.cores} - e_inst: ${crdjob.spec.executor.instances} - e_cores: ${crdjob.spec.executor.cores}- d_mem: ${crdjob.spec.driver.memory} - e_mem: ${crdjob.spec.executor.memory}`,
             `ti: ${doc.job.transid}`
         );
 
@@ -198,7 +189,7 @@ export const caclCap: (doc: IModel, crdjob: ICrdConfig) => ICrdConfig = (
 
             if (cpu >= 30) {
                 utils.logInfo(
-                    `$spark.capacity (caclCap): max config crdjob.spec. - job:  ${id} - drv_c: ${crdjob.spec.driver.cores} - inst: ${crdjob.spec.executor.instances} - exec_c: ${crdjob.spec.executor.cores} - drv_m: ${crdjob.spec.driver.memory} - exec_m: ${crdjob.spec.executor.memory}`,
+                    `$spark.capacity (caclCap): max config crdjob.spec. - job:  ${id} - d_cores: ${crdjob.spec.driver.cores} - e_inst: ${crdjob.spec.executor.instances} - e_cores: ${crdjob.spec.executor.cores} - d_mem: ${crdjob.spec.driver.memory} - e_mem: ${crdjob.spec.executor.memory}`,
                     `ti: ${doc.job.transid}`
                 );
 
@@ -219,7 +210,7 @@ export const caclCap: (doc: IModel, crdjob: ICrdConfig) => ICrdConfig = (
         }
 
         utils.logInfo(
-            `$spark.capacity (caclCap): max crdjob.spec. - job:  ${id} - drv_c: ${crdjob.spec.driver.cores} - inst: ${crdjob.spec.executor.instances} - exec_c: ${crdjob.spec.executor.cores}- drv_m: ${crdjob.spec.driver.memory} - exec_m: ${crdjob.spec.executor.memory}`,
+            `$spark.capacity (caclCap): max crdjob.spec. - job:  ${id} - d_cores: ${crdjob.spec.driver.cores} - e_inst: ${crdjob.spec.executor.instances} - e_cores: ${crdjob.spec.executor.cores}- d_mem: ${crdjob.spec.driver.memory} - e_mem: ${crdjob.spec.executor.memory}`,
             `ti: ${doc.job.transid}`
         );
 
@@ -265,13 +256,13 @@ export const caclCap: (doc: IModel, crdjob: ICrdConfig) => ICrdConfig = (
     crdjob.spec.executor.instances = Math.ceil(numpartitions / crdjob.spec.executor.cores); // devide and roound it up
 
     utils.logInfo(
-        `$spark.capacity (caclCap): calculated - job:  ${id} - drv_c: ${crdjob.spec.driver.cores} - inst: ${crdjob.spec.executor.instances}  - exec_c: ${crdjob.spec.executor.cores}- drv_m: ${crdjob.spec.driver.memory} - exec_m: ${crdjob.spec.executor.memory}`,
+        `$spark.capacity (caclCap): calculated - job:  ${id} - d_cores: ${crdjob.spec.driver.cores} - e_inst: ${crdjob.spec.executor.instances}  - e_cores: ${crdjob.spec.executor.cores}- d_mem: ${crdjob.spec.driver.memory} - e_mem: ${crdjob.spec.executor.memory}`,
         `ti: ${doc.job.transid}`
     );
 
     /*
     $spark.capacity (caclCap): available - nodes: 9 - cores: 12 - memory: 65785812Ki
-    $spark.capacity (caclCap): balanced capacity drv_c: 1 - inst: 2 - exec_c: 12
+    $spark.capacity (caclCap): balanced capacity d_cores: 1 - e_inst: 2 - e_cores: 12
     */
 
     return crdjob;

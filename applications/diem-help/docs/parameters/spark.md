@@ -8,17 +8,29 @@ In certain circumstances you can overwrite the default spark capacity allocartio
 - when running local ( use driver settings)
 - large jobs (large data) - increase if needed executor memory
 
+# Running on local (execution is done on the driver)
+
 ```yaml
 spark:
-    local: 5 # run in local mode on driver
-    driver:
-        cores: 10
-        memory: 8G
+    local: true # specify to run on local
     executor:
         cores: 5 #number of cores
-        memory: 8G # memory allocated
-        instances: 2 #number of instances
+        memory: 8g # memory allocated
 ```
 
-Memory is measured in bytes. In addition, it may be used with SI suffices (E, P, T, G, M, K)
-Runs a custom spark file with 5 CPU
+# Running with spark executors (execution is done via one or more executors)
+
+```yaml
+spark:
+    driver:
+        cores: 2 # specify the number of cores: default 1
+        memory: 2g # specify the memory: default 1024m
+    executor:
+        cores: 5 # number of executor cores
+        memory: 8g # memory allocated to the executor
+        instances: 2 # number of instances
+```
+
+Runs a custom spark file with 5 CPU on 2 executor with 1 driver
+
+Memory is measured in bytes. In addition, it may be used with SI suffices (e, p, t, g, m, k)

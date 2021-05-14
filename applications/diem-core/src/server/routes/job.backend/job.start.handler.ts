@@ -4,11 +4,11 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 
 import { utils } from '@common/utils';
-import { IError } from '@interfaces';
+import { IError, ICapacity } from '@interfaces';
 import { DataModel, EJobTypes, IModel, IETLJob, EJobStatus, ExecutorTypes } from '@models';
 import { pubSub } from '@config/pubsub';
 import { addTrace } from '@functions';
-import { createSparkPythonJob, ICapacity, publishSparkJob } from '../executors/spark/spark.python.job';
+import { createSparkPythonJob, publishSparkJob } from '../executors/spark/spark.python.job';
 import { createSparkScalaJob } from '../executors/spark/spark.scala.job';
 import { createNodePyJob } from '../executors/nodepy/np.create';
 import { mergeDeep } from '../job.updates/job.action.update';

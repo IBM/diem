@@ -18,15 +18,6 @@ export interface ICos {
     bucket: string;
 }
 
-export interface ICapacity {
-    instances: number;
-    driver_cores: number;
-    driver_memory: string;
-    executor_cores: number;
-    executor_memory: string;
-    nodes: number;
-}
-
 export const getCosCredentials: (doc: IModel) => Promise<Partial<ICos>> = async (
     doc: IModel
 ): Promise<Partial<ICos>> => {
