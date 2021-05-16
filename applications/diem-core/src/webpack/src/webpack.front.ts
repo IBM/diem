@@ -3,14 +3,14 @@
 /*  eslint-disable @typescript-eslint/no-var-requires */
 
 export {};
-const webpack: any = require('webpack');
-const TerserPlugin: any = require('terser-webpack-plugin');
-const ngToolsWebpack: any = require('@ngtools/webpack');
-const CopyWebpackPlugin: any = require('copy-webpack-plugin');
-const MiniCssExtractPlugin: any = require('mini-css-extract-plugin');
-const CssMinimizerPlugin: any = require('css-minimizer-webpack-plugin');
-const WebpackAssetsManifest: any = require('webpack-assets-manifest');
-const { InjectManifest }: any = require('workbox-webpack-plugin');
+import CopyWebpackPlugin from 'copy-webpack-plugin';
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
+import WebpackAssetsManifest from 'webpack-assets-manifest';
+import webpack from 'webpack';
+import { AngularWebpackPlugin } from '@ngtools/webpack';
+import { InjectManifest } from 'workbox-webpack-plugin';
 /** const Ba = require('webpack-bundle-analyzer'); */
 
 console.info(`$webpack.front: environment: ${process.env.webpackenv}`);
@@ -220,9 +220,9 @@ module.exports = {
             ],
         }),
 
-        new ngToolsWebpack.AngularCompilerPlugin({
+        new AngularWebpackPlugin({
             /** alias for skipCodeGeneration: false */
-            tsConfigPath: `${(global as any).__basedir}/src/client/tsconfig-aot.json`,
+            tsconfig: `${(global as any).__basedir}/src/client/tsconfig-aot.json`,
         }),
 
         new webpack.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)/, `${(global as any).__basedir}/src`),
@@ -235,7 +235,7 @@ module.exports = {
 
         /** new Ba.BundleAnalyzerPlugin(), */
 
-        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+        new webpack.IgnorePlugin({ resourceRegExp: /^\.\/locale$/, contextRegExp: /moment$/ }),
 
         new WebpackAssetsManifest({
             integrity: true,
