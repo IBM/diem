@@ -12,11 +12,7 @@ import {
 import { Env } from '@mydiem/diem-angular-util';
 import { AbstractControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import cloneDeep from 'lodash-es/cloneDeep';
-import findIndex from 'lodash-es/findIndex';
-import isEmpty from 'lodash-es/isEmpty';
-import isEqual from 'lodash-es/isEqual';
-import reduce from 'lodash-es/reduce';
+import { cloneDeep, findIndex, isEmpty, isEqual, reduce } from 'lodash-es';
 import { select, Store } from '@ngrx/store';
 import { utc } from 'moment';
 import { debounceTime, distinctUntilChanged, filter, take } from 'rxjs/operators';

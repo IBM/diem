@@ -15,11 +15,9 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { select, Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import isEmpty from 'lodash-es/isEmpty';
-import cloneDeep from 'lodash-es/cloneDeep';
+import { isEmpty, cloneDeep, merge } from 'lodash-es';
 import { map, take } from 'rxjs/operators';
 import { Env } from '@mydiem/diem-angular-util';
-import { merge } from 'lodash-es';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { DFCommonService } from './df.common.api';
 import { DFFilterService } from './df.filter.service';

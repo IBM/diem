@@ -19,7 +19,7 @@ import {
     IStoreFormState,
     IStoreTableState,
 } from '@mydiem/diem-forms';
-import isEqual from 'lodash-es/isEqual';
+import { isEqual } from 'lodash-es';
 import { Env } from '@mydiem/diem-angular-util';
 import { Subscription } from 'rxjs';
 import { catchError, filter } from 'rxjs/operators';

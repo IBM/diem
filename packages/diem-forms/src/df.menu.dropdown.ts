@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import each from 'lodash-es/each';
+import { each } from 'lodash-es';
 import { Subscription } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
