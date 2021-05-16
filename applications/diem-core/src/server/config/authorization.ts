@@ -67,6 +67,7 @@ export const login: (req: IRequest, res: any) => Promise<boolean | Error> = asyn
             res.cookie(`${utils.Env.appcookie}`, profile.token, {
                 maxAge,
                 secure: true,
+                sameSite: 'strict',
             });
             utils.logGreen(`$authorization (created token): user: ${email} - ti: ${req.transid}`);
 
