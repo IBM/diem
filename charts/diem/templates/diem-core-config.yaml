@@ -28,14 +28,7 @@ data:
   SPARK__VOLUME: {{ .Values.core.config.volume.volumeClaimName }}
   SPARK__FILE_URL: {{ printf "http://%s/internal/pyfile" .Values.core.name }}
   SPARK__CALLBACK_URL: {{ printf "http://%s%s" .Values.core.name .Values.core.config.spark.CALLBACK_URL }}
-  {{- with .Values.core.config.spark }}
-  SPARK__IMAGE: {{ .SPARK_IMAGE }}
-  OPERATOR__DRIVER_CORES: {{ .OPERATOR_DRIVER_CORES  | quote}}
-  OPERATOR__DRIVER_MEMORY: {{ .OPERATOR_DRIVER_MEMORY  | quote}}
-  OPERATOR__EXECUTOR_CORES: {{ .OPERATOR_EXECUTOR_CORES  | quote }}
-  OPERATOR__EXECUTOR_INSTANCES: {{ .OPERATOR_EXECUTOR_INSTANCES  | quote}}
-  OPERATOR__EXECUTOR_MEMORY: {{ .OPERATOR_EXECUTOR_MEMORY | quote }}
-  {{- end }}
+  SPARK__IMAGE: {{ .Values.core.config.spark.SPARK_IMAGE }}
   {{- if .Values.core.config.spark.SPARK_IMAGEPULLSECRETS }}
   SPARK__IMAGEPULLSECRETS: {{ .Values.core.config.spark.SPARK_IMAGEPULLSECRETS }}
   {{- end }}

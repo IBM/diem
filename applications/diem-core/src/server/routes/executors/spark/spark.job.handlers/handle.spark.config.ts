@@ -36,8 +36,8 @@ export const handleWithConfig: (doc: IJobSchema) => Promise<string> = async (doc
     let code: string = py_start();
 
     const local: string =
-        doc.job.audit && doc.job.audit.spark && doc.job.audit.spark.nodes <= 1
-            ? `.master("local[${doc.job.audit.spark.driver_cores}]")`
+        doc.job.params?.spark?.local && doc.job.audit?.spark?.executor_cores
+            ? `.master("local[${doc.job.audit.spark.executor_cores}]")`
             : '';
 
     code = code.replace('######', py_session(local));

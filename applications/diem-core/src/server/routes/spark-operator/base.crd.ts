@@ -1,4 +1,3 @@
-import { Credentials } from '@common/cfenv';
 import { sparkCredentials } from './spark.base';
 
 export interface ICrdConfig {
@@ -34,7 +33,6 @@ export interface ICrdConfig {
             javaOptions?: string;
             volumeMounts?: any[];
             cores: number;
-            nodes?: number;
             coreRequest?: string;
         };
         executor: {
@@ -63,15 +61,6 @@ export interface ICrdConfig {
     };
 }
 
-const operator: {
-    mode: string;
-    driver_cores: string;
-    driver_memory: string;
-    executor_cores: string;
-    executor_instances: string;
-    executor_memory: string;
-} = Credentials('operator');
-
 export const crdconfig: () => ICrdConfig = (): ICrdConfig => ({
     apiVersion: 'sparkoperator.k8s.io/v1beta2',
     kind: 'SparkApplication',
@@ -86,14 +75,14 @@ export const crdconfig: () => ICrdConfig = (): ICrdConfig => ({
     spec: {
         imagePullPolicy: 'Always',
         mainApplicationFile: 'dummy',
-        mode: operator.mode || 'cluster',
+        mode: 'cluster',
         sparkVersion: '3.1.0',
         driver: {
             cores: 1,
             envSecretKeyRefs: {},
             envVars: {},
             hostNetwork: true,
-            memory: operator.driver_memory || '1Gb',
+            memory: '1024m',
             podName: 'dummy',
             labels: {
                 version: '3.1.0',
@@ -102,7 +91,7 @@ export const crdconfig: () => ICrdConfig = (): ICrdConfig => ({
         },
         executor: {
             cores: 1,
-            memory: operator.executor_memory || '8Gb',
+            memory: '8Gb',
             labels: {
                 version: '3.1.0',
             },

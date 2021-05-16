@@ -163,6 +163,9 @@ export class Express {
                 .get(`${utils.Env.apppath}/robots.txt`, limiter, (_req: IRequest, res: IResponse) => {
                     res.sendFile('/public/robots.txt', { root: path.resolve() });
                 })
+                .get(`/DomainVerification.html`, limiter, (_req: IRequest, res: IResponse) => {
+                    res.sendFile('/public/DomainVerification.html', { root: path.resolve() });
+                })
                 .use((req, res, next) =>
                     !hasSome(req, this.config ? this.config.cspExcluded : []) ? csp(req, res, next) : next()
                 )
@@ -264,6 +267,7 @@ export class Express {
             maxAge: 86400000,
             path: '/',
             secure: true,
+            sameSite: 'strict',
         },
         genid: (): string => utils.guid(),
         name: this.session ? this.session.name : undefined,

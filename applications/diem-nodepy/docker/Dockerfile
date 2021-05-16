@@ -1,4 +1,4 @@
-FROM nikolaik/python-nodejs:python3.8-nodejs16
+FROM nikolaik/python-nodejs:python3.9-nodejs16
 
 LABEL   maintainer=guy_huinen@be.ibm.com \
     org.label-schema.description="Diem Nodepy Application" \
@@ -35,4 +35,4 @@ COPY server $HOME/server
 
 RUN chmod -R 775 .
 
-CMD [ "npm", "start" ]
+CMD [ "node", "./server/server.js" ]

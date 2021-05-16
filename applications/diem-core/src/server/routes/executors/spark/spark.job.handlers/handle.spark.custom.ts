@@ -57,16 +57,11 @@ export const handleWithCustom: (doc: IJobSchema) => Promise<string> = async (doc
      * or if absent we always allocated 5 cpu
      */
 
-    let spark_local: number = 5;
-    if (
-        doc.job.params &&
-        doc.job.params.spark &&
-        doc.job.params.spark.local &&
-        Number(doc.job.params.spark.local) < 11
-    ) {
-        spark_local = doc.job.params.spark.local;
-    }
-    const local = `.master("local[${spark_local}]")`;
+    const local: string =
+        doc.job.params?.spark?.local && doc.job.audit?.spark?.executor_cores
+            ? `.master("local[${doc.job.audit.spark.executor_cores}]")`
+            : '';
+
     code = code.replace('######', py_session(local));
 
     const custom_code: string = `

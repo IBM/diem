@@ -34,7 +34,7 @@ class MarkDown {
                     } catch (__) {}
                 } else if (lang && hljs.getLanguage(lang)) {
                     try {
-                        return hljs.highlight(lang, str).value;
+                        return hljs.highlight(str, { language: lang }).value;
                         // eslint-disable-next-line no-empty
                     } catch (__) {}
                 }

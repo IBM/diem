@@ -177,18 +177,6 @@ export class Server {
                     res.status(200).send(data);
                 }
             } catch (err) {
-                const msg: IError = {
-                    ...err,
-                    email: 'anonymous',
-                    endpoint: req.params ? req.params.function : 'n/a',
-                    name: err.name || '$server (api) function error',
-                    time: utils.time(),
-                    transid: req.transid || 'n/a',
-                    url: req.originalUrl,
-                    message: err.message,
-                    stack: err.stack,
-                };
-
                 if (err && err.return) {
                     res.status(200).send(err.return);
                 } else if (err && err.displayerr) {
@@ -198,6 +186,18 @@ export class Server {
                      * we will only slack the error here as the 2 above are errors custom
                      * returned to the user so not real functional errors
                      */
+
+                    const msg: IError = {
+                        ...err,
+                        email: 'anonymous',
+                        endpoint: req.params ? req.params.function : 'n/a',
+                        name: err.name || '$server (api) function error',
+                        time: utils.time(),
+                        transid: req.transid || 'n/a',
+                        url: req.originalUrl,
+                        message: err.message,
+                        stack: err.stack,
+                    };
 
                     err.trace = addTrace(err.trace, '@at $server (api)');
 
