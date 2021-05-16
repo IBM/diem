@@ -75,7 +75,10 @@ export const caclCap: (doc: IModel, crdjob: ICrdConfig) => ICrdConfig = (
     const id: string = doc._id.toString();
 
     // set the default values for cores and memory
-    crdjob.spec.executor.cores = capacity.cores;
+    // we take 25 % of the available numbers
+    // this overwrites the default
+    crdjob.spec.driver.cores = Math.round(capacity.cores / 4);
+    crdjob.spec.executor.cores = Math.round(capacity.cores / 4);
     crdjob.spec.executor.memory = capacity.memory;
 
     utils.logInfo(
