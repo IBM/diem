@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 import { Env, HttpService } from '@mydiem/diem-angular-util';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
-import merge from 'lodash-es/merge';
+import { merge } from 'lodash-es';
 import { DomHandler } from 'primeng/dom';
 import { IForm, ILocals, IParams, IStoreFormState, IStoreTableState } from './definitions/interfaces';
 
