@@ -76,7 +76,7 @@ export const crdconfig: () => ICrdConfig = (): ICrdConfig => ({
         imagePullPolicy: 'Always',
         mainApplicationFile: 'dummy',
         mode: 'cluster',
-        sparkVersion: '3.1.0',
+        sparkVersion: '3.1.1',
         driver: {
             cores: 1,
             envSecretKeyRefs: {},
@@ -93,7 +93,7 @@ export const crdconfig: () => ICrdConfig = (): ICrdConfig => ({
             cores: 1,
             memory: '8Gb',
             labels: {
-                version: '3.1.0',
+                version: '3.1.1',
             },
             instances: 1,
         },

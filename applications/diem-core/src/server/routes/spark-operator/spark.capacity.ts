@@ -127,6 +127,12 @@ export const caclCap: (doc: IModel, crdjob: ICrdConfig) => ICrdConfig = (
     /* no job ! or job but no config */
 
     if (!doc.config) {
+        crdjob.spec.executor.coreRequest =
+            (Math.round((crdjob.spec.executor.cores / 3) * 100) / 100).toString() || undefined;
+
+        crdjob.spec.driver.coreRequest =
+            (Math.round((crdjob.spec.driver.cores / 3) * 100) / 100).toString() || undefined;
+
         utils.logInfo(
             `$spark.capacity (caclCap): default custom:  ${id} - d_cores: ${crdjob.spec.driver.cores} - e_inst: ${crdjob.spec.executor.instances} - e_cores: ${crdjob.spec.executor.cores} - d_mem: ${crdjob.spec.driver.memory} - e_mem: ${crdjob.spec.executor.memory}`,
             `ti: ${doc.job.transid}`
@@ -169,6 +175,12 @@ export const caclCap: (doc: IModel, crdjob: ICrdConfig) => ICrdConfig = (
         if (!spark?.executor?.memory) {
             crdjob.spec.executor.memory = `${capacity.mem_core * crdjob.spec.executor.cores}g`;
         }
+
+        crdjob.spec.executor.coreRequest =
+            (Math.round((crdjob.spec.executor.cores / 3) * 100) / 100).toString() || undefined;
+
+        crdjob.spec.driver.coreRequest =
+            (Math.round((crdjob.spec.driver.cores / 3) * 100) / 100).toString() || undefined;
 
         utils.logInfo(
             `$spark.capacity (caclCap): running on single node - job:  ${id} - d_cores: ${crdjob.spec.driver.cores} - e_inst: ${crdjob.spec.executor.instances} - e_cores: ${crdjob.spec.executor.cores}- d_mem: ${crdjob.spec.driver.memory} - e_mem: ${crdjob.spec.executor.memory}`,
@@ -269,6 +281,11 @@ export const caclCap: (doc: IModel, crdjob: ICrdConfig) => ICrdConfig = (
     crdjob.spec.executor.instances = Math.ceil(numpartitions / crdjob.spec.executor.cores); // devide and roound it up
 
     crdjob.spec.executor.memory = `${capacity.mem_core * crdjob.spec.executor.cores}g`;
+
+    crdjob.spec.executor.coreRequest =
+        (Math.round((crdjob.spec.executor.cores / 3) * 100) / 100).toString() || undefined;
+
+    crdjob.spec.driver.coreRequest = (Math.round((crdjob.spec.driver.cores / 3) * 100) / 100).toString() || undefined;
 
     utils.logInfo(
         `$spark.capacity (caclCap): calculated - job:  ${id} - d_cores: ${crdjob.spec.driver.cores} - e_inst: ${crdjob.spec.executor.instances}  - e_cores: ${crdjob.spec.executor.cores}- d_mem: ${crdjob.spec.driver.memory} - e_mem: ${crdjob.spec.executor.memory}`,
