@@ -187,8 +187,6 @@ export const caclCap: (doc: IModel, crdjob: ICrdConfig) => ICrdConfig = (
             `ti: ${doc.job.transid}`
         );
 
-        console.info(crdjob.spec);
-
         return crdjob;
     }
 
