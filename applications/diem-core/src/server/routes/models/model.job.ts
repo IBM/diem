@@ -57,6 +57,8 @@ export interface IJobParams {
     spark?: {
         local?: number;
         image?: string;
+        tmpfs?: boolean;
+        adaptive?: boolean;
         driver?: {
             cores?: number;
             memory?: string;
