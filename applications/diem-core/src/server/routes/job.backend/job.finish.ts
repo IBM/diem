@@ -15,7 +15,7 @@ export const getPySparkJobLog: (doc: IModel) => Promise<IModel> = async (doc: IM
 
     if (sparkLog) {
         if (sparkLog.length && sparkLog.length > 10000) {
-            sparkLog = `${sparkLog.slice(0, 1000)}\n\n....\n\n${sparkLog.slice(-9000)}`;
+            sparkLog = `${sparkLog.slice(0, 3000)}\n\n....\n\n${sparkLog.slice(-7000)}`;
         }
 
         doc.job.error = `${doc.job.error}\n\n*** Attaching Spark Log***\n\n${sparkLog}`;
