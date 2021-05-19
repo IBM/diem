@@ -29,9 +29,11 @@ export const createSparkPythonJob: (doc: IModel) => Promise<ICapacity> = async (
     crdjob.spec.sparkConf = {
         'spark.sql.execution.arrow.pyspark.enabled': 'true',
         'spark.sql.execution.arrow.pyspark.fallback.enabled': 'true',
+        'spark.sql.adaptive.enabled': doc.job.params?.spark?.adaptive ? 'true' : 'false',
         'spark.driver.extraClassPath': stocator,
         'spark.task.maxFailures': '1',
         'spark.executor.extraClassPath': stocator,
+        'spark.kubernetes.local.dirs.tmpfs': doc.job.params?.spark?.tmpfs ? 'true' : 'false',
         //'spark.yarn.maxAppAttempts': 1,  //  put this in the job somewhere
     };
 
@@ -83,7 +85,7 @@ export const createSparkPythonJob: (doc: IModel) => Promise<ICapacity> = async (
     crdjob.spec.driver.javaOptions = encoder;
 
     // adding a volume if there is a volume provisioned and if the flag is on
-    if (sparkCredentials.volume && doc.job?.params?.spark?.volume) {
+    if (sparkCredentials.volume && doc.job.params?.spark?.volume) {
         crdjob = addVolume(crdjob, sparkCredentials.volume);
     }
 

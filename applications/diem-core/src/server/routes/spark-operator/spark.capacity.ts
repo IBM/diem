@@ -13,6 +13,7 @@ export interface IBaseCapacity {
     memory: string;
     mem_mb: number;
     mem_gb: number;
+    mem_core: number;
 }
 
 const capacity: IBaseCapacity = {
@@ -20,6 +21,7 @@ const capacity: IBaseCapacity = {
     memory: '',
     mem_mb: 0,
     mem_gb: 0,
+    mem_core: 0,
     nodes: 0,
 };
 
@@ -52,6 +54,8 @@ const setCap: () => void = async () => {
     capacity.memory = status.capacity.memory;
     capacity.nodes = node.body.items.length;
 
+    capacity.mem_core = Math.round(capacity.mem_gb / capacity.cores);
+
     utils.logInfo(
         `$spark.capacity (setCap): nodes: ${capacity.nodes} - cores: ${capacity.cores} - memory: ${capacity.memory}`
     );
@@ -79,10 +83,9 @@ export const caclCap: (doc: IModel, crdjob: ICrdConfig) => ICrdConfig = (
     // this overwrites the default
     crdjob.spec.driver.cores = Math.round(capacity.cores / 4);
     crdjob.spec.executor.cores = Math.round(capacity.cores / 4);
-    crdjob.spec.executor.memory = capacity.memory;
 
     utils.logInfo(
-        `$spark.capacity (caclCap): current capacity - job:  ${id} - cores: ${capacity.cores} - memory: ${capacity.memory} - nodes: ${capacity.nodes}`,
+        `$spark.capacity (caclCap): current capacity - job:  ${id} - cores: ${capacity.cores} - mem: ${capacity.memory} - nodes: ${capacity.nodes}`,
         `ti: ${doc.job.transid}`
     );
 
@@ -163,6 +166,10 @@ export const caclCap: (doc: IModel, crdjob: ICrdConfig) => ICrdConfig = (
         crdjob.spec.executor.cores =
             numpartitions <= crdjob.spec.executor.cores ? numpartitions : crdjob.spec.executor.cores;
 
+        if (!spark?.executor?.memory) {
+            crdjob.spec.executor.memory = `${capacity.mem_core * crdjob.spec.executor.cores}g`;
+        }
+
         utils.logInfo(
             `$spark.capacity (caclCap): running on single node - job:  ${id} - d_cores: ${crdjob.spec.driver.cores} - e_inst: ${crdjob.spec.executor.instances} - e_cores: ${crdjob.spec.executor.cores}- d_mem: ${crdjob.spec.driver.memory} - e_mem: ${crdjob.spec.executor.memory}`,
             `ti: ${doc.job.transid}`
@@ -181,12 +188,14 @@ export const caclCap: (doc: IModel, crdjob: ICrdConfig) => ICrdConfig = (
      *
      */
     crdjob.spec.executor.cores = 5; // this is the ideal number per node capacity.cores; // eg 12 cpu per node
+    crdjob.spec.executor.memory = `${capacity.mem_core * crdjob.spec.executor.cores}g`;
 
     if (numpartitions >= 30) {
         // hard maximum assigning 30 in total  5 x 6
         // 5
 
-        crdjob.spec.executor.instances = 6; // 30 / 5
+        crdjob.spec.executor.instances = capacity.nodes > 5 ? 6 : capacity.nodes; // 30 / 5
+        crdjob.spec.executor.cores = Math.round(30 / crdjob.spec.executor.instances);
 
         if (doc.config.source.partition?.maxcpu) {
             const cpu: number = doc.config.source.partition.maxcpu;
@@ -214,7 +223,7 @@ export const caclCap: (doc: IModel, crdjob: ICrdConfig) => ICrdConfig = (
         }
 
         utils.logInfo(
-            `$spark.capacity (caclCap): max crdjob.spec. - job:  ${id} - d_cores: ${crdjob.spec.driver.cores} - e_inst: ${crdjob.spec.executor.instances} - e_cores: ${crdjob.spec.executor.cores}- d_mem: ${crdjob.spec.driver.memory} - e_mem: ${crdjob.spec.executor.memory}`,
+            `$spark.capacity (caclCap): max crdjob.spec. - job:  ${id} - d_cores: ${crdjob.spec.driver.cores} - e_inst: ${crdjob.spec.executor.instances} - e_cores: ${crdjob.spec.executor.cores} - d_mem: ${crdjob.spec.driver.memory} - e_mem: ${crdjob.spec.executor.memory}`,
             `ti: ${doc.job.transid}`
         );
 
@@ -258,6 +267,8 @@ export const caclCap: (doc: IModel, crdjob: ICrdConfig) => ICrdConfig = (
     crdjob.spec.executor.cores = calc_instances(numpartitions); // devide and roound it up
 
     crdjob.spec.executor.instances = Math.ceil(numpartitions / crdjob.spec.executor.cores); // devide and roound it up
+
+    crdjob.spec.executor.memory = `${capacity.mem_core * crdjob.spec.executor.cores}g`;
 
     utils.logInfo(
         `$spark.capacity (caclCap): calculated - job:  ${id} - d_cores: ${crdjob.spec.driver.cores} - e_inst: ${crdjob.spec.executor.instances}  - e_cores: ${crdjob.spec.executor.cores}- d_mem: ${crdjob.spec.driver.memory} - e_mem: ${crdjob.spec.executor.memory}`,
