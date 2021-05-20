@@ -150,7 +150,7 @@ class SparkLib {
             let body: string;
 
             if (log && log.body && log.body.length && log.body.length > 10000) {
-                body = `${log.body.slice(0, 1000)}\n\n....\n\n${log.body.slice(-9000)}`;
+                body = `${log.body.slice(0, 3000)}\n\n....\n\n${log.body.slice(-7000)}`;
             } else {
                 body = log.body;
             }
