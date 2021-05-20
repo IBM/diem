@@ -267,7 +267,7 @@ export class Express {
             maxAge: 86400000,
             path: '/',
             secure: true,
-            sameSite: 'strict',
+            sameSite: 'Lax',
         },
         genid: (): string => utils.guid(),
         name: this.session ? this.session.name : undefined,
