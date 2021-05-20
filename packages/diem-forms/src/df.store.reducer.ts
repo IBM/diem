@@ -6,7 +6,7 @@
  */
 
 import { Action } from '@ngrx/store';
-import cloneDeep from 'lodash-es/cloneDeep';
+import { cloneDeep } from 'lodash-es';
 import { IStore, IStoreFormState, IStoreResults, IStoreTableState } from './definitions/interfaces';
 
 const ADD_DATA: string = 'ADD_DATA';

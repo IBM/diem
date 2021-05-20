@@ -146,7 +146,16 @@ class SparkLib {
         try {
             const log: any = await this.client.api.v1.namespaces(sparkCredentials.namespace)?.pods(id)?.log.get();
 
-            return Promise.resolve(log.body);
+            // some code to prevent large logs
+            let body: string;
+
+            if (log && log.body && log.body.length && log.body.length > 10000) {
+                body = `${log.body.slice(0, 1000)}\n\n....\n\n${log.body.slice(-9000)}`;
+            } else {
+                body = log.body;
+            }
+
+            return Promise.resolve(body);
         } catch (err) {
             err.trace = addTrace(err.trace, '@at $spark.watcher (getJobLog)');
             err.id = id;

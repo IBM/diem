@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Injectable } from '@angular/core';
 import { HttpService } from '@mydiem/diem-angular-util';
-import cloneDeep from 'lodash-es/cloneDeep';
+import { cloneDeep } from 'lodash-es';
 import { IFormSpecs } from './definitions/interfaces';
 import * as def from './definitions/index';
 

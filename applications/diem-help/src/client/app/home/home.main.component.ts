@@ -131,7 +131,7 @@ export class HomeMainComponent implements OnInit, OnDestroy, AfterViewChecked {
             )
             .subscribe(async (res: any) => {
                 const title: string | undefined = this.findDeep(this.items, id);
-                this.doc_title = typeof title === 'string' ? title : 'no found';
+                this.doc_title = typeof title === 'string' ? title : 'Page not found';
 
                 const safe_html: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(res);
                 this.doc_content = safe_html;

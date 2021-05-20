@@ -3,6 +3,7 @@ import { utils } from '@common/utils';
 import { EJobStatus, IJobResponse, IModel } from '@models';
 import { pubSub } from '@config/pubsub';
 import { addTrace } from '@functions';
+import { ICapacity } from '@interfaces';
 import { crdconfig, ICrdConfig } from '../../spark-operator/base.crd';
 import { spark, sparkCredentials } from '../../spark-operator/spark.base';
 import { caclCap } from '../../spark-operator/spark.capacity';
@@ -12,15 +13,6 @@ import { addVolume, getCosCredentials, ICos } from './spark.job';
 
 const stocator: string = '/opt/cos/stocator-1.1.3.jar';
 const encoder: string = '-Ddb2.jcc.charsetDecoderEncoder=3';
-
-export interface ICapacity {
-    instances: number;
-    driver_cores: number;
-    driver_memory: string;
-    executor_cores: number;
-    executor_memory: string;
-    nodes: number;
-}
 
 interface IEnvVars {
     [index: string]: string;
@@ -177,12 +169,11 @@ export const createSparkScalaJob: (doc: IModel) => Promise<ICapacity> = async (d
     );
 
     return Promise.resolve({
-        instances: crdjob.spec.executor.instances,
         driver_cores: crdjob.spec.driver.cores,
         driver_memory: crdjob.spec.driver.memory,
         executor_cores: crdjob.spec.executor.cores,
         executor_memory: crdjob.spec.executor.memory,
-        nodes: crdjob.spec.driver.nodes || 1,
+        executor_instances: crdjob.spec.executor.instances,
     });
 };
 

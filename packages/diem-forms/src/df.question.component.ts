@@ -20,7 +20,7 @@ import {
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import cloneDeep from 'lodash-es/cloneDeep';
+import { cloneDeep } from 'lodash-es';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Env, HttpService } from '@mydiem/diem-angular-util';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
