@@ -143,7 +143,7 @@
         "pug-loader": "^2.4.0",
         "rimraf": "^3.0.2",
         "rxjs": "^7.0.1",
-        "sass": "^1.33.0",
+        "sass": "^1.32.13",
         "sass-loader": "^11.1.1",
         "strip-loader": "^0.1.2",
         "style-loader": "^2.0.0",
