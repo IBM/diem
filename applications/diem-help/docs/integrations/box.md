@@ -36,7 +36,7 @@ out(response)
 
 ### Remarks
 
-- You need to give access to the diem application add AutomationUser_1456564_UYa95JeUq8@boxdevedition.com
+- You need to give access to the diem application add xxxxxx@boxdevedition.com
 - you need to know the id of the file (open the file and look at the url)
 - you need to know the name of the folder (open the ffolder and look at the url)
 
