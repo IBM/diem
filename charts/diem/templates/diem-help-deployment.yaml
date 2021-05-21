@@ -33,12 +33,21 @@ spec:
                 name: {{ .Values.help.name }}-config
             - secretRef:
                 name: {{ .Values.help.name }}-secret
-          resources: {}
+          resources:
+            {{- if .Values.help.config.resources }}
+            {{- with .Values.help.config.resources }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- end }}
           terminationMessagePath: "/dev/termination-log"
           terminationMessagePolicy: File
           imagePullPolicy: Always
           securityContext:
-            privileged: false
+            {{- if .Values.help.config.securityContext }}
+            {{- with .Values.help.config.securityContext }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+            {{- end }}
           lifecycle:
             preStop:
               exec:
