@@ -13,6 +13,8 @@ from io import StringIO
 from pathlib import Path
 import pandas as pd
 from diemlib.main import error
+import chardet
+import openpyxl
 
 
 class Box(object):
@@ -20,15 +22,28 @@ class Box(object):
         config = JWTAuth.from_settings_dictionary(auth)
         self.client = Client(config)
 
-    def readFile(self, file, **kwargs):
+    def readFile(self, file_id, **kwargs):
         # gets a file from box
 
         try:
 
-            file_type = Path(file).suffix
+            # get the file info
+            file_info = self.client.file(file_id).get()
 
-            file_content = self.client.file(file).content()
-            body = StringIO(str(file_content, "utf-8"))
+            # get the file extention
+            file_type = Path(file_info["name"]).suffix
+
+            # read file content
+            file_content = self.client.file(file_id).content()
+
+            # detect the encoding
+            encoding = chardet.detect(file_content)
+
+            # if no encoding then pass bytes
+            if not encoding["encoding"] == None:
+                body = StringIO(str(file_content, encoding["encoding"]))
+            else:
+                body = file_content
 
             if file_type == ".pickle":
                 df = pd.read_pickle(body)
@@ -38,6 +53,9 @@ class Box(object):
                 return df
             elif file_type == ".csv":
                 df = pd.read_csv(body, encoding="utf8", **kwargs)
+                return df
+            elif file_type == ".xlsx":
+                df = pd.read_excel(body, engine='openpyxl', **kwargs)
                 return df
             else:
                 df = pd.read_csv(body, encoding="utf8", **kwargs)

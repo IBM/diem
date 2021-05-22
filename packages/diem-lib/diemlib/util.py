@@ -24,3 +24,9 @@ def guid():
     import uuid
 
     return str(uuid.uuid1())
+
+# split a pandas dataframe in chuncks
+
+
+def chunker(seq, size):
+    return (seq[pos:pos + size] for pos in range(0, len(seq), size))
