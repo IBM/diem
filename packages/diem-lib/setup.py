@@ -5,7 +5,7 @@ with open("readme.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="diemlib",  # Replace with your own username
-    version="1.0.2",
+    version="1.0.3",
     author="Guy Huinen",
     author_email="guy_huinen@be.ibm.com",
     description="Python Utilities for DIEM",
