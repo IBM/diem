@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { setTimeout } from 'timers/promises';
 import { IntInternal, IntEnv } from '@interfaces';
 import { utils } from '@config/utils';
 import { publisher } from './nats_publisher';
@@ -31,8 +30,10 @@ export class Server {
             })
             .on('exit', async (code: any) => {
                 utils.logInfo(`$server.ts (exit): fatal error, system shutting down : ${code}`);
-                await setTimeout(1000);
-                process.exit(1);
+
+                setTimeout(() => {
+                    process.exit(1);
+                }, 1000);
             });
 
         utils.ev.on('internal', (internal: IntInternal) => {

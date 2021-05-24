@@ -1,4 +1,3 @@
-import { setTimeout } from 'timers/promises';
 import { workers } from '../routes/etl/etl.workers';
 
 const memory = () => {
@@ -24,6 +23,8 @@ const memory = () => {
 
 export const stats = async () => {
     memory();
-    await setTimeout(60000);
-    void stats();
+
+    setTimeout(() => {
+        void stats();
+    }, 60000);
 };

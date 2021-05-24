@@ -79,6 +79,11 @@ spec:
             pathType: Prefix
             path: {{ .Values.help.deployment.path }}
           {{- end }}
+          {{- if .Values.ingress.extra }}
+          {{- with .Values.ingress.extra }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
+          {{- end }}
 
   tls:
     - hosts:
