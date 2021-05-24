@@ -1,5 +1,4 @@
 /*jshint esversion: 8 */
-import { setTimeout } from 'timers/promises';
 import { connect, NatsConnection, JSONCodec, StringCodec, nkeyAuthenticator } from 'nats';
 import { IPayload, INatsCredentials } from '@interfaces';
 import { etl_subscriber } from '../routes/etl/etl_subscriber';
@@ -85,8 +84,9 @@ class NCConnection {
                 name: 'Nats connection error',
             });
 
-            await setTimeout(10000);
-            void this.connect();
+            setTimeout(() => {
+                void this.connect();
+            }, 10000);
 
             retry += 1;
         }
