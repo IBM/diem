@@ -9,10 +9,12 @@
 """
 
 from boxsdk import JWTAuth, Client
+from boxsdk.exception import BoxAPIException
 from io import StringIO
 from pathlib import Path
 import pandas as pd
 from diemlib.main import error
+from diemlib.util import dictX
 import chardet
 import openpyxl
 
@@ -22,16 +24,30 @@ class Box(object):
         config = JWTAuth.from_settings_dictionary(auth)
         self.client = Client(config)
 
+    def fileInfo(self, file_id):
+        try:
+            t = self.client.file(file_id).get()
+            return dictX(t.response_object)
+        except BoxAPIException as e:
+            error(e)
+
+    def deleteFile(self, file_id):
+        try:
+            t = self.client.file(file_id).delete()
+            return t
+        except BoxAPIException as e:
+            error(e)
+
     def readFile(self, file_id, **kwargs):
         # gets a file from box
 
         try:
 
             # get the file info
-            file_info = self.client.file(file_id).get()
+            file_info = self.fileInfo(file_id)
 
             # get the file extention
-            file_type = Path(file_info["name"]).suffix
+            file_type = Path(file_info.name).suffix
 
             # read file content
             file_content = self.client.file(file_id).content()
@@ -63,7 +79,6 @@ class Box(object):
 
         except Exception as e:
             error(e)
-            raise
 
     def saveFile(self, df, file, folder=0, **kwargs):
         # saves a file to box
@@ -83,9 +98,8 @@ class Box(object):
             else:
                 pd.to_csv(body, encoding="utf8", **kwargs)
 
-            self.client.folder(folder).upload_stream(body, file)
-            return file
+            t = self.client.folder(folder).upload_stream(body, file)
+            return dictX(t.response_object)
 
-        except Exception as e:
+        except BoxAPIException as e:
             error(e)
-            raise

@@ -116,7 +116,13 @@ def insert(resultSet):
         insert_stmt.setObject(i + 1, resultSet.getObject(i+1));
       insert_stmt.addBatch();
       if c == ${batch_size}:
-          insert_stmt.executeBatch()
+          try:
+            insert_stmt.executeBatch()
+          except Exception as e:
+            if 'getNextException' in dir(e):
+              error(Exception(e.getNextException()))
+            else:
+              error(Exception(e))
           c = 0
           loop += 1
           tgt_conn.commit()
@@ -129,7 +135,15 @@ try:
   while resultSet.next():
     config.__count += 1
     insert(resultSet)
-  insert_stmt.executeBatch()
+
+  try:
+    insert_stmt.executeBatch()
+  except Exception as e:
+    if 'getNextException' in dir(e):
+      error(Exception(e.getNextException()))
+    else:
+      error(Exception(e))
+
   tgt_conn.commit()
   if insert_stmt:
     insert_stmt.close()

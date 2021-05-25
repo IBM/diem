@@ -234,6 +234,7 @@ nats:
   name: nats
 
   fullnameOverride: diem-nats
+  nameOverride: diem-nats
 
   ## authentication
   ## it4s recommended you create your own long encrypted password

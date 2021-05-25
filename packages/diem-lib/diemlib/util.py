@@ -30,3 +30,37 @@ def guid():
 
 def chunker(seq, size):
     return (seq[pos:pos + size] for pos in range(0, len(seq), size))
+
+# dot annotation
+# don't use reserved python words in dot assignment
+
+
+class dictX(dict):
+    def __getattr__(self, key):
+
+        if not key in self:
+            try:
+                self[key] = value = dictX({})
+                return value
+            except KeyError as k:
+                raise AttributeError(f'{key} is invalid.')
+        try:
+            if self[key] and type(self[key]) is dict:
+                self[key] = value = dictX(self[key])
+                return value
+            else:
+                return self[key]
+        except KeyError as k:
+            raise AttributeError(f'{key} is invalid.')
+
+    def __setattr__(self, key, value):
+        self[key] = value
+
+    def __delattr__(self, key):
+        try:
+            del self[key]
+        except KeyError as k:
+            raise AttributeError(k)
+
+    def __repr__(self):
+        return dict.__repr__(self)

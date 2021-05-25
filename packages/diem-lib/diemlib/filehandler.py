@@ -40,7 +40,6 @@ class filehandler(object):
 
         except Exception as e:
             error(e)
-            raise
 
     def saveLocal(self, file_name, file_body):
         # Saves a file locally
@@ -120,7 +119,6 @@ class filehandler(object):
 
         except Exception as e:
             error(e)
-            raise
 
     def loadFile(self, file):
 
@@ -133,7 +131,6 @@ class filehandler(object):
 
         except Exception as e:
             error(e)
-            raise
 
     def readString(self, file):
 
@@ -144,7 +141,6 @@ class filehandler(object):
 
         except Exception as e:
             error(e)
-            raise
 
     def download(self, file, filename=None):
 
@@ -164,7 +160,6 @@ class filehandler(object):
 
         except Exception as e:
             error(e)
-            raise
 
 
 def savePandas(filename, df):
@@ -190,4 +185,3 @@ def savePandas(filename, df):
 
     except Exception as e:
         error(e)
-        raise

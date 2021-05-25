@@ -123,7 +123,7 @@ In Order to read files the service account (app) needs to be given access to a f
 - Find the email of the app (service id)
 
 ```py
-print(user.login)
+out(user.login)
 
 AutomationUser_something@boxdevedition.com
 ```
@@ -137,7 +137,7 @@ AutomationUser_something@boxdevedition.com
 ```py
 file_id = '776846379598'
 file_info = client.file(file_id).get()
-print(f"File {file_info.name} has a size of {file_info.size} bytes")
+out(f"File {file_info.name} has a size of {file_info.size} bytes")
 
 File org.csv has a size of 1324 bytes
 ```
@@ -156,7 +156,7 @@ data = StringIO(s)
 df=pd.read_csv(data)
 ```
 
-## Other
+## Documentation
 
 Api Calls : [https://developer.box.com/reference/](https://developer.box.com/reference/)
 Python SDK Github: [https://github.com/box/box-python-sdk](https://github.com/box/box-python-sdk)
