@@ -19,7 +19,7 @@ import requests
 import io
 
 __all__ = ["UtcNow", "runTime", "printl",
-           "mq", "out", "endJob", "endjob", "failjob","stopjob", "error", "startTimer"]
+           "mq", "out", "endJob", "endjob", "failjob", "stopjob", "error", "startTimer"]
 
 
 def UtcNow():
@@ -62,13 +62,11 @@ def mq(data):
                     data["out"] = "Response must be booleam, number, string or json"
     except Exception as e:
         error(e)
-        raise
 
     if config.__logcount > config.__loglimit:
         # set the logcount back to 0 so that the error can pass
         config.__logcount = 0
         error(f"Rate limit of {config.__loglimit} exceeded")
-        raise
 
     config.__logcount += 1
 
@@ -138,19 +136,21 @@ def endJob(kwargs):
         error(e)
 
 
-def endjob(out = None):
+def endjob(out=None):
     data = {"status": "Completed", "count": config.__count}
     if not out == None:
         data["out"] = out
     endJob(data)
 
-def stopjob(out = None):
+
+def stopjob(out=None):
     data = {"status": "Stopped", "count": config.__count}
     if not out == None:
         data["out"] = out
     endJob(data)
 
-def failjob(out = None):
+
+def failjob(out=None):
     data = {"status": "Failed", "count": config.__count}
     if not out == None:
         data["out"] = out
@@ -187,18 +187,19 @@ def error(err):
 
     exit(1)
 
+
 def startTimer():
-  from threading import Timer
-  sys.stdout = io.TextIOWrapper(io.BufferedWriter(sys.stdout.buffer, 1024 ))
+    from threading import Timer
+    sys.stdout = io.TextIOWrapper(io.BufferedWriter(sys.stdout.buffer, 1024))
 
-  class RepeatTimer(Timer):
-    def run(self):
-        while not self.finished.wait(self.interval):
-            self.function(*self.args, **self.kwargs)
+    class RepeatTimer(Timer):
+        def run(self):
+            while not self.finished.wait(self.interval):
+                self.function(*self.args, **self.kwargs)
 
-  def flushOut():
-    sys.stdout.flush()
+    def flushOut():
+        sys.stdout.flush()
 
-  config.__timer = RepeatTimer(1, flushOut)
-  config.__timer.daemon = True
-  config.__timer.start()
+    config.__timer = RepeatTimer(1, flushOut)
+    config.__timer.daemon = True
+    config.__timer.start()

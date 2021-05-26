@@ -16,7 +16,8 @@ spec:
   type: LoadBalancer
   externalTrafficPolicy: Local
   selector:
-    app: {{ .Release.Name }}-nats
+    app.kubernetes.io/name: {{ .Release.Name }}-nats
+    app.kubernetes.io/instance: {{ .Release.Name }}
   ports:
     - protocol: TCP
       port: 4222

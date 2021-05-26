@@ -2,6 +2,9 @@ ingress:
   # -- name of your ingress
   name: diem-ingress
 
+  # any extra paths to include in your ingress
+  extra:
+
   # -- K8 api version (v1 or v1beta)
   version: v1
 
@@ -168,7 +171,7 @@ spark-operator:
 
   image:
     repository: quay.io/diem/spark-operator
-    tag: 3.1.1
+    tag: v1beta2-1.2.3-3.1.1
 
 help:
   createservice: true
@@ -230,6 +233,7 @@ nats:
   # -- the name of the service
   name: nats
 
+  fullnameOverride: diem-nats
   nameOverride: diem-nats
 
   ## authentication
@@ -266,7 +270,7 @@ nats:
 
   ## nats config settings
   nats:
-    image: nats:2.2.1-alpine3.13
+    image: nats:2.2.4-alpine3.13
     pullPolicy: IfNotPresent
 
   ## Nats cluster settings
