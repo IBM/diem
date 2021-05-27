@@ -53,11 +53,11 @@ export class Server {
             return Promise.resolve();
             // }, 1);
         } catch (err) {
-            err.trace = addTrace(err.trace, '@at $pubsub (publish)');
+            err.trace = addTrace(err.trace, '@at $pubsub (publishService)');
 
             await utils.logError(`$pubsub (publish): error - job: ${job.id}`, err);
 
-            return Promise.reject(err);
+            void Promise.reject();
         }
     };
 

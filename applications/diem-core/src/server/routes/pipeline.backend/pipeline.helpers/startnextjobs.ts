@@ -5,15 +5,15 @@ import { IJobResponse, IJobModel, IJobDetails, EJobStatus, EJobStatusCodes } fro
 import { addTrace } from '@functions';
 import { jobStartHandler } from '../../job.backend/job.start.handler';
 import { findOne } from './findone';
-import { ConfigurationServicePlaceholders } from 'ibm-cos-sdk/lib/config_service_placeholders';
 
 const getNextInQueue: (pldid: string, id: string) => Promise<string[]> = async (
     plid: string,
 
     id: string
 ): Promise<string[]> => {
+    console.info('$startnextjobs (getNextInQueue): looking up', id);
     const pldoc: IJobModel | null = await findOne(plid);
-
+    console.info('$startnextjobs (getNextInQueue): looked up', id);
     if (pldoc === null) {
         return Promise.reject({
             trace: ['@at $startnextjobs (getNextInQueue) - no doc'],
@@ -23,7 +23,7 @@ const getNextInQueue: (pldid: string, id: string) => Promise<string[]> = async (
     }
 
     const nodeIds: string[] = await getNodesFromId(id, pldoc);
-
+    console.info('$startnextjobs (getNextInQueue): after getnodes', id);
     const nodes: string[] = [];
 
     // eslint-disable-next-line guard-for-in
@@ -143,9 +143,9 @@ export const startNextJobs: (job: IJobResponse, pldoc: IJobModel) => Promise<num
                     batch_doc.job.runby = job.runby;
 
                     await jobStartHandler(batch_doc).catch(async (err) => {
-                        err.trace = addTrace(err.trace, '@at $pipeline.handler (startNextJobs)');
+                        err.trace = addTrace(err.trace, '@at $startnextjobs (startNextJobs) - batch');
 
-                        return Promise.resolve(0);
+                        return Promise.reject(err);
                     });
                 }
             }

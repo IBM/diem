@@ -13,10 +13,10 @@ export const findOne: (id: string) => Promise<IJobModel | null> = async (id: str
     return Promise.resolve(doc);
 };
 
-export const findOneAndUpdate: (id: string, update: any) => Promise<IJobModel | null> = async (
+export const findOneAndUpdate: (id: string, update: any) => Promise<IJobModel> = async (
     id: string,
     update: any
-): Promise<IJobModel | null> => {
+): Promise<IJobModel> => {
     const doc: IJobModel | null = await DataModel.findByIdAndUpdate({ _id: id }, update, {
         new: true,
         useFindAndModify: false,

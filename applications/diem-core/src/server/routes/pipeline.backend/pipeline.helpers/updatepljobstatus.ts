@@ -6,18 +6,18 @@ import { IJobModel } from '@models';
 import { findOne, findOneAndUpdate } from './findone';
 import { getNodesFromId } from './helpers';
 
-export const updatePlJobStatus: (plid: string, job: { id: string; status: string }) => Promise<IJobModel> = async (
-    plid: string,
+export const updatePlJobStatus: (pldoc: IJobModel, job: { id: string; status: string }) => Promise<IJobModel> = async (
+    pldoc: IJobModel,
     job: { id: string; status: string }
 ): Promise<IJobModel> => {
-    let pldoc: IJobModel | null = await findOne(plid);
-
     if (pldoc === null) {
         return Promise.reject({
             message: 'The document to update could not be found',
             trace: addTrace([], '@at $updatepljobstatus (updatePlJobStatus) - no doc'),
         });
     }
+
+    const plid: string = pldoc._id.toString();
 
     if (pldoc.jobs[job.id] && pldoc.jobs[job.id].status !== job.status) {
         const f: string = `jobs.${job.id}.status`;
@@ -114,7 +114,7 @@ export const findAndUpdatePlJob: (doc: IJobModel) => Promise<void> = async (doc:
 
     const plid: string = pldoc._id.toString();
 
-    await updatePlJobStatus(plid, { id, status: doc.job.status }).catch(async (err: IError) => {
+    await updatePlJobStatus(pldoc, { id, status: doc.job.status }).catch(async (err: IError) => {
         err.trace = addTrace(err.trace, '@at $updatepljobstatus (findAndUpdatePlJob) - updatePlJobStatus');
         err.id = id;
         err.plid = plid;

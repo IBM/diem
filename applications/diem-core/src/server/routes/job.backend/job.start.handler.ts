@@ -32,7 +32,7 @@ export const jobStartHandler: (doc: IJobModel) => Promise<void> = async (doc: IJ
 
         const { transid, email, jobid, runby, executor } = doc.job;
 
-        await pubSub.publish({
+        void pubSub.publish({
             count: null,
             email,
             error: err.message,

@@ -473,7 +473,7 @@ const dataSchema: Schema = new Schema(
     {
         collection: 'jobs',
         strict: true,
-        versionKey: false,
+        optimisticConcurrency: true,
     }
 );
 

@@ -224,7 +224,8 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
         // here we save the job as no more values of the document will be changed
         await doc.save().catch(async (err: any) => {
             err.caller = '$job.handler';
-            void utils.logError(`$job.handler (jobHandler): save failed - doc: ${id}`, err);
+
+            console.info(err.code, err.message);
 
             return Promise.reject(err);
         });
