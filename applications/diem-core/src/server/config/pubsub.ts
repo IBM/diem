@@ -13,16 +13,19 @@ export class Server {
         this.pack = utils.Env;
     }
 
-    public publish: (job: IJobResponse) => Promise<void> = async (job: IJobResponse): Promise<void> => {
+    public publish: (job: IJobResponse) => Promise<boolean> = async (job: IJobResponse): Promise<boolean> => {
         try {
             // setTimeout(async () => {
-            const pl: ISocketPayload | void = await jobHandler(job);
+
+            utils.logInfo(`$pubsub (publish): passing to job handler - job: ${job.id}`);
+
+            const payload: ISocketPayload = await jobHandler(job);
 
             utils.logInfo(`$pubsub (publish): publishing payload - job: ${job.id}`);
 
-            await publisher.publish('global.core.users', pl);
+            await publisher.publish('global.core.users', payload);
 
-            return Promise.resolve();
+            return Promise.resolve(true);
             // }, 1);
         } catch (err) {
             err.trace = addTrace(err.trace, '@at $pubsub (publish)');
@@ -35,7 +38,7 @@ export class Server {
 
     public publishService: (job: IJobResponse) => Promise<void> = async (job: IJobResponse): Promise<void> => {
         try {
-            const results: ISocketPayload | void = await servicesOutHandler(job);
+            const results: ISocketPayload = await servicesOutHandler(job);
 
             utils.logInfo(`$pubsub (publishservice): publishing payload - job: ${job.id}`);
 

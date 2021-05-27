@@ -6,7 +6,7 @@
 
 import { IntPayload } from '@interfaces';
 import { utils } from '@common/utils';
-import { EJobStatus, IJobResponse, IModel } from '@models';
+import { EJobStatus, IJobResponse, IJobModel } from '@models';
 
 import { pubSub } from '@config/pubsub';
 
@@ -38,7 +38,7 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
         return Promise.resolve(payload);
     }
 
-    let pldoc: IModel | null = await findOne(job.jobid);
+    let pldoc: IJobModel | null = await findOne(job.jobid);
 
     if (pldoc === null || !pldoc.jobs || !pldoc.jobs[job.id]) {
         return Promise.reject({
@@ -113,7 +113,7 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
 
             if (pldoc.job.jobid !== plid) {
                 utils.logInfo(
-                    `$pipeline.handler (pipelineHandler): publishing calling pl - pl: ${job.jobid} - job: ${job.id} - status: ${job.status}`,
+                    `$pipeline.handler (pipelineHandler): publishing ${job.status} to calling pl - pl: ${job.jobid} - job: ${job.id}`,
                     job.transid
                 );
                 await pubSub.publish({
@@ -188,7 +188,7 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
 
                 if (pldoc.job.jobid !== plid) {
                     utils.logInfo(
-                        `$pipeline.handler (pipelineHandler): publishing calling pl - pl: ${job.jobid} - job: ${job.id} - status: ${job.status}`,
+                        `$pipeline.handler (pipelineHandler): publishing ${job.status} to calling pl - pl: ${job.jobid} - calling pl: ${job.id}`,
                         job.transid
                     );
                     await pubSub.publish({
@@ -212,7 +212,7 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
 
         if (pldoc.job.jobid !== plid) {
             utils.logInfo(
-                `$pipeline.handler (pipelineHandler): publishing calling pl - pl: ${job.jobid} - target pl: ${pldoc.job.jobid} -  job: ${job.id} - status: ${job.status}`
+                `$pipeline.handler (pipelineHandler): publishing ${job.status} to calling pl - pl: ${job.jobid} - calling pl: ${pldoc.job.jobid} -  job: ${job.id}`
             );
             await pubSub.publish({
                 count: pldoc.job.count,
@@ -279,7 +279,7 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
 
             if (pldoc.job.jobid !== plid) {
                 utils.logInfo(
-                    `$pipeline.handler (pipelineHandler): publishing calling pl - pl: ${job.jobid} - job: ${job.id} - status: ${pldoc.job.status}`,
+                    `$pipeline.handler (pipelineHandler): publishing ${pldoc.job.status} to calling pl - pl: ${job.jobid} - calling pl: ${pldoc.job.jobid} -  job: ${job.id}`,
                     job.transid
                 );
                 await pubSub.publish({

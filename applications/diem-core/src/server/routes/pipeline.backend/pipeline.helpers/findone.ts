@@ -1,7 +1,7 @@
-import { DataModel, IModel } from '@models';
+import { DataModel, IJobModel } from '@models';
 
-export const findOne: (id: string) => Promise<IModel | null> = async (id: string): Promise<IModel | null> => {
-    const doc: IModel | null = await DataModel.findOne({ _id: id }).exec();
+export const findOne: (id: string) => Promise<IJobModel | null> = async (id: string): Promise<IJobModel | null> => {
+    const doc: IJobModel | null = await DataModel.findOne({ _id: id }).exec();
 
     if (doc === null) {
         return Promise.reject({
@@ -13,11 +13,11 @@ export const findOne: (id: string) => Promise<IModel | null> = async (id: string
     return Promise.resolve(doc);
 };
 
-export const findOneAndUpdate: (id: string, update: any) => Promise<IModel | null> = async (
+export const findOneAndUpdate: (id: string, update: any) => Promise<IJobModel | null> = async (
     id: string,
     update: any
-): Promise<IModel | null> => {
-    const doc: IModel | null = await DataModel.findOneAndUpdate({ _id: id }, update, {
+): Promise<IJobModel | null> => {
+    const doc: IJobModel | null = await DataModel.findByIdAndUpdate({ _id: id }, update, {
         new: true,
         useFindAndModify: false,
     }).exec();

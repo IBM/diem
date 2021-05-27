@@ -1,17 +1,18 @@
 /* eslint-disable max-len */
 /* eslint-disable sonarjs/cognitive-complexity */
 import { utils } from '@common/utils';
-import { IJobResponse, IModel, IJobDetails, EJobStatus } from '@models';
+import { IJobResponse, IJobModel, IJobDetails, EJobStatus, EJobStatusCodes } from '@models';
 import { addTrace } from '@functions';
 import { jobStartHandler } from '../../job.backend/job.start.handler';
 import { findOne } from './findone';
+import { ConfigurationServicePlaceholders } from 'ibm-cos-sdk/lib/config_service_placeholders';
 
-const getNextInQueue: (pldid: string, nodeIds: string[], id: string) => Promise<string[]> = async (
+const getNextInQueue: (pldid: string, id: string) => Promise<string[]> = async (
     plid: string,
-    nodeIds: string[],
+
     id: string
 ): Promise<string[]> => {
-    const pldoc: IModel | null = await findOne(plid);
+    const pldoc: IJobModel | null = await findOne(plid);
 
     if (pldoc === null) {
         return Promise.reject({
@@ -21,50 +22,45 @@ const getNextInQueue: (pldid: string, nodeIds: string[], id: string) => Promise<
         });
     }
 
+    const nodeIds: string[] = await getNodesFromId(id, pldoc);
+
     const nodes: string[] = [];
 
     // eslint-disable-next-line guard-for-in
     for await (const nodeId of nodeIds) {
+        /* at the beginning the queue is empty, when a job completed, it's add to the queue
+         * once the queue has the same number of elements as the from (can be multiple jobs)
+         * this would mean that all parent jobs have completed and we can run the next job
+         */
         if (pldoc.jobs[nodeId]) {
-            if (!pldoc.jobs[nodeId].queue) {
-                pldoc.jobs[nodeId].queue = [id];
-            }
-
-            if (pldoc.jobs[nodeId].queue && !pldoc.jobs[nodeId].queue.includes(id)) {
-                pldoc.jobs[nodeId].queue.push(id);
-            }
-
-            pldoc.markModified('jobs');
-
             // add some piece on checking the continueing conditions
             if (
                 pldoc.jobs[nodeId].from &&
                 pldoc.jobs[nodeId].queue &&
                 pldoc.jobs[nodeId].queue.length === pldoc.jobs[nodeId].from.length
             ) {
-                nodes.push(nodeId);
-                // eslint-disable-next-line max-len
-                utils.logInfo(
-                    `$startnextjobs (getNextInQueue): adding next job - pl: ${plid} - job: ${id} - adding job: ${nodeId} - node: ${nodes.length}`
-                );
+                const check_doc: IJobModel | null = await findOne(nodeId);
+
+                console.info(check_doc?.job);
+
+                if (check_doc?.job.status === EJobStatus.pending) {
+                    nodes.push(nodeId);
+                    // eslint-disable-next-line max-len
+                    utils.logInfo(
+                        `$startnextjobs (getNextInQueue): adding next job - pl: ${plid} - job: ${id} - adding job: ${nodeId} - node: ${nodes.length}`
+                    );
+                } else {
+                    utils.logInfo(
+                        `$startnextjobs (getNextInQueue): next job not in pending state - pl: ${plid} - job: ${id} - adding job: ${nodeId} - node: ${nodes.length}`
+                    );
+                }
             } else {
                 utils.logInfo(
-                    `$startnextjobs (getNextInQueue): no next job - pl: ${plid} - job: ${id} - node: ${nodeId}  - queue: ${pldoc.jobs[nodeId].from.length}`
+                    `$startnextjobs (getNextInQueue): no next job - pl: ${plid} - job: ${id} - node: ${nodeId}  - queue: ${pldoc.jobs[nodeId].queue.length} - from: ${pldoc.jobs[nodeId].from.length}`
                 );
             }
         }
     }
-
-    await pldoc.save().catch(async (err: any) => {
-        err.trace = ['$startnextjobs (getNextInQueue)'];
-        void utils.logError(`$startnextjobs (getNextInQueue): save failed - doc: ${plid}`, err);
-
-        return Promise.reject(err);
-    });
-
-    utils.logInfo(
-        `$startnextjobs (getNextInQueue): pipeline updated - returning nodes - pl: ${plid} - job: ${id} - nodes: ${nodes.length}`
-    );
 
     return Promise.resolve(nodes);
 };
@@ -85,70 +81,80 @@ const getNodesWithIdFrom: (jobs: IJobDetails, id: string) => Promise<string[]> =
     return Promise.resolve(nodes);
 };
 
-export const startNextJobs: (job: IJobResponse, pldoc: IModel) => Promise<number> = async (
+export const getNodesFromId: (id: string, pldoc: IJobModel) => Promise<string[]> = async (
+    id: string,
+    pldoc: IJobModel
+): Promise<string[]> => {
+    // we have now the job and now need to find the nodeIds where the from contains the job id
+
+    const nodeIds: string[] = await getNodesWithIdFrom(pldoc.jobs, id);
+
+    if (nodeIds && nodeIds.length === 0) {
+        return Promise.resolve([]);
+    }
+
+    return Promise.resolve(nodeIds);
+};
+
+export const startNextJobs: (job: IJobResponse, pldoc: IJobModel) => Promise<number> = async (
     job: IJobResponse,
-    pldoc: IModel
+    pldoc: IJobModel
 ): Promise<number> => {
     const plid: string = pldoc._id.toString();
 
-    // we have now the job and now need to find the nodeIds where the from contains the job id
-
-    const nodeIds: string[] = await getNodesWithIdFrom(pldoc.jobs, job.id);
-
-    if (nodeIds && nodeIds.length === 0) {
-        // there are no nodeIds so let's stop here
-        utils.logInfo(
-            `startnextjobs (startNextJobs): no dependent job found - pl: ${plid} - job: ${job.id}`,
-            job.transid
-        );
-
-        return Promise.resolve(0);
-    }
-
     // nodeIds length is always greater then 0
-    const d: string[] = await getNextInQueue(plid, nodeIds, job.id).catch(async (err: any) => {
+    const d: string[] = await getNextInQueue(plid, job.id).catch(async (err: any) => {
         err.trace = ['startnextjobs (startNextJobs)'];
 
         return Promise.reject(err);
     });
 
     if (d && d.length > 0) {
-        for (const id of d) {
+        for await (const id of d) {
             if (id) {
                 utils.logInfo(
                     `$startnextjobs (startNextJobs): calling jobStartHandler - pl: ${job.jobid} - next job: ${id}`,
                     job.transid
                 );
 
-                void jobStartHandler(
-                    {
-                        email: job.email,
-                        executor: job.executor,
-                        id,
-                        jobid: job.jobid, // this is the pipeline indicator
-                        jobstart: new Date(),
-                        name: job.name,
-                        runby: pldoc.job.runby,
-                        status: EJobStatus.submitted,
-                        transid: job.transid,
-                        org: job.org,
-                    },
-                    {
-                        name: 'startnextjob',
-                        id: plid,
-                    }
-                ).catch(async (err) => {
-                    err.trace = addTrace(err.trace, '@at $pipeline.handler (startNextJobs)');
+                const batch_doc: IJobModel | null = await findOne(id);
 
-                    return Promise.resolve(0);
-                });
+                if (!batch_doc) {
+                    const err: any = {
+                        message: `No config file found - id: ${job.id} - batch_job: ${id}`,
+                        trace: ['@at $startnextjobs (startNextJobs)'],
+                    };
+
+                    return Promise.reject(err);
+                }
+
+                if (([EJobStatus.running, EJobStatus.submitted] as EJobStatusCodes[]).includes(batch_doc.job.status)) {
+                    utils.logInfo(
+                        `$startnextjobs (startNextJobs): already running - pl: ${plid} - pl status: ${batch_doc.job.status}`,
+                        job.transid
+                    );
+                } else {
+                    batch_doc.job.email = job.email;
+                    batch_doc.job.executor = job.executor;
+                    batch_doc.job.jobstart = new Date();
+                    batch_doc.job.status = EJobStatus.submitted;
+                    batch_doc.job.transid = job.transid;
+                    batch_doc.job.jobid = plid;
+                    batch_doc.job.runby = job.runby;
+
+                    await jobStartHandler(batch_doc).catch(async (err) => {
+                        err.trace = addTrace(err.trace, '@at $pipeline.handler (startNextJobs)');
+
+                        return Promise.resolve(0);
+                    });
+                }
             }
         }
 
         return Promise.resolve(d.length);
     }
     utils.logInfo(
-        `$job.handler (startNextJobs): no depending job in queue - pl: ${job.jobid} - job: ${job.id}`,
+        `$startnextjobs (startNextJobs): no depending job in queue - pl: ${job.jobid} - job: ${job.id}`,
         job.transid
     );
 

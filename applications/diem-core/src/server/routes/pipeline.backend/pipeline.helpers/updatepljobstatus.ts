@@ -2,14 +2,15 @@
 import { utils } from '@common/utils';
 import { IError } from '@interfaces';
 import { addTrace } from '@functions';
-import { IModel } from '@models';
+import { IJobModel } from '@models';
 import { findOne, findOneAndUpdate } from './findone';
+import { getNodesFromId } from './helpers';
 
-export const updatePlJobStatus: (plid: string, job: { id: string; status: string }) => Promise<IModel> = async (
+export const updatePlJobStatus: (plid: string, job: { id: string; status: string }) => Promise<IJobModel> = async (
     plid: string,
     job: { id: string; status: string }
-): Promise<IModel> => {
-    let pldoc: IModel | null = await findOne(plid);
+): Promise<IJobModel> => {
+    let pldoc: IJobModel | null = await findOne(plid);
 
     if (pldoc === null) {
         return Promise.reject({
@@ -19,23 +20,51 @@ export const updatePlJobStatus: (plid: string, job: { id: string; status: string
     }
 
     if (pldoc.jobs[job.id] && pldoc.jobs[job.id].status !== job.status) {
-        utils.logInfo(
-            `$updatepljobstatus (updatePlJobStatus): updating pipeline job status - pl: ${plid} - doc: ${
-                job.id
-            } - old: ${pldoc.jobs[job.id].status}  - new: ${job.status}`
-        );
-
         const f: string = `jobs.${job.id}.status`;
 
-        pldoc = await findOneAndUpdate(plid, { $set: { [f]: job.status } }).catch(async (err: any) => {
-            err.trace = ['@at $authorization (login-email)'];
-            void utils.logError(
-                `$updatepljobstatus (findAndUpdatePlJob): save failed - pl: ${plid} - job: ${job.id}`,
-                err
-            );
+        const oldStatus: string = pldoc.jobs[job.id].status;
 
-            return Promise.reject(err);
-        });
+        /* the boolean nodes means we in addition to updating the status we also need to update the
+         * queue of that job for that pipeline
+         */
+
+        const nodeIds: string[] = await getNodesFromId(job.id, pldoc);
+
+        if (nodeIds && nodeIds.length > 0) {
+            const nodes: any = {};
+            for await (const nodeId of nodeIds) {
+                if (pldoc.jobs[nodeId]) {
+                    if (!pldoc.jobs[nodeId].queue) {
+                        pldoc.jobs[nodeId].queue = [job.id];
+                    }
+
+                    if (pldoc.jobs[nodeId].queue && !pldoc.jobs[nodeId].queue.includes(job.id)) {
+                        pldoc.jobs[nodeId].queue.push(job.id);
+                    }
+                }
+                nodes[`jobs.${nodeId}.queue`] = pldoc.jobs[nodeId].queue;
+            }
+
+            pldoc = await findOneAndUpdate(plid, { $set: { [f]: job.status, ...nodes } }).catch(async (err: any) => {
+                err.trace = ['@at $authorization (login-email)'];
+                void utils.logError(
+                    `$updatepljobstatus (findAndUpdatePlJob): save failed - pl: ${plid} - job: ${job.id}`,
+                    err
+                );
+
+                return Promise.reject(err);
+            });
+        } else {
+            pldoc = await findOneAndUpdate(plid, { $set: { [f]: job.status } }).catch(async (err: any) => {
+                err.trace = ['@at $authorization (login-email)'];
+                void utils.logError(
+                    `$updatepljobstatus (findAndUpdatePlJob): save failed - pl: ${plid} - job: ${job.id}`,
+                    err
+                );
+
+                return Promise.reject(err);
+            });
+        }
 
         if (pldoc === null) {
             return Promise.reject({
@@ -43,6 +72,12 @@ export const updatePlJobStatus: (plid: string, job: { id: string; status: string
                 trace: addTrace([], '@at $updatepljobstatus (findOneAndUpdate) - no doc'),
             });
         }
+
+        utils.logInfo(
+            `$updatepljobstatus (updatePlJobStatus): updated pipeline job status - pl: ${plid} - doc: ${
+                job.id
+            } - old: ${oldStatus} - new: ${job.status} - check: ${pldoc.jobs[job.id].status} - nodes: ${nodeIds.length}`
+        );
 
         return Promise.resolve(pldoc);
     }
@@ -54,7 +89,7 @@ export const updatePlJobStatus: (plid: string, job: { id: string; status: string
     return Promise.resolve(pldoc);
 };
 
-export const findAndUpdatePlJob: (doc: IModel) => Promise<void> = async (doc: IModel): Promise<void> => {
+export const findAndUpdatePlJob: (doc: IJobModel) => Promise<void> = async (doc: IJobModel): Promise<void> => {
     const id: string = doc._id.toString();
 
     if (!doc.job || (doc.job && !doc.job.jobid)) {
@@ -66,7 +101,7 @@ export const findAndUpdatePlJob: (doc: IModel) => Promise<void> = async (doc: IM
         });
     }
 
-    const pldoc: IModel | null = await findOne(doc.job.jobid);
+    const pldoc: IJobModel | null = await findOne(doc.job.jobid);
 
     if (pldoc === null || !pldoc.jobs || !pldoc.jobs[id]) {
         return Promise.reject({
@@ -91,8 +126,8 @@ export const findAndUpdatePlJob: (doc: IModel) => Promise<void> = async (doc: IM
     return Promise.resolve();
 };
 
-export const updatePlStatus: (pldoc: IModel, job: { id: string; status: string }) => Promise<void> = async (
-    pldoc: IModel,
+export const updatePlStatus: (pldoc: IJobModel, job: { id: string; status: string }) => Promise<void> = async (
+    pldoc: IJobModel,
     job: { id: string; status: string }
 ): Promise<void> => {
     const plid: string = pldoc._id.toString();

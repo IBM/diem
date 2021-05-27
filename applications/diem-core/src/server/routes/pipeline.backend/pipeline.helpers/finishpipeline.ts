@@ -1,9 +1,9 @@
 import { utils } from '@common/utils';
-import { IModel, IJob, IJobResponse } from '@models';
+import { IJobModel, IJob, IJobResponse } from '@models';
 
-export const finishPl: (job: IJobResponse, pldoc: IModel) => Promise<void> = async (
+export const finishPl: (job: IJobResponse, pldoc: IJobModel) => Promise<void> = async (
     job: IJobResponse,
-    pldoc: IModel
+    pldoc: IJobModel
 ): Promise<void> => {
     pldoc.job.jobend = new Date();
 
@@ -22,7 +22,7 @@ export const finishPl: (job: IJobResponse, pldoc: IModel) => Promise<void> = asy
         runtime: pldoc.job.runtime,
         status: pldoc.job.status,
         transid: job.transid,
-        name: job.name,
+        name: pldoc.name,
     };
 
     if (Array.isArray(pldoc.log)) {

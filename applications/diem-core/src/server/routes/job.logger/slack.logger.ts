@@ -4,20 +4,25 @@
 
 import { slackMsg } from '@common/slack/slack';
 import { ISlack, utils } from '@common/utils';
-import { IModel, EJobTypes, IWebhooksSchema } from '@models';
+import { IJobModel, EJobTypes, IWebhooksSchema } from '@models';
 import { IError } from '@interfaces';
 import { addTrace, fmtTime, makeUrl } from '@functions';
 import { getwebhook } from '../webhooks/webhooks';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 // eslint-disable-next-line sonarjs/cognitive-complexity
-export const toSlack: (doc: IModel) => Promise<void> = async (doc: IModel): Promise<void> => {
+export const toSlack: (doc: IJobModel) => Promise<void> = async (doc: IJobModel): Promise<void> => {
     const id: string = doc._id.toString();
 
     const isPl: boolean = doc.type === EJobTypes.pipeline;
     const jobkind: string = isPl ? 'pipeline' : 'job';
 
-    if (doc.job && doc.job.params && doc.job.params.slack && doc.job.params.slack.disabled) {
+    if (
+        doc.job &&
+        doc.job.params &&
+        doc.job.params.slack &&
+        (doc.job.params.slack.disabled || !doc.job.params.slack.enabled)
+    ) {
         utils.logInfo(`$slack.logger (toSlack): slack disabled by params - ${jobkind}: ${id}`);
 
         return Promise.resolve();
@@ -25,7 +30,7 @@ export const toSlack: (doc: IModel) => Promise<void> = async (doc: IModel): Prom
 
     const url: string = makeUrl({
         text: doc.name,
-        url: `jobdetail/${doc.id}`,
+        url: `jobdetail/${id}`,
     });
 
     const pipeline_url: string = makeUrl({
@@ -109,9 +114,12 @@ export const toSlack: (doc: IModel) => Promise<void> = async (doc: IModel): Prom
     let emoji: string = isPl ? ':ok:' : ':information_source:';
     let color: string = '#ececec';
 
-    if (['Failed', 'Stopped'].includes(status)) {
+    if (['Failed'].includes(status)) {
         emoji = isPl ? ':x:' : ':heavy_exclamation_mark:';
         color = isPl ? '#da1e28' : '#fa4d56'; // alt '#e71d32';
+    } else if (['Stopped'].includes(status)) {
+        emoji = isPl ? ':stop-2:' : ':stop22:';
+        color = '#FF8C00'; // alt '#e71d32';
     } else if (status === 'Completed') {
         emoji = isPl ? ':heavy_check_mark:' : ':white_check_mark:';
         color = isPl ? '#24a148' : '#42be65';

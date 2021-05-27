@@ -1,5 +1,5 @@
 import { EStoreActions, IntPayload, IntServerPayload } from '@interfaces';
-import { DataModel, IJobBody, IModel, IJobSchema } from '@models';
+import { DataModel, IJobBody, IJobModel, IJobSchema } from '@models';
 import { extract__, expand, addTrace } from '@functions';
 
 const detail_store: string = 'jobdetail.store';
@@ -24,7 +24,7 @@ export const actionNew: (body: IJobBody) => Promise<any> = async (body: IJobBody
 
     body.config = expand(extract__(body, '__'), '__');
 
-    const doc: IModel = new DataModel(input);
+    const doc: IJobModel = new DataModel(input);
 
     try {
         const docs: any = await doc.save().catch(async (err: any) => {

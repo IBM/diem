@@ -4,7 +4,7 @@
 
 import { utils } from '@common/utils';
 import * as Api from 'kubernetes-client';
-import { IJobParams, IModel } from '@models';
+import { IJobParams, IJobSchema } from '@models';
 import { ICrdConfig } from './base.crd';
 
 export interface IBaseCapacity {
@@ -70,8 +70,8 @@ setCap();
  * @returns
  */
 // eslint-disable-next-line sonarjs/cognitive-complexity
-export const caclCap: (doc: IModel, crdjob: ICrdConfig) => ICrdConfig = (
-    doc: IModel,
+export const caclCap: (doc: IJobSchema, crdjob: ICrdConfig) => ICrdConfig = (
+    doc: IJobSchema,
     crdjob: ICrdConfig
 ): ICrdConfig => {
     // in case we habe only one node, we can only run in local mode, this will be seen by the pyfile loading

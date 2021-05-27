@@ -52,7 +52,7 @@ class Subscriber {
             const payload: INatsPayload | string | undefined = fromBuff(msg.data);
 
             if (payload && typeof payload === 'object' && payload.client) {
-                utils.logInfo(
+                utils.logCyan(
                     `$nats_subscriber (sub): client: ${payload.client} - new data: ${payload.meta?.size || 0}`
                 );
                 void this.subs_handler(msg, payload);
@@ -79,7 +79,7 @@ class Subscriber {
 
         let out: any[] = [];
         let base: any;
-        for (const json of json_array) {
+        for await (const json of json_array) {
             let parsed_json: any;
             i = i + 10;
 
@@ -137,18 +137,18 @@ class Subscriber {
 
         switch (msg_type) {
             case 'info':
-                utils.logInfo(`$nats_subscriber (${msg_type}): client: ${payload.client} - info: ${payload.data}`);
+                utils.logCyan(`$nats_subscriber (${msg_type}): client: ${payload.client} - info: ${payload.data}`);
                 break;
 
             case 'publish':
-                utils.logInfo(`$nats_subscriber (${msg_type}): client: ${payload.client}`);
+                utils.logCyan(`$nats_subscriber (${msg_type}): client: ${payload.client}`);
                 const publish_msg: string = `📨 $publish (${payload.client}): ${payload.data}`;
 
                 void slackMsg(publish_msg);
                 break;
 
             case 'timer':
-                utils.logInfo(`$nats_subscriber (${msg_type}): client: ${payload.client} - run: ${payload.data.run}`);
+                utils.logCyan(`$nats_subscriber (${msg_type}): client: ${payload.client} - run: ${payload.data.run}`);
                 getQueue();
                 break;
 
@@ -157,19 +157,19 @@ class Subscriber {
 
                 if (data && typeof data === 'string' && data.endsWith('\n')) {
                     const json_array: string[] = data.split('\n').filter((s: string) => s);
-                    utils.logInfo(
+                    utils.logCyan(
                         `$nats_subscriber (${msg_type}): client: ${payload.client} - incoming buffered data: ${json_array.length}`
                     );
                     // await new Promise((resolve) => setTimeout(resolve, 50));
-                    void this.json_handler(json_array);
+                    await this.json_handler(json_array);
                 } else {
-                    utils.logInfo(`$nats_subscriber (${msg_type}): client: ${payload.client} - incoming data`);
+                    utils.logCyan(`$nats_subscriber (${msg_type}): client: ${payload.client} - incoming data`);
                     await pubSub.publish(payload.data);
                 }
                 break;
 
             default:
-                utils.logInfo(`$nats_subscriber (${msg_type}): client: ${payload.client}`);
+                utils.logCyan(`$nats_subscriber (${msg_type}): client: ${payload.client}`);
         }
 
         if (msg.reply) {
@@ -179,11 +179,11 @@ class Subscriber {
                     sid: msg.sid || 0,
                 })
             );
-            utils.logInfo(`$$nats_subscriber (${msg_type}):  client: ${payload.client} - client: ${msg.sid}`);
+            utils.logCyan(`$$nats_subscriber (${msg_type}):  client: ${payload.client} - client: ${msg.sid}`);
         }
 
         if (!['timer', 'info', 'job'].includes(msg_type)) {
-            utils.logInfo(`$nats_subscriber (${msg_type}): client: ${payload.client}`);
+            utils.logCyan(`$nats_subscriber (${msg_type}): client: ${payload.client}`);
         }
     };
 
@@ -200,25 +200,25 @@ class Subscriber {
 
         switch (msg_type) {
             case 'info':
-                utils.logInfo(
+                utils.logCyan(
                     `$nats_subscriber (global.${msg_type}): client: ${payload.client} - data: ${payload.data}`
                 );
                 break;
 
             case 'error':
-                utils.logInfo(`$nats_subscriber (global.${msg_type}): client: ${payload.client}`);
+                utils.logCyan(`$nats_subscriber (global.${msg_type}): client: ${payload.client}`);
 
                 await pubSub.publish(payload.data);
                 break;
 
             case 'users':
-                utils.logInfo(`$nats_subscriber (global.${msg_type}): client: ${payload.client}`);
+                utils.logCyan(`$nats_subscriber (global.${msg_type}): client: ${payload.client}`);
 
                 WSS.bc(payload.data);
                 break;
 
             case 'user':
-                utils.logInfo(`$nats_subscriber (global.${msg_type}): client: ${payload.client}`);
+                utils.logCyan(`$nats_subscriber (global.${msg_type}): client: ${payload.client}`);
 
                 const data: { email: string; payload: string } = payload.data;
 
@@ -226,7 +226,7 @@ class Subscriber {
                 break;
 
             default:
-                utils.logInfo(`$nats_subscriber (global.${msg_type}): client: ${payload.client}`);
+                utils.logCyan(`$nats_subscriber (global.${msg_type}): client: ${payload.client}`);
         }
     };
 }

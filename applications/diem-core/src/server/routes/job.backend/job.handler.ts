@@ -4,7 +4,7 @@
 
 import { EStoreActions, IntPayload } from '@interfaces';
 import { utils } from '@common/utils';
-import { DataModel, EJobTypes, IJobResponse, IModel, EJobStatus, ISocketPayload, ExecutorTypes } from '@models';
+import { DataModel, EJobTypes, IJobResponse, IJobModel, EJobStatus, ISocketPayload, ExecutorTypes } from '@models';
 import { addTrace } from '@functions';
 import { pipelineHandler } from '../pipeline.backend/pipeline.handler';
 import { PayloadValues } from './job.functions';
@@ -18,7 +18,7 @@ interface IOut {
 
 const jobdetail: string = 'jobdetail.store';
 
-const runTime: (doc: IModel) => number = (doc: IModel): number => {
+const runTime: (doc: IJobModel) => number = (doc: IJobModel): number => {
     const je: Date | undefined = doc.job.jobend ? new Date(doc.job.jobend) : new Date();
 
     const js: Date | undefined = doc.job.jobstart ? new Date(doc.job.jobstart) : new Date();
@@ -26,11 +26,11 @@ const runTime: (doc: IModel) => number = (doc: IModel): number => {
     return je && js ? Math.round(Math.abs(je.getTime() - js.getTime()) / 1000) : 0;
 };
 
-export const updateOne: (doc: IModel, obj: any) => any = async (doc: IModel, obj: any) =>
+export const updateOne: (doc: IJobModel, obj: any) => any = async (doc: IJobModel, obj: any) =>
     Promise.resolve(await doc.updateOne(obj));
 
-export const jobOutHandler: (doc: IModel, job: IJobResponse) => Promise<ISocketPayload> = async (
-    doc: IModel,
+export const jobOutHandler: (doc: IJobModel, job: IJobResponse) => Promise<ISocketPayload> = async (
+    doc: IJobModel,
     job: IJobResponse
 ): Promise<ISocketPayload> => {
     const id: string = doc._id.toString();
@@ -49,7 +49,6 @@ export const jobOutHandler: (doc: IModel, job: IJobResponse) => Promise<ISocketP
 
     await doc.save().catch(async (err: any) => {
         err.trace = addTrace(err.trace, '@at $job.handler (jobHandler)');
-
         err.id = id;
 
         void utils.emit('error', err);
@@ -79,9 +78,9 @@ export const jobOutHandler: (doc: IModel, job: IJobResponse) => Promise<ISocketP
     return Promise.resolve(load);
 };
 
-const jobDocOutHandler: (payload: IntPayload[], doc: IModel, job: IJobResponse) => Promise<IntPayload[]> = async (
+const jobDocOutHandler: (payload: IntPayload[], doc: IJobModel, job: IJobResponse) => Promise<IntPayload[]> = async (
     payload: IntPayload[],
-    doc: IModel,
+    doc: IJobModel,
     job: IJobResponse
 ): Promise<IntPayload[]> => {
     const obj: IOut = {
@@ -133,7 +132,7 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
 
     try {
         const id: string = job.id;
-        const doc: IModel | null = await DataModel.findOne({ _id: id })
+        const doc: IJobModel | null = await DataModel.findOne({ _id: id })
             .exec()
             .catch(async (err: any) => {
                 err.trace = addTrace(err.trace, '@at $job.handler (jobHandler) - findOne');
@@ -144,7 +143,7 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
 
         if (doc === null) {
             return Promise.reject({
-                id: job.id,
+                id,
                 message: 'The document could not be found',
                 trace: ['@at $job.handler (jobHandler)'],
             });
@@ -222,6 +221,14 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
             doc.markModified('job.audit');
         }
 
+        // here we save the job as no more values of the document will be changed
+        await doc.save().catch(async (err: any) => {
+            err.caller = '$job.handler';
+            void utils.logError(`$job.handler (jobHandler): save failed - doc: ${id}`, err);
+
+            return Promise.reject(err);
+        });
+
         // if it's a regular job , make sure that the stop is really stopped, so this does not include pipelines
         if (job.jobid !== id) {
             utils.logInfo(
@@ -260,12 +267,6 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
             targetid: job.id,
             type: EStoreActions.UPD_STORE_FORM_RCD,
             values,
-        });
-
-        // here we save the job as no more values of the document will be changed
-        await doc.save().catch(async (err: any) => {
-            err.caller = '$job.handler';
-            void utils.logError(`$job.handler (jobHandler): save failed - doc: ${id}`, err);
         });
 
         const load: ISocketPayload = {

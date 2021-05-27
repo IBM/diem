@@ -1,12 +1,12 @@
 import { utils } from '@common/utils';
 import { IError } from '@interfaces';
-import { IModel, IJob, ExecutorTypes } from '@models';
+import { IJobModel, IJob, ExecutorTypes } from '@models';
 import { addTrace } from '@functions';
 import { deleteJob } from '../executors/spark/spark.job';
 import { jobLogger } from '../job.logger/job.logger';
 import { sparkWatcher } from '../spark-operator/spark.watcher';
 
-export const getPySparkJobLog: (doc: IModel) => Promise<IModel> = async (doc: IModel): Promise<IModel> => {
+export const getPySparkJobLog: (doc: IJobModel) => Promise<IJobModel> = async (doc: IJobModel): Promise<IJobModel> => {
     const id: string = doc._id.toString();
 
     let sparkLog: string | undefined = await sparkWatcher.getJobLog(id).catch(() => {
@@ -24,7 +24,7 @@ export const getPySparkJobLog: (doc: IModel) => Promise<IModel> = async (doc: IM
     return Promise.resolve(doc);
 };
 
-export const finishJob: (doc: IModel) => Promise<any> = async (doc: IModel): Promise<any> => {
+export const finishJob: (doc: IJobModel) => Promise<boolean> = async (doc: IJobModel): Promise<boolean> => {
     const id: string = doc._id.toString();
 
     if (doc.job.executor === ExecutorTypes.pyspark) {
@@ -69,5 +69,5 @@ export const finishJob: (doc: IModel) => Promise<any> = async (doc: IModel): Pro
         void utils.logError('$job.start.handler (saveDoc): error', err);
     });
 
-    return Promise.resolve();
+    return Promise.resolve(true);
 };

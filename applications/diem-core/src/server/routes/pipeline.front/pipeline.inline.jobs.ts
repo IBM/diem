@@ -2,7 +2,7 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
 import { addTrace } from '@functions';
-import { DataModel, IJobSchema, IModel, IQuery } from '@models';
+import { DataModel, IJobSchema, IJobModel, IQuery } from '@models';
 import { countByFilter } from '../job.backend/job.functions';
 import { allPipelineIds } from '../pipeline.backend/pipeline.helpers/getallpipelinejobs';
 
@@ -159,10 +159,10 @@ export const pipelineinlinejobs: (req: IRequest) => Promise<any> = async (req: I
             body.sortField = `job.${body.sortField}`;
         }
 
-        const d1: Promise<IModel[]> = findByFilter(filter, body);
+        const d1: Promise<IJobModel[]> = findByFilter(filter, body);
         const d2: Promise<number> = countByFilter(filter);
 
-        const dbjobs: [IModel[], number] = await Promise.all([d1, d2]);
+        const dbjobs: [IJobModel[], number] = await Promise.all([d1, d2]);
 
         utils.logInfo(
             `$pipeline.inline.jobs (pipelineinlinejobs): email: ${req.user.email} `,

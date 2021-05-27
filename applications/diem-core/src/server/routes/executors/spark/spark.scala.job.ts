@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import { utils } from '@common/utils';
-import { EJobStatus, IJobResponse, IModel } from '@models';
+import { EJobStatus, IJobResponse, IJobSchema } from '@models';
 import { pubSub } from '@config/pubsub';
 import { addTrace } from '@functions';
 import { ICapacity } from '@interfaces';
@@ -44,7 +44,9 @@ const getEnvVars: (org: string, configmaps: string | string[]) => Promise<IEnvVa
     return Promise.resolve(envVars);
 };
 
-export const createSparkScalaJob: (doc: IModel) => Promise<ICapacity> = async (doc: IModel): Promise<ICapacity> => {
+export const createSparkScalaJob: (doc: IJobSchema) => Promise<ICapacity> = async (
+    doc: IJobSchema
+): Promise<ICapacity> => {
     const hrstart: [number, number] = process.hrtime();
 
     let crdjob: ICrdConfig = crdconfig();
@@ -82,7 +84,7 @@ export const createSparkScalaJob: (doc: IModel) => Promise<ICapacity> = async (d
     // environmental variables
     crdjob.spec.driver.envVars = {
         EMAIL: doc.job.email,
-        NAME: doc.job.name,
+        NAME: doc.name,
         ORG: org,
         ID: id,
         TRANSID: doc.job.transid,
@@ -142,11 +144,12 @@ export const createSparkScalaJob: (doc: IModel) => Promise<ICapacity> = async (d
         void utils.logError('$spark (createSparkScalaJob): jobStart error', err);
 
         const pjob: IJobResponse = {
-            ...doc.toObject().job,
+            ...doc.job,
             id,
             count: null,
             jobend: null,
             jobstart: new Date(),
+            name: doc.name,
             runtime: null,
             status: EJobStatus.failed,
             org,

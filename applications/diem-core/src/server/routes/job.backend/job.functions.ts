@@ -2,7 +2,16 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 import { utils } from '@common/utils';
 import { parseExpression } from 'cron-parser';
-import { IJobSchema, DataModel, IQuery, IModel, IntPayloadValues, EJobTypes, IScheduleSchema, FaIcons } from '@models';
+import {
+    IJobSchema,
+    DataModel,
+    IQuery,
+    IJobModel,
+    IntPayloadValues,
+    EJobTypes,
+    IScheduleSchema,
+    FaIcons,
+} from '@models';
 import { fmtTime, addTrace } from '@functions';
 
 export const StatusConfig: any = {
@@ -136,7 +145,7 @@ export const countByFilter: (filter: any) => Promise<any> = async (filter: any) 
     }
 };
 
-export const nextSchedule: (doc: IModel) => IScheduleSchema = (doc: IModel): IScheduleSchema => {
+export const nextSchedule: (doc: IJobModel) => IScheduleSchema = (doc: IJobModel): IScheduleSchema => {
     const cronTime: string | null = doc.schedule.cronTime;
 
     if (cronTime === null) {

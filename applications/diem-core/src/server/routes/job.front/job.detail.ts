@@ -9,7 +9,7 @@ import {
     DataModel,
     IJobDetail,
     IJobDetails,
-    IModel,
+    IJobModel,
     IJobSchemaAnnotations,
     ITemplatesModel,
     EJobTypes,
@@ -22,7 +22,7 @@ import { StatusConfig } from '../job.backend/job.functions';
 import { getGraphLinks } from './job.grapht';
 import { lookupTemplate } from './job.template';
 
-interface IModelPayload extends IModel {
+interface IModelPayload extends IJobModel {
     source__dropcolumns: string[];
     source__connection: string;
     source__fetchsize: number;

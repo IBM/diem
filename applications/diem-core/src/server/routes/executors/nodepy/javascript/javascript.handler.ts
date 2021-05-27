@@ -1,7 +1,7 @@
 /* eslint-disable complexity */
 /* eslint-disable sonarjs/cognitive-complexity */
 
-import { ECodeLanguage, IETLJob, IJobSchema } from '@models';
+import { ECodeLanguage, IJobSchema } from '@models';
 import { base64encode, addTrace } from '@functions';
 import { INodePyJob } from '../np.interfaces';
 import { javascript_start, javascript_end } from './javascript.code/js';
@@ -13,12 +13,11 @@ import { javascript_start, javascript_end } from './javascript.code/js';
  * @param {IETLJob} job
  * @returns {(Promise<INodePyJob | undefined>)}
  */
-export const javascriptHandler: (doc: IJobSchema, job: IETLJob) => Promise<INodePyJob> = async (
-    doc: IJobSchema,
-    job: IETLJob
+export const javascriptHandler: (doc: IJobSchema) => Promise<INodePyJob> = async (
+    doc: IJobSchema
 ): Promise<INodePyJob> => {
     try {
-        let code: string = javascript_start(job);
+        let code: string = javascript_start(doc);
 
         if (doc.custom?.code) {
             code = code.replace('/* ###### */', `\n${doc.custom.code}\n/* ###### */`);
@@ -31,9 +30,11 @@ export const javascriptHandler: (doc: IJobSchema, job: IETLJob) => Promise<INode
 
         // we need to base64encode this file
         const nodepy: INodePyJob = {
-            ...job,
-            language: ECodeLanguage.javascript,
+            ...doc.job,
             code: base64encode(code),
+            id: doc._id,
+            language: ECodeLanguage.javascript,
+            org: doc.project.org,
         };
 
         return Promise.resolve(nodepy);

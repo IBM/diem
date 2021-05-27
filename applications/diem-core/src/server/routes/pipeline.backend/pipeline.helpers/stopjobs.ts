@@ -1,19 +1,24 @@
 /* eslint-disable max-len */
 import { utils } from '@common/utils';
-import { IModel, DataModel, EJobTypes } from '@models';
+import { IJobModel, DataModel, EJobTypes, EJobStatusCodes, EJobStatus } from '@models';
 import { jobStop } from '../../job.front/job.stop';
 import { findAndUpdatePlJob } from './helpers';
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
-export const stopJobs: (pldoc: IModel) => Promise<void> = async (pldoc: IModel): Promise<void> => {
+export const stopJobs: (pldoc: IJobModel) => Promise<void> = async (pldoc: IJobModel): Promise<void> => {
     const plid: string = pldoc._id.toString();
 
     let save: boolean = false;
 
     for await (const [key, value] of Object.entries(pldoc.jobs)) {
-        const doc: IModel | null = await DataModel.findOne({ _id: key }).exec();
+        const doc: IJobModel | null = await DataModel.findOne({ _id: key }).exec();
 
-        if (doc && doc.job && doc.job.status && ['Running', 'Submitted'].includes(value.status)) {
+        if (
+            doc &&
+            doc.job &&
+            doc.job.status &&
+            ([EJobStatus.running, EJobStatus.submitted] as EJobStatusCodes[]).includes(value.status)
+        ) {
             utils.logInfo(
                 `$stopJobs (stopJobs): stopping job - pl: ${doc.job.jobid} - job: ${key} - status: ${value.status} - executor: ${doc.job.executor}`
             );
@@ -51,7 +56,7 @@ export const stopJobs: (pldoc: IModel) => Promise<void> = async (pldoc: IModel):
     /*
     // if the pipeline in itself is part of a pipeline
     if (pldoc.job.jobid !== plid) {
-        const doc: IModel | null = await DataModel.findOne({ _id: pldoc.job.jobid }).exec();
+        const doc: IJobModel | null = await DataModel.findOne({ _id: pldoc.job.jobid }).exec();
         if (doc && doc.job.status !== pldoc.job.status) {
             utils.logInfo(
                 `$stopJobs (stopJobs): stop jobs - pl: ${plid}- target pl: ${pldoc.job.jobid} - pl status: ${pldoc.job.status} - job status: ${doc.job.status}`

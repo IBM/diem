@@ -1,10 +1,12 @@
 import { utils } from '@common/utils';
-import { DataModel, EJobStatus, IJob, IJobDetails, EJobStatusCodes, IModel } from '@models';
+import { DataModel, EJobStatus, IJob, IJobDetails, EJobStatusCodes, IJobModel } from '@models';
 import { pubSub } from '@config/pubsub';
 import { flatten__, addTrace } from '@functions';
 import { jobStartHandler } from '../job.backend/job.start.handler';
 import { findByFilter } from '../job.backend/job.functions';
 import { saveDoc } from '../job.backend/job.savedoc';
+
+const findOne: (id: string) => any = async (id: string) => DataModel.findOne({ _id: id }).exec();
 
 const findRootJobs: (jobs: IJobDetails, id: string) => Promise<string[]> = async (
     jobs: IJobDetails,
@@ -38,7 +40,7 @@ const resetQueue: (jobs: IJobDetails) => Promise<IJobDetails> = async (jobs: IJo
     return Promise.resolve(jobs);
 };
 
-const updateJobs: (doc: IModel) => Promise<void> = async (doc: IModel): Promise<void> => {
+const updateJobs: (doc: IJobModel) => Promise<void> = async (doc: IJobModel): Promise<void> => {
     const id: string = doc._id.toString();
 
     const jobs: IJobDetails = doc.jobs;
@@ -81,8 +83,8 @@ const updateJobs: (doc: IModel) => Promise<void> = async (doc: IModel): Promise<
     return Promise.resolve();
 };
 
-const publishPl: (doc: IModel, status: EJobStatusCodes, jobs: IJob[] | undefined) => Promise<void> = async (
-    doc: IModel,
+const publishPl: (doc: IJobModel, status: EJobStatusCodes, jobs: IJob[] | undefined) => Promise<void> = async (
+    doc: IJobModel,
     status: EJobStatusCodes,
     jobs: IJob[] | undefined
 ): Promise<void> => {
@@ -106,7 +108,7 @@ const publishPl: (doc: IModel, status: EJobStatusCodes, jobs: IJob[] | undefined
     return Promise.resolve();
 };
 
-export const plStartHandler: (doc: IModel) => Promise<void> = async (doc: IModel): Promise<any> => {
+export const plStartHandler: (doc: IJobModel) => Promise<void> = async (doc: IJobModel): Promise<any> => {
     try {
         /**
          * If there are no jobs in this pipeline then just publish the Completed state
@@ -160,28 +162,27 @@ export const plStartHandler: (doc: IModel) => Promise<void> = async (doc: IModel
         for (const batchid of batchJobs) {
             /* The slack message will be handled in the job.type.handler */
 
-            void jobStartHandler(
-                {
-                    email: doc.job.email,
-                    executor: doc.job.executor,
-                    id: batchid,
-                    jobid: plid, // this is the pipeline indicator
-                    jobstart: doc.job.jobstart,
-                    name: doc.name, // attention: will be replaced by the real name in job.handler
-                    runby: doc.job.runby,
-                    status: EJobStatus.submitted,
-                    transid: doc.job.transid,
-                    org: doc.project.org,
-                },
-                {
-                    name: 'pipeline',
-                    id: plid,
-                }
-            ).catch(async (err) => {
-                err.trace = addTrace(err.trace, '@at $pipeline.start.handler (plStartHandler)');
+            const batch_doc: IJobModel = await findOne(batchid);
 
-                return Promise.reject(err);
-            });
+            if (([EJobStatus.running, EJobStatus.submitted] as EJobStatusCodes[]).includes(batch_doc.job.status)) {
+                utils.logInfo(
+                    `$pipeline.start.handler (plStartHandler): already running - pl: ${plid} - pl status: ${batch_doc.job.status}`,
+                    doc.job.transid
+                );
+            } else {
+                batch_doc.job.email = doc.job.email;
+                batch_doc.job.executor = doc.job.executor;
+                batch_doc.job.jobstart = doc.job.jobstart;
+                batch_doc.job.status = EJobStatus.submitted;
+                batch_doc.job.transid = doc.job.transid;
+                batch_doc.job.jobid = plid;
+                batch_doc.job.runby = doc.job.runby;
+                void jobStartHandler(batch_doc).catch(async (err) => {
+                    err.trace = addTrace(err.trace, '@at $pipeline.start.handler (plStartHandler)');
+
+                    return Promise.reject(err);
+                });
+            }
         }
 
         return Promise.resolve();

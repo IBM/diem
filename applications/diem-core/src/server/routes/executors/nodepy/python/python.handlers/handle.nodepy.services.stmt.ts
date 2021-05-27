@@ -1,7 +1,7 @@
 import { IConnSchema } from '@models';
 import { addTrace } from '@functions';
-import { getConnection } from '../../../spark/spark.job.handlers/hendle.spark.common';
 import { IntPythonStmtJob } from '../../np.interfaces';
+import { getConnection } from '../../../spark/spark.job.handlers/hendle.spark.common';
 import { py_jdbc } from './py_jdbc';
 
 const makeConn: (target: string, connection: IConnSchema) => Promise<string> = async (
@@ -70,4 +70,13 @@ tgt_stmt.close()
 tgt_conn.close()
 
 ######`;
+};
+
+export const handleNodePyServicesStmtJob: (code: string, job: IntPythonStmtJob) => Promise<string> = async (
+    code: string,
+    job: IntPythonStmtJob
+): Promise<string> => {
+    const pystmt: string = await py_stmt_services(job);
+
+    return Promise.resolve(`${code}\n${pystmt}`);
 };

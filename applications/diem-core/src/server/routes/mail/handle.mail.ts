@@ -12,7 +12,7 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 
 import { utils } from '@common/utils';
-import { EJobStatus, IModel } from '@models';
+import { EJobStatus, IJobModel } from '@models';
 import { fmtTime, addTrace } from '@functions';
 import { sendMail } from './mail.notifications';
 import { IMailMeta, IMailInput, IMailParams } from './mail.interfaces';
@@ -101,7 +101,7 @@ const prepareMail: (mail: IMailInput) => Promise<any> = async (mail: IMailInput)
     return Promise.resolve();
 };
 
-export const handleMail: (doc: IModel) => Promise<any> = async (doc: IModel): Promise<any> => {
+export const handleMail: (doc: IJobModel) => Promise<any> = async (doc: IJobModel): Promise<any> => {
     const id: string = doc._id.toString();
 
     // a few checks if we should sent mail or not

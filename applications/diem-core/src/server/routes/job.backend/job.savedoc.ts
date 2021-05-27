@@ -4,12 +4,12 @@
 
 import { utils } from '@common/utils';
 
-import { IModel } from '@models';
+import { IJobModel } from '@models';
 
 import { addTrace } from '@functions';
 import { nextSchedule } from './job.functions';
 
-export const saveDoc: (doc: IModel) => Promise<boolean> = async (doc: IModel): Promise<boolean> => {
+export const saveDoc: (doc: IJobModel) => Promise<boolean> = async (doc: IJobModel): Promise<boolean> => {
     const id: string = doc._id.toString();
     if (doc.schedule && doc.schedule.enabled) {
         doc.schedule = { ...nextSchedule(doc) };
