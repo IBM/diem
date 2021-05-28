@@ -27,7 +27,9 @@ const findRootJobs: (jobs: IJobDetails, id: string) => Promise<string[]> = async
     return Promise.resolve(rootJobs);
 };
 
-const resetQueue: (jobs: IJobDetails) => Promise<IJobDetails> = async (jobs: IJobDetails): Promise<IJobDetails> => {
+export const resetQueue: (jobs: IJobDetails) => Promise<IJobDetails> = async (
+    jobs: IJobDetails
+): Promise<IJobDetails> => {
     for await (const [key, value] of Object.entries(jobs)) {
         if (jobs[key]) {
             if (value && value.from) {
@@ -131,6 +133,7 @@ export const plStartHandler: (doc: IJobModel) => Promise<void> = async (doc: IJo
          * Here we reset the queue we've added a field called queue
          * and we delete it here
          */
+        // doc.set({ jobs: await resetQueue2(doc.jobs) });
         doc.jobs = await resetQueue(doc.jobs);
 
         // needed for mongo if you update nested fields
@@ -139,7 +142,11 @@ export const plStartHandler: (doc: IJobModel) => Promise<void> = async (doc: IJo
         // set the status to submitted
         // doc.job.status = EJobStatus.running;  why ?
 
-        await saveDoc(doc); // needed to add the pipeline save event here
+        await saveDoc(doc).catch(async (err) => {
+            err.trace = addTrace(err.trace, '@at $pipeline.start.handler (plStartHandler) - save');
+
+            return Promise.reject(err);
+        });
 
         /**
          * Here we reset the queue and set the value of all to pending

@@ -15,6 +15,8 @@ export const logLogger: (doc: IJobModel) => Promise<void> = async (doc: IJobMode
         name: doc.name,
         project: doc.project,
         type: doc.type,
+        jobend: doc.job.jobend || null,
+        jobstart: doc.job.jobstart || null,
     };
 
     void JobLogModel.collection.insertOne(joblog).catch(async (err: IError) => {

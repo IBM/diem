@@ -1,8 +1,9 @@
 /* eslint-disable max-len */
 import { utils } from '@common/utils';
-import { IJobModel, DataModel, EJobTypes, EJobStatusCodes, EJobStatus } from '@models';
+import { pubSub } from '@config/pubsub';
+import { IJobModel, DataModel, EJobTypes, EJobStatusCodes, EJobStatus, IJobResponse } from '@models';
+import { finishJob } from '../../job.backend/job.finish';
 import { jobStop } from '../../job.front/job.stop';
-import { findAndUpdatePlJob } from './helpers';
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
 export const stopJobs: (pldoc: IJobModel) => Promise<void> = async (pldoc: IJobModel): Promise<void> => {
@@ -20,10 +21,10 @@ export const stopJobs: (pldoc: IJobModel) => Promise<void> = async (pldoc: IJobM
             ([EJobStatus.running, EJobStatus.submitted] as EJobStatusCodes[]).includes(value.status)
         ) {
             utils.logInfo(
-                `$stopJobs (stopJobs): stopping job - pl: ${doc.job.jobid} - job: ${key} - status: ${value.status} - executor: ${doc.job.executor}`
+                `$stopJobs (stopJobs): passing to jobStop - pl: ${doc.job.jobid} - job: ${key} - status: ${value.status} - executor: ${doc.job.executor}`
             );
 
-            await jobStop({
+            void jobStop({
                 email: doc.job.email,
                 executor: doc.job.executor,
                 id: key,
@@ -32,19 +33,14 @@ export const stopJobs: (pldoc: IJobModel) => Promise<void> = async (pldoc: IJobM
                 runby: 'user',
                 status: pldoc.job.status,
                 jobstart: doc.job.jobstart,
+                jobend: new Date(),
                 transid: pldoc.job.transid,
                 org: doc.project.org,
             });
 
-            const isPlJob: boolean = (doc.job && doc.job.jobid && doc.job.jobid !== key) || false; // part of a pipeline
-            // save the doc and let's start running stuff
-            if (isPlJob) {
-                await findAndUpdatePlJob(doc);
-            }
-
             if (doc.type === EJobTypes.pipeline) {
-                utils.logInfo(`$stopJobs (stopJobs): stop pipeline jobs - pl: ${doc.job.jobid} - job: ${key}`);
-                await stopJobs(doc);
+                utils.logInfo(`$stopJobs (stopJobs): passing to stopJobs - pl: ${doc.job.jobid} - job: ${key}`);
+                void stopJobs(doc);
             }
 
             pldoc.jobs[key].status = pldoc.job.status;
@@ -56,12 +52,22 @@ export const stopJobs: (pldoc: IJobModel) => Promise<void> = async (pldoc: IJobM
     if (save) {
         pldoc.markModified('jobs');
 
-        await pldoc.save().catch(async (err: any) => {
+        utils.logInfo(`$stopJobs (stopJobs): saving - pl: ${plid} - job: ${pldoc.job.status}`);
+
+        await finishJob(pldoc).catch(async (err: any) => {
             err.trace = ['@t $stopJobs (stopJobs)'];
             void utils.logError(`$stopJobs (stopJobs): save failed - doc: ${plid}`, err);
 
             return Promise.reject(err);
         });
+
+        const job: IJobResponse = {
+            ...pldoc.toObject().job,
+            org: pldoc.project.org,
+            id: plid,
+        };
+
+        await pubSub.publish(job);
     }
 
     return Promise.resolve();

@@ -1,12 +1,12 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
-import { DataModel, EJobStatus, EJobStatusCodes, EJobTypes, IBody, IETLJob, IJobModel } from '@models';
+import { DataModel, EJobStatus, EJobStatusCodes, EJobTypes, IBody, IJobModel, IJobResponse } from '@models';
 import { addTrace } from '@functions';
 import { jobStart } from '../job.backend/job.start';
 import { findAndUpdatePlJob, stopJobs } from '../pipeline.backend/pipeline.helpers/helpers';
-import { jobStop, stopPlJob } from './job.stop';
+import { jobStop } from './job.stop';
 
-export const jobHanldeStop: (doc: IJobModel, body: { id: string; email: string; transid: string }) => Promise<boolean> =
+export const jobHandleStop: (doc: IJobModel, body: { id: string; email: string; transid: string }) => Promise<boolean> =
     async (doc: IJobModel, body: { id: string; email: string; transid: string }): Promise<boolean> => {
         const id: string = doc._id.toString();
         const isPl: boolean = doc.type === EJobTypes.pipeline;
@@ -15,50 +15,61 @@ export const jobHanldeStop: (doc: IJobModel, body: { id: string; email: string; 
 
         doc.job.status = EJobStatus.stopped;
 
-        const job: IETLJob = {
+        const job: IJobResponse = {
+            count: 0,
             email: doc.job.email,
             executor: doc.job.executor,
             id,
             jobid: doc.job.jobid,
             jobstart: doc.job.jobstart,
+            jobend: new Date(),
             name: doc.name,
             runby: 'user',
+            runtime: 0,
             status: doc.job.status,
             transid: doc.job.transid,
             org: doc.project.org,
         };
 
         if (isPl) {
+            // if the stop request comes from a pipeline
             utils.logInfo(
-                `$job.actions (jobactions): pipeline stop request - pl: ${body.id} - email: ${body.email}`,
+                `$job.actions (jobactions): stop request - passing to stopJobs - pl: ${body.id} - email: ${body.email}`,
                 body.transid
             );
 
             //
-            await stopJobs(doc);
-            await stopPlJob(job);
+            await stopJobs(doc); // to stop all jobs
         } else {
+            // the stop request comes from a job
             utils.logInfo(
-                `$job.actions (jobactions): stop request - ${jobkind}: ${body.id} - executer: ${job.executor} - email: ${body.email}`,
+                `$job.actions (jobactions): stop request - passing to jobStop - ${jobkind}: ${body.id} - executer: ${job.executor} - email: ${body.email}`,
                 body.transid
             );
 
-            await jobStop(job);
+            await jobStop(job).catch(async (err) => {
+                err.trace = addTrace(err.trace, '@at $job.actions (jobStop)');
+                err.id = id;
+
+                return Promise.reject(err);
+            });
         }
 
-        // if this job is part of another pipeline then update that pipeline
         if (isPlJob) {
-            await findAndUpdatePlJob(doc);
+            // if this job is part of another pipeline then update that pipeline
+            utils.logInfo(
+                `$job.actions (jobactions): stop request - passing to findAndUpdatePlJob - ${jobkind}: ${body.id} - executer: ${job.executor} - email: ${body.email}`,
+                body.transid
+            );
+            await findAndUpdatePlJob(doc).catch(async (err) => {
+                err.trace = addTrace(err.trace, '@at $job.actions (findAndUpdatePlJob)');
+                err.id = id;
+
+                return Promise.reject(err);
+            });
         }
 
         //doc.markModified('job');
-
-        await doc.save().catch(async (err) => {
-            err.trace = addTrace(err.trace, '@at $job.actions (jobactions) - stop save');
-            err.id = id;
-
-            return Promise.reject(err);
-        });
 
         return Promise.resolve(true);
     };
@@ -85,7 +96,12 @@ export const jobactions: (req: IRequest) => Promise<boolean> = async (req: IRequ
     doc.job.runby = 'user';
 
     if (body.action === 'stop') {
-        void jobHanldeStop(doc, body);
+        await jobHandleStop(doc, body).catch(async (err) => {
+            err.trace = addTrace(err.trace, '@at $job.actions (jobactions) - jobHandleStop');
+            err.id = id;
+
+            return Promise.reject(err);
+        });
 
         return Promise.resolve(true);
     }
@@ -99,7 +115,7 @@ export const jobactions: (req: IRequest) => Promise<boolean> = async (req: IRequ
         );
     } else {
         await jobStart(doc).catch(async (err) => {
-            err.trace = addTrace(err.trace, '@at $job.actions (jobactions) - jonstart');
+            err.trace = addTrace(err.trace, '@at $job.actions (jobactions) - jobStart');
             err.id = id;
 
             return Promise.reject(err);

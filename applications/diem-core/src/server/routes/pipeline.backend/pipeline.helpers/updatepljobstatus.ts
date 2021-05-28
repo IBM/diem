@@ -2,7 +2,7 @@
 import { utils } from '@common/utils';
 import { IError } from '@interfaces';
 import { addTrace } from '@functions';
-import { IJobModel } from '@models';
+import { EJobStatus, IJobModel } from '@models';
 import { findOne, findOneAndUpdate } from './findone';
 import { getNodesFromId } from './helpers';
 
@@ -30,7 +30,7 @@ export const updatePlJobStatus: (pldoc: IJobModel, job: { id: string; status: st
 
         const nodeIds: string[] = await getNodesFromId(job.id, pldoc);
 
-        if (nodeIds && nodeIds.length > 0) {
+        if (nodeIds && nodeIds.length && job.status === EJobStatus.completed) {
             const nodes: any = {};
             for await (const nodeId of nodeIds) {
                 if (pldoc.jobs[nodeId] && pldoc.jobs[nodeId].queue && !pldoc.jobs[nodeId].queue.includes(job.id)) {
@@ -44,7 +44,7 @@ export const updatePlJobStatus: (pldoc: IJobModel, job: { id: string; status: st
             }).catch(async (err: any) => {
                 err.trace = ['@at $authorization (login-email)'];
                 void utils.logError(
-                    `$updatepljobstatus (findAndUpdatePlJob): save failed - pl: ${plid} - job: ${job.id}`,
+                    `$updatepljobstatus (updatePlJobStatus): save failed - pl: ${plid} - job: ${job.id}`,
                     err
                 );
 
@@ -54,7 +54,7 @@ export const updatePlJobStatus: (pldoc: IJobModel, job: { id: string; status: st
             pldoc = await findOneAndUpdate(plid, { $set: { [f]: job.status } }).catch(async (err: any) => {
                 err.trace = ['@at $authorization (login-email)'];
                 void utils.logError(
-                    `$updatepljobstatus (findAndUpdatePlJob): save failed - pl: ${plid} - job: ${job.id}`,
+                    `$updatepljobstatus (updatePlJobStatus): save failed - pl: ${plid} - job: ${job.id}`,
                     err
                 );
 
@@ -79,7 +79,7 @@ export const updatePlJobStatus: (pldoc: IJobModel, job: { id: string; status: st
     }
 
     utils.logInfo(
-        `$updatepljobstatus (updatePlJobStatus): no pipeline job status update needed - pl: ${plid} - job: ${job.id} - status: ${job.status}`
+        `$updatepljobstatus (updatePlJobStatus): status update not needed - pl: ${plid} - job: ${job.id} - status: ${job.status}`
     );
 
     return Promise.resolve(pldoc);

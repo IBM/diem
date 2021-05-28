@@ -90,7 +90,8 @@ export interface IETLJob {
     id: string;
     jobid: string;
     serviceid?: string;
-    jobstart: Date;
+    jobstart?: Date | null;
+    jobend?: Date | null;
     name: string;
     params?: IJobParams;
     runby: string;
@@ -103,9 +104,9 @@ export interface IJob {
     email: string;
     error?: string | null;
     executor: keyof typeof ExecutorTypes;
-    jobend: Date | null;
+    jobend?: Date | null;
     jobid: string;
-    jobstart: Date;
+    jobstart?: Date | null;
     name: string;
     params?: IJobParams;
     runby: string;
@@ -522,9 +523,9 @@ export interface IJobResponse {
     error?: string | null;
     executor: keyof typeof ExecutorTypes;
     id: string;
-    jobend: Date | null;
+    jobend?: Date | null;
     jobid: string;
-    jobstart?: Date;
+    jobstart?: Date | null;
     jobs?: IJob[];
     log?: IJob[];
     name: string;

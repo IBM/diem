@@ -26,9 +26,7 @@ export const saveDoc: (doc: IJobModel) => Promise<boolean> = async (doc: IJobMod
     doc.job.error = null;
     doc.out = [];
 
-    // doc.markModified('job');
-
-    await doc.save().catch(async (err) => {
+    await doc.save({ validateModifiedOnly: true }).catch(async (err) => {
         err.trace = addTrace(err.trace, '@at $job.savedoc (saveDoc)');
         err.doc = id;
 

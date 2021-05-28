@@ -125,7 +125,7 @@ export const startNextJobs: (job: IJobResponse, pldoc: IJobModel) => Promise<num
                     batch_doc.job.runby = job.runby;
 
                     utils.logInfo(
-                        `$startnextjobs (startNextJobs): passing job to the jobStartHandler - pl: ${job.jobid} - id: ${job.id} - job: ${id}`,
+                        `$startnextjobs (startNextJobs): passing to jobStartHandler - pl: ${job.jobid} - id: ${job.id} - job: ${id}`,
                         job.transid
                     );
 

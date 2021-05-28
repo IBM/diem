@@ -63,7 +63,7 @@ export const jobStartHandler: (doc: IJobModel) => Promise<void> = async (doc: IJ
 
         // for pipeplien we log first
         await jobLogger(doc).catch(async (err: any) => {
-            err.trace = addTrace(err.trace, '@at $job.start.handler (saveDoc) - jobLogger - pipeline');
+            err.trace = addTrace(err.trace, '@at $job.start.handler (jobStartHandler) - jobLogger - pipeline');
 
             // we just log the error here
             return errHandler(err);

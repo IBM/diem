@@ -231,7 +231,7 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
         // if it's a regular job , make sure that the stop is really stopped, so this does not include pipelines
         if (job.jobid !== id) {
             utils.logInfo(
-                `$job.handler (jobHandler): handle pipeline - pl: ${job.jobid} - job: ${id} - job status: ${job.status}`,
+                `$job.handler (jobHandler): passing to pipelineHandler - pl: ${job.jobid} - job: ${id} - job status: ${job.status}`,
                 job.transid
             );
 

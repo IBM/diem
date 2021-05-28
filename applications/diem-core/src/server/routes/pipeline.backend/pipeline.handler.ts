@@ -164,7 +164,7 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
             );
             await stopJobs(pldoc);
 
-            await finishPl(job, pldoc).catch(async (err: any) => {
+            await finishPl(pldoc).catch(async (err: any) => {
                 err.trace = addTrace(err.trace, '@at $pipeline.handler (pipelineHandler) - finishPl - job.id === plid');
 
                 void utils.logError('$pipeline.handler (pipelineHandler: pipeline save error', err);
@@ -182,7 +182,7 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
                 // set the pipeline to complete and save the pipeline
                 pldoc.job.status = isfailed ? EJobStatus.failed : isstopped ? EJobStatus.stopped : job.status;
 
-                await finishPl(job, pldoc).catch(async (err: any) => {
+                await finishPl(pldoc).catch(async (err: any) => {
                     err.trace = addTrace(err.trace, '$pipeline.handler (pipelineHandler) - finishPl - job.id !== plid');
 
                     void utils.logError('$pipeline.handler (pipelineHandler: pipeline save error', err);
@@ -256,7 +256,7 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
             // set the pipeline to complete and save the pipeline
             pldoc.job.status = isfailed ? EJobStatus.failed : isstopped ? EJobStatus.stopped : job.status;
 
-            await finishPl(job, pldoc).catch(async (err: any) => {
+            await finishPl(pldoc).catch(async (err: any) => {
                 if (err?.name && err.name.toLowerCase().includes('versionerror')) {
                     err.VersionError = true;
 

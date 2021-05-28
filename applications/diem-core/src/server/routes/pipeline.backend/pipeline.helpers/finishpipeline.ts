@@ -1,10 +1,7 @@
-import { IJobModel, IJob, IJobResponse } from '@models';
+import { IJobModel, IJob } from '@models';
 import { addTrace } from '@functions';
 
-export const finishPl: (job: IJobResponse, pldoc: IJobModel) => Promise<void> = async (
-    job: IJobResponse,
-    pldoc: IJobModel
-): Promise<void> => {
+export const finishPl: (pldoc: IJobModel) => Promise<void> = async (pldoc: IJobModel): Promise<void> => {
     pldoc.job.jobend = new Date();
 
     if (pldoc.job.jobstart) {
@@ -12,16 +9,16 @@ export const finishPl: (job: IJobResponse, pldoc: IJobModel) => Promise<void> = 
     }
 
     const log: IJob = {
-        count: job.count ? Number(job.count) : 0,
-        email: job.email,
-        executor: job.executor,
+        count: pldoc.job.count ? Number(pldoc.job.count) : 0,
+        email: pldoc.job.email,
+        executor: pldoc.job.executor,
         jobend: pldoc.job.jobend,
-        jobid: job.jobid,
+        jobid: pldoc.job.jobid,
         jobstart: pldoc.job.jobstart,
         runby: pldoc.job.runby,
         runtime: pldoc.job.runtime,
         status: pldoc.job.status,
-        transid: job.transid,
+        transid: pldoc.job.transid,
         name: pldoc.name,
     };
 

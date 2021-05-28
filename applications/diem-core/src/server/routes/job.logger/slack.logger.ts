@@ -21,7 +21,7 @@ export const toSlack: (doc: IJobModel) => Promise<void> = async (doc: IJobModel)
         doc.job &&
         doc.job.params &&
         doc.job.params.slack &&
-        (doc.job.params.slack.disabled || !doc.job.params.slack.enabled)
+        (doc.job.params.slack.disabled === true || doc.job.params.slack.enabled === false)
     ) {
         utils.logInfo(`$slack.logger (toSlack): slack disabled by params - ${jobkind}: ${id}`);
 

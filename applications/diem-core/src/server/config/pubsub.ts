@@ -17,7 +17,7 @@ export class Server {
         try {
             // setTimeout(async () => {
 
-            utils.logInfo(`$pubsub (publish): passing job to the jobHandler - job: ${job.id}`);
+            utils.logInfo(`$pubsub (publish): passing to jobHandler - job: ${job.id}`);
 
             const payload: ISocketPayload = await jobHandler(job);
 

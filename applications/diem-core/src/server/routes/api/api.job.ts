@@ -3,7 +3,7 @@ import { IRequest } from '@interfaces';
 import { addTrace } from '@functions';
 import { DataModel, EJobStatus, EJobStatusCodes, IJobModel } from '@models';
 import { jobStart } from '../job.backend/job.start';
-import { jobHanldeStop } from '../job.front/job.actions';
+import { jobHandleStop } from '../job.front/job.actions';
 
 interface IApiJob {
     email: string;
@@ -75,7 +75,7 @@ export const apijob: (req: IRequest) => Promise<IApiJobReturn> = async (req: IRe
         }
 
         await jobStart(doc).catch(async (err) => {
-            err.trace = addTrace(err.trace, '@at $job.start (createJob)');
+            err.trace = addTrace(err.trace, '@at $api.job (apijob) - jobStart');
             err.id = body.jobid;
 
             return Promise.reject({
@@ -102,8 +102,8 @@ export const apijob: (req: IRequest) => Promise<IApiJobReturn> = async (req: IRe
                 message: 'job already stopped',
             });
         }
-        await jobHanldeStop(doc, body).catch(async (err) => {
-            err.trace = addTrace(err.trace, '@at $job.start (createJob)');
+        await jobHandleStop(doc, body).catch(async (err) => {
+            err.trace = addTrace(err.trace, '@at $api.job (apijob)');
             err.id = body.jobid;
 
             return Promise.reject({
