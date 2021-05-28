@@ -78,7 +78,7 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
                     `$pipeline.handler (pipelineHandler): informing calling pl - pl: ${job.jobid} - job: ${job.id} - status: ${job.status}`,
                     job.transid
                 );
-                await pubSub.publish({
+                void pubSub.publish({
                     count: null,
                     email: job.email,
                     executor: job.executor,
@@ -113,10 +113,10 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
 
             if (pldoc.job.jobid !== plid) {
                 utils.logInfo(
-                    `$pipeline.handler (pipelineHandler): publishing ${job.status} to calling pl - pl: ${job.jobid} - job: ${job.id}`,
+                    `$pipeline.handler (pipelineHandler): 1 - publishing ${job.status} - pl: ${job.jobid} - job: ${job.id} - tgt jobid: ${pldoc.job.jobid}`,
                     job.transid
                 );
-                await pubSub.publish({
+                void pubSub.publish({
                     count: null,
                     email: job.email,
                     executor: job.executor,
@@ -154,6 +154,7 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
         pldoc = await updatePlJobStatus(pldoc, job);
 
         if (job.id === plid) {
+            // the pipeline to stopp was called
             if (pldoc.job.status !== job.status) {
                 pldoc.job.status = job.status; // running is enough to cover both submitted and running
             }
@@ -163,7 +164,13 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
             );
             await stopJobs(pldoc);
 
-            await finishPl(job, pldoc);
+            await finishPl(job, pldoc).catch(async (err: any) => {
+                err.trace = addTrace(err.trace, '@at $pipeline.handler (pipelineHandler) - finishPl - job.id === plid');
+
+                void utils.logError('$pipeline.handler (pipelineHandler: pipeline save error', err);
+
+                return Promise.resolve(0);
+            });
 
             await makePlPayload(pldoc, job, payload);
         } else {
@@ -176,7 +183,7 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
                 pldoc.job.status = isfailed ? EJobStatus.failed : isstopped ? EJobStatus.stopped : job.status;
 
                 await finishPl(job, pldoc).catch(async (err: any) => {
-                    err.trace = addTrace(err.trace, '$pipeline.handler (pipelineHandler) - pipeline save');
+                    err.trace = addTrace(err.trace, '$pipeline.handler (pipelineHandler) - finishPl - job.id !== plid');
 
                     void utils.logError('$pipeline.handler (pipelineHandler: pipeline save error', err);
 
@@ -185,36 +192,15 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
 
                 // create the payload
                 await makePlPayload(pldoc, job, payload);
-
-                if (pldoc.job.jobid !== plid) {
-                    utils.logInfo(
-                        `$pipeline.handler (pipelineHandler): publishing ${job.status} to calling pl - pl: ${job.jobid} - calling pl: ${job.id}`,
-                        job.transid
-                    );
-                    await pubSub.publish({
-                        count: pldoc.job.count,
-                        email: job.email,
-                        executor: job.executor,
-                        id: plid,
-                        jobend: pldoc.job.jobend,
-                        jobid: pldoc.job.jobid,
-                        jobstart: pldoc.job.jobstart,
-                        name: pldoc.name,
-                        runby: job.runby,
-                        runtime: pldoc.job.runtime,
-                        status: job.status,
-                        transid: job.transid,
-                        org: job.org,
-                    });
-                }
             }
         }
 
         if (pldoc.job.jobid !== plid) {
             utils.logInfo(
-                `$pipeline.handler (pipelineHandler): publishing ${job.status} to calling pl - pl: ${job.jobid} - calling pl: ${pldoc.job.jobid} -  job: ${job.id}`
+                `$pipeline.handler (pipelineHandler): 2 - publishing ${job.status} - pl: ${job.jobid} - job: ${job.id} - tgt jobid: ${pldoc.job.jobid}`,
+                job.transid
             );
-            await pubSub.publish({
+            void pubSub.publish({
                 count: pldoc.job.count,
                 email: job.email,
                 executor: job.executor,
@@ -271,11 +257,24 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
             pldoc.job.status = isfailed ? EJobStatus.failed : isstopped ? EJobStatus.stopped : job.status;
 
             await finishPl(job, pldoc).catch(async (err: any) => {
-                err.trace = addTrace(err.trace, '$pipeline.handler (pipelineHandler) - pipeline save');
+                if (err?.name && err.name.toLowerCase().includes('versionerror')) {
+                    err.VersionError = true;
 
-                void utils.logError('$pipeline.handler (pipelineHandler: pipeline save error', err);
+                    utils.logRed(
+                        `$pipeline.handler (pipelineHandler): version error, retrying - pl: ${job.jobid} - job: ${job.id}`
+                    );
 
-                return Promise.resolve(0);
+                    return pipelineHandler(job, payload);
+                } else {
+                    err.trace = addTrace(
+                        err.trace,
+                        '@at $pipeline.handler (pipelineHandler) - finishPl - Completed/Failed'
+                    );
+
+                    void utils.logError('$pipeline.handler (pipelineHandler: pipeline save error', err);
+
+                    return Promise.resolve(0);
+                }
             });
 
             // create the payload
@@ -283,10 +282,10 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
 
             if (pldoc.job.jobid !== plid) {
                 utils.logInfo(
-                    `$pipeline.handler (pipelineHandler): publishing ${pldoc.job.status} to calling pl - pl: ${job.jobid} - calling pl: ${pldoc.job.jobid} -  job: ${job.id}`,
+                    `$pipeline.handler (pipelineHandler): 3 - publishing ${job.status} - pl: ${job.jobid} - job: ${job.id} - tgt jobid: ${pldoc.job.jobid}`,
                     job.transid
                 );
-                await pubSub.publish({
+                void pubSub.publish({
                     count: pldoc.job.count,
                     email: job.email,
                     executor: job.executor,

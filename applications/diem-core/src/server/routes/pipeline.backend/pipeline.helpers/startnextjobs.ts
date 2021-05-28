@@ -11,9 +11,7 @@ const getNextInQueue: (pldid: string, id: string) => Promise<string[]> = async (
 
     id: string
 ): Promise<string[]> => {
-    console.info('$startnextjobs (getNextInQueue): looking up', id);
     const pldoc: IJobModel | null = await findOne(plid);
-    console.info('$startnextjobs (getNextInQueue): looked up', id);
     if (pldoc === null) {
         return Promise.reject({
             trace: ['@at $startnextjobs (getNextInQueue) - no doc'],
@@ -23,7 +21,6 @@ const getNextInQueue: (pldid: string, id: string) => Promise<string[]> = async (
     }
 
     const nodeIds: string[] = await getNodesFromId(id, pldoc);
-    console.info('$startnextjobs (getNextInQueue): after getnodes', id);
     const nodes: string[] = [];
 
     // eslint-disable-next-line guard-for-in
@@ -39,21 +36,11 @@ const getNextInQueue: (pldid: string, id: string) => Promise<string[]> = async (
                 pldoc.jobs[nodeId].queue &&
                 pldoc.jobs[nodeId].queue.length === pldoc.jobs[nodeId].from.length
             ) {
-                const check_doc: IJobModel | null = await findOne(nodeId);
-
-                console.info(check_doc?.job);
-
-                if (check_doc?.job.status === EJobStatus.pending) {
-                    nodes.push(nodeId);
-                    // eslint-disable-next-line max-len
-                    utils.logInfo(
-                        `$startnextjobs (getNextInQueue): adding next job - pl: ${plid} - job: ${id} - adding job: ${nodeId} - node: ${nodes.length}`
-                    );
-                } else {
-                    utils.logInfo(
-                        `$startnextjobs (getNextInQueue): next job not in pending state - pl: ${plid} - job: ${id} - adding job: ${nodeId} - node: ${nodes.length}`
-                    );
-                }
+                nodes.push(nodeId);
+                // eslint-disable-next-line max-len
+                utils.logInfo(
+                    `$startnextjobs (getNextInQueue): adding next job - pl: ${plid} - job: ${id} - adding job: ${nodeId} - node: ${nodes.length}`
+                );
             } else {
                 utils.logInfo(
                     `$startnextjobs (getNextInQueue): no next job - pl: ${plid} - job: ${id} - node: ${nodeId}  - queue: ${pldoc.jobs[nodeId].queue.length} - from: ${pldoc.jobs[nodeId].from.length}`
@@ -103,7 +90,7 @@ export const startNextJobs: (job: IJobResponse, pldoc: IJobModel) => Promise<num
     const plid: string = pldoc._id.toString();
 
     // nodeIds length is always greater then 0
-    const d: string[] = await getNextInQueue(plid, job.id).catch(async (err: any) => {
+    let d: string[] = await getNextInQueue(plid, job.id).catch(async (err: any) => {
         err.trace = ['startnextjobs (startNextJobs)'];
 
         return Promise.reject(err);
@@ -112,11 +99,6 @@ export const startNextJobs: (job: IJobResponse, pldoc: IJobModel) => Promise<num
     if (d && d.length > 0) {
         for await (const id of d) {
             if (id) {
-                utils.logInfo(
-                    `$startnextjobs (startNextJobs): calling jobStartHandler - pl: ${job.jobid} - next job: ${id}`,
-                    job.transid
-                );
-
                 const batch_doc: IJobModel | null = await findOne(id);
 
                 if (!batch_doc) {
@@ -142,10 +124,30 @@ export const startNextJobs: (job: IJobResponse, pldoc: IJobModel) => Promise<num
                     batch_doc.job.jobid = plid;
                     batch_doc.job.runby = job.runby;
 
-                    await jobStartHandler(batch_doc).catch(async (err) => {
-                        err.trace = addTrace(err.trace, '@at $startnextjobs (startNextJobs) - batch');
+                    utils.logInfo(
+                        `$startnextjobs (startNextJobs): passing job to the jobStartHandler - pl: ${job.jobid} - id: ${job.id} - job: ${id}`,
+                        job.transid
+                    );
 
-                        return Promise.reject(err);
+                    await jobStartHandler(batch_doc).catch(async (err) => {
+                        if (err.VersionError) {
+                            /*
+                             * we are getting version error, this means the job is already running
+                             * we log the event and then stop proceeding
+                             * we filter out the node , there might be others running
+                             */
+                            d = d.filter((a) => a !== id);
+
+                            utils.logRed(
+                                `$startnextjobs (startNextJobs): version error, not proceeding - pl: ${job.jobid} - id: ${job.id} - job: ${id}`
+                            );
+
+                            return Promise.resolve();
+                        } else {
+                            err.trace = addTrace(err.trace, '@at $startnextjobs (startNextJobs) - batch');
+
+                            return Promise.reject(err);
+                        }
                     });
                 }
             }

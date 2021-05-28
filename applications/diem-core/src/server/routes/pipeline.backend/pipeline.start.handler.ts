@@ -88,7 +88,7 @@ const publishPl: (doc: IJobModel, status: EJobStatusCodes, jobs: IJob[] | undefi
     status: EJobStatusCodes,
     jobs: IJob[] | undefined
 ): Promise<void> => {
-    await pubSub.publish({
+    void pubSub.publish({
         count: null,
         email: doc.job.email,
         executor: doc.job.executor,

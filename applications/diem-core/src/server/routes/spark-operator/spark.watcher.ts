@@ -284,7 +284,7 @@ class SparkLib {
                 this.streams[id].status = applicationState.state;
                 if (applicationState.state === 'RUNNING') {
                     utils.logInfo(`$spark.watcher (managed watcher): set running - id: ${id}`);
-                    await pubSub.publish({
+                    void pubSub.publish({
                         ...obj,
                         status: EJobStatus.running,
                     });
@@ -295,7 +295,7 @@ class SparkLib {
                         utils.logInfo(`$spark.watcher (managed watcher): no log found - id: ${id}`);
                     });
 
-                    await pubSub.publish({
+                    void pubSub.publish({
                         ...obj,
                         out,
                         status: EJobStatus.completed,
@@ -326,7 +326,7 @@ class SparkLib {
                     this.streams[id].log = true;
                 }
 
-                await pubSub.publish({
+                void pubSub.publish({
                     ...obj,
                     error: log,
                     status: EJobStatus.failed,

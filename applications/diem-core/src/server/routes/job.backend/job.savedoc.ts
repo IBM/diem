@@ -29,7 +29,7 @@ export const saveDoc: (doc: IJobModel) => Promise<boolean> = async (doc: IJobMod
     // doc.markModified('job');
 
     await doc.save().catch(async (err) => {
-        err.trace = addTrace(err.trace, '@at $job.start.handler (saveDoc) - save');
+        err.trace = addTrace(err.trace, '@at $job.savedoc (saveDoc)');
         err.doc = id;
 
         return Promise.reject(err);

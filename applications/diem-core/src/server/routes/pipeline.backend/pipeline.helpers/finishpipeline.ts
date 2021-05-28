@@ -1,5 +1,5 @@
-import { utils } from '@common/utils';
 import { IJobModel, IJob, IJobResponse } from '@models';
+import { addTrace } from '@functions';
 
 export const finishPl: (job: IJobResponse, pldoc: IJobModel) => Promise<void> = async (
     job: IJobResponse,
@@ -36,11 +36,11 @@ export const finishPl: (job: IJobResponse, pldoc: IJobModel) => Promise<void> = 
 
     pldoc.markModified('job');
 
-    await pldoc
-        .save()
-        .catch(async (err: any) =>
-            utils.logError(`$finishpl (finishPl): save failed - doc: ${pldoc._id.toString()}`, err)
-        );
+    await pldoc.save().catch(async (err: any) => {
+        err.trace = addTrace(err.trace, '@at $finishpipeline (finishPl)');
+
+        return Promise.reject(err);
+    });
 
     return Promise.resolve();
 };

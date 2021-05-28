@@ -26,7 +26,7 @@ export const jobStartHandler: (doc: IJobModel) => Promise<void> = async (doc: IJ
     doc.job.status = isPl ? EJobStatus.running : EJobStatus.submitted;
 
     const errHandler: (err: IError) => void = async (err: IError) => {
-        err.trace = addTrace(err.trace, '@at $doc.job.start.handler (jobStartHandler) - errHandler');
+        err.trace = addTrace(err.trace, '@at $job.start.handler (jobStartHandler) - errHandler');
         err.email = doc.job.runby;
         err.job = id;
 
@@ -57,20 +57,20 @@ export const jobStartHandler: (doc: IJobModel) => Promise<void> = async (doc: IJ
     if (doc.type === EJobTypes.pipeline) {
         // if this is a pipeline document, the start all it's job
         utils.logInfo(
-            `$doc.job.start.handler (jobStartHandler): calling plStartHandler - pl: ${id} - pl status: ${doc.job.status}`,
+            `$job.start.handler (jobStartHandler): calling plStartHandler - pl: ${id} - pl status: ${doc.job.status}`,
             doc.job.transid
         );
 
         // for pipeplien we log first
         await jobLogger(doc).catch(async (err: any) => {
-            err.trace = addTrace(err.trace, '@at $doc.job.start.handler (saveDoc) - jobLogger - pipeline');
+            err.trace = addTrace(err.trace, '@at $job.start.handler (saveDoc) - jobLogger - pipeline');
 
             // we just log the error here
             return errHandler(err);
         });
 
         await plStartHandler(doc).catch(async (err: any) => {
-            err.trace = addTrace(err.trace, '@at $doc.job.start.handler (jobStartHandler) - plStartHandler');
+            err.trace = addTrace(err.trace, '@at $job.start.handler (jobStartHandler) - plStartHandler');
 
             return errHandler(err);
         });
@@ -120,7 +120,7 @@ export const jobStartHandler: (doc: IJobModel) => Promise<void> = async (doc: IJ
 
     if (isspark) {
         utils.logInfo(
-            `$doc.job.start.handler (jobStartHandler): calling spark - job: ${id} - jobid: ${doc.job.jobid}`,
+            `$job.start.handler (jobStartHandler): calling spark - job: ${id} - jobid: ${doc.job.jobid}`,
             doc.job.transid
         );
 
@@ -136,7 +136,7 @@ export const jobStartHandler: (doc: IJobModel) => Promise<void> = async (doc: IJ
             // add to the audit trail
             doc.job.audit.spark = cap;
         } catch (err) {
-            err.trace = addTrace(err.trace, '@at $doc.job.start.handler (jobStartHandler) - cap');
+            err.trace = addTrace(err.trace, '@at $job.start.handler (jobStartHandler) - cap');
 
             return errHandler(err);
         }
@@ -150,7 +150,7 @@ export const jobStartHandler: (doc: IJobModel) => Promise<void> = async (doc: IJ
         doc.markModified('doc.job.audit');
 
         await saveDoc(doc).catch(async (err: any) => {
-            err.trace = addTrace(err.trace, '@at $doc.job.start.handler (jobStartHandler) - save doc spark');
+            err.trace = addTrace(err.trace, '@at $job.start.handler (jobStartHandler) - save doc spark');
 
             return errHandler(err);
         });
@@ -158,7 +158,7 @@ export const jobStartHandler: (doc: IJobModel) => Promise<void> = async (doc: IJ
         void publishSparkJob(doc.toObject());
 
         await jobLogger(doc).catch(async (err: any) => {
-            err.trace = addTrace(err.trace, '@at $doc.job.start.handler (saveDoc) - jobLogger - spark');
+            err.trace = addTrace(err.trace, '@at $job.start.handler (saveDoc) - jobLogger - spark');
 
             // we just log the error here
             return errHandler(err);
@@ -187,25 +187,34 @@ export const jobStartHandler: (doc: IJobModel) => Promise<void> = async (doc: IJ
     }
 
     await saveDoc(doc).catch(async (err: any) => {
-        err.trace = addTrace(err.trace, '@at $doc.job.start.handler (jobStartHandler) - save doc');
+        /* if this is for some reason a Version conflict, then we stop the job and return
+         * a VersionError to the caller
+         */
+        if (err?.name && err.name.toLowerCase().includes('versionerror')) {
+            err.VersionError = true;
 
-        return errHandler(err);
+            return Promise.reject(err);
+        } else {
+            err.trace = addTrace(err.trace, '@at $job.start.handler (jobStartHandler) - save doc');
+
+            return errHandler(err);
+        }
     });
 
     utils.logInfo(
-        `$doc.job.start.handler (jobStartHandler): calling nodepy - job: ${id} - jobid: ${doc.job.jobid}`,
+        `$job.start.handler (jobStartHandler): calling nodepy - job: ${id} - jobid: ${doc.job.jobid}`,
         doc.job.transid
     );
 
     await createNodePyJob(doc.toObject()).catch(async (err: any) => {
-        err.trace = addTrace(err.trace, '@at $doc.job.start.handler ( createNodePyJob)');
+        err.trace = addTrace(err.trace, '@at $job.start.handler ( createNodePyJob)');
 
         // we just log the error here
         return errHandler(err);
     });
 
     await jobLogger(doc).catch(async (err: any) => {
-        err.trace = addTrace(err.trace, '@at $doc.job.start.handler (saveDoc) - jobLogger - nodepy');
+        err.trace = addTrace(err.trace, '@at $job.start.handler (saveDoc) - jobLogger - nodepy');
 
         // we just log the error here
         return errHandler(err);

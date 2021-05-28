@@ -223,9 +223,7 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
 
         // here we save the job as no more values of the document will be changed
         await doc.save().catch(async (err: any) => {
-            err.caller = '$job.handler';
-
-            console.info(err.code, err.message);
+            err.trace = addTrace(err.trace, '@at $job.handler (pipelineHandler) - doc save');
 
             return Promise.reject(err);
         });

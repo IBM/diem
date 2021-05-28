@@ -13,11 +13,11 @@ export class Server {
         this.pack = utils.Env;
     }
 
-    public publish: (job: IJobResponse) => Promise<boolean> = async (job: IJobResponse): Promise<boolean> => {
+    public publish: (job: IJobResponse) => Promise<void> = async (job: IJobResponse): Promise<void> => {
         try {
             // setTimeout(async () => {
 
-            utils.logInfo(`$pubsub (publish): passing to job handler - job: ${job.id}`);
+            utils.logInfo(`$pubsub (publish): passing job to the jobHandler - job: ${job.id}`);
 
             const payload: ISocketPayload = await jobHandler(job);
 
@@ -25,14 +25,13 @@ export class Server {
 
             await publisher.publish('global.core.users', payload);
 
-            return Promise.resolve(true);
             // }, 1);
         } catch (err) {
             err.trace = addTrace(err.trace, '@at $pubsub (publish)');
 
             await utils.logError(`$pubsub (publish): error - job: ${job.id}`, err);
 
-            return Promise.reject(err);
+            // return Promise.reject(err);
         }
     };
 
@@ -42,7 +41,7 @@ export class Server {
 
             utils.logInfo(`$pubsub (publishservice): publishing payload - job: ${job.id}`);
 
-            pubSub.publishUserPayload({
+            void pubSub.publishUserPayload({
                 email: job.email,
                 payload: {
                     org: job.org,

@@ -22,7 +22,7 @@ const stopSparkJob: (job: IETLJob) => Promise<boolean | Error> = async (job: IET
         job.status = EJobStatus.failed;
     }
 
-    await pubSub.publish({
+    void pubSub.publish({
         ...job,
         count: null,
         jobend: new Date(),
@@ -52,7 +52,7 @@ export const stopNodePyJob: (job: IETLJob) => Promise<void> = async (job: IETLJo
     void publisher.publish('global.nodepy.stop', response_job);
 
     // we must assume nodepy cleans it up
-    await pubSub.publish(response_job);
+    void pubSub.publish(response_job);
 };
 
 export const stopPlJob: (job: IETLJob) => Promise<boolean | Error> = async (job: IETLJob): Promise<boolean | Error> => {
@@ -61,7 +61,7 @@ export const stopPlJob: (job: IETLJob) => Promise<boolean | Error> = async (job:
         job.transid
     );
 
-    await pubSub.publish({
+    void pubSub.publish({
         ...job,
         count: null,
         jobend: null,

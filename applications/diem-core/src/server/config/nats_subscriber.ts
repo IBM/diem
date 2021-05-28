@@ -101,11 +101,11 @@ class Subscriber {
                         if (base) {
                             base.out = out.map((_out: any) => ({ out: _out }));
                             base.outl = true;
-                            await pubSub.publish(base);
+                            void pubSub.publish(base);
                             base = undefined;
                             out = [];
                         }
-                        await pubSub.publish(parsed_json);
+                        void pubSub.publish(parsed_json);
                     }
                 }
             } catch (err) {
@@ -116,7 +116,7 @@ class Subscriber {
         if (base) {
             base.out = out.map((_out: any) => ({ out: _out }));
             base.outl = true;
-            await pubSub.publish(base);
+            void pubSub.publish(base);
             base = undefined;
             out = [];
         }
@@ -164,7 +164,7 @@ class Subscriber {
                     await this.json_handler(json_array);
                 } else {
                     utils.logCyan(`$nats_subscriber (${msg_type}): client: ${payload.client} - incoming data`);
-                    await pubSub.publish(payload.data);
+                    void pubSub.publish(payload.data);
                 }
                 break;
 
@@ -208,7 +208,7 @@ class Subscriber {
             case 'error':
                 utils.logCyan(`$nats_subscriber (global.${msg_type}): client: ${payload.client}`);
 
-                await pubSub.publish(payload.data);
+                void pubSub.publish(payload.data);
                 break;
 
             case 'users':

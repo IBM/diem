@@ -33,19 +33,15 @@ export const updatePlJobStatus: (pldoc: IJobModel, job: { id: string; status: st
         if (nodeIds && nodeIds.length > 0) {
             const nodes: any = {};
             for await (const nodeId of nodeIds) {
-                if (pldoc.jobs[nodeId]) {
-                    if (!pldoc.jobs[nodeId].queue) {
-                        pldoc.jobs[nodeId].queue = [job.id];
-                    }
-
-                    if (pldoc.jobs[nodeId].queue && !pldoc.jobs[nodeId].queue.includes(job.id)) {
-                        pldoc.jobs[nodeId].queue.push(job.id);
-                    }
+                if (pldoc.jobs[nodeId] && pldoc.jobs[nodeId].queue && !pldoc.jobs[nodeId].queue.includes(job.id)) {
+                    nodes[`jobs.${nodeId}.queue`] = job.id;
                 }
-                nodes[`jobs.${nodeId}.queue`] = pldoc.jobs[nodeId].queue;
             }
 
-            pldoc = await findOneAndUpdate(plid, { $set: { [f]: job.status, ...nodes } }).catch(async (err: any) => {
+            pldoc = await findOneAndUpdate(plid, {
+                $set: { [f]: job.status },
+                $push: nodes,
+            }).catch(async (err: any) => {
                 err.trace = ['@at $authorization (login-email)'];
                 void utils.logError(
                     `$updatepljobstatus (findAndUpdatePlJob): save failed - pl: ${plid} - job: ${job.id}`,
