@@ -53,19 +53,6 @@ export const stopJobs: (pldoc: IJobModel) => Promise<void> = async (pldoc: IJobM
         }
     }
 
-    /*
-    // if the pipeline in itself is part of a pipeline
-    if (pldoc.job.jobid !== plid) {
-        const doc: IJobModel | null = await DataModel.findOne({ _id: pldoc.job.jobid }).exec();
-        if (doc && doc.job.status !== pldoc.job.status) {
-            utils.logInfo(
-                `$stopJobs (stopJobs): stop jobs - pl: ${plid}- target pl: ${pldoc.job.jobid} - pl status: ${pldoc.job.status} - job status: ${doc.job.status}`
-            );
-            await stopJobs(doc);
-        }
-    }
-    */
-
     if (save) {
         pldoc.markModified('jobs');
 
