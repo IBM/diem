@@ -12,13 +12,14 @@ export interface INodePyJob extends IETLJob {
 }
 
 export const nodePyRequestJob: (job: INodePyJob) => Promise<void> = async (job: INodePyJob): Promise<void> => {
+    job.status = 
     void pubSub.publish({
         ...job,
         count: null,
         jobend: null,
         jobstart: new Date(),
         runtime: null,
-        status: EJobStatus.submitted,
+        status: EJobStatus.running,
     });
 
     void publisher.request('nodepy.job.start', job).catch(async (err: IError) => {
