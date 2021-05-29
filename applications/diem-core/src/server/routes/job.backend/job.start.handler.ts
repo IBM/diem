@@ -213,7 +213,7 @@ export const jobStartHandler: (doc: IJobModel) => Promise<void> = async (doc: IJ
         return errHandler(err);
     });
 
-    await jobLogger(doc).catch(async (err: any) => {
+    void jobLogger(doc).catch(async (err: any) => {
         err.trace = addTrace(err.trace, '@at $job.start.handler (saveDoc) - jobLogger - nodepy');
 
         // we just log the error here

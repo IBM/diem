@@ -101,11 +101,14 @@ class Subscriber {
                         if (base) {
                             base.out = out.map((_out: any) => ({ out: _out }));
                             base.outl = true;
-                            void pubSub.publish(base);
+                            parsed_json = { ...parsed_json, ...base };
+                            void pubSub.publish(parsed_json);
+
                             base = undefined;
                             out = [];
+                        } else {
+                            void pubSub.publish(parsed_json);
                         }
-                        void pubSub.publish(parsed_json);
                     }
                 }
             } catch (err) {

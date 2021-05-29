@@ -44,12 +44,10 @@ export const jobOutHandler: (doc: IJobModel, job: IJobResponse) => Promise<ISock
     let insert;
 
     if (job.outl) {
-        doc.out = doc.out.concat(job.out);
         insert = {
             $push: { out: { $each: job.out } },
         };
     } else {
-        doc.out = [obj];
         insert = {
             $push: { out: obj },
         };
@@ -114,7 +112,7 @@ const jobDocOutHandler: (payload: IntPayload[], doc: IJobModel, job: IJobRespons
         doc.out = [obj];
     }
 
-    utils.logInfo(`$job.handler (jobDocOutHandler): out payload - job: ${job.id}`, job.transid);
+    utils.logInfo(`$job.handler (jobDocOutHandler): adding out payload - job: ${job.id}`, job.transid);
 
     payload.push({
         loaded: true,
@@ -240,6 +238,7 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
 
         // adding the job log
         if (['Failed', 'Stopped', 'Completed'].includes(job.status) && !isPl) {
+            utils.logInfo(`$job.handler (jobHandler): finishing job and logging - job: ${job.id}`, job.transid);
             await finishJob(doc);
 
             // we don't now need the job audit anymore in the job itself
@@ -247,6 +246,7 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
             doc.markModified('job.audit');
         }
 
+        /*
         // here we save the job as no more values of the document will be changed
         await doc.save().catch(async (err: any) => {
             if (err?.name && err.name.toLowerCase().includes('versionerror')) {
@@ -260,6 +260,26 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
             }
 
             return Promise.reject(err);
+        });
+        */
+
+        await findOneAndUpdate(doc._id, {
+            $set: { job: doc.toObject().job },
+        }).catch(async (err: any) => {
+            if (err?.name && err.name.toLowerCase().includes('versionerror')) {
+                err.VersionError = true;
+
+                utils.logRed(
+                    `$job.handler (jobHandler) - save : version error, retrying - pl: ${job.jobid} - job: ${job.id}`
+                );
+
+                return jobHandler(job_copy);
+            } else {
+                err.trace = addTrace(err.trace, '@at $job.handler (jobHandler) - save');
+                err.id = doc._id.toString();
+
+                return Promise.reject(err);
+            }
         });
 
         // if it's a regular job , make sure that the stop is really stopped, so this does not include pipelines
@@ -312,6 +332,8 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
             load.message = `${jobkind}: ${doc.name} ${doc.job.status}`;
             load.success = job.status === EJobStatus.failed ? false : true; /** just display a success message */
         }
+
+        utils.logInfo(`$job.handler (jobHandler): finished handling - job: ${job.id}`, job.transid);
 
         return Promise.resolve(load);
     } catch (err) {

@@ -129,7 +129,7 @@ export const startNextJobs: (job: IJobResponse, pldoc: IJobModel) => Promise<num
                         job.transid
                     );
 
-                    await jobStartHandler(batch_doc).catch(async (err) => {
+                    void jobStartHandler(batch_doc).catch(async (err) => {
                         if (err.VersionError) {
                             /*
                              * we are getting version error, this means the job is already running

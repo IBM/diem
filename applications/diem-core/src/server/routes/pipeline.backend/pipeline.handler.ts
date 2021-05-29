@@ -30,6 +30,9 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
      * below is the code that will check if there are any dependencies
      */
 
+    const job_copy: IJobResponse = { ...job };
+    const payload_copy: IntPayload[] = { ...payload };
+
     if (!job.jobid) {
         utils.logInfo(
             `$pipeline.handler (pipelineHandler): this is not a pipeline - pl: ${job.jobid} - job: ${job.id} - status: ${job.status}`
@@ -266,7 +269,7 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
                         `$pipeline.handler (pipelineHandler): version error, retrying - pl: ${job.jobid} - job: ${job.id}`
                     );
 
-                    return pipelineHandler(job, payload);
+                    return pipelineHandler(job_copy, payload_copy);
                 } else {
                     err.trace = addTrace(
                         err.trace,
