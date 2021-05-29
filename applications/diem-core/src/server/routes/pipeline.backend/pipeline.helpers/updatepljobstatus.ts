@@ -79,7 +79,7 @@ export const updatePlJobStatus: (pldoc: IJobModel, job: { id: string; status: st
     }
 
     utils.logInfo(
-        `$updatepljobstatus (updatePlJobStatus): status update not needed - pl: ${plid} - job: ${job.id} - status: ${job.status}`
+        `$updatepljobstatus (updatePlJobStatus): status update not needed - pl: ${plid} - pl status: ${pldoc.job.status} - job: ${job.id} - status: ${job.status}`
     );
 
     return Promise.resolve(pldoc);

@@ -26,6 +26,7 @@ export const checkPlCompleted: (job: IJobResponse, plid: string) => Promise<[boo
         return Promise.resolve([true, true, true]);
     }
 
+    // incomplete = true if some jobs are still running
     const incomplete: boolean = Object.values(pldoc.jobs).some((obj: any) =>
         [EJobStatus.submitted, EJobStatus.running].includes(obj.status)
     );

@@ -60,7 +60,7 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
             // a restart from a failed or stopped pipeline
 
             utils.logInfo(
-                `$pipeline.handler (pipelineHandler): change pipeline status - pl: ${job.jobid} - pl status: ${pldoc.job.status} - job: ${job.id} - status: ${job.status}`
+                `$pipeline.handler (pipelineHandler): changed pipeline status - pl: ${job.jobid} - pl status: ${pldoc.job.status} - job: ${job.id} - status: ${job.status}`
             );
 
             pldoc = await updatePlJobStatus(pldoc, job);
@@ -100,7 +100,7 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
 
         if (pldoc.job.status !== job.status) {
             utils.logInfo(
-                `$pipeline.handler (pipelineHandler): verify job status - pl: ${job.jobid} - pl status: ${pldoc.job.status} - job: ${job.id} - new status: ${job.status}`
+                `$pipeline.handler (pipelineHandler): changed status - pl: ${job.jobid} - pl status: ${pldoc.job.status} - job: ${job.id} - new status: ${job.status}`
             );
 
             pldoc = await updatePlJobStatus(pldoc, job);
@@ -135,9 +135,9 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
         } else {
             /* for all jobs update the pipeline jobs field and it's status */
             utils.logInfo(
-                `$pipeline.handler (pipelineHandler): verify job status - pl: ${plid} - job: ${job.id} - status: ${job.status}`
+                `$pipeline.handler (pipelineHandler): update pipeline job status - pl: ${plid} - pl status: ${pldoc.job.status} - job: ${job.id} - status: ${job.status}`
             );
-            await updatePlJobStatus(pldoc, job);
+            pldoc = await updatePlJobStatus(pldoc, job);
         }
 
         return Promise.resolve(payload);
@@ -223,8 +223,10 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
     if (['Completed', 'Failed'].includes(job.status)) {
         pldoc = await updatePlJobStatus(pldoc, job);
 
+        let nextJobs: number = 0;
+
         if (pldoc.jobs[job.id] && !(pldoc.jobs[job.id].required === 'all' && job.status === EJobStatus.failed)) {
-            const nextJobs: number = await startNextJobs(job, pldoc).catch(async (err) => {
+            nextJobs = await startNextJobs(job, pldoc).catch(async (err) => {
                 err.trace = addTrace(err.trace, '@at $pipeline.handler (pipelineHandler) - startNextJobs');
 
                 return Promise.reject(err);

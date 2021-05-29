@@ -7,6 +7,7 @@ import { utils } from '@common/utils';
 import { DataModel, EJobTypes, IJobResponse, IJobModel, EJobStatus, ISocketPayload, ExecutorTypes } from '@models';
 import { addTrace } from '@functions';
 import { pipelineHandler } from '../pipeline.backend/pipeline.handler';
+import { findOneAndUpdate } from '../pipeline.backend/pipeline.helpers/helpers';
 import { PayloadValues } from './job.functions';
 import { finishJob, getPySparkJobLog } from './job.finish';
 
@@ -33,25 +34,42 @@ export const jobOutHandler: (doc: IJobModel, job: IJobResponse) => Promise<ISock
     doc: IJobModel,
     job: IJobResponse
 ): Promise<ISocketPayload> => {
-    const id: string = doc._id.toString();
+    const job_copy: IJobResponse = { ...job };
+
     const obj: IOut = {
         out: job.out,
         special: job.special,
     };
 
+    let insert;
+
     if (job.outl) {
         doc.out = doc.out.concat(job.out);
-    } else if (Array.isArray(doc.out)) {
-        doc.out.push(obj);
+        insert = {
+            $push: { out: { $each: job.out } },
+        };
     } else {
         doc.out = [obj];
+        insert = {
+            $push: { out: obj },
+        };
     }
 
-    await doc.save().catch(async (err: any) => {
-        err.trace = addTrace(err.trace, '@at $job.handler (jobHandler)');
-        err.id = id;
+    await findOneAndUpdate(doc._id, insert).catch(async (err: any) => {
+        if (err?.name && err.name.toLowerCase().includes('versionerror')) {
+            err.VersionError = true;
 
-        void utils.emit('error', err);
+            utils.logRed(
+                `$job.handler (jobHandler) - out: version error, retrying - pl: ${job.jobid} - job: ${job.id}`
+            );
+
+            return jobHandler(job_copy);
+        } else {
+            err.trace = addTrace(err.trace, '@at $job.handler (jobHandler) - findOne');
+            err.id = doc._id.toString();
+
+            return Promise.reject(err);
+        }
     });
 
     utils.logInfo(`$job.handler (jobHandler): out payload - job: ${job.id}`, job.transid);
@@ -130,31 +148,39 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
      * if it's a pipeline we need to do some other pipeline actions
      */
 
+    // make a copy of the job to reuse it in case of failure
+    const job_copy: IJobResponse = { ...job };
+
+    const id: string = job.id;
+    const doc: IJobModel | null = await DataModel.findOne({ _id: id })
+        .exec()
+        .catch(async (err: any) => {
+            err.trace = addTrace(err.trace, '@at $job.handler (jobHandler) - findOne');
+            err.id = id;
+
+            return Promise.reject(err);
+        });
+
+    if (doc === null) {
+        return Promise.reject({
+            id,
+            message: 'The document could not be found',
+            trace: ['@at $job.handler (jobHandler) - null doc'],
+        });
+    }
+
+    let payload: IntPayload[] = [];
+
     try {
-        const id: string = job.id;
-        const doc: IJobModel | null = await DataModel.findOne({ _id: id })
-            .exec()
-            .catch(async (err: any) => {
-                err.trace = addTrace(err.trace, '@at $job.handler (jobHandler) - findOne');
+        // if it's just an out message and it's not the end then handle it as just an out
+
+        if (job.out !== undefined && !job.status) {
+            const load: any = await jobOutHandler(doc, job).catch(async (err: any) => {
+                err.trace = addTrace(err.trace, '@at $job.handler (jobHandler) - jobOutHandler');
                 err.id = id;
 
                 return Promise.reject(err);
             });
-
-        if (doc === null) {
-            return Promise.reject({
-                id,
-                message: 'The document could not be found',
-                trace: ['@at $job.handler (jobHandler)'],
-            });
-        }
-
-        let payload: IntPayload[] = [];
-
-        // if it's just an out message and it's not the end then handle it as just an out
-
-        if (job.out !== undefined && !job.status) {
-            const load: any = await jobOutHandler(doc, job);
 
             return Promise.resolve(load);
         } else if (job.out) {
@@ -223,7 +249,15 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
 
         // here we save the job as no more values of the document will be changed
         await doc.save().catch(async (err: any) => {
-            err.trace = addTrace(err.trace, '@at $job.handler (pipelineHandler) - doc save');
+            if (err?.name && err.name.toLowerCase().includes('versionerror')) {
+                err.VersionError = true;
+
+                utils.logRed(`$job.handler (jobHandler): version error, retrying - pl: ${job.jobid} - job: ${job.id}`);
+
+                return jobHandler(job_copy);
+            } else {
+                err.trace = addTrace(err.trace, '@at $job.handler (pipelineHandler) - doc save');
+            }
 
             return Promise.reject(err);
         });
@@ -281,7 +315,7 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
 
         return Promise.resolve(load);
     } catch (err) {
-        err.trace = addTrace(err.trace, '@at $job.handler (jobHandler)');
+        err.trace = addTrace(err.trace, '@at $job.handler (jobHandler) - try catch');
 
         return Promise.reject(err);
     }

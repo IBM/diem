@@ -96,7 +96,7 @@ export const startNextJobs: (job: IJobResponse, pldoc: IJobModel) => Promise<num
         return Promise.reject(err);
     });
 
-    if (d && d.length > 0) {
+    if (d?.length > 0) {
         for await (const id of d) {
             if (id) {
                 const batch_doc: IJobModel | null = await findOne(id);
@@ -142,7 +142,7 @@ export const startNextJobs: (job: IJobResponse, pldoc: IJobModel) => Promise<num
                                 `$startnextjobs (startNextJobs): version error, not proceeding - pl: ${job.jobid} - id: ${job.id} - job: ${id}`
                             );
 
-                            return Promise.resolve();
+                            return Promise.resolve(0);
                         } else {
                             err.trace = addTrace(err.trace, '@at $startnextjobs (startNextJobs) - batch');
 
