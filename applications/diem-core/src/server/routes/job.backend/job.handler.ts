@@ -149,8 +149,11 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
     // make a copy of the job to reuse it in case of failure
     const job_copy: IJobResponse = { ...job };
 
+    // the object that will be used to insert
+    let insert: any = { $set: {} };
+
     const id: string = job.id;
-    const doc: IJobModel | null = await DataModel.findOne({ _id: id })
+    let doc: IJobModel | null = await DataModel.findOne({ _id: id })
         .exec()
         .catch(async (err: any) => {
             err.trace = addTrace(err.trace, '@at $job.handler (jobHandler) - findOne');
@@ -239,7 +242,9 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
         // adding the job log
         if (['Failed', 'Stopped', 'Completed'].includes(job.status) && !isPl) {
             utils.logInfo(`$job.handler (jobHandler): finishing job and logging - job: ${job.id}`, job.transid);
-            await finishJob(doc);
+            const t = await finishJob(doc);
+            doc = t[0];
+            insert = t[1];
 
             // we don't now need the job audit anymore in the job itself
             doc.job.audit = undefined;
@@ -263,9 +268,9 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
         });
         */
 
-        await findOneAndUpdate(doc._id, {
-            $set: { job: doc.toObject().job },
-        }).catch(async (err: any) => {
+        insert.$set.job = doc.toObject().job;
+
+        await findOneAndUpdate(doc._id, insert).catch(async (err: any) => {
             if (err?.name && err.name.toLowerCase().includes('versionerror')) {
                 err.VersionError = true;
 
@@ -276,7 +281,7 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
                 return jobHandler(job_copy);
             } else {
                 err.trace = addTrace(err.trace, '@at $job.handler (jobHandler) - save');
-                err.id = doc._id.toString();
+                err.id = id;
 
                 return Promise.reject(err);
             }

@@ -24,8 +24,12 @@ export const getPySparkJobLog: (doc: IJobModel) => Promise<IJobModel> = async (d
     return Promise.resolve(doc);
 };
 
-export const finishJob: (doc: IJobModel) => Promise<boolean> = async (doc: IJobModel): Promise<boolean> => {
+export const finishJob: (doc: IJobModel) => Promise<[IJobModel, any]> = async (
+    doc: IJobModel
+): Promise<[IJobModel, any]> => {
     const id: string = doc._id.toString();
+
+    const insert: any = { $set: {} };
 
     if (doc.job.executor === ExecutorTypes.pyspark) {
         await deleteJob(id).catch((err: IError) => {
@@ -40,6 +44,7 @@ export const finishJob: (doc: IJobModel) => Promise<boolean> = async (doc: IJobM
     if (doc.job.jobstart) {
         // a zero never displays as equal to false.. so the minimum is one second
         const runtime: number = Math.round(Math.abs(doc.job.jobend.getTime() - doc.job.jobstart.getTime()) / 1000) || 1;
+        // because 0 equals false in js
         doc.job.runtime = runtime === 0 ? 1 : runtime;
     }
 
@@ -56,11 +61,16 @@ export const finishJob: (doc: IJobModel) => Promise<boolean> = async (doc: IJobM
     if (Array.isArray(doc.log)) {
         if (doc.log.length > 9) {
             doc.log.pop();
+            // insert.$pop = { log: 1 };
         }
         doc.log.unshift(log);
+        //insert.$push = { log: { $each: [log], $position: 0 } };
     } else {
+        // insert.$push = { out: log };
         doc.log = [log];
     }
+
+    insert.$set.log = doc.log;
 
     await jobLogger(doc).catch(async (err: any) => {
         err.trace = addTrace(err.trace, '@at $job.finish (jobStop)');
@@ -69,5 +79,5 @@ export const finishJob: (doc: IJobModel) => Promise<boolean> = async (doc: IJobM
         void utils.logError('$job.start.handler (saveDoc): error', err);
     });
 
-    return Promise.resolve(true);
+    return Promise.resolve([doc, insert]);
 };

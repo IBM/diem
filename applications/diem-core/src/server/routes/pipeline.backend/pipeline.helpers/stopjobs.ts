@@ -1,16 +1,10 @@
 /* eslint-disable max-len */
 import { utils } from '@common/utils';
-import { pubSub } from '@config/pubsub';
-import { IJobModel, DataModel, EJobTypes, EJobStatusCodes, EJobStatus, IJobResponse } from '@models';
-import { finishJob } from '../../job.backend/job.finish';
+import { IJobModel, DataModel, EJobTypes, EJobStatusCodes, EJobStatus } from '@models';
 import { jobStop } from '../../job.front/job.stop';
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
 export const stopJobs: (pldoc: IJobModel) => Promise<void> = async (pldoc: IJobModel): Promise<void> => {
-    const plid: string = pldoc._id.toString();
-
-    let save: boolean = false;
-
     for await (const [key, value] of Object.entries(pldoc.jobs)) {
         const doc: IJobModel | null = await DataModel.findOne({ _id: key }).exec();
 
@@ -43,31 +37,8 @@ export const stopJobs: (pldoc: IJobModel) => Promise<void> = async (pldoc: IJobM
                 void stopJobs(doc);
             }
 
-            pldoc.jobs[key].status = pldoc.job.status;
-
-            save = true;
+            // pldoc.jobs[key].status = pldoc.job.status;
         }
-    }
-
-    if (save) {
-        pldoc.markModified('jobs');
-
-        utils.logInfo(`$stopJobs (stopJobs): saving - pl: ${plid} - job: ${pldoc.job.status}`);
-
-        await finishJob(pldoc).catch(async (err: any) => {
-            err.trace = ['@t $stopJobs (stopJobs)'];
-            void utils.logError(`$stopJobs (stopJobs): save failed - doc: ${plid}`, err);
-
-            return Promise.reject(err);
-        });
-
-        const job: IJobResponse = {
-            ...pldoc.toObject().job,
-            org: pldoc.project.org,
-            id: plid,
-        };
-
-        await pubSub.publish(job);
     }
 
     return Promise.resolve();

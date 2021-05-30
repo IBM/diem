@@ -167,6 +167,7 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
             );
             await stopJobs(pldoc);
 
+            /*  Clean up this code after running it for a bit
             await finishPl(pldoc).catch(async (err: any) => {
                 err.trace = addTrace(err.trace, '@at $pipeline.handler (pipelineHandler) - finishPl - job.id === plid');
 
@@ -176,6 +177,7 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
             });
 
             await makePlPayload(pldoc, job, payload);
+            */
         } else {
             // incomplete means that there are still pending jobs
             const [incomplete, isfailed, isstopped]: [boolean, boolean, boolean] = await checkPlCompleted(job, plid);
