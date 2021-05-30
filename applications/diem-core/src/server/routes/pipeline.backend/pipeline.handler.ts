@@ -57,49 +57,11 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
     // here we start
 
     if (job.status === EJobStatus.running || job.status === EJobStatus.submitted) {
-        job.status = EJobStatus.running; // ! we convert any job in status submitted to running
+        // job.status = EJobStatus.running; // ! we convert any job in status submitted to running
 
-        if (['Stopped', 'Failed'].includes(pldoc.job.status)) {
-            // a restart from a failed or stopped pipeline
+        pldoc = await updatePlJobStatus(pldoc, job);
 
-            utils.logInfo(
-                `$pipeline.handler (pipelineHandler): changed pipeline status - pl: ${job.jobid} - pl status: ${pldoc.job.status} - job: ${job.id} - status: ${job.status}`
-            );
-
-            pldoc = await updatePlJobStatus(pldoc, job);
-
-            if (pldoc.job.status !== job.status) {
-                pldoc.job.status = job.status; // running is enough to cover both submitted and running
-
-                await updatePlStatus(pldoc, job);
-            }
-
-            await makePlPayload(pldoc, job, payload);
-
-            if (pldoc.job.jobid !== plid) {
-                utils.logInfo(
-                    `$pipeline.handler (pipelineHandler): informing calling pl - pl: ${job.jobid} - job: ${job.id} - status: ${job.status}`,
-                    job.transid
-                );
-                void pubSub.publish({
-                    count: null,
-                    email: job.email,
-                    executor: job.executor,
-                    id: plid,
-                    jobend: pldoc.job.jobend,
-                    jobid: pldoc.job.jobid,
-                    jobstart: pldoc.job.jobstart,
-                    name: pldoc.name,
-                    runby: job.runby,
-                    runtime: pldoc.job.runtime,
-                    status: job.status,
-                    transid: job.transid,
-                    org: job.org,
-                });
-            }
-
-            return Promise.resolve(payload);
-        }
+        job.status = EJobStatus.running;
 
         if (pldoc.job.status !== job.status) {
             utils.logInfo(
@@ -138,7 +100,7 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
         } else {
             /* for all jobs update the pipeline jobs field and it's status */
             utils.logInfo(
-                `$pipeline.handler (pipelineHandler): update pipeline job status - pl: ${plid} - pl status: ${pldoc.job.status} - job: ${job.id} - status: ${job.status}`
+                `$pipeline.handler (pipelineHandler): passing to updatePlJobStatus - pl: ${plid} - pl status: ${pldoc.job.status} - job: ${job.id} - status: ${job.status}`
             );
             pldoc = await updatePlJobStatus(pldoc, job);
         }
@@ -166,18 +128,6 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
                 `$pipeline.handler (pipelineHandler): stopping all jobs - pl: ${job.jobid} - job: ${job.id} - status: ${job.status}`
             );
             await stopJobs(pldoc);
-
-            /*  Clean up this code after running it for a bit
-            await finishPl(pldoc).catch(async (err: any) => {
-                err.trace = addTrace(err.trace, '@at $pipeline.handler (pipelineHandler) - finishPl - job.id === plid');
-
-                void utils.logError('$pipeline.handler (pipelineHandler: pipeline save error', err);
-
-                return Promise.resolve(0);
-            });
-
-            await makePlPayload(pldoc, job, payload);
-            */
         } else {
             // incomplete means that there are still pending jobs
             const [incomplete, isfailed, isstopped]: [boolean, boolean, boolean] = await checkPlCompleted(job, plid);
@@ -188,11 +138,19 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
                 pldoc.job.status = isfailed ? EJobStatus.failed : isstopped ? EJobStatus.stopped : job.status;
 
                 await finishPl(pldoc).catch(async (err: any) => {
-                    err.trace = addTrace(err.trace, '$pipeline.handler (pipelineHandler) - finishPl - job.id !== plid');
+                    if (err?.name && err.name.toLowerCase().includes('versionerror')) {
+                        err.VersionError = true;
 
-                    void utils.logError('$pipeline.handler (pipelineHandler: pipeline save error', err);
+                        utils.logRed(
+                            `$pipeline.handler (pipelineHandler): version error - Stopped - pl: ${job.jobid} - job: ${job.id}`
+                        );
 
-                    return Promise.resolve(0);
+                        return pipelineHandler(job_copy, payload_copy);
+                    } else {
+                        err.trace = addTrace(err.trace, '@at $pipeline.handler (pipelineHandler) - finishPl - Stopped');
+
+                        return Promise.reject(err);
+                    }
                 });
 
                 // create the payload
@@ -268,7 +226,7 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
                     err.VersionError = true;
 
                     utils.logRed(
-                        `$pipeline.handler (pipelineHandler): version error, retrying - pl: ${job.jobid} - job: ${job.id}`
+                        `$pipeline.handler (pipelineHandler): version error - Completed/Failed - pl: ${job.jobid} - job: ${job.id}`
                     );
 
                     return pipelineHandler(job_copy, payload_copy);
@@ -278,9 +236,7 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
                         '@at $pipeline.handler (pipelineHandler) - finishPl - Completed/Failed'
                     );
 
-                    void utils.logError('$pipeline.handler (pipelineHandler: pipeline save error', err);
-
-                    return Promise.resolve(0);
+                    return Promise.reject(err);
                 }
             });
 
