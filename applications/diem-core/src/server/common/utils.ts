@@ -110,7 +110,11 @@ class Utils {
     };
 
     public logCyan = (msg: any) => {
-        console.info('\x1b[92m%s\x1b[0m', msg);
+        console.info('\x1b[96m%s\x1b[0m', msg);
+    };
+
+    public logRed = (msg: any) => {
+        console.info('\x1b[91m%s\x1b[0m', msg);
     };
 
     public logInfo = (msg: any, func?: string, hrend?: any) => {

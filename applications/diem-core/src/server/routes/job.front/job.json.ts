@@ -1,10 +1,10 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
 import { addTrace } from '@functions';
-import { DataModel, IJobDetails, IModel, IJobSchema } from '@models';
+import { DataModel, IJobDetails, IJobModel, IJobSchema } from '@models';
 import { getNodes } from './job.detail';
 
-interface IModelPayload extends IModel {
+interface IModelPayload extends IJobModel {
     source__dropcolumns: string[];
     source__connection: string;
     source__fetchsize: number;
@@ -26,10 +26,10 @@ interface IModelPayload extends IModel {
     tags: string[];
 }
 
-const getDBJobs: (jobs: IJobDetails, id: string) => Promise<[{ id: string }[], IModel[]]> = async (
+const getDBJobs: (jobs: IJobDetails, id: string) => Promise<[{ id: string }[], IJobModel[]]> = async (
     jobs: IJobDetails,
     id: string
-): Promise<[{ id: string }[], IModel[]]> => {
+): Promise<[{ id: string }[], IJobModel[]]> => {
     const nodes: { id: string }[] = [];
     const jobNodes: string[] = getNodes(jobs);
 
@@ -44,7 +44,7 @@ const getDBJobs: (jobs: IJobDetails, id: string) => Promise<[{ id: string }[], I
 
     idarr = idarr.filter((key: string) => key !== id);
 
-    const dbjobs: IModel[] = await DataModel.find({ _id: { $in: idarr } })
+    const dbjobs: IJobModel[] = await DataModel.find({ _id: { $in: idarr } })
         .sort({ name: 1 })
         .exec();
 
@@ -119,9 +119,9 @@ export const jobpipeline_json: (req: IRequest) => Promise<IModelPayload | any> =
         doc.log = [];
         out.push(doc);
 
-        const DBJobs: [{ id: string }[], IModel[]] = await getDBJobs(doc.jobs, doc._id);
+        const DBJobs: [{ id: string }[], IJobModel[]] = await getDBJobs(doc.jobs, doc._id);
 
-        DBJobs[1].forEach((pldoc: IModel) => {
+        DBJobs[1].forEach((pldoc: IJobModel) => {
             // job.jobid = id; // adding the jobid for tracking the pipeline
             const pljob: IJobSchema = pldoc.toObject();
             pljob.log = [];

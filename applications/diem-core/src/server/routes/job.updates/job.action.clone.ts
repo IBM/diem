@@ -1,5 +1,5 @@
 import { IntServerPayload } from '@interfaces';
-import { DataModel, EJobStatus, IJobBody, IModel, IJobSchema, newId, IJobDetail } from '@models';
+import { DataModel, EJobStatus, IJobBody, IJobModel, IJobSchema, newId, IJobDetail } from '@models';
 import { addTrace } from '@functions';
 
 export const actionClone: (body: IJobBody) => Promise<any> = async (body: IJobBody) => {
@@ -54,7 +54,7 @@ export const actionClone: (body: IJobBody) => Promise<any> = async (body: IJobBo
         });
     }
 
-    const ndoc: IModel = new DataModel(doc);
+    const ndoc: IJobModel = new DataModel(doc);
     ndoc._id = id;
 
     try {

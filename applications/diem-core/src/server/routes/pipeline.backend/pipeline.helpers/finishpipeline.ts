@@ -1,10 +1,7 @@
-import { utils } from '@common/utils';
-import { IModel, IJob, IJobResponse } from '@models';
+import { IJobModel, IJob } from '@models';
+import { addTrace } from '@functions';
 
-export const finishPl: (job: IJobResponse, pldoc: IModel) => Promise<void> = async (
-    job: IJobResponse,
-    pldoc: IModel
-): Promise<void> => {
+export const finishPl: (pldoc: IJobModel) => Promise<void> = async (pldoc: IJobModel): Promise<void> => {
     pldoc.job.jobend = new Date();
 
     if (pldoc.job.jobstart) {
@@ -12,17 +9,17 @@ export const finishPl: (job: IJobResponse, pldoc: IModel) => Promise<void> = asy
     }
 
     const log: IJob = {
-        count: job.count ? Number(job.count) : 0,
-        email: job.email,
-        executor: job.executor,
+        count: pldoc.job.count ? Number(pldoc.job.count) : 0,
+        email: pldoc.job.email,
+        executor: pldoc.job.executor,
         jobend: pldoc.job.jobend,
-        jobid: job.jobid,
+        jobid: pldoc.job.jobid,
         jobstart: pldoc.job.jobstart,
         runby: pldoc.job.runby,
         runtime: pldoc.job.runtime,
         status: pldoc.job.status,
-        transid: job.transid,
-        name: job.name,
+        transid: pldoc.job.transid,
+        name: pldoc.name,
     };
 
     if (Array.isArray(pldoc.log)) {
@@ -36,11 +33,11 @@ export const finishPl: (job: IJobResponse, pldoc: IModel) => Promise<void> = asy
 
     pldoc.markModified('job');
 
-    await pldoc
-        .save()
-        .catch(async (err: any) =>
-            utils.logError(`$finishpl (finishPl): save failed - doc: ${pldoc._id.toString()}`, err)
-        );
+    await pldoc.save().catch(async (err: any) => {
+        err.trace = addTrace(err.trace, '@at $finishpipeline (finishPl)');
+
+        return Promise.reject(err);
+    });
 
     return Promise.resolve();
 };

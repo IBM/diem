@@ -1,12 +1,12 @@
 import { utils } from '@common/utils';
 import { IntPayload, EStoreActions } from '@interfaces';
-import { IModel, IJobResponse, IJobSchema } from '@models';
+import { IJobModel, IJobResponse, IJobSchema } from '@models';
 import { addTrace } from '@functions';
 import { PayloadValues } from '../../job.backend/job.functions';
 import { jobLogger } from '../../job.logger/job.logger';
 
-export const makePlPayload: (doc: IModel | boolean, job: IJobResponse, payload: IntPayload[]) => Promise<boolean> =
-    async (doc: IModel | boolean, job: IJobResponse, payload: IntPayload[]): Promise<boolean> => {
+export const makePlPayload: (doc: IJobModel | boolean, job: IJobResponse, payload: IntPayload[]) => Promise<boolean> =
+    async (doc: IJobModel | boolean, job: IJobResponse, payload: IntPayload[]): Promise<boolean> => {
         if (typeof doc !== 'boolean') {
             // we log as the pipeline has failed
             const jobdetail: string = 'jobdetail.store';

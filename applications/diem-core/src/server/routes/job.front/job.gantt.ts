@@ -1,8 +1,8 @@
 import moment, { Moment } from 'moment';
-import { IJobDetails, IJobDetail, IModel, DataModel } from '@models';
+import { IJobDetails, IJobDetail, IJobModel, DataModel } from '@models';
 import { addTrace } from '@functions';
 
-export const getGantt: (pldoc: IModel) => Promise<string> = async (pldoc: IModel): Promise<string> => {
+export const getGantt: (pldoc: IJobModel) => Promise<string> = async (pldoc: IJobModel): Promise<string> => {
     const jobs: IJobDetails = pldoc.jobs;
 
     let gantt: string = `gantt
@@ -16,7 +16,7 @@ export const getGantt: (pldoc: IModel) => Promise<string> = async (pldoc: IModel
         nodes.push(key);
     });
 
-    const dbjobs: IModel[] = await DataModel.find({ _id: { $in: nodes } }, {})
+    const dbjobs: IJobModel[] = await DataModel.find({ _id: { $in: nodes } }, {})
         .sort({ name: 1 })
         .exec()
         .catch(async (err: any) => {
@@ -25,7 +25,7 @@ export const getGantt: (pldoc: IModel) => Promise<string> = async (pldoc: IModel
             return Promise.reject(err);
         });
 
-    dbjobs.forEach((doc: IModel) => {
+    dbjobs.forEach((doc: IJobModel) => {
         const runtime: number = doc.job.runtime || 1;
         const m: Moment = moment(doc.job.jobstart);
         const starttime: string = m.format('YYYY-MM-DD HH:mm:ss');

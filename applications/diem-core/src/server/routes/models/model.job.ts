@@ -76,6 +76,7 @@ export interface IJobParams {
     files?: boolean | IParamsFiles;
     slack?: {
         disabled?: boolean;
+        enabled?: boolean;
         webhook?: string;
         channel?: string;
         username?: string;
@@ -89,7 +90,8 @@ export interface IETLJob {
     id: string;
     jobid: string;
     serviceid?: string;
-    jobstart: Date;
+    jobstart?: Date | null;
+    jobend?: Date | null;
     name: string;
     params?: IJobParams;
     runby: string;
@@ -102,9 +104,9 @@ export interface IJob {
     email: string;
     error?: string | null;
     executor: keyof typeof ExecutorTypes;
-    jobend: Date | null;
+    jobend?: Date | null;
     jobid: string;
-    jobstart: Date;
+    jobstart?: Date | null;
     name: string;
     params?: IJobParams;
     runby: string;
@@ -128,7 +130,7 @@ export interface IJobDetail {
     from: string[];
     required: string;
     queue: string[];
-    status: string;
+    status: EJobStatusCodes;
 }
 
 export interface IJobDetails {
@@ -472,7 +474,7 @@ const dataSchema: Schema = new Schema(
     {
         collection: 'jobs',
         strict: true,
-        versionKey: false,
+        optimisticConcurrency: true,
     }
 );
 
@@ -482,15 +484,15 @@ dataSchema.index({ 'project.org': 1, type: 1 });
 /**
  * The Main model interface
  *
- * @interface IModel
+ * @interface IJobModel
  * @extends {IJobSchema}
  * @extends {mongoose.Document}
  */
-export interface IModel extends IJobSchema, mongoose.Document {
+export interface IJobModel extends IJobSchema, mongoose.Document {
     _id: string;
 }
 
-export const DataModel = mongoose.model<IModel>('jobs', dataSchema);
+export const DataModel = mongoose.model<IJobModel>('jobs', dataSchema);
 
 export const newId: () => string = () => mongoose.Types.ObjectId().toString();
 
@@ -521,9 +523,9 @@ export interface IJobResponse {
     error?: string | null;
     executor: keyof typeof ExecutorTypes;
     id: string;
-    jobend: Date | null;
+    jobend?: Date | null;
     jobid: string;
-    jobstart?: Date;
+    jobstart?: Date | null;
     jobs?: IJob[];
     log?: IJob[];
     name: string;

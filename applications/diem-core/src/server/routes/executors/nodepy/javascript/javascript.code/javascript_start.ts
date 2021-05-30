@@ -1,9 +1,9 @@
-import { IETLJob } from '@models';
+import { IJobSchema } from '@models';
 
 // ideal is to make this an env variable as it's the same path as spark in spark operator uses
 const filepath: string = '/tmp/spark-local-dir';
 
-export const javascript_start: (job: IETLJob) => string = (job: IETLJob): string => String.raw`
+export const javascript_start: (doc: IJobSchema) => string = (doc: IJobSchema): string => String.raw`
 /* javascript_start */
 
 /*jshint esversion: 6 */
@@ -60,13 +60,13 @@ const TimeNow = () => {
 }
 
 const config = {
-    __id : '${job.id}',
-    __email : '${job.email}',
-    __jobid : '${job.jobid}',
-    __name : '${job.name}',
+    __id : '${doc._id}',
+    __email : '${doc.job.email}',
+    __jobid : '${doc.job.jobid}',
+    __name : '${doc.name}',
     __filepath : '${filepath}',
-    __transid : '${job.transid}',
-    __org : '${job.org}',
+    __transid : '${doc.job.transid}',
+    __org : '${doc.project.org}',
     __count : 0,
     __starttime : new Date().getTime() / 1000,
     __jobstart : new Date()

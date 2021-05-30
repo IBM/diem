@@ -5,7 +5,7 @@
 
 import { utils } from '@common/utils';
 import { IError, ICapacity } from '@interfaces';
-import { DataModel, EJobTypes, IModel, IETLJob, EJobStatus, ExecutorTypes } from '@models';
+import { EJobTypes, IJobModel, EJobStatus, ExecutorTypes } from '@models';
 import { pubSub } from '@config/pubsub';
 import { addTrace } from '@functions';
 import { createSparkPythonJob, publishSparkJob } from '../executors/spark/spark.python.job';
@@ -16,60 +16,37 @@ import { plStartHandler } from '../pipeline.backend/pipeline.start.handler';
 import { jobLogger } from '../job.logger/job.logger';
 import { saveDoc } from './job.savedoc';
 
-interface ICaller {
-    name: string;
-    id: string;
-}
-
-const findOne: (id: string) => any = async (id: string) => DataModel.findOne({ _id: id }).exec();
-
-export const updateOne: (doc: IModel, obj: any) => any = async (doc: IModel, obj: any) =>
+export const updateOne: (doc: IJobModel, obj: any) => any = async (doc: IJobModel, obj: any) =>
     Promise.resolve(doc.updateOne(obj));
 
-export const jobStartHandler: (job: IETLJob, caller: ICaller) => Promise<void> = async (
-    job: IETLJob,
-    caller: ICaller
-): Promise<void> => {
-    const id: string = job.id;
-    const doc: IModel = await findOne(id);
-
-    if (doc === null) {
-        return Promise.reject({
-            message: 'doc not found',
-            trace: ['@at $job.start.handler (jobStartHandler)'],
-            caller,
-        });
-    }
-
-    if (['Rnning', 'Submitted'].includes(doc.job.status)) {
-        utils.logInfo(
-            `$job.start.handler (jobStartHandler): job already running - pl: ${id} - pl status: ${job.status}`,
-            doc.job.transid
-        );
-    }
+export const jobStartHandler: (doc: IJobModel) => Promise<void> = async (doc: IJobModel): Promise<void> => {
+    const id: string = doc._id.toString();
 
     const isPl: boolean = doc.type === EJobTypes.pipeline;
-    job.status = isPl ? EJobStatus.running : EJobStatus.submitted;
-    doc.job.status = job.status; // the job status is set here ??
-
-    doc.job.jobid = job.jobid;
-    doc.job.transid = job.transid;
-    doc.job.runby = job.runby;
+    doc.job.status = isPl ? EJobStatus.running : EJobStatus.submitted;
 
     const errHandler: (err: IError) => void = async (err: IError) => {
-        err.trace = addTrace(err.trace, '@at $job.start.handler (obStartHandler) - errHandler');
-        err.email = job.runby;
-        err.job = job.id;
+        err.trace = addTrace(err.trace, '@at $job.start.handler (jobStartHandler) - errHandler');
+        err.email = doc.job.runby;
+        err.job = id;
 
-        await pubSub.publish({
-            ...job,
+        const { transid, email, jobid, runby, executor } = doc.job;
+
+        void pubSub.publish({
             count: null,
-            executor: job.executor,
+            email,
+            error: err.message,
+            executor,
+            id,
+            jobid,
             jobend: null,
             jobstart: new Date(),
+            name: doc.name,
+            org: doc.project.org,
+            runby,
             runtime: null,
-            error: err.message,
             status: 'Failed',
+            transid,
         });
 
         return Promise.reject(err);
@@ -80,13 +57,13 @@ export const jobStartHandler: (job: IETLJob, caller: ICaller) => Promise<void> =
     if (doc.type === EJobTypes.pipeline) {
         // if this is a pipeline document, the start all it's job
         utils.logInfo(
-            `$job.start.handler (jobStartHandler): calling plStartHandler - pl: ${id} - pl status: ${job.status}`,
+            `$job.start.handler (jobStartHandler): calling plStartHandler - pl: ${id} - pl status: ${doc.job.status}`,
             doc.job.transid
         );
 
         // for pipeplien we log first
         await jobLogger(doc).catch(async (err: any) => {
-            err.trace = addTrace(err.trace, '@at $job.start.handler (saveDoc) - jobLogger - pipeline');
+            err.trace = addTrace(err.trace, '@at $job.start.handler (jobStartHandler) - jobLogger - pipeline');
 
             // we just log the error here
             return errHandler(err);
@@ -110,14 +87,6 @@ export const jobStartHandler: (job: IETLJob, caller: ICaller) => Promise<void> =
             // merge deep to ensure nested values are updated
             doc.stmt = mergeDeep(doc.stmt, doc.job.params.stmt);
         }
-    }
-
-    /* ! important , this is to ensure we always have the right name as this could be a pipeline batch job */
-    job.name = doc.name;
-
-    /* ! important , this is to ensure that the job runby is from the caller */
-    if (job.runby) {
-        doc.job.runby = job.runby;
     }
 
     /* if there's an out field then reset it to accept new outs */
@@ -151,7 +120,7 @@ export const jobStartHandler: (job: IETLJob, caller: ICaller) => Promise<void> =
 
     if (isspark) {
         utils.logInfo(
-            `$job.start.handler (jobStartHandler): calling spark - job: ${id} - caller: ${caller.name} - calling job: ${caller.id}`,
+            `$job.start.handler (jobStartHandler): calling spark - job: ${id} - jobid: ${doc.job.jobid}`,
             doc.job.transid
         );
 
@@ -160,7 +129,9 @@ export const jobStartHandler: (job: IETLJob, caller: ICaller) => Promise<void> =
         // we void as this is done via socket
         try {
             const cap: ICapacity =
-                doc.type === EJobTypes.params ? await createSparkScalaJob(doc) : await createSparkPythonJob(doc);
+                doc.type === EJobTypes.params
+                    ? await createSparkScalaJob(doc.toObject())
+                    : await createSparkPythonJob(doc.toObject());
 
             // add to the audit trail
             doc.job.audit.spark = cap;
@@ -176,7 +147,7 @@ export const jobStartHandler: (job: IETLJob, caller: ICaller) => Promise<void> =
         if (doc.custom) {
             doc.job.audit.spark.config = doc.custom;
         }
-        doc.markModified('job.audit');
+        doc.markModified('doc.job.audit');
 
         await saveDoc(doc).catch(async (err: any) => {
             err.trace = addTrace(err.trace, '@at $job.start.handler (jobStartHandler) - save doc spark');
@@ -196,8 +167,7 @@ export const jobStartHandler: (job: IETLJob, caller: ICaller) => Promise<void> =
         return Promise.resolve();
     }
 
-    job.executor = 'nodepy';
-    doc.job.executor = job.executor;
+    doc.job.executor = 'nodepy';
 
     // add to the audit trail
     doc.job.audit.nodepy = {
@@ -217,24 +187,33 @@ export const jobStartHandler: (job: IETLJob, caller: ICaller) => Promise<void> =
     }
 
     await saveDoc(doc).catch(async (err: any) => {
-        err.trace = addTrace(err.trace, '@at $job.start.handler (jobStartHandler) - save doc');
+        /* if this is for some reason a Version conflict, then we stop the job and return
+         * a VersionError to the caller
+         */
+        if (err?.name && err.name.toLowerCase().includes('versionerror')) {
+            err.VersionError = true;
 
-        return errHandler(err);
+            return Promise.reject(err);
+        } else {
+            err.trace = addTrace(err.trace, '@at $job.start.handler (jobStartHandler) - save doc');
+
+            return errHandler(err);
+        }
     });
 
     utils.logInfo(
-        `$job.start.handler (jobStartHandler): calling nodepy - job: ${id} - caller: ${caller.name} - calling job: ${caller.id}`,
+        `$job.start.handler (jobStartHandler): calling nodepy - job: ${id} - jobid: ${doc.job.jobid}`,
         doc.job.transid
     );
 
-    await createNodePyJob(doc, job).catch(async (err: any) => {
+    await createNodePyJob(doc.toObject()).catch(async (err: any) => {
         err.trace = addTrace(err.trace, '@at $job.start.handler ( createNodePyJob)');
 
         // we just log the error here
         return errHandler(err);
     });
 
-    await jobLogger(doc).catch(async (err: any) => {
+    void jobLogger(doc).catch(async (err: any) => {
         err.trace = addTrace(err.trace, '@at $job.start.handler (saveDoc) - jobLogger - nodepy');
 
         // we just log the error here

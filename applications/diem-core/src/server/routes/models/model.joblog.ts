@@ -9,7 +9,7 @@ export interface IJobLog {
     executor: string;
     jobend: Date | null;
     jobid?: string;
-    jobstart: Date;
+    jobstart: Date | null;
     logid: string;
     name: string;
     params?: any;

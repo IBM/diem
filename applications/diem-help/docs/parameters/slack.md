@@ -32,6 +32,7 @@ Api Reporting Manager on test
 # Disable using the disabled boolean value
 slack:
     disabled: true
+    enabled: false
 ```
 
 ## Event Messages

@@ -5,7 +5,7 @@ Could be used later in previewing the job
 
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
-import { DataModel, ECodeLanguage, IETLJob, IJobSchema, ExecutorTypes } from '@models';
+import { DataModel, ECodeLanguage, IJobSchema } from '@models';
 import { base64decode, addTrace } from '@functions';
 import { javascriptHandler } from './javascript/javascript.handler';
 import { INodePyJob } from './np.interfaces';
@@ -46,29 +46,16 @@ export const npcodefile: (req: IRequest) => Promise<string> = async (req: IReque
         });
     }
 
-    const jobConfig: IETLJob = {
-        email: req.user && req.user.email ? req.user.email : '',
-        executor: ExecutorTypes.nodepy,
-        id,
-        jobid: id,
-        jobstart: doc.job.jobstart,
-        name: doc.name,
-        runby: req.user && req.user.email ? req.user.email : '',
-        status: 'Submitted',
-        transid: req.transid,
-        org: doc.project.org,
-    };
-
     let nodepyJob: INodePyJob | undefined;
 
     if (doc.custom?.executor === ECodeLanguage.javascript) {
-        nodepyJob = await javascriptHandler(doc, jobConfig).catch(async (err: any) => {
+        nodepyJob = await javascriptHandler(doc).catch(async (err: any) => {
             err.trace = addTrace(err.trace, '@at $nodepy.file (npcodefile) - javascript');
 
             return Promise.reject(err);
         });
     } else {
-        nodepyJob = await pythonHandler(doc, jobConfig).catch(async (err: any) => {
+        nodepyJob = await pythonHandler(doc).catch(async (err: any) => {
             err.trace = addTrace(err.trace, '@at $nodepy.file (npcodefile) - python');
 
             return Promise.reject(err);

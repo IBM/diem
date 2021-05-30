@@ -4,7 +4,6 @@
 import { IETLJob, EJobTypes, IJobSchema, ECodeLanguage } from '@models';
 import { base64encode, addTrace } from '@functions';
 import { INodePyJob } from '../np.interfaces';
-import { py_start_services } from './python.code/py';
 import { handleNodePyServicesCustomJob } from './python.handlers/handle.nodepy.services.custom';
 import { handleNodePyServicesSelect } from './python.handlers/handle.nodepy.services.select';
 import { handleNodePyServicesRestJob } from './python.handlers/handle.nodepy.services.rest';
@@ -18,6 +17,34 @@ import { handleCos } from './python.code.handlers/handle.cos';
 import { handleMail } from './python.code.handlers/handle.mail';
 import { handleValues, setValues } from './python.code.handlers/handle.values';
 import { handlePip } from './python.code.handlers/handle.pip';
+
+// ideal is to make this an env variable as it's the same path as spark in spark operator uses
+const filepath: string = '/tmp/spark-local-dir';
+
+const py_start_services: (job: IETLJob) => string = (job: IETLJob): string => String.raw`### py_start ###
+
+import time
+import os
+import diemlib.config as config
+from diemlib.main import *
+
+env = os.environ
+
+config.__id = '${job.id}'
+config.__email = '${job.email}'
+config.__jobid = '${job.jobid}'
+config.__serviceid = '${job.serviceid}'
+config.__name = '${job.name}'
+config.__filepath = '${filepath}'
+config.__transid = '${job.transid}'
+config.__org = '${job.org}'
+config.__count = 0
+config.__starttime = time.time()
+config.__jobstart = UtcNow()
+config.__nats = True
+
+######`;
+
 /**
  *
  *

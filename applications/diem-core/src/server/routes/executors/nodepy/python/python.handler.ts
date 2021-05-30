@@ -1,13 +1,12 @@
 /* eslint-disable complexity */
 /* eslint-disable sonarjs/cognitive-complexity */
 
-import { IETLJob, EJobTypes, IJobSchema, ECodeLanguage } from '@models';
+import { EJobTypes, IJobSchema, ECodeLanguage } from '@models';
 import { base64encode, addTrace } from '@functions';
 import { INodePyJob } from '../np.interfaces';
-import { py_start } from './python.code/py';
 import { handleNodePyTransferJob } from './python.handlers/handle.nodepy.transfer';
 import { handleNodePyCustomJob } from './python.handlers/handle.nodepy.custom';
-import { handleNodePyStmtJob } from './python.handlers/handle.nodepy.pystmt';
+import { handleNodeStmtJob } from './python.handlers/handle.nodepy.stmt';
 import { handleNodePySelect } from './python.handlers/handle.nodepy.select';
 import { handleNodePyRestJob } from './python.handlers/handle.nodepy.rest';
 import { handleConnectionParams } from './python.code.handlers/handle.connection.params';
@@ -20,6 +19,51 @@ import { handleCos } from './python.code.handlers/handle.cos';
 import { handleMail } from './python.code.handlers/handle.mail';
 import { handleValues, setValues } from './python.code.handlers/handle.values';
 import { handlePip } from './python.code.handlers/handle.pip';
+
+// ideal is to make this an env variable as it's the same path as spark in spark operator uses
+const filepath: string = '/tmp/spark-local-dir';
+
+const py_start: (doc: IJobSchema) => string = (doc: IJobSchema): string => String.raw`
+### py_start ###
+
+import os
+import sys
+import time
+
+import diemlib.config as config
+from diemlib.main import *
+
+env = os.environ
+
+config.__id = '${doc._id}'
+config.__email = '${doc.job.email}'
+config.__jobid = '${doc.job.jobid}'
+config.__name = '${doc.name}'
+config.__filepath = '${filepath}'
+config.__transid = '${doc.job.transid}'
+config.__org = '${doc.project.org}'
+config.__count = 0
+config.__starttime = time.time()
+config.__jobstart = UtcNow()
+config.__nats = True
+
+os.remove(f"{config.__id}.py")
+
+def diem_except_hook(exctype, value, traceback):
+    error(value)
+sys.excepthook = diem_except_hook
+
+data = {
+    "jobstart": config.__jobstart,
+    "status": "Running",
+    "out": f"Job {config.__id} started - email: {config.__email} - time: {UtcNow()}",
+}
+mq(data)
+
+startTimer()
+
+######`;
+
 /**
  *
  *
@@ -27,12 +71,10 @@ import { handlePip } from './python.code.handlers/handle.pip';
  * @param {IETLJob} job
  * @returns {(Promise<INodePyJob | undefined>)}
  */
-export const pythonHandler: (doc: IJobSchema, job: IETLJob) => Promise<INodePyJob> = async (
-    doc: IJobSchema,
-    job: IETLJob
-): Promise<INodePyJob> => {
+export const pythonHandler: (doc: IJobSchema) => Promise<INodePyJob> = async (doc: IJobSchema): Promise<INodePyJob> => {
     try {
-        let code: string = py_start(job);
+        let code: string = py_start(doc);
+        const id: string = doc._id.toString();
 
         /* These are transformations we need to do at the start */
         if (doc.job.params) {
@@ -81,25 +123,13 @@ export const pythonHandler: (doc: IJobSchema, job: IETLJob) => Promise<INodePyJo
         if (doc.type === EJobTypes.pycustom && doc.custom) {
             code = await handleNodePyCustomJob(code, doc);
         } else if (doc.type === EJobTypes.pystmt && doc.stmt && doc.stmt.type) {
-            code = await handleNodePySelect(code, {
-                ...job,
-                stmt: doc.stmt,
-            });
+            code = await handleNodePySelect(code, doc);
         } else if (doc.type === EJobTypes.pystmt && doc.stmt) {
-            code = await handleNodePyStmtJob(code, {
-                ...job,
-                stmt: doc.stmt,
-            });
+            code = await handleNodeStmtJob(code, doc);
         } else if (doc.type === EJobTypes.urlgetpost && doc.url) {
-            code = await handleNodePyRestJob(code, {
-                ...job,
-                url: doc.url,
-            });
+            code = await handleNodePyRestJob(code, doc);
         } else if (doc.type === EJobTypes.pyspark && doc.config) {
-            code = await handleNodePyTransferJob(code, {
-                ...job,
-                config: doc.config,
-            });
+            code = await handleNodePyTransferJob(code, doc);
         }
 
         /* These are transformations we need to do at the end , they are mostly string replace */
@@ -138,7 +168,10 @@ export const pythonHandler: (doc: IJobSchema, job: IETLJob) => Promise<INodePyJo
 
         // we need to base64encode this file
         const pubJob: INodePyJob = {
-            ...job,
+            ...doc.job,
+            id,
+            org: doc.project.org,
+            params: doc.job.params,
             language: ECodeLanguage.python,
             code: base64encode(code),
         };

@@ -6,17 +6,48 @@
 
 ### Obtain an api key
 
-This is manual yet, but will be authomated
+From the Integrations section, select Api Keys
 
-### Configuration
+![files3](../../../diem-help/docs/images/integrations/apikeys1.png =150x)
 
-make a post request to diem-dev.mybluemix.net
+Create a new API Key
 
-! API is an example and not a real one
+![files3](../../../diem-help/docs/images/integrations/apikeys2.png =150x)
+
+Fill in all fields, optional add additional fields to be included in the api
+
+![files3](../../../diem-help/docs/images/integrations/apikeys3.png =800x)
+
+You can preview the api key
+
+![files3](../../../diem-help/docs/images/integrations/apikeys4.png =800x)
+
+You api key will look like this
+
+```txt
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHAiOiJwb3N0bWFuIiwidWlkIjoiZGllbV9hcGkiLCJvcmciOiJ0ZXN0IiwiaWQiOiIzNmQyMzAwNy0wZGE0LWViZmUtZmQzZS0wZDhjMjdmYWFmYWUiLCJpYXQiOjE2MjIwMTk3Nzl9.oZXeMb3je2mDT7vOT9d-8g76lKABdA3qdxzoVUDDHKY # pragma: allowlist secret
+```
+
+You api key will look like this decoded
+
+```json
+{
+  "app": "postman",
+  "uid": "diem_api",
+  "org": "test",
+  "id": "36d23007-0da4-ebfe-fd3e-0d8c27faafae",
+  "iat": 1622019779
+}
+```
+
+### Usuage
+
+make a post request to your diem instance diem-instance.com
+
 
 ```yaml
-endpoint: [https://diem-dev.mybluemix.net/etl-mgr/api/apijob](https://diem-dev.mybluemix.net/etl-mgr/api/apijob)
-apik_value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImxlYXBAaWJtLmNvbSIsIm5hbWUiOiJMZWFwIEFwaSIsImlkIjoiMjE0YWNhZTAtZTVjMC1iNzQzLWI1MjUtMDJlM2ZlM2ViOTVkIiwib3JnIjoibGVhcCIsImJsdWVHcm91cHMiOlsiYWxsIl0sInVpZCI6ImxlYXAiLCJpYXQiOjE2MDgwNTYwMTN9._PxC62evC7oJE6U_-hMjgdkfjdskfdkljajdkakfhdkhfak
+endpoint: [https://diem-instance.com/etl-mgr/api/apijob](https://diem-instance.com/etl-mgr/api/apijob)
+apik_value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.  eyJhcHAiOiJwb3N0bWFuIiwidWlkIjoiZGllbV9hcGkiLCJvcmciOiJ0ZXN0IiwiaWQiOiIzNmQyMzAwNy0wZGE0LWViZmUtZmQzZS0wZDhjMjdmYWFmYWUiLCJpYXQiOjE2MjIwMTk3Nzl9.oZXeMb3je2mDT7vOT9d-8g76lKABdA3qdxzoVUDDHKY # pragma: allowlist secret
 api_token: x-api-key
 method: json
 body: {"id":"5fd3a340b15cc4d3b71b7cc7"}
@@ -25,8 +56,8 @@ body: {"id":"5fd3a340b15cc4d3b71b7cc7"}
 Id is the name of your job
 
 ```shell
-curl --location --request POST 'https://diem-dev.mybluemix.net/etl-mgr/api/apijob' \
---header 'x-api-key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImxlYXBAaWJtLmNvbSIsIm5hbWUiOiJMZWFwIEFwaSIsImlkIjoiMjE0YWNhZTAtZTVjMC1iNzQzLWI1MjUtMDJlM2ZlM2ViOTVkIiwib3JnIjoibGVhcCIsImJsdWVHcm91cHMiOlsiYWxsIl0sInVpZCI6ImxlYXAiLCJpYXQiOjE2MDgwNTYwMTN9._PxC62evC7oJE6U_-hMjgdkfjdskfdkljajdkakfhdkhfak' \
+curl --location --request POST 'https://diem-instance.com/etl-mgr/api/apijob' \
+--header 'x-api-key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHAiOiJwb3N0bWFuIiwidWlkIjoiZGllbV9hcGkiLCJvcmciOiJ0ZXN0IiwiaWQiOiIzNmQyMzAwNy0wZGE0LWViZmUtZmQzZS0wZDhjMjdmYWFmYWUiLCJpYXQiOjE2MjIwMTk3Nzl9.oZXeMb3je2mDT7vOT9d-8g76lKABdA3qdxzoVUDDHKY' \ # pragma: allowlist secret
 --header 'Content-Type: application/json' \
 --data-raw '{"id":"5fd3a340b15cc4d3b71b7cc7"}'
 ```
@@ -36,11 +67,11 @@ curl --location --request POST 'https://diem-dev.mybluemix.net/etl-mgr/api/apijo
 ```python
 import requests
 
-url = "https://diem-dev.mybluemix.net/etl-mgr/api/apijob"
+url = "https://diem-instance.com/etl-mgr/api/apijob"
 
 payload="{\"id\":\"5fd3a340b15cc4d3b71b7cc7\"}"
 headers = {
-  'x-api-key': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImxlYXBAaWJtLmNvbSIsIm5hbWUiOiJMZWFwIEFwaSIsImlkIjoiMjE0YWNhZTAtZTVjMC1iNzQzLWI1MjUtMDJlM2ZlM2ViOTVkIiwib3JnIjoibGVhcCIsImJsdWVHcm91cHMiOlsiYWxsIl0sInVpZCI6ImxlYXAiLCJpYXQiOjE2MDgwNTYwMTN9._PxC62evC7oJE6U_-hMjgdkfjdskfdkljajdkakfhdkhfak',
+  'x-api-key': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHAiOiJwb3N0bWFuIiwidWlkIjoiZGllbV9hcGkiLCJvcmciOiJ0ZXN0IiwiaWQiOiIzNmQyMzAwNy0wZGE0LWViZmUtZmQzZS0wZDhjMjdmYWFmYWUiLCJpYXQiOjE2MjIwMTk3Nzl9.oZXeMb3je2mDT7vOT9d-8g76lKABdA3qdxzoVUDDHKY', # pragma: allowlist secret
   'Content-Type': 'application/json',
   'Cookie': '2dde790f4336c48096c854e78a2bf377=8e7fbffd3054f98246f64722461a3275'
 }
@@ -59,9 +90,9 @@ var data = JSON.stringify({"id":"5fd3a340b15cc4d3b71b7cc7"});
 
 var config = {
   method: 'post',
-  url: 'https://diem-dev.mybluemix.net/etl-mgr/api/apijob',
+  url: 'https://diem-instance.com/etl-mgr/api/apijob',
   headers: {
-    'x-api-key': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImxlYXBAaWJtLmNvbSIsIm5hbWUiOiJMZWFwIEFwaSIsImlkIjoiMjE0YWNhZTAtZTVjMC1iNzQzLWI1MjUtMDJlM2ZlM2ViOTVkIiwib3JnIjoibGVhcCIsImJsdWVHcm91cHMiOlsiYWxsIl0sInVpZCI6ImxlYXAiLCJpYXQiOjE2MDgwNTYwMTN9._PxC62evC7oJE6U_-hMjgdkfjdskfdkljajdkakfhdkhfak',
+    'x-api-key': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHAiOiJwb3N0bWFuIiwidWlkIjoiZGllbV9hcGkiLCJvcmciOiJ0ZXN0IiwiaWQiOiIzNmQyMzAwNy0wZGE0LWViZmUtZmQzZS0wZDhjMjdmYWFmYWUiLCJpYXQiOjE2MjIwMTk3Nzl9.oZXeMb3je2mDT7vOT9d-8g76lKABdA3qdxzoVUDDHKY', # pragma: allowlist secret
     'Content-Type': 'application/json',
     'Cookie': '2dde790f4336c48096c854e78a2bf377=8e7fbffd3054f98246f64722461a3275'
   },
@@ -85,9 +116,9 @@ OkHttpClient client = new OkHttpClient().newBuilder()
 MediaType mediaType = MediaType.parse("application/json");
 RequestBody body = RequestBody.create(mediaType, "{\"id\":\"5fd3a340b15cc4d3b71b7cc7\"}");
 Request request = new Request.Builder()
-  .url("https://diem-dev.mybluemix.net/etl-mgr/api/apijob")
+  .url("https://diem-instance.com/etl-mgr/api/apijob")
   .method("POST", body)
-  .addHeader("x-api-key", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImxlYXBAaWJtLmNvbSIsIm5hbWUiOiJMZWFwIEFwaSIsImlkIjoiMjE0YWNhZTAtZTVjMC1iNzQzLWI1MjUtMDJlM2ZlM2ViOTVkIiwib3JnIjoibGVhcCIsImJsdWVHcm91cHMiOlsiYWxsIl0sInVpZCI6ImxlYXAiLCJpYXQiOjE2MDgwNTYwMTN9._PxC62evC7oJE6U_-hMjgdkfjdskfdkljajdkakfhdkhfak")
+  .addHeader("x-api-key", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHAiOiJwb3N0bWFuIiwidWlkIjoiZGllbV9hcGkiLCJvcmciOiJ0ZXN0IiwiaWQiOiIzNmQyMzAwNy0wZGE0LWViZmUtZmQzZS0wZDhjMjdmYWFmYWUiLCJpYXQiOjE2MjIwMTk3Nzl9.oZXeMb3je2mDT7vOT9d-8g76lKABdA3qdxzoVUDDHKY") # pragma: allowlist secret
   .addHeader("Content-Type", "application/json")
   .addHeader("Cookie", "2dde790f4336c48096c854e78a2bf377=8e7fbffd3054f98246f64722461a3275")
   .build();

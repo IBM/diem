@@ -78,7 +78,7 @@ export const getservice: (req: IRequest) => Promise<any> = async (req: IRequest)
         const results: any = await servicesOutHandler({ id: body.id, out: err });
 
         utils.logInfo(`$getservice (getservice): publishing payload - job: ${body.id}`);
-        pubSub.publishUserPayload({
+        void pubSub.publishUserPayload({
             email: body.email,
             payload: { payload: [results] },
         });

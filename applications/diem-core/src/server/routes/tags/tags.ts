@@ -72,7 +72,7 @@ export const tagsupdate: (req: IRequest) => Promise<IRequest | any> = async (
     const actions: IntSharedAction[] = [
         {
             target: body.target,
-            targetid: doc.id,
+            targetid: doc._id.toString(),
             type: 'read',
         },
     ];

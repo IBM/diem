@@ -18,7 +18,6 @@ export const nodePyRequestJob: (job: INodePyJob) => Promise<void> = async (job: 
         jobend: null,
         jobstart: new Date(),
         runtime: null,
-        status: EJobStatus.submitted,
     });
 
     void publisher.request('nodepy.job.start', job).catch(async (err: IError) => {

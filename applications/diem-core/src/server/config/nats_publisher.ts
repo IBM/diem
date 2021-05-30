@@ -57,7 +57,7 @@ class Publisher {
     public request = async (channel: string, data: any): Promise<INatsPayload | undefined> => {
         const hrstart: [number, number] = process.hrtime();
 
-        utils.logInfo(`$nats_publisher (request): new request - channel: ${channel} client: ${this.client}`);
+        utils.logGreen(`$nats_publisher (request): new request - channel: ${channel} client: ${this.client}`);
 
         try {
             const payload = toBuff({ client: this.client, data });
@@ -86,7 +86,7 @@ class Publisher {
             const response_data = fromBuff(response.data);
             if (response_data) {
                 utils.logInfo(
-                    `$nats_publisher (request): delivery confirmed - client: ${response_data.client}`,
+                    `$nats_publisher (request): delivery confirmed - channel: ${channel} - client: ${response_data.client}`,
                     undefined,
                     process.hrtime(hrstart)
                 );
