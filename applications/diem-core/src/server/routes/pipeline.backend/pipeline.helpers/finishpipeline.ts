@@ -1,7 +1,13 @@
 import { IJobModel, IJob } from '@models';
 import { addTrace } from '@functions';
+import { utils } from '@common/utils';
+import { findOneAndUpdate } from './findone';
 
 export const finishPl: (pldoc: IJobModel) => Promise<void> = async (pldoc: IJobModel): Promise<void> => {
+    const pldoc_copy: any = { ...pldoc };
+
+    const id: string = pldoc._id.toString();
+
     pldoc.job.jobend = new Date();
 
     if (pldoc.job.jobstart) {
@@ -31,12 +37,24 @@ export const finishPl: (pldoc: IJobModel) => Promise<void> = async (pldoc: IJobM
         pldoc.log = [log];
     }
 
-    pldoc.markModified('job');
+    await findOneAndUpdate(pldoc._id, {
+        $set: {
+            job: pldoc.toObject().job,
+            log: pldoc.toObject().log,
+        },
+    }).catch(async (err: any) => {
+        if (err?.name && err.name.toLowerCase().includes('versionerror')) {
+            err.VersionError = true;
 
-    await pldoc.save().catch(async (err: any) => {
-        err.trace = addTrace(err.trace, '@at $finishpipeline (finishPl)');
+            utils.logRed(`$finishpipeline (finishPl) - save : version error, retrying - pl: ${id}`);
 
-        return Promise.reject(err);
+            return finishPl(pldoc_copy);
+        } else {
+            err.trace = addTrace(err.trace, '@at $job.handler (jobHandler) - save');
+            err.id = id;
+
+            return Promise.reject(err);
+        }
     });
 
     return Promise.resolve();

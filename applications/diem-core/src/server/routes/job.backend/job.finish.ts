@@ -70,7 +70,7 @@ export const finishJob: (doc: IJobModel) => Promise<[IJobModel, any]> = async (
         doc.log = [log];
     }
 
-    insert.$set.log = doc.log;
+    insert.$set.log = doc.toObject().log;
 
     await jobLogger(doc).catch(async (err: any) => {
         err.trace = addTrace(err.trace, '@at $job.finish (jobStop)');

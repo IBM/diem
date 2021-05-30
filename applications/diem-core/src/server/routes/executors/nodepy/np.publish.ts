@@ -20,7 +20,7 @@ export const nodePyRequestJob: (job: INodePyJob) => Promise<void> = async (job: 
         runtime: null,
     });
 
-    void publisher.request('nodepy.job.start', job).catch(async (err: IError) => {
+    await publisher.request('nodepy.job.start', job).catch(async (err: IError) => {
         err.trace = addTrace(err.trace, '@at $np.publish (nodePyRequestJob) - request');
 
         void utils.logError(`$np.publish (nodePyRequestJob): error - job: ${job.id}`, err);
