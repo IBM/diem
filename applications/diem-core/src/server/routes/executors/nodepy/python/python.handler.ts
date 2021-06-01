@@ -167,16 +167,16 @@ export const pythonHandler: (doc: IJobSchema) => Promise<INodePyJob> = async (do
         code = handlePrintStatement(code);
 
         // we need to base64encode this file
-        const pubJob: INodePyJob = {
+        const nodepyJob: INodePyJob = {
             ...doc.job,
+            code: base64encode(code),
             id,
+            language: ECodeLanguage.python,
             org: doc.project.org,
             params: doc.job.params,
-            language: ECodeLanguage.python,
-            code: base64encode(code),
         };
 
-        return Promise.resolve(pubJob || undefined);
+        return Promise.resolve(nodepyJob);
     } catch (err) {
         err.trace = addTrace(err.trace, '@at $python.handler (handleNodePy)');
 

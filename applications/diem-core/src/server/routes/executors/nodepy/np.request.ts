@@ -9,27 +9,30 @@ import { addTrace } from '@functions';
 
 export interface INodePyJob extends IETLJob {
     code: string;
+    language: string;
 }
 
-export const nodePyRequestJob: (job: INodePyJob) => Promise<void> = async (job: INodePyJob): Promise<void> => {
+export const nodePyRequestJob: (nodepyJob: INodePyJob) => Promise<void> = async (
+    nodepyJob: INodePyJob
+): Promise<void> => {
+    nodepyJob.jobstart = new Date();
+    nodepyJob.jobend = null;
+
     void pubSub.publish({
-        ...job,
+        ...nodepyJob,
         count: null,
-        jobend: null,
-        jobstart: new Date(),
         runtime: null,
     });
 
-    await publisher.request('nodepy.job.start', job).catch(async (err: IError) => {
-        err.trace = addTrace(err.trace, '@at $np.publish (nodePyRequestJob) - request');
+    await publisher.request('nodepy.job.start', nodepyJob).catch(async (err: IError) => {
+        err.trace = addTrace(err.trace, '@at $np.request (nodePyRequestJob) - request');
 
-        void utils.logError(`$np.publish (nodePyRequestJob): error - job: ${job.id}`, err);
+        void utils.logError(`$np.request (nodePyRequestJob): error - job: ${nodepyJob.id}`, err);
 
         void pubSub.publish({
-            ...job,
+            ...nodepyJob,
             count: null,
             jobend: new Date(),
-            jobstart: new Date(),
             runtime: null,
             error: err.message,
             status: EJobStatus.failed,

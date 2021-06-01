@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import { utils } from '@config/utils';
-import { IError, ServicesJob, IHandler } from '@interfaces';
+import { IError, ServicesJob, IHandler, ECodeLanguage } from '@interfaces';
 import { addTrace } from '../shared/functions';
 import { servicesNodepy } from './services.nodepy';
 
@@ -42,7 +42,7 @@ export const handler: (job: ServicesJob) => any = async (job: ServicesJob): Prom
     utils.logInfo(`$services.handler (handler): new request - job: ${id}`, job.transid);
 
     // clean up the file and fill in the missing data
-    const py: string = base64decode(job.code);
+    const code: string = base64decode(job.code);
 
     await fs.mkdir(`${path.resolve()}/workdir/${id}/workdir`, { recursive: true }).catch(async (error: Error) => {
         const err: IError = {
@@ -56,7 +56,9 @@ export const handler: (job: ServicesJob) => any = async (job: ServicesJob): Prom
         return Promise.reject(err);
     });
 
-    await fs.writeFile(`${path.resolve()}/workdir/${id}/${id}.py`, py).catch(async (err: IError) => {
+    const extention: string = job.language === ECodeLanguage.javascript ? 'js' : 'py';
+
+    await fs.writeFile(`${path.resolve()}/workdir/${id}/${id}.${extention}`, code).catch(async (err: IError) => {
         err.caller = 'NodePy services.handler (handler): writeFile';
         err.message = `Executor: Could not save the file for job ${id}`;
         err.trace = addTrace(err.trace, '@at $services.handler (handler): writeFile');
