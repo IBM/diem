@@ -1,12 +1,15 @@
-import { IConnSchema } from '@models';
+import { IConnSchema, IJobSchema } from '@models';
 import { addTrace } from '@functions';
-import { IntPythonStmtJob } from '../../np.interfaces';
 import { getConnection, jdbc_config } from '../../../spark/spark.job.handlers/hendle.spark.common';
 
-export const py_select_services: (job: IntPythonStmtJob) => Promise<string> = async (
-    job: IntPythonStmtJob
-): Promise<string> => {
-    const conn: string = job.stmt.connection;
+export const py_select_services: (doc: IJobSchema) => Promise<string> = async (doc: IJobSchema): Promise<string> => {
+    if (!doc.stmt) {
+        return Promise.reject({
+            id: doc._id,
+            message: 'job without statement',
+        });
+    }
+    const conn: string = doc.stmt.connection;
 
     let connection: IConnSchema;
 
@@ -35,7 +38,7 @@ def main():
             url='${jdbc}',
             driver_args=['${connection.user}', '${connection.password}'])
 
-    sql = f"""${job.stmt.sql}"""
+    sql = f"""${doc.stmt.sql}"""
 
     try:
         load = pd.read_sql(sql, conn)
@@ -53,11 +56,11 @@ main()
 `;
 };
 
-export const handleNodePyServicesSelect: (code: string, job: IntPythonStmtJob) => Promise<string> = async (
+export const handleNodePyServicesSelect: (code: string, doc: IJobSchema) => Promise<string> = async (
     code: string,
-    job: IntPythonStmtJob
+    doc: IJobSchema
 ): Promise<string> => {
-    const pyselect: string = await py_select_services(job);
+    const pyselect: string = await py_select_services(doc);
 
     return Promise.resolve(`${code}\n${pyselect}`);
 };

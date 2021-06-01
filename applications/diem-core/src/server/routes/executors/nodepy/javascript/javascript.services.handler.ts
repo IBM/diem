@@ -4,11 +4,15 @@
 import { ECodeLanguage, IJobSchema } from '@models';
 import { base64encode, addTrace } from '@functions';
 import { INodePyJob } from '../np.interfaces';
+import { handleConfigmapsParams } from '../python/python.code.handlers/handle.configmaps.params';
+import { handleConnectionParams } from '../python/python.code.handlers/handle.connection.params';
+import { handleSnippets } from '../python/python.code.handlers/handle.snippets';
+import { handleValues } from '../python/python.code.handlers/handle.values';
 
 // ideal is to make this an env variable as it's the same path as spark in spark operator uses
 const filepath: string = '/tmp/spark-local-dir';
 
-export const javascript_start: (doc: IJobSchema) => string = (doc: IJobSchema): string => String.raw`
+const javascript_start: (doc: IJobSchema) => string = (doc: IJobSchema): string => String.raw`
 /* javascript_start */
 
 /*jshint esversion: 6 */
@@ -77,32 +81,9 @@ const config = {
     __jobstart : new Date()
 }
 
-msg = __\`Job __\${config.__id} started - email: __\${config.__email} - time: __\${UtcNow()}__\`
-
-data = {
-    jobstart: config.__jobstart,
-    status: "Running",
-    out: msg,
-}
-mq(data)
-
 console.log = function() {}
 
 /* ###### */`;
-
-export const javascript_end: () => string = (): string => String.raw`
-/* javascript_end */
-
-msg = __\`Job __\${config.__id} finished - time: __\${UtcNow()} - running time: __\${(TimeNow() - config.__starttime).toFixed(3)} ms__\`
-
-data = {
-    status: "Completed",
-    out: msg,
-    jobend: UtcNow()
-}
-mq(data)
-
-/* ###### */;`;
 
 /**
  *
@@ -111,7 +92,7 @@ mq(data)
  * @param {IETLJob} job
  * @returns {(Promise<INodePyJob | undefined>)}
  */
-export const javascriptHandler: (doc: IJobSchema) => Promise<INodePyJob> = async (
+export const javascriptServicesHandler: (doc: IJobSchema) => Promise<INodePyJob> = async (
     doc: IJobSchema
 ): Promise<INodePyJob> => {
     try {
@@ -122,7 +103,22 @@ export const javascriptHandler: (doc: IJobSchema) => Promise<INodePyJob> = async
             code = code.replace('/* ###### */', `\n${doc.custom.code}\n/* ###### */`);
         }
 
-        code = code.replace('/* ###### */', javascript_end);
+        code = await handleSnippets(code, doc.project.org);
+
+        if (doc.job.params) {
+            console.info(doc.job.params);
+            if (doc.job.params.connections) {
+                code = await handleConnectionParams(code, doc.job.params.connections, doc.project.org);
+            }
+
+            if (doc.job.params.values) {
+                code = await handleValues(code, doc.job.params.values);
+            }
+
+            if (doc.job.params.configmaps) {
+                code = await handleConfigmapsParams(code, doc.job.params.configmaps, doc.project.org);
+            }
+        }
 
         const regExp: string | RegExp = new RegExp('__\\\\', 'ig');
         code = code.replace(regExp, '');

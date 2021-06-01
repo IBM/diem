@@ -1,7 +1,17 @@
+import { IJobSchema } from '@models';
 import { IntPythonRestJob } from '../../np.interfaces';
 
-export const py_rest_services: (job: IntPythonRestJob) => string = (job: IntPythonRestJob): string => {
-    const url: IntPythonRestJob['url'] = job.url;
+export const py_rest_services: (doc: IJobSchema) => string = (doc: IJobSchema): string => {
+    if (!doc.url) {
+        const err: any = {
+            message: `No config file found - job: ${doc._id}`,
+            trace: ['@at $handle.nodepy.transfer (py_rest)'],
+        };
+
+        return err;
+    }
+
+    const url: IntPythonRestJob['url'] = doc.url;
 
     return String.raw`
 ### py_rest ###
@@ -76,11 +86,11 @@ else:
 ######`;
 };
 
-export const handleNodePyServicesRestJob: (code: string, job: IntPythonRestJob) => Promise<string> = async (
+export const handleNodePyServicesRestJob: (code: string, doc: IJobSchema) => Promise<string> = async (
     code: string,
-    job: IntPythonRestJob
+    doc: IJobSchema
 ): Promise<string> => {
-    const rest: string = py_rest_services(job);
+    const rest: string = py_rest_services(doc);
 
     return Promise.resolve(`${code} \n${rest}`);
 };

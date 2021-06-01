@@ -25,10 +25,10 @@ export const servicesNodepy: (job: ServicesJob) => Promise<any> = async (job: Se
     if (job.language === ECodeLanguage.javascript) {
         response = spawnSync('node', [`${path.resolve()}/workdir/${id}/${id}.js`, job.params], {
             env: {
-                PATH: process.env.PATH,
-                APPPATH: process.env.APPPATH,
+                PATH: `/home/app/.local/bin:${process.env.PATH}`,
             },
             cwd: `${path.resolve()}/workdir/${id}/workdir`,
+            stdio: ['pipe', 'pipe', 'pipe'],
         });
     } else {
         response = spawnSync('python3', ['-u', `${path.resolve()}/workdir/${id}/${id}.py`, job.params], {
@@ -52,6 +52,8 @@ export const servicesNodepy: (job: ServicesJob) => Promise<any> = async (job: Se
     }
 
     let data: any = {};
+
+    console.info(response_string);
 
     try {
         data = JSON.parse(response_string);

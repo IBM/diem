@@ -111,6 +111,7 @@ export interface IJob {
     params?: IJobParams;
     runby: string;
     runtime: number | null;
+    serviceid?: string; // if run internally
     status: EJobStatusCodes;
     transid: string;
     audit?: {
