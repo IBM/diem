@@ -24,14 +24,23 @@ export const apijob: (req: IRequest) => Promise<IApiJobReturn> = async (req: IRe
     const hrstart: [number, number] = process.hrtime();
 
     const body: IApiJob = { ...req.body };
-    body.transid = req.transid;
-    body.email = req.user.email;
+    body.transid = req.transid || body.transid;
+    body.email = req.user?.email ? req.user.email : body.email ? body.email : 'system';
 
     const id: string = body.id;
 
     const doc: IJobModel | null = await DataModel.findOne({ _id: id })
         .exec()
         .catch(async (err: any) => {
+            if (err.message && err.message.includes('Cast to ObjectI')) {
+                return Promise.reject({
+                    message: 'this is not a vamid id',
+                    return: { error: `document ${id} could not be found` },
+                    status: 200,
+                    id,
+                });
+            }
+
             err.trace = addTrace(err.trace, '@at $api.job (apijob) - findOne');
 
             return Promise.reject(err);
@@ -45,6 +54,7 @@ export const apijob: (req: IRequest) => Promise<IApiJobReturn> = async (req: IRe
             email: body.email,
             transid: body.transid,
             trace: ['@at $api.job (apijob)'],
+            status: 200,
         });
     }
 

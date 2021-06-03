@@ -90,6 +90,7 @@ export const createSparkScalaJob: (doc: IJobSchema) => Promise<ICapacity> = asyn
         TRANSID: doc.job.transid,
         JOBID: doc.job.jobid ? doc.job.jobid : id,
         SPARK__CALLBACK_URL: sparkCredentials.callback_url,
+        APPNAME: process.env.NAME,
     };
 
     // extra environmental variables
