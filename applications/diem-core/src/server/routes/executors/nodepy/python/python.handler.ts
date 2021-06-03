@@ -46,6 +46,7 @@ config.__count = 0
 config.__starttime = time.time()
 config.__jobstart = UtcNow()
 config.__nats = True
+config.__appname = '${process.env.NAME}'
 
 os.remove(f"{config.__id}.py")
 

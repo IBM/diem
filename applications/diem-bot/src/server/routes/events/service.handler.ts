@@ -17,6 +17,8 @@ export const serviceHandler = async (payload: any, body: IArgsBody): Promise<any
     // start with setting some default data
 
     if (!result?.data?.out) {
+        console.info('result.data', result.data);
+
         return;
     }
 

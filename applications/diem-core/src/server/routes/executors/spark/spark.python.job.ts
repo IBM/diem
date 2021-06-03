@@ -52,6 +52,7 @@ export const createSparkPythonJob: (doc: IJobSchema) => Promise<ICapacity> = asy
         TRANSID: doc.job.transid,
         JOBID: doc.job.jobid ? doc.job.jobid : id,
         SPARK__CALLBACK_URL: sparkCredentials.callback_url,
+        APPNAME: process.env.NAME,
     };
 
     if (doc.job.params?.files) {

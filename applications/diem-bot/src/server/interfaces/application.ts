@@ -14,5 +14,6 @@ export interface IArgsBody {
         id: string | undefined;
         payload: { [index: string]: any } | string | undefined; // args[4]}
         event: { [index: string]: any } | string | undefined; // adding the event
+        user: string;
     };
 }

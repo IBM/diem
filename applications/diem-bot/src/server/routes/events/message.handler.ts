@@ -39,18 +39,13 @@ const argsParser: (event: any) => IArgsBody = (event: any): IArgsBody => {
                 if (params?.id) {
                     id = params.id;
                 }
-                if (params?.jobs) {
-                    component = EComponents.jobs;
-                    id = params?.jobs;
-                } else if (params?.service) {
+
+                if (params?.job) {
+                    payload = params;
+                }
+                if (params?.service) {
                     component = EComponents.service;
                     id = params?.service;
-                } else if (params?.announcement) {
-                    component = EComponents.announcement;
-                    id = params?.announcement;
-                } else if (params?.approval) {
-                    component = EComponents.approval;
-                    id = params?.approval;
                 }
             } catch (err) {
                 payload = params_tmp;
@@ -67,6 +62,7 @@ const argsParser: (event: any) => IArgsBody = (event: any): IArgsBody => {
             id,
             payload,
             event,
+            user: event.user,
         },
     };
 };

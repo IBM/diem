@@ -19,15 +19,20 @@ export const interactionsHander: (req: IRequest, res: IResponse) => Promise<any>
 
         const id = payload.view.callback_id;
 
+        //console.info('view', payload.view);
+
+        //console.info('state', JSON.stringify(payload.view.state.values));
+
         const args: IArgsBody = {
             id,
             component: EComponents.service,
             params: {
                 id,
                 component: EComponents.service,
-                action: payload.type,
+                action: payload.view.private_metadata || payload.type,
                 payload,
                 event: undefined,
+                user: payload.user,
             },
         };
 
@@ -51,6 +56,7 @@ export const interactionsHander: (req: IRequest, res: IResponse) => Promise<any>
                 action,
                 payload,
                 event: undefined,
+                user: payload.user,
             },
         };
 
