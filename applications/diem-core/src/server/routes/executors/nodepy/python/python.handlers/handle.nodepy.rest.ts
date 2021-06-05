@@ -83,7 +83,7 @@ else:
         error(e)
         raise
 
-######`;
+###__CODE__###`;
 };
 
 export const handleNodePyRestJob: (code: string, doc: IJobSchema) => Promise<string> = async (

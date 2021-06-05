@@ -40,7 +40,7 @@ export const handleWithConfig: (doc: IJobSchema) => Promise<string> = async (doc
             ? `.master("local[${doc.job.audit.spark.executor_cores}]")`
             : '';
 
-    code = code.replace('######', py_session(local));
+    code = code.replace('###__CODE__###', py_session(local));
 
     if (config.source) {
         const source: IJobConfig['source'] = config.source;
@@ -66,9 +66,9 @@ export const handleWithConfig: (doc: IJobSchema) => Promise<string> = async (doc
         py_src =
             src.partition && src.partition.partitioncolumn
                 ? py_src.replace(/\$PARTITION/g, py_partition(src.partition))
-                : py_src.replace(/\$PARTITION/g, '\n######');
+                : py_src.replace(/\$PARTITION/g, '\n###__CODE__###');
 
-        code = code.replace('######', py_src);
+        code = code.replace('###__CODE__###', py_src);
 
         if (
             src.dropcolumns &&
@@ -78,9 +78,9 @@ export const handleWithConfig: (doc: IJobSchema) => Promise<string> = async (doc
         ) {
             const opt_dropcolumns: string = py_opt_dropcolumns(`.drop("${src.dropcolumns.join('"),.drop("')}")`);
 
-            code = code.replace('######', opt_dropcolumns);
+            code = code.replace('###__CODE__###', opt_dropcolumns);
         } else {
-            code = code.replace('######', 'df_tgt = df_src######');
+            code = code.replace('###__CODE__###', 'df_tgt = df_src###__CODE__###');
         }
     }
 
@@ -102,7 +102,7 @@ export const handleWithConfig: (doc: IJobSchema) => Promise<string> = async (doc
         tgt.truncate = !!tgt.truncate;
 
         const target_txt: string = tgt.type === 'nz' ? py_tgt_nz(tgt) : py_tgt_jdbc(tgt);
-        code = code.replace('######', target_txt);
+        code = code.replace('###__CODE__###', target_txt);
     }
 
     // here we create the final construct

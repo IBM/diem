@@ -54,7 +54,7 @@ cos = filehandler(
 
 ${filename}
 
-######`;
+###__CODE__###`;
 
-    return Promise.resolve(`${code.replace('######', file_part)}`);
+    return Promise.resolve(`${code.replace('###__CODE__###', file_part)}`);
 };

@@ -83,7 +83,7 @@ const config = {
 
 console.log = function() {}
 
-/* ###### */`;
+/* ###__CODE__### */`;
 
 /**
  *
@@ -100,7 +100,7 @@ export const javascriptServicesHandler: (doc: IJobSchema) => Promise<INodePyJob>
         const id: string = doc._id.toString();
 
         if (doc.custom?.code) {
-            code = code.replace('/* ###### */', `\n${doc.custom.code}\n/* ###### */`);
+            code = code.replace('/* ###__CODE__### */', `\n${doc.custom.code}\n/* ###__CODE__### */`);
         }
 
         code = await handleSnippets(code, doc.project.org);

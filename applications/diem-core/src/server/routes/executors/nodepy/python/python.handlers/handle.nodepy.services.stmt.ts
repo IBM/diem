@@ -69,7 +69,7 @@ for sql in sqls:
 tgt_stmt.close()
 tgt_conn.close()
 
-######`;
+###__CODE__###`;
 };
 
 export const handleNodePyServicesStmtJob: (code: string, job: IntPythonStmtJob) => Promise<string> = async (

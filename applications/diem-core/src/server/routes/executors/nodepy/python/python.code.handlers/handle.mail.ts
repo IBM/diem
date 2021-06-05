@@ -56,7 +56,7 @@ from diemlib.mailhandler import mailhandler
 config.api_key = '${api_key}'
 ${mail_options}
 
-######`;
+###__CODE__###`;
 
-    return Promise.resolve(`${code.replace('######', mail_code)}`);
+    return Promise.resolve(`${code.replace('###__CODE__###', mail_code)}`);
 };

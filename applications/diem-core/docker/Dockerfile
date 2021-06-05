@@ -1,4 +1,4 @@
-FROM node:16.2.0-alpine3.13
+FROM node:16.3.0-alpine3.13
 
 LABEL   maintainer=guy_huinen@be.ibm.com \
     org.label-schema.description="Diem Core Application" \

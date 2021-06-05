@@ -13,9 +13,9 @@ export const handleFiles: (code: string, files: { name: string; value: string }[
         const file_part: string = String.raw`
 ### Manual Files ###
 ${insert}
-######`;
+###__CODE__###`;
 
-        return Promise.resolve(`${code.replace('######', file_part)}`);
+        return Promise.resolve(`${code.replace('###__CODE__###', file_part)}`);
     };
 
 export const handleFilesParams: (code: string, files: { name: string; value: string }[]) => Promise<string> = async (

@@ -105,7 +105,7 @@ data = {
 mq(data)
 exit(0)
 
-######`;
+###__CODE__###`;
 };
 
 export const handleNodeStmtJob: (code: string, doc: IJobSchema) => Promise<string> = async (
@@ -114,5 +114,5 @@ export const handleNodeStmtJob: (code: string, doc: IJobSchema) => Promise<strin
 ): Promise<string> => {
     const pystmt: string = await py_stmt(doc);
 
-    return Promise.resolve(code.replace('######', pystmt));
+    return Promise.resolve(code.replace('###__CODE__###', pystmt));
 };

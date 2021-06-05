@@ -202,7 +202,7 @@ export const jobStartHandler: (doc: IJobModel) => Promise<void> = async (doc: IJ
     });
 
     utils.logInfo(
-        `$job.start.handler (jobStartHandler): calling nodepy - job: ${id} - jobid: ${doc.job.jobid}`,
+        `$job.start.handler (jobStartHandler): passing to createNodePyJob - job: ${id} - jobid: ${doc.job.jobid}`,
         doc.job.transid
     );
 

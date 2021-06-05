@@ -88,7 +88,7 @@ mq(data)
 
 console.log = function() {}
 
-/* ###### */`;
+/* ###__CODE__### */`;
 
 export const javascript_end: () => string = (): string => String.raw`
 /* javascript_end */
@@ -102,7 +102,7 @@ data = {
 }
 mq(data)
 
-/* ###### */;`;
+/* ###__CODE__### */;`;
 
 /**
  *
@@ -119,10 +119,10 @@ export const javascriptHandler: (doc: IJobSchema) => Promise<INodePyJob> = async
         const id: string = doc._id.toString();
 
         if (doc.custom?.code) {
-            code = code.replace('/* ###### */', `\n${doc.custom.code}\n/* ###### */`);
+            code = code.replace('/* ###__CODE__### */', `\n${doc.custom.code}\n/* ###__CODE__### */`);
         }
 
-        code = code.replace('/* ###### */', javascript_end);
+        code = code.replace('/* ###__CODE__### */', javascript_end);
 
         const regExp: string | RegExp = new RegExp('__\\\\', 'ig');
         code = code.replace(regExp, '');

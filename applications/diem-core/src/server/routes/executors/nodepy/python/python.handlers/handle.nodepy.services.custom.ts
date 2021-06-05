@@ -10,9 +10,9 @@ export const handleNodePyServicesCustomJob: (code: string, doc: IJobSchema) => P
     }
 
     try {
-        const custom: string = `### custom ###\n${doc.custom.code}\n\n######`;
+        const custom: string = `### custom ###\n${doc.custom.code}\n\n###__CODE__###`;
 
-        code = code.replace('######', custom);
+        code = code.replace('###__CODE__###', custom);
 
         return Promise.resolve(code);
     } catch (err) {

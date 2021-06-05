@@ -28,5 +28,5 @@ def getconn():
         raise
 $TARGET = getconn()
 
-######`;
+###__CODE__###`;
 };
