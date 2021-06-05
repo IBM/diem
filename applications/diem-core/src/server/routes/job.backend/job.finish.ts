@@ -9,8 +9,10 @@ import { sparkWatcher } from '../spark-operator/spark.watcher';
 export const getPySparkJobLog: (doc: IJobModel) => Promise<IJobModel> = async (doc: IJobModel): Promise<IJobModel> => {
     const id: string = doc._id.toString();
 
-    let sparkLog: string | undefined = await sparkWatcher.getJobLog(id).catch(() => {
-        // nothing
+    let sparkLog: string | undefined = await sparkWatcher.getJobLog(id).catch(async () => {
+        void utils.logInfo(`$job.finish (getPySparkJobLog): no log found - id: ${id}`);
+
+        return Promise.resolve(doc);
     });
 
     if (sparkLog) {
@@ -24,7 +26,7 @@ export const getPySparkJobLog: (doc: IJobModel) => Promise<IJobModel> = async (d
     return Promise.resolve(doc);
 };
 
-export const finishJob: (doc: IJobModel) => Promise<[IJobModel, any]> = async (
+export const jobFinish: (doc: IJobModel) => Promise<[IJobModel, any]> = async (
     doc: IJobModel
 ): Promise<[IJobModel, any]> => {
     const id: string = doc._id.toString();
@@ -33,7 +35,7 @@ export const finishJob: (doc: IJobModel) => Promise<[IJobModel, any]> = async (
 
     if (doc.job.executor === ExecutorTypes.pyspark) {
         await deleteJob(id).catch((err: IError) => {
-            err.trace = addTrace(err.trace, '@at $job.finish (finishJob)');
+            err.trace = addTrace(err.trace, '@at $job.finish (jobFinish) - deleteJob');
         });
     }
 
@@ -72,12 +74,17 @@ export const finishJob: (doc: IJobModel) => Promise<[IJobModel, any]> = async (
 
     insert.$set.log = doc.toObject().log;
 
+    utils.logInfo(`$job.finish (getPySparkJobLog): passing to jobLogger - id: ${id}`);
+
     await jobLogger(doc).catch(async (err: any) => {
         err.trace = addTrace(err.trace, '@at $job.finish (jobStop)');
 
         // we just log the error here
-        void utils.logError('$job.start.handler (saveDoc): error', err);
+        void utils.logError('$job.finish (saveDoc): error', err);
     });
+
+    // the job is logged with it's audit , so we don't need the audit anymore
+    doc.job.audit = undefined;
 
     return Promise.resolve([doc, insert]);
 };

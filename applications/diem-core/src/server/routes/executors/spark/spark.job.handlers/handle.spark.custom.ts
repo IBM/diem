@@ -62,7 +62,7 @@ export const handleWithCustom: (doc: IJobSchema) => Promise<string> = async (doc
             ? `.master("local[${doc.job.audit.spark.executor_cores}]")`
             : '';
 
-    code = code.replace('######', py_session(local));
+    code = code.replace('###__CODE__###', py_session(local));
 
     const custom_code: string = `
 ### py_session ###
@@ -71,9 +71,9 @@ ${doc.custom.code}
 
 endjob()
 
-######`;
+###__CODE__###`;
 
-    code = code.replace('######', custom_code);
+    code = code.replace('###__CODE__###', custom_code);
 
     code = await handleSnippets(code, doc.project.org);
 

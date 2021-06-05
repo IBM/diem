@@ -19,7 +19,7 @@ const py_truncate: (truncate: boolean, target: string, connection: IConnSchema) 
 
 # No truncation
 
-######
+###__CODE__###
 `;
     }
 
@@ -40,7 +40,7 @@ except Exception as e:
 msg = f"Target truncated at {UtcNow()} - runtime: {time.time() - config.__starttime}"
 out(msg)
 
-######
+###__CODE__###
 `;
 };
 
@@ -162,9 +162,9 @@ def insert(resultSet):
             insert_stmt.executeBatch()
           except Exception as e:
             if 'getNextException' in dir(e):
-              error(Exception(e.getNextException()))
+              error(e.getNextException())
             else:
-              error(Exception(e))
+              error(e)
           c = 0
           loop += 1
           tgt_conn.commit()
@@ -182,9 +182,9 @@ try:
     insert_stmt.executeBatch()
   except Exception as e:
     if 'getNextException' in dir(e):
-      error(Exception(e.getNextException()))
+      error(e.getNextException())
     else:
-      error(Exception(e))
+      error(e)
 
   tgt_conn.commit()
   if insert_stmt:
@@ -209,7 +209,7 @@ data = {
 mq(data)
 exit(0)
 
-######
+###__CODE__###
 `;
 };
 

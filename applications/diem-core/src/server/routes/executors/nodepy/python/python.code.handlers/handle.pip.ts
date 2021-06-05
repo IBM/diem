@@ -11,7 +11,7 @@ for __pip in ['${pip.join("','")}']:
         mq({"out": f"pip: {__pip} installed"})
     except subprocess.CalledProcessError as e:
         error(e)
-######`;
+###__CODE__###`;
 
 export const handlePip: (code: string, doc: IJobSchema) => Promise<string> = async (
     code: string,
@@ -26,7 +26,7 @@ export const handlePip: (code: string, doc: IJobSchema) => Promise<string> = asy
             doc.job.params.pip.length > 0
         ) {
             const pipcode: string = py_pipinstall(doc._id.toString(), doc.job.params.pip);
-            code = code.replace('######', pipcode);
+            code = code.replace('###__CODE__###', pipcode);
         }
 
         return Promise.resolve(code);

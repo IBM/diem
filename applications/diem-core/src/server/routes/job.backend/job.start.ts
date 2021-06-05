@@ -12,7 +12,10 @@ export const jobStart: (doc: IJobModel) => Promise<void> = async (doc: IJobModel
 
     // it's a job so we will create it here
 
-    utils.logInfo(`$job.start (jobStart): new job start request - job: ${id}`, doc.job.transid);
+    utils.logInfo(
+        `$job.start (jobStart): new job start request - passing to jobStartHandler - job: ${id}`,
+        doc.job.transid
+    );
 
     await jobStartHandler(doc).catch(async (err) => {
         err.trace = addTrace(err.trace, '@at $job.start (createJob)');

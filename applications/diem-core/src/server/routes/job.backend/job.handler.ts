@@ -9,7 +9,7 @@ import { addTrace } from '@functions';
 import { pipelineHandler } from '../pipeline.backend/pipeline.handler';
 import { findOneAndUpdate } from '../pipeline.backend/pipeline.helpers/helpers';
 import { PayloadValues } from './job.functions';
-import { finishJob, getPySparkJobLog } from './job.finish';
+import { jobFinish, getPySparkJobLog } from './job.finish';
 
 interface IOut {
     out: string;
@@ -70,7 +70,7 @@ export const jobOutHandler: (doc: IJobModel, job: IJobResponse) => Promise<ISock
         }
     });
 
-    utils.logInfo(`$job.handler (jobHandler): out payload - job: ${job.id}`, job.transid);
+    utils.logInfo(`$job.handler (jobHandler): adding out - job: ${job.id} - status: ${doc.job.status}`, job.transid);
 
     const load: ISocketPayload = {
         org: doc.project.org,
@@ -112,7 +112,7 @@ const jobDocOutHandler: (payload: IntPayload[], doc: IJobModel, job: IJobRespons
         doc.out = [obj];
     }
 
-    utils.logInfo(`$job.handler (jobDocOutHandler): adding out payload - job: ${job.id}`, job.transid);
+    utils.logInfo(`$job.handler (jobDocOutHandler): adding out - job: ${job.id} - status: ${job.status}`, job.transid);
 
     payload.push({
         loaded: true,
@@ -137,9 +137,9 @@ const jobDocOutHandler: (payload: IntPayload[], doc: IJobModel, job: IJobRespons
  * @param {*} job
  * @returns {Promise<IjobHandler>}
  */
-export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async (
+export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload | false> = async (
     job: IJobResponse
-): Promise<ISocketPayload> => {
+): Promise<ISocketPayload | false> => {
     /**
      * @info Job can be a pipeline or a regular job
      *
@@ -224,11 +224,6 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
             values: rest,
         });
 
-        // get the log of the sparkjob in case of an error
-        if (doc.job.error && doc.job.executor === ExecutorTypes.pyspark) {
-            await getPySparkJobLog(doc);
-        }
-
         // can i remove this
         const isActivePl: boolean = isPl && doc.jobs && Object.keys(doc.jobs).length > 0; // has pipeline items
         if (isActivePl && ['Running', 'Failed', 'Completed'].includes(doc.job.status)) {
@@ -241,32 +236,30 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
 
         // adding the job log
         if (['Failed', 'Stopped', 'Completed'].includes(job.status) && !isPl) {
-            utils.logInfo(`$job.handler (jobHandler): finishing job and logging - job: ${job.id}`, job.transid);
-            const t = await finishJob(doc);
-            doc = t[0];
-            insert = t[1];
+            if (!doc.job.audit) {
+                utils.logInfo(
+                    `$job.handler (jobHandler): no audit found - stopping here  - status: ${job.status} - job: ${job.id}`,
+                    job.transid
+                );
 
-            // we don't now need the job audit anymore in the job itself
-            doc.job.audit = undefined;
-            doc.markModified('job.audit');
-        }
-
-        /*
-        // here we save the job as no more values of the document will be changed
-        await doc.save().catch(async (err: any) => {
-            if (err?.name && err.name.toLowerCase().includes('versionerror')) {
-                err.VersionError = true;
-
-                utils.logRed(`$job.handler (jobHandler): version error, retrying - pl: ${job.jobid} - job: ${job.id}`);
-
-                return jobHandler(job_copy);
-            } else {
-                err.trace = addTrace(err.trace, '@at $job.handler (pipelineHandler) - doc save');
+                return Promise.resolve(false);
             }
 
-            return Promise.reject(err);
-        });
-        */
+            // get the log of the sparkjob in case of an error
+            if (doc.job.error && doc.job.executor === ExecutorTypes.pyspark) {
+                utils.logInfo(`$job.handler (getPySparkJobLog): passing to getPySparkJobLog - id: ${id}`);
+
+                doc = await getPySparkJobLog(doc);
+            }
+
+            utils.logInfo(
+                `$job.handler (jobHandler): passing to jobFinish - status: ${job.status} - job: ${job.id}`,
+                job.transid
+            );
+            const t = await jobFinish(doc);
+            doc = t[0];
+            insert = t[1];
+        }
 
         insert.$set.job = doc.toObject().job;
 
@@ -338,7 +331,10 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
             load.success = job.status === EJobStatus.failed ? false : true; /** just display a success message */
         }
 
-        utils.logInfo(`$job.handler (jobHandler): finished handling - job: ${job.id}`, job.transid);
+        utils.logInfo(
+            `$job.handler (jobHandler): passing back to publish - job: ${job.id} - status: ${job.status}`,
+            job.transid
+        );
 
         return Promise.resolve(load);
     } catch (err) {

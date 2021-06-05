@@ -19,8 +19,8 @@ export const setValues: (code: string, values: { [index: string]: string }) => P
     const values_part: string = String.raw`
 ### Values obj ###
 values = ${JSON.stringify(values)}
-######
+###__CODE__###
      `;
 
-    return Promise.resolve(`${code.replace('######', values_part)}`);
+    return Promise.resolve(`${code.replace('###__CODE__###', values_part)}`);
 };

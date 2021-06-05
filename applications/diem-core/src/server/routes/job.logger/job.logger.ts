@@ -23,6 +23,7 @@ export const jobLogger: (doc: IJobModel) => Promise<void> = async (doc: IJobMode
         });
     }
 
+    // handle mail for all Completed and Failed
     if (['Completed', 'Failed'].includes(doc.job.status)) {
         // mailhandler has it's own logging
         void handleMail(doc).catch(async (err: any) => {

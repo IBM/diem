@@ -19,7 +19,13 @@ export class Server {
 
             utils.logInfo(`$pubsub (publish): passing to jobHandler - job: ${job.id}`);
 
-            const payload: ISocketPayload = await jobHandler(job);
+            const payload: ISocketPayload | false = await jobHandler(job);
+
+            if (payload === false) {
+                utils.logInfo(`$pubsub (publish): not going to publish - job: ${job.id}`);
+
+                return;
+            }
 
             utils.logInfo(`$pubsub (publish): publishing payload - job: ${job.id}`);
 

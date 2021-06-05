@@ -44,7 +44,7 @@ config.__jobstart = UtcNow()
 config.__nats = True
 config.__appname = '${process.env.NAME}'
 
-######`;
+###__CODE__###`;
 
 /**
  *
