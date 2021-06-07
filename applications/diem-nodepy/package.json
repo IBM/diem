@@ -54,6 +54,7 @@
         "webpack:build": "rm -rf ./src/webpack/lib && ./node_modules/.bin/tsc -p ./src/webpack/tsconfig.json",
         "webpack:node": "webpackenv=node webpack --mode production",
         "webpack:node-test": "webpackenv=node-test webpack -w --mode development",
-        "lock": "npm install --package-lock"
+        "lock": "npm install --package-lock",
+        "requirement": "pip-upgrade --dry-run --skip-package-installation requirements.txt"
     }
 }
