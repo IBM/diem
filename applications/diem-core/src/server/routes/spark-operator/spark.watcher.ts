@@ -121,7 +121,9 @@ class SparkLib {
 
         setTimeout(async () => {
             if (this.streams[id] && this.streams[id].stream) {
-                utils.logInfo(`$spark.watcher (checkStream): aborting open stream - id: ${id} - from: ${from}`);
+                utils.logInfo(
+                    `$spark.watcher (checkStream): going to abort any open stream - id: ${id} - from: ${from}`
+                );
                 await this.streams[id].stream.destroy();
                 await this.streams[id].stream.abort();
 
@@ -165,11 +167,14 @@ class SparkLib {
     };
 
     // eslint-disable-next-line sonarjs/cognitive-complexity
-    public startWatcher = async (id: string, managed?: boolean) => {
+    public startWatcher: (id: string, managed?: boolean) => Promise<void> = async (
+        id: string,
+        managed?: boolean
+    ): Promise<void> => {
         if (!this.apis[this.crd.spec.group]) {
             utils.logInfo(`$spark.watcher (watcher): no sparkapplications detected - id: ${id}`);
 
-            return;
+            return Promise.resolve();
         }
 
         const appsApi: Api.ApiV1WatchEvents = this.apis[this.crd.spec.group].v1beta2.watch.namespaces(
@@ -199,7 +204,7 @@ class SparkLib {
                 await this.startWatcher(id);
             } else {
                 if (err.message === 'aborted') {
-                    utils.logInfo(`$spark.watcher (watcher): confirmation aborted stream - id: ${id}`);
+                    utils.logInfo(`$spark.watcher (watcher): stream aborted - id: ${id}`);
                 } else {
                     await utils.logError(`$spark.watcher (watcher): other stream error - ${id}`, err);
                 }
@@ -284,18 +289,24 @@ class SparkLib {
                 this.streams[id].status = applicationState.state;
                 if (applicationState.state === 'RUNNING') {
                     utils.logInfo(`$spark.watcher (managed watcher): set running - id: ${id}`);
-                    await pubSub.publish({
+                    void pubSub.publish({
                         ...obj,
                         status: EJobStatus.running,
                     });
                 } else if (applicationState.state === 'COMPLETED') {
-                    utils.logInfo(`$spark.watcher (managed watcher): set completed - id: ${id}`);
+                    utils.logInfo(
+                        `$spark.watcher (managed watcher): collecting log and publishing Completed - id: ${id}`
+                    );
 
                     const out: string = await this.getJobLog(obj.id).catch(async () => {
-                        utils.logInfo(`$spark.watcher (managed watcher): no log found - id: ${id}`);
+                        utils.logInfo(`$spark.watcher (managed watcher): no log found - passing to abort - id: ${id}`);
+
+                        await this.abort(id, 'watcher - deleted');
+
+                        return;
                     });
 
-                    await pubSub.publish({
+                    void pubSub.publish({
                         ...obj,
                         out,
                         status: EJobStatus.completed,
@@ -310,23 +321,24 @@ class SparkLib {
 
             if (['FAILING', 'SUBMISSION_FAILED'].includes(applicationState.state) && !this.streams[id]?.log) {
                 utils.logInfo(
-                    `$spark.watcher (watcher): collecting log - id: ${obj.id} - type: ${data.type} - status: ${applicationState.state}`
+                    `$spark.watcher (watcher): collecting log and publishing failed - id: ${obj.id} - type: ${data.type} - status: ${applicationState.state}`
                 );
 
                 let log: any = 'Unspecified error';
 
-                log = await this.getJobLog(obj.id).catch(async (err: any) => {
-                    err.trace = addTrace(err.trace, '@at $spark.watcher (startWatcher)');
-                    // void utils.logError('$spark.watcher (log): error', err);
+                log = await this.getJobLog(obj.id).catch(async () => {
+                    utils.logInfo(`$spark.watcher (managed watcher): no log found - passing to abort - id: ${id}`);
 
-                    return JSON.stringify(err);
+                    await this.abort(id, 'watcher - deleted');
+
+                    return;
                 });
 
                 if (this.streams[id]) {
                     this.streams[id].log = true;
                 }
 
-                await pubSub.publish({
+                void pubSub.publish({
                     ...obj,
                     error: log,
                     status: EJobStatus.failed,
@@ -335,7 +347,7 @@ class SparkLib {
 
             if (data.type === 'DELETED') {
                 utils.logInfo(
-                    `$spark.watcher (watcher): closing stream - id: ${obj.id} - type: ${data.type} - status: ${applicationState.state}`
+                    `$spark.watcher (watcher): passing to abort - id: ${obj.id} - type: ${data.type} - status: ${applicationState.state}`
                 );
 
                 await this.abort(id, 'watcher - deleted');
@@ -355,6 +367,8 @@ class SparkLib {
                 await this.startWatcher(id);
             }
         });
+
+        return Promise.resolve();
     };
 }
 

@@ -1,6 +1,6 @@
 {
     "name": "diem-nodepy",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "description": "ETL- Manager NodePy",
     "config": {
         "appname": "diem-nodepy",
@@ -8,7 +8,7 @@
     },
     "dependencies": {
         "moment": "^2.29.1",
-        "nats": "^2.0.4",
+        "nats": "^2.0.6",
         "print-hrtime": "^2.0.0",
         "rimraf": "^3.0.2"
     },
@@ -18,18 +18,18 @@
     ],
     "devDependencies": {
         "@types/core-js": "^2.5.4",
-        "@types/node": "^15.6.1",
+        "@types/node": "^15.9.0",
         "@types/rimraf": "^3.0.0",
         "@types/webpack": "^5.28.0",
         "@types/webpack-env": "^1.16.0",
-        "@typescript-eslint/eslint-plugin": "^4.25.0",
-        "@typescript-eslint/parser": "^4.25.0",
+        "@typescript-eslint/eslint-plugin": "^4.26.0",
+        "@typescript-eslint/parser": "^4.26.0",
         "browserslist": "^4.16.6",
-        "core-js": "^3.13.0",
+        "core-js": "^3.13.1",
         "eslint": "^7.27.0",
         "eslint-config-prettier": "^8.3.0",
-        "eslint-plugin-import": "^2.23.3",
-        "eslint-plugin-jsdoc": "^35.0.0",
+        "eslint-plugin-import": "^2.23.4",
+        "eslint-plugin-jsdoc": "^35.1.2",
         "eslint-plugin-node": "^11.1.0",
         "eslint-plugin-prettier": "^3.4.0",
         "eslint-plugin-sonarjs": "^0.7.0",
@@ -38,9 +38,9 @@
         "npm-run-all": "^4.1.5",
         "prettier": "^2.3.0",
         "ts-loader": "^9.2.2",
-        "typescript": "^4.2.4",
+        "typescript": "^4.3.2",
         "typescript-eslint": "0.0.1-alpha.0",
-        "webpack": "^5.37.1",
+        "webpack": "^5.38.1",
         "webpack-cli": "^4.7.0"
     },
     "scripts": {
@@ -54,6 +54,7 @@
         "webpack:build": "rm -rf ./src/webpack/lib && ./node_modules/.bin/tsc -p ./src/webpack/tsconfig.json",
         "webpack:node": "webpackenv=node webpack --mode production",
         "webpack:node-test": "webpackenv=node-test webpack -w --mode development",
-        "lock": "npm install --package-lock"
+        "lock": "npm install --package-lock",
+        "requirement": "pip-upgrade --dry-run --skip-package-installation requirements.txt"
     }
 }

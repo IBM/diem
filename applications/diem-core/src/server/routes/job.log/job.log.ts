@@ -105,13 +105,18 @@ export const joblog: (req: IRequest) => Promise<any> = async (req: IRequest) => 
         const nbr: number = dbjobs[1];
 
         rows.forEach((row: IJobLog) => {
+            const out: string | any[] | undefined =
+                row.out && Array.isArray(row.out) && row.out.length > 0
+                    ? row.out.map((obj: any) => obj.out).join('\n')
+                    : undefined;
+
             row.nbr = nbr;
             row.statusicon = StatusConfig[row.status].statusicon || 'fa fa-question';
             row.erroricon = row.error ? 'far fa-file-code fa-lg c-red' : undefined;
             row.outicon = row.out ? 'far fa-file-code fa-lg c-green' : undefined;
             row.auditicon = row.audit ? 'far fa-file-code fa-lg' : undefined;
             row.audit = row.audit ? JSON.stringify(row.audit, undefined, 2).replace(/\\n/g, '\n') : undefined;
-            row.out = row.out && Array.isArray(row.out) ? row.out.map((obj: any) => obj.out).join('\n') : undefined;
+            row.out = out;
         });
 
         return Promise.resolve(rows);

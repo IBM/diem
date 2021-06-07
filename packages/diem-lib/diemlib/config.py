@@ -25,3 +25,4 @@ __url = None
 __loglimit = 1000
 __logcount = 0
 __timer = None
+__appname = None

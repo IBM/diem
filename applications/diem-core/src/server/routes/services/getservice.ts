@@ -6,7 +6,8 @@ import { pubSub } from '@config/pubsub';
 import { publisher } from '@config/nats_publisher';
 import { IJobResponse } from '@models';
 import { base64encode, addTrace } from '@functions';
-import { npcodefileservices, IServices } from '../executors/nodepy/np.codefile.services';
+import { prepareNodePyServicesJob, IServices } from '../executors/nodepy/np.create.services';
+import { INodePyJob } from '../executors/nodepy/np.interfaces';
 
 const jobdetail: string = 'jobdetail.store';
 
@@ -50,7 +51,7 @@ export const getservice: (req: IRequest) => Promise<any> = async (req: IRequest)
      *
      * @info the false is to ensure the code is not decoded
      */
-    const code: string = await npcodefileservices(body).catch(async (err: IError) => {
+    const nodepyJob: INodePyJob = await prepareNodePyServicesJob(body).catch(async (err: IError) => {
         err.trace = addTrace(err.trace, '@at $services (npcodefile)');
 
         return Promise.reject(err);
@@ -65,7 +66,7 @@ export const getservice: (req: IRequest) => Promise<any> = async (req: IRequest)
 
     try {
         void publisher.publish(channel, {
-            code: base64encode(code),
+            code: base64encode(nodepyJob.code),
             transid: req.transid,
             id,
         });
@@ -78,7 +79,7 @@ export const getservice: (req: IRequest) => Promise<any> = async (req: IRequest)
         const results: any = await servicesOutHandler({ id: body.id, out: err });
 
         utils.logInfo(`$getservice (getservice): publishing payload - job: ${body.id}`);
-        pubSub.publishUserPayload({
+        void pubSub.publishUserPayload({
             email: body.email,
             payload: { payload: [results] },
         });

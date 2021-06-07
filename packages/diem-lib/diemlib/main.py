@@ -71,6 +71,10 @@ def mq(data):
     config.__logcount += 1
 
     if config.__nats is False:
+        t = json.dumps(data)
+        if len(t) > 1024000:
+            data["out"] = "maximum payload of 1 MB exceeded"
+
         requests.post(url=config.__url, data=data)
     else:
         print(json.dumps(data))

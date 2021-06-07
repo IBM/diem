@@ -3,7 +3,7 @@
 import { ICrdConfig } from 'routes/spark-operator/base.crd';
 import { utils } from '@common/utils';
 import { Credentials } from '@common/cfenv';
-import { IModel, IConfigmapsModel } from '@models';
+import { IJobSchema, IConfigmapsModel } from '@models';
 import { addTrace } from '@functions';
 import { spark } from '../../spark-operator/spark.base';
 import { getConfigmap } from '../nodepy/python/python.code.handlers/handle.configmaps';
@@ -18,13 +18,13 @@ export interface ICos {
     bucket: string;
 }
 
-export const getCosCredentials: (doc: IModel) => Promise<Partial<ICos>> = async (
-    doc: IModel
+export const getCosCredentials: (doc: IJobSchema) => Promise<Partial<ICos>> = async (
+    doc: IJobSchema
 ): Promise<Partial<ICos>> => {
     let credentials: Partial<ICos> = {};
 
     const org: string = doc.project.org;
-    const id: string = doc._id.toString();
+    const id: string = doc._id;
 
     if (doc.job?.params?.files && typeof doc.job.params.files !== 'boolean' && doc.job.params.files.cos) {
         const cos: string = doc.job.params.files.cos;

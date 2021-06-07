@@ -1,10 +1,9 @@
 /* eslint-disable complexity */
 /* eslint-disable sonarjs/cognitive-complexity */
 
-import { IETLJob, EJobTypes, IJobSchema, ECodeLanguage } from '@models';
+import { EJobTypes, IJobSchema, ECodeLanguage } from '@models';
 import { base64encode, addTrace } from '@functions';
 import { INodePyJob } from '../np.interfaces';
-import { py_start_services } from './python.code/py';
 import { handleNodePyServicesCustomJob } from './python.handlers/handle.nodepy.services.custom';
 import { handleNodePyServicesSelect } from './python.handlers/handle.nodepy.services.select';
 import { handleNodePyServicesRestJob } from './python.handlers/handle.nodepy.services.rest';
@@ -18,6 +17,35 @@ import { handleCos } from './python.code.handlers/handle.cos';
 import { handleMail } from './python.code.handlers/handle.mail';
 import { handleValues, setValues } from './python.code.handlers/handle.values';
 import { handlePip } from './python.code.handlers/handle.pip';
+
+// ideal is to make this an env variable as it's the same path as spark in spark operator uses
+const filepath: string = '/tmp/spark-local-dir';
+
+const py_start_services: (doc: IJobSchema) => string = (doc: IJobSchema): string => String.raw`### py_start ###
+
+import time
+import os
+import diemlib.config as config
+from diemlib.main import *
+
+env = os.environ
+
+config.__id = '${doc._id.toString()}'
+config.__email = '${doc.job.email}'
+config.__jobid = '${doc.job.jobid}'
+config.__serviceid = '${doc.job.serviceid}'
+config.__name = '${doc.name}'
+config.__filepath = '${filepath}'
+config.__transid = '${doc.job.transid}'
+config.__org = '${doc.project.org}'
+config.__count = 0
+config.__starttime = time.time()
+config.__jobstart = UtcNow()
+config.__nats = True
+config.__appname = '${process.env.NAME}'
+
+###__CODE__###`;
+
 /**
  *
  *
@@ -25,12 +53,12 @@ import { handlePip } from './python.code.handlers/handle.pip';
  * @param {IETLJob} job
  * @returns {(Promise<INodePyJob | undefined>)}
  */
-export const pythonServicesHandler: (doc: IJobSchema, job: IETLJob) => Promise<INodePyJob | undefined> = async (
-    doc: IJobSchema,
-    job: IETLJob
-): Promise<INodePyJob | undefined> => {
+export const pythonServicesHandler: (doc: IJobSchema) => Promise<INodePyJob> = async (
+    doc: IJobSchema
+): Promise<INodePyJob> => {
     try {
-        let code: string = py_start_services(job);
+        let code: string = py_start_services(doc);
+        const id: string = doc._id.toString();
 
         /* These are transformations we need to do at the start */
         if (doc.job.params) {
@@ -80,15 +108,9 @@ export const pythonServicesHandler: (doc: IJobSchema, job: IETLJob) => Promise<I
         if (doc.type === EJobTypes.pycustom && doc.custom) {
             code = await handleNodePyServicesCustomJob(code, doc);
         } else if (doc.type === EJobTypes.pystmt && doc.stmt && doc.stmt.type) {
-            code = await handleNodePyServicesSelect(code, {
-                ...job,
-                stmt: doc.stmt,
-            });
+            code = await handleNodePyServicesSelect(code, doc);
         } else if (doc.type === EJobTypes.urlgetpost && doc.url) {
-            code = await handleNodePyServicesRestJob(code, {
-                ...job,
-                url: doc.url,
-            });
+            code = await handleNodePyServicesRestJob(code, doc);
         }
 
         /* These are transformations we need to do at the end , they are mostly string replace */
@@ -116,14 +138,17 @@ export const pythonServicesHandler: (doc: IJobSchema, job: IETLJob) => Promise<I
         code = handlePrintStatement(code);
 
         // we need to base64encode this file
-        const pubJob: INodePyJob = {
-            ...job,
-            params: job.params,
+
+        const nodepyJob: INodePyJob = {
+            ...doc.job,
+            id,
+            org: doc.project.org,
+            params: doc.job.params,
             language: ECodeLanguage.python,
             code: base64encode(code),
         };
 
-        return Promise.resolve(pubJob || undefined);
+        return Promise.resolve(nodepyJob);
     } catch (err) {
         err.trace = addTrace(err.trace, '@at $handle.nodepy (handleNodePy)');
         err.message = `No nodepy job could be created for doc: ${doc.name} - name: ${doc.name}`;

@@ -50,7 +50,7 @@ export const filedelete: (req: IRequest) => Promise<IRequest | any> = async (
         success: true /** just display a success message */,
     };
 
-    pubSub.publishUserPayload({
+    void pubSub.publishUserPayload({
         email: req.user.email,
         payload,
     });

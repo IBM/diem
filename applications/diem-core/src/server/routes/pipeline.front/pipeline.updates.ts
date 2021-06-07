@@ -1,6 +1,6 @@
 import { utils } from '@common/utils';
 import { IRequest, EStoreActions, IntPayload, IntServerPayload } from '@interfaces';
-import { DataModel, IJobBody, IJobDetail, IModel, IntPayloadValues } from '@models';
+import { DataModel, IJobBody, IJobDetail, IJobModel, IntPayloadValues } from '@models';
 import { addTrace } from '@functions';
 import { getGraphLinks } from '../job.front/job.grapht';
 
@@ -25,7 +25,7 @@ const actionPlUpdate: (body: IJobBody) => Promise<any> = async (body: IJobBody) 
 
     /* get the id here */
 
-    const pldoc: IModel | null = await DataModel.findOne({ _id: jobid }).exec();
+    const pldoc: IJobModel | null = await DataModel.findOne({ _id: jobid }).exec();
 
     if (pldoc === null || (pldoc && !pldoc.jobs)) {
         return Promise.reject({
@@ -90,7 +90,7 @@ const actionPlUpdate: (body: IJobBody) => Promise<any> = async (body: IJobBody) 
         return Promise.reject(err);
     });
 
-    const doc: IModel | null = await DataModel.findOne({ _id: id }).exec();
+    const doc: IJobModel | null = await DataModel.findOne({ _id: id }).exec();
 
     if (doc === null) {
         return Promise.reject({

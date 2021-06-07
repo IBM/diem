@@ -1,10 +1,13 @@
+import { IJobModel, IJob } from '@models';
+import { addTrace } from '@functions';
 import { utils } from '@common/utils';
-import { IModel, IJob, IJobResponse } from '@models';
+import { findOneAndUpdate } from './findone';
 
-export const finishPl: (job: IJobResponse, pldoc: IModel) => Promise<void> = async (
-    job: IJobResponse,
-    pldoc: IModel
-): Promise<void> => {
+export const finishPl: (pldoc: IJobModel) => Promise<void> = async (pldoc: IJobModel): Promise<void> => {
+    const pldoc_copy: any = { ...pldoc };
+
+    const id: string = pldoc._id.toString();
+
     pldoc.job.jobend = new Date();
 
     if (pldoc.job.jobstart) {
@@ -12,17 +15,17 @@ export const finishPl: (job: IJobResponse, pldoc: IModel) => Promise<void> = asy
     }
 
     const log: IJob = {
-        count: job.count ? Number(job.count) : 0,
-        email: job.email,
-        executor: job.executor,
+        count: pldoc.job.count ? Number(pldoc.job.count) : 0,
+        email: pldoc.job.email,
+        executor: pldoc.job.executor,
         jobend: pldoc.job.jobend,
-        jobid: job.jobid,
+        jobid: pldoc.job.jobid,
         jobstart: pldoc.job.jobstart,
         runby: pldoc.job.runby,
         runtime: pldoc.job.runtime,
         status: pldoc.job.status,
-        transid: job.transid,
-        name: job.name,
+        transid: pldoc.job.transid,
+        name: pldoc.name,
     };
 
     if (Array.isArray(pldoc.log)) {
@@ -34,13 +37,25 @@ export const finishPl: (job: IJobResponse, pldoc: IModel) => Promise<void> = asy
         pldoc.log = [log];
     }
 
-    pldoc.markModified('job');
+    await findOneAndUpdate(pldoc._id, {
+        $set: {
+            job: pldoc.toObject().job,
+            log: pldoc.toObject().log,
+        },
+    }).catch(async (err: any) => {
+        if (err?.name && err.name.toLowerCase().includes('versionerror')) {
+            err.VersionError = true;
 
-    await pldoc
-        .save()
-        .catch(async (err: any) =>
-            utils.logError(`$finishpl (finishPl): save failed - doc: ${pldoc._id.toString()}`, err)
-        );
+            utils.logRed(`$finishpipeline (finishPl) - save : version error, retrying - pl: ${id}`);
+
+            return finishPl(pldoc_copy);
+        } else {
+            err.trace = addTrace(err.trace, '@at $job.handler (jobHandler) - save');
+            err.id = id;
+
+            return Promise.reject(err);
+        }
+    });
 
     return Promise.resolve();
 };

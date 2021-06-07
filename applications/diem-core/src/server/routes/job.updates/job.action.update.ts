@@ -1,7 +1,7 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 import { parse } from 'yaml';
 import { EStoreActions, IntPayload, IntServerPayload, IntSharedAction } from '@interfaces';
-import { DataModel, EJobStatus, EJobTypes, ExecutorTypes, IJobBody, IJobSchema, IModel } from '@models';
+import { DataModel, EJobStatus, EJobTypes, ExecutorTypes, IJobBody, IJobSchema, IJobModel } from '@models';
 import { extract__, expand, addTrace } from '@functions';
 import { nextSchedule } from '../job.backend/job.functions';
 import { makePayload } from '../job.front/job.detail';
@@ -40,7 +40,7 @@ export const actionUpdate: (body: IJobBody) => Promise<any> = async (body: IJobB
 
     let isNew: boolean = false;
 
-    let doc: IModel | null;
+    let doc: IJobModel | null;
 
     if (!body.id) {
         doc = new DataModel();

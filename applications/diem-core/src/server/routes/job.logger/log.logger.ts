@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/quotes */
 import { utils } from '@common/utils';
-import { IModel, IJob, JobLogModel, IJobLog } from '@models';
+import { IJobModel, IJob, JobLogModel, IJobLog } from '@models';
 import { IError } from '@interfaces';
 import { addTrace } from '@functions';
 
-export const logLogger: (doc: IModel) => Promise<void> = async (doc: IModel): Promise<void> => {
+export const logLogger: (doc: IJobModel) => Promise<void> = async (doc: IJobModel): Promise<void> => {
     const id: string = doc._id.toString();
     const job: IJob = doc.toObject().job;
 
@@ -15,9 +15,11 @@ export const logLogger: (doc: IModel) => Promise<void> = async (doc: IModel): Pr
         name: doc.name,
         project: doc.project,
         type: doc.type,
+        jobend: doc.job.jobend || null,
+        jobstart: doc.job.jobstart || null,
     };
 
-    await JobLogModel.collection.insertOne(joblog).catch(async (err: IError) => {
+    void JobLogModel.collection.insertOne(joblog).catch(async (err: IError) => {
         err.trace = addTrace(err.trace, '@at $log.logger (jobLogger) - logLogger');
 
         return Promise.reject(err);

@@ -2,7 +2,7 @@ import { utils } from '@common/utils';
 import { IRequest, EStoreActions, IntPayload } from '@interfaces';
 import { format } from 'sql-formatter';
 import { publisher } from '@config/nats_publisher';
-import { DataModel, IJobBody, IModel, ITemplatesModel, TemplatesModel, ISocketPayload, EJobTypes } from '@models';
+import { DataModel, IJobBody, IJobModel, ITemplatesModel, TemplatesModel, ISocketPayload, EJobTypes } from '@models';
 import { addTrace } from '@functions';
 
 export const lookupTemplate: (id: string) => Promise<ITemplatesModel | null> = async (
@@ -16,7 +16,7 @@ const getTemplate: (body: IJobBody) => Promise<any> = async (body: IJobBody): Pr
     /* get the id here */
 
     // the calling document
-    const doc: IModel | null = await DataModel.findOne({ _id: body.id }).exec();
+    const doc: IJobModel | null = await DataModel.findOne({ _id: body.id }).exec();
 
     // the template
 
@@ -27,6 +27,8 @@ const getTemplate: (body: IJobBody) => Promise<any> = async (body: IJobBody): Pr
             trace: ['@at $job.template (jobdetail) - doc'],
         });
     }
+
+    const id: string = doc._id.toString();
 
     const templateid: string | undefined = body.templateid || doc.templateid;
 
@@ -97,7 +99,7 @@ const getTemplate: (body: IJobBody) => Promise<any> = async (body: IJobBody): Pr
                 key: 'id',
                 loaded: true,
                 store: detail_store /** not used as forcestore is enabled */,
-                targetid: doc.id,
+                targetid: id,
                 type: EStoreActions.UPD_STORE_FORM_RCD,
                 values: {
                     [templatename]: templ.name,
@@ -153,7 +155,7 @@ export const removetemplate: (req: IRequest) => Promise<any> = async (req: IRequ
 
     body.org = req.user.org;
 
-    const doc: IModel | null = await DataModel.findOne({ _id: body.id }).exec();
+    const doc: IJobModel | null = await DataModel.findOne({ _id: body.id }).exec();
 
     // the template
 
@@ -205,7 +207,7 @@ export const removetemplate: (req: IRequest) => Promise<any> = async (req: IRequ
                 key: 'id',
                 loaded: true,
                 store: detail_store /** not used as forcestore is enabled */,
-                targetid: doc.id,
+                targetid: doc._id.toString(),
                 type: EStoreActions.UPD_STORE_FORM_RCD,
                 values: {
                     [templatename]: null,

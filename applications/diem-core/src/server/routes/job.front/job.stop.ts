@@ -6,23 +6,23 @@ import { addTrace } from '@functions';
 import { deleteJob } from '../executors/spark/spark.job';
 
 const stopSparkJob: (job: IETLJob) => Promise<boolean | Error> = async (job: IETLJob): Promise<boolean | Error> => {
-    utils.logInfo(`$job.actions (jobStop): spark delete request - job: ${job.id}`, job.transid);
+    utils.logInfo(`$job.stop (jobStop): spark delete request - job: ${job.id}`, job.transid);
 
     try {
         await deleteJob(job.id);
 
-        utils.logInfo(`$job.actions (jobStop): sparkjob deleted - job ${job.id}`, job.transid);
+        utils.logInfo(`$job.stop (jobStop): sparkjob deleted - job ${job.id}`, job.transid);
     } catch (err) {
         err.message = err.message ? err.message : err;
         err.name = 'job';
         err.trace = addTrace(err.trace, '@at $job.stop (stopSparkJob)');
 
-        void utils.logError(`$job.actions (jobStop): delete failed - job: ${job.id}`, err);
+        void utils.logError(`$job.stop (jobStop): delete failed - job: ${job.id}`, err);
 
         job.status = EJobStatus.failed;
     }
 
-    await pubSub.publish({
+    void pubSub.publish({
         ...job,
         count: null,
         jobend: new Date(),
@@ -36,7 +36,7 @@ const stopSparkJob: (job: IETLJob) => Promise<boolean | Error> = async (job: IET
 };
 
 export const stopNodePyJob: (job: IETLJob) => Promise<void> = async (job: IETLJob): Promise<void> => {
-    utils.logInfo(`$job.actions (jobStop): NodePy stop request - job: ${job.id}`, job.transid);
+    utils.logInfo(`$job.stop (jobStop): NodePy stop request - job: ${job.id}`, job.transid);
 
     const response_job: IJobResponse = {
         ...job,
@@ -52,26 +52,7 @@ export const stopNodePyJob: (job: IETLJob) => Promise<void> = async (job: IETLJo
     void publisher.publish('global.nodepy.stop', response_job);
 
     // we must assume nodepy cleans it up
-    await pubSub.publish(response_job);
-};
-
-export const stopPlJob: (job: IETLJob) => Promise<boolean | Error> = async (job: IETLJob): Promise<boolean | Error> => {
-    utils.logInfo(
-        `$job.actions (stopPlJob): publishing stop requestt - pl: ${job.jobid} - job: ${job.id}`,
-        job.transid
-    );
-
-    await pubSub.publish({
-        ...job,
-        count: null,
-        jobend: null,
-        jobstart: new Date(),
-        runtime: null,
-        status: EJobStatus.stopped,
-        transid: job.transid,
-    });
-
-    return Promise.resolve(true);
+    void pubSub.publish(response_job);
 };
 
 export const jobStop: (job: IETLJob) => Promise<boolean | Error> = async (job: IETLJob): Promise<boolean | Error> => {

@@ -93,7 +93,7 @@ export const webhookupdate: (req: IRequest) => Promise<IRequest | any> = async (
                 deleteicon: `${FaIcons.deleteicon}`,
                 description: doc.description,
                 editicon: `${FaIcons.editicon}`,
-                id: doc._id.toString(),
+                id,
                 idtype: doc.idtype,
                 name: doc.name,
                 org: doc.project.org,

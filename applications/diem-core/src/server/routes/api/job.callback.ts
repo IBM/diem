@@ -22,7 +22,7 @@ export const spark_callback: (req: IRequest) => Promise<any> = async (req: IRequ
     try {
         utils.logInfo(`$job.callback (spark_callback): incoming payload - job: ${body.id}`, body.transid);
 
-        await pubSub.publish(body);
+        void pubSub.publish(body);
 
         return Promise.resolve(true);
     } catch (err) {

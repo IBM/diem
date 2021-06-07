@@ -1,13 +1,13 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 import { utils } from '@common/utils';
-import { EJobStatus, IJobResponse, IModel } from '@models';
+import { EJobStatus, IJobResponse, IJobModel } from '@models';
 import { findOne } from './findone';
 
 export const checkPlCompleted: (job: IJobResponse, plid: string) => Promise<[boolean, boolean, boolean]> = async (
     job: IJobResponse,
     plid: string
 ): Promise<[boolean, boolean, boolean]> => {
-    const pldoc: IModel | null = await findOne(plid);
+    const pldoc: IJobModel | null = await findOne(plid);
 
     if (pldoc === null) {
         return Promise.reject({
@@ -26,6 +26,7 @@ export const checkPlCompleted: (job: IJobResponse, plid: string) => Promise<[boo
         return Promise.resolve([true, true, true]);
     }
 
+    // incomplete = true if some jobs are still running
     const incomplete: boolean = Object.values(pldoc.jobs).some((obj: any) =>
         [EJobStatus.submitted, EJobStatus.running].includes(obj.status)
     );

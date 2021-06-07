@@ -1,6 +1,6 @@
 import { utils } from '@common/utils';
 import { IRequest, EStoreActions, IntPayload, IntServerPayload } from '@interfaces';
-import { DataModel, IModel, IntPayloadValues } from '@models';
+import { DataModel, IJobModel, IntPayloadValues } from '@models';
 import { addTrace } from '@functions';
 import { getGraphLinks } from '../job.front/job.grapht';
 
@@ -16,8 +16,8 @@ interface IDependencyBody {
     reset?: boolean; // optional is true in case we have to reset all jobs
 }
 
-export const makemakePlPayload: (doc: IModel) => Promise<IntServerPayload> = async (
-    doc: IModel
+export const makemakePlPayload: (doc: IJobModel) => Promise<IntServerPayload> = async (
+    doc: IJobModel
 ): Promise<IntServerPayload> => {
     doc.markModified('jobs');
 
@@ -30,7 +30,7 @@ export const makemakePlPayload: (doc: IModel) => Promise<IntServerPayload> = asy
     const actions: any[] = [
         {
             target: 'jobdetail.general.form',
-            targetid: doc.id,
+            targetid: doc._id.toString(),
             type: 'read',
         },
     ];
@@ -46,7 +46,7 @@ export const makemakePlPayload: (doc: IModel) => Promise<IntServerPayload> = asy
             key: 'id',
             loaded: true,
             store: 'jobdetail.store' /** not used as forcestore is enabled */,
-            targetid: doc.id,
+            targetid: doc._id.toString(),
             type: EStoreActions.UPD_STORE_FORM_RCD,
             values: {
                 graph: DBJobs[0],
@@ -74,7 +74,7 @@ const pipelineDependencyUpdate: (body: IDependencyBody) => Promise<IntServerPayl
 
     /* get the id here */
 
-    const doc: IModel | null = await DataModel.findOne({ _id: jobid }).exec();
+    const doc: IJobModel | null = await DataModel.findOne({ _id: jobid }).exec();
 
     if (doc === null) {
         return Promise.reject({

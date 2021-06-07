@@ -1,15 +1,15 @@
 import moment from 'moment';
 import { utils } from '@common/utils';
-import { DataModel, IModel } from '@models';
+import { DataModel, IJobModel } from '@models';
 import { jobStart } from '../routes/job.backend/job.start';
 
-const getdocs: (t: number) => Promise<IModel[]> = async (t: number): Promise<IModel[]> => {
+const getdocs: (t: number) => Promise<IJobModel[]> = async (t: number): Promise<IJobModel[]> => {
     const query: any = DataModel.find({
         'schedule.enabled': true,
         'schedule.nextExecution': { $lte: t },
     });
 
-    const docs: IModel[] = await query;
+    const docs: IJobModel[] = await query;
 
     return Promise.resolve(docs);
 };
@@ -20,9 +20,9 @@ export const getQueue: () => void = async (): Promise<void> => {
     const rd: any = m.startOf('minute');
     const t: number = rd.toDate().getTime();
 
-    const docs: IModel[] = await getdocs(t);
+    const docs: IJobModel[] = await getdocs(t);
 
-    docs.forEach(async (doc: IModel) => {
+    docs.forEach(async (doc: IJobModel) => {
         /** there are 3 places manual, cron and api that can trigger a job */
 
         const id: string = doc._id.toString();

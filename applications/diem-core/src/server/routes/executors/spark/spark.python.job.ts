@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import { utils } from '@common/utils';
-import { EJobStatus, IJobResponse, IJobSchema, IModel } from '@models';
+import { EJobStatus, IJobResponse, IJobSchema } from '@models';
 import { pubSub } from '@config/pubsub';
 import { addTrace } from '@functions';
 import { ICapacity } from '@interfaces';
@@ -13,7 +13,9 @@ import { addVolume, getCosCredentials, ICos } from './spark.job';
 const stocator: string = '/opt/cos/stocator-1.1.3.jar';
 const encoder: string = '-Ddb2.jcc.charsetDecoderEncoder=3';
 
-export const createSparkPythonJob: (doc: IModel) => Promise<ICapacity> = async (doc: IModel): Promise<ICapacity> => {
+export const createSparkPythonJob: (doc: IJobSchema) => Promise<ICapacity> = async (
+    doc: IJobSchema
+): Promise<ICapacity> => {
     const hrstart: [number, number] = process.hrtime();
 
     let crdjob: ICrdConfig = crdconfig();
@@ -44,12 +46,13 @@ export const createSparkPythonJob: (doc: IModel) => Promise<ICapacity> = async (
     // environmental variables
     crdjob.spec.driver.envVars = {
         EMAIL: doc.job.email,
-        NAME: doc.job.name,
+        NAME: doc.name,
         ORG: org,
         ID: id,
         TRANSID: doc.job.transid,
         JOBID: doc.job.jobid ? doc.job.jobid : id,
         SPARK__CALLBACK_URL: sparkCredentials.callback_url,
+        APPNAME: process.env.NAME,
     };
 
     if (doc.job.params?.files) {
@@ -100,8 +103,9 @@ export const createSparkPythonJob: (doc: IModel) => Promise<ICapacity> = async (
         void utils.emit('error', err);
 
         const pjob: IJobResponse = {
-            ...doc.toObject().job,
+            ...doc.job,
             id,
+            name: doc.name,
             count: null,
             jobend: null,
             jobstart: new Date(),
@@ -139,6 +143,7 @@ export const publishSparkJob: (doc: IJobSchema) => Promise<void> = async (doc: I
     void pubSub.publish({
         ...doc.job,
         id: doc._id.toString(),
+        name: doc.name,
         count: null,
         jobend: null,
         jobstart: new Date(),

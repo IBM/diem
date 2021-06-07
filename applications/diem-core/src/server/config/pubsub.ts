@@ -16,30 +16,38 @@ export class Server {
     public publish: (job: IJobResponse) => Promise<void> = async (job: IJobResponse): Promise<void> => {
         try {
             // setTimeout(async () => {
-            const pl: ISocketPayload | void = await jobHandler(job);
+
+            utils.logInfo(`$pubsub (publish): passing to jobHandler - job: ${job.id}`);
+
+            const payload: ISocketPayload | false = await jobHandler(job);
+
+            if (payload === false) {
+                utils.logInfo(`$pubsub (publish): not going to publish - job: ${job.id}`);
+
+                return;
+            }
 
             utils.logInfo(`$pubsub (publish): publishing payload - job: ${job.id}`);
 
-            await publisher.publish('global.core.users', pl);
+            await publisher.publish('global.core.users', payload);
 
-            return Promise.resolve();
             // }, 1);
         } catch (err) {
             err.trace = addTrace(err.trace, '@at $pubsub (publish)');
 
             await utils.logError(`$pubsub (publish): error - job: ${job.id}`, err);
 
-            return Promise.reject(err);
+            // return Promise.reject(err);
         }
     };
 
     public publishService: (job: IJobResponse) => Promise<void> = async (job: IJobResponse): Promise<void> => {
         try {
-            const results: ISocketPayload | void = await servicesOutHandler(job);
+            const results: ISocketPayload = await servicesOutHandler(job);
 
             utils.logInfo(`$pubsub (publishservice): publishing payload - job: ${job.id}`);
 
-            pubSub.publishUserPayload({
+            void pubSub.publishUserPayload({
                 email: job.email,
                 payload: {
                     org: job.org,
@@ -50,11 +58,11 @@ export class Server {
             return Promise.resolve();
             // }, 1);
         } catch (err) {
-            err.trace = addTrace(err.trace, '@at $pubsub (publish)');
+            err.trace = addTrace(err.trace, '@at $pubsub (publishService)');
 
             await utils.logError(`$pubsub (publish): error - job: ${job.id}`, err);
 
-            return Promise.reject(err);
+            void Promise.reject();
         }
     };
 

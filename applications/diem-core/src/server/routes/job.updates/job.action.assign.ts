@@ -1,5 +1,5 @@
 import { EStoreActions, IntPayload, IntServerPayload, IntSharedAction } from '@interfaces';
-import { DataModel, IJobBody, IModel } from '@models';
+import { DataModel, IJobBody, IJobModel } from '@models';
 import { addTrace } from '@functions';
 import { makePayload } from '../job.front/job.detail';
 
@@ -9,7 +9,7 @@ const update_request: string = 'Update Request';
 export const actionAssign: (body: IJobBody) => Promise<any> = async (body: IJobBody) => {
     /* get the id here */
 
-    const doc: IModel | null = await DataModel.findOne({ _id: body.id }).exec();
+    const doc: IJobModel | null = await DataModel.findOne({ _id: body.id }).exec();
 
     if (doc === null) {
         return Promise.reject({
@@ -44,7 +44,7 @@ export const actionAssign: (body: IJobBody) => Promise<any> = async (body: IJobB
     sharedActions = [
         {
             target: 'jobdetail.general.form',
-            targetid: doc.id,
+            targetid: doc._id.toString(),
             type: 'read',
         },
     ];
@@ -55,7 +55,7 @@ export const actionAssign: (body: IJobBody) => Promise<any> = async (body: IJobB
                 key: 'id',
                 loaded: true,
                 store: detail_store /** not used as forcestore is enabled */,
-                targetid: doc.id,
+                targetid: doc._id.toString(),
                 type: EStoreActions.UPD_STORE_FORM_RCD,
                 values: await makePayload(docs.toObject()),
             },

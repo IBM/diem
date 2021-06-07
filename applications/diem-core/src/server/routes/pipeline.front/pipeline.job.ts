@@ -1,6 +1,6 @@
 import { utils } from '@common/utils';
 import { IRequest, IntServerPayload } from '@interfaces';
-import { DataModel, EJobStatus, IJobBody, IJobResponse, IModel } from '@models';
+import { DataModel, EJobStatus, IJobBody, IJobResponse, IJobModel } from '@models';
 import { addTrace } from '@functions';
 import { makemakePlPayload } from '../pipeline.backend/pipeline.dependency';
 
@@ -17,7 +17,7 @@ const actionUpdate: (body: IJobBody) => Promise<any> = async (body: IJobBody) =>
 
     /* get the id here */
 
-    const doc: IModel | null = await DataModel.findOne({ _id: pipelineid }).exec();
+    const doc: IJobModel | null = await DataModel.findOne({ _id: pipelineid }).exec();
 
     if (doc === null) {
         return Promise.reject({

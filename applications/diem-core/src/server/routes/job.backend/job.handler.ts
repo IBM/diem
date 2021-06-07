@@ -4,11 +4,12 @@
 
 import { EStoreActions, IntPayload } from '@interfaces';
 import { utils } from '@common/utils';
-import { DataModel, EJobTypes, IJobResponse, IModel, EJobStatus, ISocketPayload, ExecutorTypes } from '@models';
+import { DataModel, EJobTypes, IJobResponse, IJobModel, EJobStatus, ISocketPayload, ExecutorTypes } from '@models';
 import { addTrace } from '@functions';
 import { pipelineHandler } from '../pipeline.backend/pipeline.handler';
+import { findOneAndUpdate } from '../pipeline.backend/pipeline.helpers/helpers';
 import { PayloadValues } from './job.functions';
-import { finishJob, getPySparkJobLog } from './job.finish';
+import { jobFinish, getPySparkJobLog } from './job.finish';
 
 interface IOut {
     out: string;
@@ -18,7 +19,7 @@ interface IOut {
 
 const jobdetail: string = 'jobdetail.store';
 
-const runTime: (doc: IModel) => number = (doc: IModel): number => {
+const runTime: (doc: IJobModel) => number = (doc: IJobModel): number => {
     const je: Date | undefined = doc.job.jobend ? new Date(doc.job.jobend) : new Date();
 
     const js: Date | undefined = doc.job.jobstart ? new Date(doc.job.jobstart) : new Date();
@@ -26,36 +27,50 @@ const runTime: (doc: IModel) => number = (doc: IModel): number => {
     return je && js ? Math.round(Math.abs(je.getTime() - js.getTime()) / 1000) : 0;
 };
 
-export const updateOne: (doc: IModel, obj: any) => any = async (doc: IModel, obj: any) =>
+export const updateOne: (doc: IJobModel, obj: any) => any = async (doc: IJobModel, obj: any) =>
     Promise.resolve(await doc.updateOne(obj));
 
-export const jobOutHandler: (doc: IModel, job: IJobResponse) => Promise<ISocketPayload> = async (
-    doc: IModel,
+export const jobOutHandler: (doc: IJobModel, job: IJobResponse) => Promise<ISocketPayload> = async (
+    doc: IJobModel,
     job: IJobResponse
 ): Promise<ISocketPayload> => {
-    const id: string = doc._id.toString();
+    const job_copy: IJobResponse = { ...job };
+
     const obj: IOut = {
         out: job.out,
         special: job.special,
     };
 
+    let insert;
+
     if (job.outl) {
-        doc.out = doc.out.concat(job.out);
-    } else if (Array.isArray(doc.out)) {
-        doc.out.push(obj);
+        insert = {
+            $push: { out: { $each: job.out } },
+        };
     } else {
-        doc.out = [obj];
+        insert = {
+            $push: { out: obj },
+        };
     }
 
-    await doc.save().catch(async (err: any) => {
-        err.trace = addTrace(err.trace, '@at $job.handler (jobHandler)');
+    await findOneAndUpdate(doc._id, insert).catch(async (err: any) => {
+        if (err?.name && err.name.toLowerCase().includes('versionerror')) {
+            err.VersionError = true;
 
-        err.id = id;
+            utils.logRed(
+                `$job.handler (jobHandler) - out: version error, retrying - pl: ${job.jobid} - job: ${job.id}`
+            );
 
-        void utils.emit('error', err);
+            return jobHandler(job_copy);
+        } else {
+            err.trace = addTrace(err.trace, '@at $job.handler (jobHandler) - findOne');
+            err.id = doc._id.toString();
+
+            return Promise.reject(err);
+        }
     });
 
-    utils.logInfo(`$job.handler (jobHandler): out payload - job: ${job.id}`, job.transid);
+    utils.logInfo(`$job.handler (jobHandler): adding out - job: ${job.id} - status: ${doc.job.status}`, job.transid);
 
     const load: ISocketPayload = {
         org: doc.project.org,
@@ -79,9 +94,9 @@ export const jobOutHandler: (doc: IModel, job: IJobResponse) => Promise<ISocketP
     return Promise.resolve(load);
 };
 
-const jobDocOutHandler: (payload: IntPayload[], doc: IModel, job: IJobResponse) => Promise<IntPayload[]> = async (
+const jobDocOutHandler: (payload: IntPayload[], doc: IJobModel, job: IJobResponse) => Promise<IntPayload[]> = async (
     payload: IntPayload[],
-    doc: IModel,
+    doc: IJobModel,
     job: IJobResponse
 ): Promise<IntPayload[]> => {
     const obj: IOut = {
@@ -97,7 +112,7 @@ const jobDocOutHandler: (payload: IntPayload[], doc: IModel, job: IJobResponse) 
         doc.out = [obj];
     }
 
-    utils.logInfo(`$job.handler (jobDocOutHandler): out payload - job: ${job.id}`, job.transid);
+    utils.logInfo(`$job.handler (jobDocOutHandler): adding out - job: ${job.id} - status: ${job.status}`, job.transid);
 
     payload.push({
         loaded: true,
@@ -122,40 +137,51 @@ const jobDocOutHandler: (payload: IntPayload[], doc: IModel, job: IJobResponse) 
  * @param {*} job
  * @returns {Promise<IjobHandler>}
  */
-export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async (
+export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload | false> = async (
     job: IJobResponse
-): Promise<ISocketPayload> => {
+): Promise<ISocketPayload | false> => {
     /**
      * @info Job can be a pipeline or a regular job
      *
      * if it's a pipeline we need to do some other pipeline actions
      */
 
+    // make a copy of the job to reuse it in case of failure
+    const job_copy: IJobResponse = { ...job };
+
+    // the object that will be used to insert
+    let insert: any = { $set: {} };
+
+    const id: string = job.id;
+    let doc: IJobModel | null = await DataModel.findOne({ _id: id })
+        .exec()
+        .catch(async (err: any) => {
+            err.trace = addTrace(err.trace, '@at $job.handler (jobHandler) - findOne');
+            err.id = id;
+
+            return Promise.reject(err);
+        });
+
+    if (doc === null) {
+        return Promise.reject({
+            id,
+            message: 'The document could not be found',
+            trace: ['@at $job.handler (jobHandler) - null doc'],
+        });
+    }
+
+    let payload: IntPayload[] = [];
+
     try {
-        const id: string = job.id;
-        const doc: IModel | null = await DataModel.findOne({ _id: id })
-            .exec()
-            .catch(async (err: any) => {
-                err.trace = addTrace(err.trace, '@at $job.handler (jobHandler) - findOne');
+        // if it's just an out message and it's not the end then handle it as just an out
+
+        if (job.out !== undefined && !job.status) {
+            const load: any = await jobOutHandler(doc, job).catch(async (err: any) => {
+                err.trace = addTrace(err.trace, '@at $job.handler (jobHandler) - jobOutHandler');
                 err.id = id;
 
                 return Promise.reject(err);
             });
-
-        if (doc === null) {
-            return Promise.reject({
-                id: job.id,
-                message: 'The document could not be found',
-                trace: ['@at $job.handler (jobHandler)'],
-            });
-        }
-
-        let payload: IntPayload[] = [];
-
-        // if it's just an out message and it's not the end then handle it as just an out
-
-        if (job.out !== undefined && !job.status) {
-            const load: any = await jobOutHandler(doc, job);
 
             return Promise.resolve(load);
         } else if (job.out) {
@@ -198,11 +224,6 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
             values: rest,
         });
 
-        // get the log of the sparkjob in case of an error
-        if (doc.job.error && doc.job.executor === ExecutorTypes.pyspark) {
-            await getPySparkJobLog(doc);
-        }
-
         // can i remove this
         const isActivePl: boolean = isPl && doc.jobs && Object.keys(doc.jobs).length > 0; // has pipeline items
         if (isActivePl && ['Running', 'Failed', 'Completed'].includes(doc.job.status)) {
@@ -215,17 +236,54 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
 
         // adding the job log
         if (['Failed', 'Stopped', 'Completed'].includes(job.status) && !isPl) {
-            await finishJob(doc);
+            if (!doc.job.audit) {
+                utils.logInfo(
+                    `$job.handler (jobHandler): no audit found - stopping here  - status: ${job.status} - job: ${job.id}`,
+                    job.transid
+                );
 
-            // we don't now need the job audit anymore in the job itself
-            doc.job.audit = undefined;
-            doc.markModified('job.audit');
+                return Promise.resolve(false);
+            }
+
+            // get the log of the sparkjob in case of an error
+            if (doc.job.error && doc.job.executor === ExecutorTypes.pyspark) {
+                utils.logInfo(`$job.handler (getPySparkJobLog): passing to getPySparkJobLog - id: ${id}`);
+
+                doc = await getPySparkJobLog(doc);
+            }
+
+            utils.logInfo(
+                `$job.handler (jobHandler): passing to jobFinish - status: ${job.status} - job: ${job.id}`,
+                job.transid
+            );
+            const t = await jobFinish(doc);
+            doc = t[0];
+            insert = t[1];
         }
+
+        insert.$set.job = doc.toObject().job;
+
+        await findOneAndUpdate(doc._id, insert).catch(async (err: any) => {
+            if (err?.name && err.name.toLowerCase().includes('versionerror')) {
+                err.VersionError = true;
+
+                utils.logRed(
+                    `$job.handler (jobHandler) - save : version error, retrying - pl: ${job.jobid} - job: ${job.id}`
+                );
+
+                return jobHandler(job_copy);
+            } else {
+                err.trace = addTrace(err.trace, '@at $job.handler (jobHandler) - save');
+                err.id = id;
+
+                return Promise.reject(err);
+            }
+        });
 
         // if it's a regular job , make sure that the stop is really stopped, so this does not include pipelines
         if (job.jobid !== id) {
             utils.logInfo(
-                `$job.handler (jobHandler): handle pipeline - pl: ${job.jobid} - job: ${id} - job status: ${job.status}`,
+                `$job.handler (jobHandler): passing to pipelineHandler - pl: ${job.jobid} - job: ${id} - job status: ${job.status}`,
                 job.transid
             );
 
@@ -262,12 +320,6 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
             values,
         });
 
-        // here we save the job as no more values of the document will be changed
-        await doc.save().catch(async (err: any) => {
-            err.caller = '$job.handler';
-            void utils.logError(`$job.handler (jobHandler): save failed - doc: ${id}`, err);
-        });
-
         const load: ISocketPayload = {
             org: doc.project.org,
             payload,
@@ -279,9 +331,14 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload> = async 
             load.success = job.status === EJobStatus.failed ? false : true; /** just display a success message */
         }
 
+        utils.logInfo(
+            `$job.handler (jobHandler): passing back to publish - job: ${job.id} - status: ${job.status}`,
+            job.transid
+        );
+
         return Promise.resolve(load);
     } catch (err) {
-        err.trace = addTrace(err.trace, '@at $job.handler (jobHandler)');
+        err.trace = addTrace(err.trace, '@at $job.handler (jobHandler) - try catch');
 
         return Promise.reject(err);
     }

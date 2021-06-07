@@ -29,9 +29,9 @@ export const handleConfigmaps: (code: string, org: string, configmaps: string | 
 
             if (doc && doc.configmap) {
                 const str: string = String.raw`${json(doc.configmap)}`;
-                const code_str: string = `${doc.selector} = ${str}\n######`;
+                const code_str: string = `${doc.selector} = ${str}\n###__CODE__###`;
 
-                code = code.replace('######', code_str);
+                code = code.replace('###__CODE__###', code_str);
             }
         }
 
@@ -41,9 +41,9 @@ export const handleConfigmaps: (code: string, org: string, configmaps: string | 
 
         if (doc && doc.configmap) {
             const str: string = String.raw`${json(doc.configmap)}`;
-            const code_str: string = `${doc.selector} = ${str}\n######`;
+            const code_str: string = `${doc.selector} = ${str}\n###__CODE__###`;
 
-            code = code.replace('######', code_str);
+            code = code.replace('###__CODE__###', code_str);
 
             return Promise.resolve(code);
         }

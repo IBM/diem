@@ -94,8 +94,7 @@
                 "title": "Administration",
                 "items": [
                     { "title": "Profiles", "name": "profiles", "location": "administration/profiles.md" },
-                    { "title": "Organizations", "name": "orgs", "location": "administration/orgs.md" },
-                    { "title": "SSO", "name": "sso", "location": "administration/sso.md" }
+                    { "title": "Organizations", "name": "orgs", "location": "administration/orgs.md" }
                 ]
             }
         },
@@ -128,8 +127,7 @@
             }
         },
         { "title": "divider" },
-        { "title": "Diem Application", "location": "//diem.mybluemix.net/etl-mgr/home" },
-        { "title": "Github", "location": "//github.ibm.com/CIO-SETS/diem" },
+        { "title": "Github", "location": "//github.com/IBM/DIEM" },
         { "title": "divider" },
 
         {

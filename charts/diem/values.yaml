@@ -52,7 +52,7 @@ core:
     # -- image location
     image: quay.io/diem/core
     # -- image version
-    version: 1.1.0
+    version: 1.2.0
     # -- number of replicas
     replicas: 1
     # -- port to listen
@@ -136,7 +136,7 @@ nodepy:
   port: 80
   replicas: 1
   tier: backend
-  version: 1.0.6
+  version: 1.0.7
 
 operator:
   # -- name of the deployment
@@ -150,7 +150,7 @@ operator:
   port: 80
   replicas: 1
   tier: backend
-  version: 1.0.3
+  version: 1.0.4
 
 ## enable the spark Operator
 ## for more details see
@@ -179,7 +179,7 @@ help:
   deployment:
     replicas: 1
     image: quay.io/diem/help
-    version: 1.1.0
+    version: 1.1.1
     path: /diem-help
     port: 80
   config:
@@ -270,7 +270,7 @@ nats:
 
   ## nats config settings
   nats:
-    image: nats:2.2.4-alpine3.13
+    image: nats:2.2.6-alpine3.13
     pullPolicy: IfNotPresent
 
   ## Nats cluster settings

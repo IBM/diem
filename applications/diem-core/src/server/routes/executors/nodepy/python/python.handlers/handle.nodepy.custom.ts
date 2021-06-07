@@ -7,7 +7,7 @@ const py_end: () => string = (): string => String.raw`
 time.sleep(0.1)
 endjob()
 
-######`;
+###__CODE__###`;
 
 export const handleNodePyCustomJob: (code: string, doc: IJobSchema) => Promise<string> = async (
     code: string,
@@ -18,11 +18,11 @@ export const handleNodePyCustomJob: (code: string, doc: IJobSchema) => Promise<s
     }
 
     try {
-        const custom: string = `### custom ###\n${doc.custom.code}\n\n######`;
+        const custom: string = `### custom ###\n${doc.custom.code}\n\n###__CODE__###`;
 
-        code = code.replace('######', custom);
+        code = code.replace('###__CODE__###', custom);
 
-        code = code.replace('######', py_end());
+        code = code.replace('###__CODE__###', py_end());
 
         return Promise.resolve(code);
     } catch (err) {

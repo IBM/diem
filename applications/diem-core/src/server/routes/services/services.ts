@@ -3,8 +3,9 @@
 import { utils } from '@common/utils';
 import { IRequest, IError, INatsPayload } from '@interfaces';
 import { publisher } from '@config/nats_publisher';
-import { base64encode, addTrace } from '@functions';
-import { npcodefileservices, IServices } from '../executors/nodepy/np.codefile.services';
+import { addTrace } from '@functions';
+import { prepareNodePyServicesJob, IServices } from '../executors/nodepy/np.create.services';
+import { INodePyJob } from '../executors/nodepy/np.interfaces';
 
 interface IServicesReturn {
     message: string;
@@ -28,7 +29,7 @@ export const services: (req: IRequest) => Promise<IServicesReturn> = async (
      *
      * @info the false is to ensure the code is not decoded
      */
-    const code: string = await npcodefileservices(body).catch(async (err: IError) => {
+    const nodepyJob: INodePyJob = await prepareNodePyServicesJob(body).catch(async (err: IError) => {
         err.trace = addTrace(err.trace, '@at $services (services)');
 
         return Promise.reject(err);
@@ -37,10 +38,8 @@ export const services: (req: IRequest) => Promise<IServicesReturn> = async (
     // Post the Job
     const result: INatsPayload | undefined = await publisher
         .request('nodepy.services.start', {
-            code: base64encode(code),
-            transid: req.transid,
-            id: body.id,
-            params: JSON.stringify(body.params),
+            ...nodepyJob,
+            params: JSON.stringify(nodepyJob.params), // pass the params seperately (stringify)
         })
         .catch(async (err: IError) => {
             err.trace = addTrace(err.trace, '@at $services (service) -  request');
@@ -61,5 +60,22 @@ export const services: (req: IRequest) => Promise<IServicesReturn> = async (
 
     utils.logInfo(`$services (services) - job ${body.id}`, req.transid, process.hrtime(hrstart));
 
-    return Promise.resolve(result?.data);
+    let payload: any = {};
+
+    if (!result?.data) {
+        payload = {
+            message: 'no data',
+        };
+    } else {
+        payload = result.data;
+        if (result.data.out) {
+            try {
+                payload.out = JSON.parse(result.data.out);
+            } catch (err) {
+                // continue
+            }
+        }
+    }
+
+    return Promise.resolve(payload);
 };
