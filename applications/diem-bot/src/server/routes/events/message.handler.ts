@@ -88,15 +88,13 @@ export const messageHandler = async (event: any): Promise<any> => {
 
     //console.info('body', body);
 
-    if (!body.component) {
-        return void otherMethod(event, body);
-    }
-
-    if (components[body.component]) {
+    if (components[body.component] && body.component in components) {
         utils.logInfo(`$event.message (messageHandler): component: ${body.id}`);
         components[body.component](event, body);
 
         return;
+    } else {
+        return void otherMethod(event, body);
     }
 };
 

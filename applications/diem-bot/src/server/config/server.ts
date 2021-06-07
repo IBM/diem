@@ -104,7 +104,7 @@ export class Server {
                 return res.status(400).send();
             })
             .all('*', limiter, (req: IRequest, res: IResponse) => {
-                console.info(req.url, req.body, req.method, this.pack.apppath);
+                utils.logInfo(`@server.ts (.all) - other request - url - ${req.url} - method: ${req.method}`);
                 res.status(404).json({ message: 'This page cannot be found' });
             });
 
