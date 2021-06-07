@@ -3,11 +3,15 @@ import axios from 'axios';
 import { IArgsBody } from '@interfaces';
 import { api } from '../routes';
 
-const services_url: string = 'https://bizops.ibm.com/etl-mgr/api/services';
+const services_url: string | undefined = process.env.services_url;
 
 const token: string | undefined = process.env.diem_token;
 
 export const serviceHandler = async (payload: any, body: IArgsBody): Promise<any> => {
+    if (!services_url) {
+        return;
+    }
+
     const result = await axios.post(services_url, body, {
         headers: { 'x-api-key': token },
     });

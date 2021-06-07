@@ -22,6 +22,8 @@ diem-help:
   - applications/diem-help/**/*
 diem-operator:
   - applications/diem-operator/**/*
+diem-slack-bot:
+  - applications/diem-slack-bot/**/*
 workflow:
   - .github/**/*
 repo:

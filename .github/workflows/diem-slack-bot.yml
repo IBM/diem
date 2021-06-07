@@ -1,0 +1,60 @@
+# This is a basic workflow to help you get started with Actions
+
+name: "CI diem-slack-bot"
+
+# Controls when the action will run.
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [main]
+    paths:
+      - "applications/diem-slack-bot/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "applications/diem-slack-bot/**"
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: applications/diem-slack-bot
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: get-npm-version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@master
+        with:
+          path: applications/diem-slack-bot
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+
+      - run: npm ci
+      - run: npm run eslint --if-present
+      - run: npm run build --if-present
+
+      - name: Build the Docker image
+        run: docker build . --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') --file docker/Dockerfile --tag quay.io/diem/slack-bot:${{ steps.package-version.outputs.current-version}}
+
+      - name: Login to quay.io
+        run: echo "${{secrets.DOCKER_QUAY}}" | docker login -u="diem+ibm_deploy_robot" --password-stdin quay.io
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+      - name: Push the Docker image
+        run: docker push quay.io/diem/slack-bot:${{ steps.package-version.outputs.current-version}}
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'

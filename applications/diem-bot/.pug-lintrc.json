@@ -1,9 +1,0 @@
-{
-  "disallowIdLiterals": null,
-  "requireSpaceAfterCodeOperator": true,
-  "disallowIdAttributeWithStaticValue": true,
-  "disallowMultipleLineBreaks": true,
-  "requireClassLiteralsBeforeAttributes": true,
-  "requireClassLiteralsBeforeIdLiterals": true,
-  "validateDivTags": true
-}
