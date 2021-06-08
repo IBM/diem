@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/python-39
+FROM registry.access.redhat.com/ubi8/python-39 as base
 
 ENV LANG=en_US.UTF-8 HOME=/home/app NODE_ENV=production
 
@@ -16,6 +16,8 @@ RUN yum install -y java-11-openjdk-headless.x86_64 && \
     rm -rf /var/lib/apt/lists/*;
 
 COPY jars/* /opt/spark/jars/
+
+FROM base
 
 WORKDIR $HOME
 
