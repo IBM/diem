@@ -67,7 +67,7 @@ core:
 
     ## spark configuration Values
     spark:
-      SPARK_IMAGE: quay.io/diem/pyspark:3.1.1-rc2
+      SPARK_IMAGE: quay.io/diem/pyspark:3.1.2
       SPARK_IMAGEPULLSECRETS: ""
       CALLBACK_URL: /internal/spark_callback
 
@@ -136,7 +136,7 @@ nodepy:
   port: 80
   replicas: 1
   tier: backend
-  version: 1.0.7
+  version: 1.0.8
 
 operator:
   # -- name of the deployment
