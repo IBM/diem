@@ -7,6 +7,7 @@ import { parseFilter } from '../jobs/jobs';
 
 const viewSecurity: number = 5;
 const editSecurity: number = 60;
+const managerSecurity: number = 80;
 
 /**
  * Nothing will be rejected here, in case of an error we log the error but return an empty [] to the user
@@ -82,8 +83,17 @@ export const getsnippets: (req: IRequest) => Promise<ISnippetPayload[]> = async 
         };
 
         if (req.user.rolenbr >= editSecurity) {
-            payload[i].deleteicon = `${FaIcons.deleteicon}`;
-            payload[i].editicon = `${FaIcons.editicon}`;
+            if (
+                row.idtype !== EIdType.personal ||
+                req.user.rolenbr >= managerSecurity ||
+                (row.idtype === EIdType.personal && body.email === row.owner)
+            ) {
+                payload[i].deleteicon = `${FaIcons.deleteicon}`;
+            }
+
+            if (row.idtype !== EIdType.personal || (row.idtype === EIdType.personal && body.email === row.owner)) {
+                payload[i].editicon = `${FaIcons.editicon}`;
+            }
         }
     });
 

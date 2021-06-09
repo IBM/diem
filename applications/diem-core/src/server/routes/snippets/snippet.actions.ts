@@ -1,12 +1,14 @@
+/* eslint-disable complexity */
 /* eslint-disable @typescript-eslint/indent */
 import { utils } from '@common/utils';
 import { IRequest, EStoreActions, IntPayload, IntServerPayload, IError } from '@interfaces';
-import { ISnippetsBody, ISnippetsModel, SnippetsModel, FaIcons, EIdType } from '@models';
+import { ISnippetsBody, ISnippetsModel, SnippetsModel, FaIcons, EIdType, UserModel } from '@models';
 
 export const snippetupdate: (req: IRequest) => Promise<IRequest | any> = async (
     req: IRequest
 ): Promise<IRequest | any> => {
     const hrstart: [number, number] = process.hrtime();
+    const managerSecurity: number = 80;
 
     const body: ISnippetsBody = { ...req.body };
 
@@ -63,6 +65,15 @@ export const snippetupdate: (req: IRequest) => Promise<IRequest | any> = async (
 
     if (doc.idtype === EIdType.personal) {
         doc.owner = body.email;
+        if (body.owner !== body.email) {
+            const exists = await UserModel.exists({ email: body.owner, org: req.user.org });
+
+            console.info(exists);
+
+            if (exists) {
+                doc.owner = body.owner;
+            }
+        }
     }
 
     await doc.save().catch(async (err) => {
@@ -87,6 +98,25 @@ export const snippetupdate: (req: IRequest) => Promise<IRequest | any> = async (
             ? 'fas fa-lock-open'
             : 'fas fa-lock';
 
+    let deleteicon;
+    let editicon;
+
+    if (
+        doc.idtype !== EIdType.personal ||
+        req.user.rolenbr >= managerSecurity ||
+        (doc.idtype === EIdType.personal && body.email === doc.owner)
+    ) {
+        deleteicon = `${FaIcons.deleteicon}`;
+    }
+
+    if (doc.idtype !== EIdType.personal || (doc.idtype === EIdType.personal && body.email === doc.owner)) {
+        editicon = `${FaIcons.editicon}`;
+    }
+
+    if (doc.idtype && doc.idtype === EIdType.personal && body.email !== doc.owner) {
+        doc.snippet = '/* redacted */';
+    }
+
     const payload: IntPayload[] = [
         {
             key: 'id',
@@ -97,11 +127,11 @@ export const snippetupdate: (req: IRequest) => Promise<IRequest | any> = async (
             store: body.store /** not used as forcestore is enabled */,
             type: isnew ? EStoreActions.ADD_STORE_RCD : EStoreActions.UPD_STORE_RCD,
             values: {
-                createdby: doc.annotations.createdbyemail,
+                createdby: doc.owner || doc.annotations.createdbyemail,
                 createddate: doc.annotations.createddate.toISOString(),
-                deleteicon: `${FaIcons.deleteicon}`,
+                deleteicon,
                 description: doc.description,
-                editicon: `${FaIcons.editicon}`,
+                editicon,
                 id,
                 idtype: doc.idtype,
                 lock,
@@ -110,6 +140,7 @@ export const snippetupdate: (req: IRequest) => Promise<IRequest | any> = async (
                 snippet: doc.snippet,
                 selector: doc.selector,
                 viewicon: `${FaIcons.viewicon}`,
+                owner: doc.owner || null,
             },
         },
     ];

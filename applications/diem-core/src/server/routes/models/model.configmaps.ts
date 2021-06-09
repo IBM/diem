@@ -35,6 +35,7 @@ export interface IConfigmapsBody {
     store: string;
     transid: string;
     username: string;
+    owner?: string;
 }
 
 export interface IConfigmapSchema {

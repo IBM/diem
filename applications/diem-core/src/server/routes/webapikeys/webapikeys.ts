@@ -7,6 +7,7 @@ import { parseFilter } from '../jobs/jobs';
 
 const viewSecurity: number = 60;
 const editSecurity: number = 60;
+const managerSecurity: number = 80;
 
 export const getwebapikey: (selector: string) => Promise<IWebApikeysSchema> = async (
     selector: string
@@ -97,8 +98,17 @@ export const getwebapikeys: (req: IRequest) => Promise<IWebApikeyPayload[]> = as
         };
 
         if (req.user.rolenbr >= editSecurity) {
-            payload[i].deleteicon = `${FaIcons.deleteicon}`;
-            payload[i].editicon = `${FaIcons.editicon}`;
+            if (
+                row.idtype !== EIdType.personal ||
+                req.user.rolenbr >= managerSecurity ||
+                (row.idtype === EIdType.personal && body.email === row.owner)
+            ) {
+                payload[i].deleteicon = `${FaIcons.deleteicon}`;
+            }
+
+            if (row.idtype !== EIdType.personal || (row.idtype === EIdType.personal && body.email === row.owner)) {
+                payload[i].editicon = `${FaIcons.editicon}`;
+            }
         }
     });
 
