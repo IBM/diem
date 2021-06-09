@@ -36,6 +36,7 @@ export interface ISnippetsBody {
     org?: string;
     selector: string;
     store: string;
+    owner?: string;
 }
 
 export interface ISnippetSchema {

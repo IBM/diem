@@ -80,13 +80,19 @@ graph TD
 
 ### local
 
--- | --
-core.info | info to single core worker
-core.error | Error message to single worker
+| Route      | Description                    |
+| ---------- | ------------------------------ |
+| core.info  | info to single core worker     |
+| core.error | Error message to single worker |
+
+{.bx--data-table .bx--data-table2}
 
 ### global
 
--- | --
-global.core.info | info to all core workers
-global.core.error | Error message to all workers
-global.core.user | Message to user
+| Route             | Description                  |
+| ----------------- | ---------------------------- |
+| global.core.info  | info to all core workers     |
+| global.core.error | Error message to all workers |
+| global.core.user  | Message to user              |
+
+{.bx--data-table .bx--data-table2}
