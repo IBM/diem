@@ -50,6 +50,8 @@ export const jobFinish: (doc: IJobModel) => Promise<[IJobModel, any]> = async (
         doc.job.runtime = runtime === 0 ? 1 : runtime;
     }
 
+    doc.job.jobid = id;
+
     const log: IJob = {
         ...doc.toObject().job,
         count: doc.job.count ? Number(doc.job.count) : 0,

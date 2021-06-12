@@ -94,42 +94,52 @@ export const jobOutHandler: (doc: IJobModel, job: IJobResponse) => Promise<ISock
     return Promise.resolve(load);
 };
 
-const jobDocOutHandler: (payload: IntPayload[], doc: IJobModel, job: IJobResponse) => Promise<IntPayload[]> = async (
-    payload: IntPayload[],
-    doc: IJobModel,
-    job: IJobResponse
-): Promise<IntPayload[]> => {
-    const obj: IOut = {
-        out: job.out,
-        special: job.special,
-    };
-
-    if (job.outl) {
-        doc.out = doc.out.concat(job.out);
-    } else if (Array.isArray(doc.out)) {
-        doc.out.push(obj);
-    } else {
-        doc.out = [obj];
-    }
-
-    utils.logInfo(`$job.handler (jobDocOutHandler): adding out - job: ${job.id} - status: ${job.status}`, job.transid);
-
-    payload.push({
-        loaded: true,
-        store: jobdetail,
-        targetid: job.id,
-        options: {
-            field: 'out',
-        },
-        type: job.outl ? EStoreActions.APPEND_STORE_TABLE_RCD : EStoreActions.ADD_STORE_TABLE_RCD,
-        values: {
+const jobDocOutHandler: (payload: IntPayload[], doc: IJobModel, job: IJobResponse) => Promise<[IntPayload[], any]> =
+    async (payload: IntPayload[], doc: IJobModel, job: IJobResponse): Promise<[IntPayload[], any]> => {
+        const obj: IOut = {
             out: job.out,
             special: job.special,
-        },
-    });
+        };
 
-    return Promise.resolve(payload);
-};
+        let insert;
+
+        if (job.outl) {
+            insert = {
+                $push: { out: { $each: job.out } },
+            };
+            doc.out = doc.out.concat(job.out);
+        } else {
+            if (Array.isArray(doc.out)) {
+                doc.out.push(obj);
+            } else {
+                doc.out = [obj];
+            }
+            insert = {
+                $push: { out: obj },
+            };
+        }
+
+        utils.logInfo(
+            `$job.handler (jobDocOutHandler): adding out - job: ${job.id} - status: ${job.status}`,
+            job.transid
+        );
+
+        payload.push({
+            loaded: true,
+            store: jobdetail,
+            targetid: job.id,
+            options: {
+                field: 'out',
+            },
+            type: job.outl ? EStoreActions.APPEND_STORE_TABLE_RCD : EStoreActions.ADD_STORE_TABLE_RCD,
+            values: {
+                out: job.out,
+                special: job.special,
+            },
+        });
+
+        return Promise.resolve([payload, insert]);
+    };
 
 /**
  *
@@ -170,6 +180,9 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload | false> 
         });
     }
 
+    // keep a reference to the original status , we use it later
+    const doc_status: string = doc.job.status;
+
     let payload: IntPayload[] = [];
 
     try {
@@ -185,7 +198,9 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload | false> 
 
             return Promise.resolve(load);
         } else if (job.out) {
-            payload = await jobDocOutHandler(payload, doc, job);
+            const out_handler: [IntPayload[], any] = await jobDocOutHandler(payload, doc, job);
+            payload = out_handler[0];
+            insert = { ...insert, ...out_handler[1] };
         }
 
         /**
@@ -230,15 +245,17 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload | false> 
             values.jobs = job.jobs;
         }
 
+        // if the doc has no out, then provide an empty arry
         if (doc.out?.length === 0) {
-            values.out = doc.out;
+            values.out = [];
         }
 
         // adding the job log
         if (['Failed', 'Stopped', 'Completed'].includes(job.status) && !isPl) {
-            if (!doc.job.audit) {
+            // we crosscheck with the original status to ensure we don't finish a job already finished
+            if (['Failed', 'Stopped', 'Completed'].includes(doc_status)) {
                 utils.logInfo(
-                    `$job.handler (jobHandler): no audit found - stopping here  - status: ${job.status} - job: ${job.id}`,
+                    `$job.handler (jobHandler): job is already in a finished status - stopping here  - status: ${job.status} - job: ${job.id}`,
                     job.transid
                 );
 
@@ -258,10 +275,12 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload | false> 
             );
             const t = await jobFinish(doc);
             doc = t[0];
-            insert = t[1];
+            insert = { ...insert, ...t[1] };
         }
 
         insert.$set.job = doc.toObject().job;
+
+        console.info(insert);
 
         await findOneAndUpdate(doc._id, insert).catch(async (err: any) => {
             if (err?.name && err.name.toLowerCase().includes('versionerror')) {

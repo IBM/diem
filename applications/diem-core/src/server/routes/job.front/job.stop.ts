@@ -36,7 +36,7 @@ const stopSparkJob: (job: IETLJob) => Promise<boolean | Error> = async (job: IET
 };
 
 export const stopNodePyJob: (job: IETLJob) => Promise<void> = async (job: IETLJob): Promise<void> => {
-    utils.logInfo(`$job.stop (jobStop): NodePy stop request - job: ${job.id}`, job.transid);
+    utils.logInfo(`$job.stop (jobStop): publishing global.nodepy.stop request - job: ${job.id}`, job.transid);
 
     const response_job: IJobResponse = {
         ...job,
