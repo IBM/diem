@@ -46,6 +46,7 @@ export interface IWebApikeysBody {
     username: string;
     params: string;
     webapikey: string;
+    owner?: string;
 }
 
 export interface IWebApikeysSchema {

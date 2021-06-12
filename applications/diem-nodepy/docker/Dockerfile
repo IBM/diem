@@ -12,9 +12,11 @@ LABEL maintainer=guy_huinen@be.ibm.com \
 
 USER root
 
-RUN yum install -y java-11-openjdk-headless.x86_64 && \
+# silently update (-y) yum and install java openjdk headless
+RUN yum -y upgrade && yum install -y java-11-openjdk-headless.x86_64 && \
     rm -rf /var/lib/apt/lists/*;
 
+# copy the spark jars over
 COPY jars/* /opt/spark/jars/
 
 FROM base

@@ -76,7 +76,8 @@
                         "location": "integrations/codesnippets.md"
                     },
                     { "title": "Box Integration", "name": "int_box", "location": "integrations/box.md" },
-                    { "title": "GitHub Integration", "name": "int_git", "location": "integrations/git.md" }
+                    { "title": "GitHub Integration", "name": "int_git", "location": "integrations/git.md" },
+                    { "title": "Slack Bot Integration", "name": "int_slack", "location": "integrations/slack.md" }
                 ]
             }
         },
@@ -121,8 +122,7 @@
                     { "title": "Local Setup", "name": "localsetup", "location": "installing/localsetup.md" },
                     { "title": "Spark", "name": "spark", "location": "installing/spark.md" },
                     { "title": "Spark Operator", "name": "spark-operator", "location": "installing/spark-operator.md" },
-                    { "title": "Openshift", "name": "openshift", "location": "installing/openshift.md" },
-                    { "title": "Yalm Files", "name": "yamlfiles", "location": "installing/yaml/readme.md" }
+                    { "title": "Openshift", "name": "openshift", "location": "installing/openshift.md" }
                 ]
             }
         },
