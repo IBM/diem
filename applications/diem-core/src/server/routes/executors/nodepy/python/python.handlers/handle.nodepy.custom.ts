@@ -1,5 +1,6 @@
 import { addTrace } from '@functions';
-import { IJobSchema } from '@models';
+import { IJobSchema, ITemplatesModel } from '@models';
+import { lookupTemplate } from '../../../../job.front/job.template';
 
 const py_end: () => string = (): string => String.raw`
 ### py_end ###
@@ -13,12 +14,30 @@ export const handleNodePyCustomJob: (code: string, doc: IJobSchema) => Promise<s
     code: string,
     doc: IJobSchema
 ): Promise<string> => {
-    if (!doc.custom || (doc.custom && !doc.custom.code)) {
+    if (!doc.custom) {
+        return Promise.resolve(code);
+    }
+
+    let custom_code: string | undefined;
+
+    if (doc.custom.code) {
+        custom_code = doc.custom.code;
+    }
+
+    if (doc.templateid) {
+        const templ: ITemplatesModel | null = await lookupTemplate(doc.templateid);
+
+        if (templ?.template) {
+            custom_code = templ.template;
+        }
+    }
+
+    if (!custom_code) {
         return Promise.resolve(code);
     }
 
     try {
-        const custom: string = `### custom ###\n${doc.custom.code}\n\n###__CODE__###`;
+        const custom: string = `### custom ###\n${custom_code}\n\n###__CODE__###`;
 
         code = code.replace('###__CODE__###', custom);
 

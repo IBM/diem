@@ -3,7 +3,7 @@
 
 /* eslint-disable max-len */
 
-import { IConnSchema, IJobConfig, IJobSchema } from '@models';
+import { IConnSchema, IJobConfig, IJobSchema, ITemplatesModel } from '@models';
 import { addTrace } from '@functions';
 import { ISrc, ITgt } from '../spark.interfaces';
 
@@ -16,6 +16,7 @@ import {
     py_conn_src,
     py_tgt_nz,
 } from '../spark.pycode/py';
+import { lookupTemplate } from '../../../job.front/job.template';
 import { getConnection } from './hendle.spark.common';
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
@@ -56,6 +57,14 @@ export const handleWithConfig: (doc: IJobSchema) => Promise<string> = async (doc
         }
 
         const src: ISrc = { ...connection, ...source };
+
+        if (doc.templateid) {
+            const templ: ITemplatesModel | null = await lookupTemplate(doc.templateid);
+
+            if (templ?.template) {
+                src.sql = templ.template;
+            }
+        }
 
         const partition: string = src.partition && src.partition.partitioncolumn ? py_partition(src.partition) : '';
 

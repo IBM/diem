@@ -2,7 +2,8 @@
 /* eslint-disable max-len */
 
 import { addTrace } from '@functions';
-import { IConnSchema, IJobSchema } from '@models';
+import { IConnSchema, IJobSchema, ITemplatesModel } from '@models';
+import { lookupTemplate } from '../../../../job.front/job.template';
 import { getConnection, jdbc_config } from '../../../spark/spark.job.handlers/hendle.spark.common';
 import { py_jdbc } from './py_jdbc';
 
@@ -99,6 +100,16 @@ const py_transfer: (doc: IJobSchema) => Promise<string> = async (doc: IJobSchema
 
     const isolationlevel: string = src_conn.type === 'db2' ? 'src_conn.setTransactionIsolation(1)' : '';
 
+    let sql: string = doc.config.source.sql;
+
+    if (doc.templateid) {
+        const templ: ITemplatesModel | null = await lookupTemplate(doc.templateid);
+
+        if (templ?.template) {
+            sql = templ.template;
+        }
+    }
+
     return `
 
 ### py_transfer ###
@@ -125,7 +136,7 @@ out(msg)
 
 ${truncate}
 
-sql = f"""${doc.config.source.sql}"""
+sql = f"""${sql}"""
 
 # create a statement object
 src_stmt = src_conn.createStatement(ResultSet.TYPE_FORWARD_ONLY,

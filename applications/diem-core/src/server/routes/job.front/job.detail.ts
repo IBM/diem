@@ -12,7 +12,6 @@ import {
     IJobModel,
     IJobSchemaAnnotations,
     ITemplatesModel,
-    EJobTypes,
     IntPayloadValues,
     IJobSchema,
     ExecutorTypes,
@@ -95,56 +94,59 @@ export const makePayload: (doc: IJobSchema) => Promise<IModelPayload> = async (
     let template: any;
 
     /** here we need to check if there is a shared template or not, if not then find the statement */
-    if (!doc.templateid) {
-        // data trasfer
-        if (doc.config) {
-            config = flatten__(doc.config);
 
-            if (config.source__sql) {
-                config.source__sql = format(config.source__sql, { language: 'db2', indent: '' });
-            }
+    let templ: ITemplatesModel | null | undefined;
+    let templatename: string = '';
+
+    if (doc.templateid) {
+        templ = await lookupTemplate(doc.templateid);
+    }
+
+    // data trasfer
+    if (doc.config) {
+        config = flatten__(doc.config);
+
+        if (templ && templ.template) {
+            config.source__sql = format(templ.template, { language: 'db2' });
+            templatename = 'source__templatename';
+        } else if (config.source__sql) {
+            config.source__sql = format(config.source__sql, { language: 'db2', indent: '' });
         }
+    }
 
-        // statement
-        if (doc.stmt) {
-            stmt.stmt__connection = doc.stmt.connection;
-            stmt.stmt__type = doc.stmt.type;
+    // statement
+    if (doc.stmt) {
+        stmt.stmt__connection = doc.stmt.connection;
+        stmt.stmt__type = doc.stmt.type;
 
-            if (doc.stmt.sql) {
-                stmt.stmt__sql = format(doc.stmt.sql, { language: 'db2' });
-            }
+        if (templ && templ.template) {
+            stmt.stmt__sql = format(templ.template, { language: 'db2' });
+            templatename = 'stmt__templatename';
+        } else if (doc.stmt.sql) {
+            stmt.stmt__sql = format(doc.stmt.sql, { language: 'db2' });
         }
+    }
 
-        if (doc.custom) {
+    if (doc.custom) {
+        if (templ && templ.template) {
+            custom = {
+                custom__code: templ.template,
+                custom__executor: doc.custom ? doc.custom.executor : ExecutorTypes.nodepy,
+            };
+            templatename = 'custom__templatename';
+        } else {
             custom = {
                 custom__code: doc.custom.code,
                 custom__executor: doc.custom.executor,
             };
         }
-    } else {
-        // so there is a template and look it up
-        const templ: ITemplatesModel | null = await lookupTemplate(doc.templateid);
+    }
 
-        if (templ) {
-            let templatename: string = '';
-            if (doc.type === EJobTypes.pystmt) {
-                stmt.stmt__sql = format(templ.template, { language: 'db2' });
-                templatename = 'stmt__templatename';
-            } else if (doc.type === EJobTypes.pyspark) {
-                config.source__sql = format(templ.template, { language: 'db2' });
-                templatename = 'source__templatename';
-            } else if (doc.type === EJobTypes.pycustom) {
-                custom = {
-                    custom__code: templ.template,
-                    custom__executor: doc.custom ? doc.custom.executor : ExecutorTypes.nodepy,
-                };
-                templatename = 'custom__templatename';
-            }
-            template = {
-                templateid: templ._id,
-                [templatename]: templ.name, // need to make template name depending on type
-            };
-        }
+    if (templ && template !== null) {
+        template = {
+            templateid: templ._id,
+            [templatename]: templ.name, // need to make template name depending on type
+        };
     }
 
     let url: any;
