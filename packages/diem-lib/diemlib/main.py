@@ -183,7 +183,7 @@ def error(err):
             "id": config.__id,
             "jobid": config.__jobid,
             "serviceid": config.__serviceid,
-            "jobend": time.strftime("%Y-%m-%d %H:%M:%S"),
+            "jobend": UtcNow(),
             "name": config.__name,
             "status": "Failed",
         }
