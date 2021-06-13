@@ -519,26 +519,27 @@ export interface ImakePlPayloadValues extends IntPayloadValues {
 }
 
 export interface IJobResponse {
+    audit?: any;
     count: number | null;
     email: string;
     error?: string | null;
     executor: keyof typeof ExecutorTypes;
+    gantt?: string | null;
     id: string;
     jobend?: Date | null;
     jobid: string;
-    jobstart?: Date | null;
     jobs?: IJob[];
+    jobstart?: Date | null;
     log?: IJob[];
     name: string;
+    org: string;
     out?: any;
     outl?: any;
     runby: string;
     runtime: number | null;
-    status: EJobStatusCodes;
     special?: string;
+    status: EJobStatusCodes;
     transid: string;
-    org: string;
-    audit?: any;
 }
 
 export interface IDetailPayloadValues extends IJob {
