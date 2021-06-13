@@ -57,20 +57,16 @@ export class MermaidComponent implements AfterViewInit, ControlValueAccessor {
     public writeValue: any = (value: any) => {
         if (value) {
             this.value = value;
+            this.mermaidrefresh();
         }
     };
 
-    public async ngAfterViewInit(): Promise<void> {
-        mermaidAPI.initialize({
-            theme: 'default',
-            startOnLoad: false,
-        });
-
+    public mermaidrefresh: () => void = (): void => {
         if (this.mermaidDiv) {
             const element: any = this.mermaidDiv.nativeElement;
 
             if (element && this.value) {
-                console.info(`$home.main.component (renderMermaid): mermaid rendering for ${this.elementId}`);
+                console.info(`$df.mermaid.component (mermaidrefresh): mermaid rendering for ${this.elementId}`);
 
                 if (this.value.includes('mermaid')) {
                     const v = this.value.substring(this.value.indexOf('mermaid'), this.value.lastIndexOf('</div>'));
@@ -84,12 +80,21 @@ export class MermaidComponent implements AfterViewInit, ControlValueAccessor {
                 });
             }
 
-            this.check('here');
+            this.check('mermaid - afterviewinit');
         }
+    };
+
+    public async ngAfterViewInit(): Promise<void> {
+        mermaidAPI.initialize({
+            theme: 'default',
+            startOnLoad: false,
+        });
+
+        this.mermaidrefresh();
     }
 
     private check = (from: string) => {
-        console.info(`%c$df.form.component (check): called by => ${from}`, 'color:red');
+        console.info(`%c$df.mermaid.component (check): called by => ${from}`, 'color:red');
         this.cd.markForCheck();
     };
 }
