@@ -33,7 +33,7 @@ export const stopJobs: (pldoc: IJobModel) => Promise<void> = async (pldoc: IJobM
             });
 
             if (doc.type === EJobTypes.pipeline) {
-                utils.logInfo(`$stopJobs (stopJobs): passing to jobStop - pl: ${doc.job.jobid} - job: ${key}`);
+                utils.logInfo(`$stopJobs (stopJobs): passing to stopJobs - pl: ${doc.job.jobid} - job: ${key}`);
                 void stopJobs(doc);
             }
 
