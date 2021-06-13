@@ -47,7 +47,12 @@ const updateJobs: (doc: IJobModel) => Promise<void> = async (doc: IJobModel): Pr
 
     const jobs: IJobDetails = doc.jobs;
 
-    let set: any = { 'job.status': EJobStatus.pending };
+    let set: any = {
+        'job.status': EJobStatus.pending,
+        'job.jobstart': new Date(),
+        'job.jobend': null,
+        'job.runtime': 0,
+    };
 
     /** There are additional parameters
      * so we need to flatten them out using a dot . notation
@@ -110,21 +115,21 @@ const publishPl: (doc: IJobModel, status: EJobStatusCodes, jobs: IJob[] | undefi
     return Promise.resolve();
 };
 
-export const plStartHandler: (doc: IJobModel) => Promise<void> = async (doc: IJobModel): Promise<any> => {
+export const plStartHandler: (pldoc: IJobModel) => Promise<void> = async (pldoc: IJobModel): Promise<any> => {
     try {
         /**
          * If there are no jobs in this pipeline then just publish the Completed state
          */
 
-        const plid: string = doc._id.toString();
+        const plid: string = pldoc._id.toString();
 
-        if (!doc.jobs || Object.keys(doc.jobs).length === 0) {
+        if (!pldoc.jobs || Object.keys(pldoc.jobs).length === 0) {
             utils.logInfo(
                 `$pipeline.start.handler (plStartHandler): pipeline without jobs - pl: ${plid}`,
-                doc.job.transid
+                pldoc.job.transid
             );
 
-            await publishPl(doc, 'Completed', undefined);
+            await publishPl(pldoc, 'Completed', undefined);
 
             return Promise.resolve(true);
         }
@@ -133,16 +138,16 @@ export const plStartHandler: (doc: IJobModel) => Promise<void> = async (doc: IJo
          * Here we reset the queue we've added a field called queue
          * and we delete it here
          */
-        // doc.set({ jobs: await resetQueue2(doc.jobs) });
-        doc.jobs = await resetQueue(doc.jobs);
+        // pldoc.set({ jobs: await resetQueue2(pldoc.jobs) });
+        pldoc.jobs = await resetQueue(pldoc.jobs);
 
         // needed for mongo if you update nested fields
-        doc.markModified('jobs');
+        pldoc.markModified('jobs');
 
         // set the status to submitted
-        // doc.job.status = EJobStatus.running;  why ?
+        // pldoc.job.status = EJobStatus.running;  why ?
 
-        await saveDoc(doc).catch(async (err) => {
+        await saveDoc(pldoc).catch(async (err) => {
             err.trace = addTrace(err.trace, '@at $pipeline.start.handler (plStartHandler) - save');
 
             return Promise.reject(err);
@@ -152,18 +157,18 @@ export const plStartHandler: (doc: IJobModel) => Promise<void> = async (doc: IJo
          * Here we reset the queue and set the value of all to pending
          * It is also here that we need to pass any params send by the
          */
-        await updateJobs(doc);
+        await updateJobs(pldoc);
 
-        const jobs: IJob[] = await findByFilter({ _id: { $in: Object.keys(doc.jobs) } }, { first: 0, rows: 0 });
+        const jobs: IJob[] = await findByFilter({ _id: { $in: Object.keys(pldoc.jobs) } }, { first: 0, rows: 0 });
 
         // set the pipeline to be running
-        await publishPl(doc, doc.job.status, jobs);
+        await publishPl(pldoc, pldoc.job.status, jobs);
 
-        const batchJobs: string[] = await findRootJobs(doc.jobs, plid);
+        const batchJobs: string[] = await findRootJobs(pldoc.jobs, plid);
 
         utils.logInfo(
             `$pipeline.start.handler (plStartHandler): found ${batchJobs.length} jobs to run - pl: ${plid}`,
-            doc.job.transid
+            pldoc.job.transid
         );
 
         for (const batchid of batchJobs) {
@@ -174,16 +179,17 @@ export const plStartHandler: (doc: IJobModel) => Promise<void> = async (doc: IJo
             if (([EJobStatus.running, EJobStatus.submitted] as EJobStatusCodes[]).includes(batch_doc.job.status)) {
                 utils.logInfo(
                     `$pipeline.start.handler (plStartHandler): already running - pl: ${plid} - pl status: ${batch_doc.job.status}`,
-                    doc.job.transid
+                    pldoc.job.transid
                 );
             } else {
-                batch_doc.job.email = doc.job.email;
-                batch_doc.job.executor = doc.job.executor;
-                batch_doc.job.jobstart = doc.job.jobstart;
+                batch_doc.job.email = pldoc.job.email;
+                batch_doc.job.executor = pldoc.job.executor;
+                batch_doc.job.jobstart = new Date();
+                batch_doc.job.jobend = null;
                 batch_doc.job.status = EJobStatus.submitted;
-                batch_doc.job.transid = doc.job.transid;
+                batch_doc.job.transid = pldoc.job.transid;
                 batch_doc.job.jobid = plid;
-                batch_doc.job.runby = doc.job.runby || 'pipeline';
+                batch_doc.job.runby = pldoc.job.runby || 'pipeline';
                 void jobStartHandler(batch_doc).catch(async (err) => {
                     err.trace = addTrace(err.trace, '@at $pipeline.start.handler (plStartHandler)');
 

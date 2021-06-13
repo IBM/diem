@@ -20,7 +20,11 @@ interface IOut {
 const jobdetail: string = 'jobdetail.store';
 
 const runTime: (doc: IJobModel) => number = (doc: IJobModel): number => {
-    const je: Date | undefined = doc.job.jobend ? new Date(doc.job.jobend) : new Date();
+    if (!doc.job.jobend) {
+        return 0;
+    }
+
+    const je: Date | undefined = new Date(doc.job.jobend);
 
     const js: Date | undefined = doc.job.jobstart ? new Date(doc.job.jobstart) : new Date();
 

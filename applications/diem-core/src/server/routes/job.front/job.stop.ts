@@ -41,8 +41,8 @@ export const stopNodePyJob: (job: IETLJob) => Promise<void> = async (job: IETLJo
     const response_job: IJobResponse = {
         ...job,
         count: null,
-        jobend: null,
-        jobstart: new Date(),
+        jobend: new Date(),
+        jobstart: job.jobstart,
         runtime: null,
         status: EJobStatus.stopped,
         transid: job.transid,
