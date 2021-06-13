@@ -1,6 +1,7 @@
-import { IJobSchema, IConnSchema } from '@models';
+import { IJobSchema, IConnSchema, ITemplatesModel } from '@models';
 import { addTrace } from '@functions';
 import { getConnection } from '../../../spark/spark.job.handlers/hendle.spark.common';
+import { lookupTemplate } from '../../../../job.front/job.template';
 import { py_jdbc } from './py_jdbc';
 
 const makeConn: (target: string, connection: IConnSchema) => Promise<string> = async (
@@ -37,6 +38,14 @@ const py_stmt: (doc: IJobSchema) => Promise<string> = async (doc: IJobSchema): P
     const tgt_conn: string = await makeConn('tgt_conn', connection);
 
     let sql: string = doc.stmt.sql;
+
+    if (doc.templateid) {
+        const templ: ITemplatesModel | null = await lookupTemplate(doc.templateid);
+
+        if (templ?.template) {
+            sql = templ.template;
+        }
+    }
 
     sql = sql
         .split(';')
