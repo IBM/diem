@@ -68,6 +68,7 @@ export const getGraphLinks: (pldoc: IJobSchema) => Promise<[string, string, IntP
 
     let gantt: string = `gantt
     title ${pldoc.name.replace(':', '')}
+    todayMarker off
     dateFormat  YYYY-MM-DD HH:mm:ss
     axisFormat  %H:%M:%S\n`;
 
@@ -85,13 +86,15 @@ export const getGraphLinks: (pldoc: IJobSchema) => Promise<[string, string, IntP
             graph += `${id}("${doc.name}");`;
         }
 
-        const runtime: number = doc.job.runtime || 1;
+        const runtime: number = doc.job.runtime || 0;
         const m: Moment = moment(doc.job.jobstart);
         const starttime: string = m.format('YYYY-MM-DD HH:mm:ss');
         const jobname = doc.name.replace(':', '');
 
         gantt += `${jobname}  :${starttime}, ${runtime}sec\n`;
     });
+
+    console.debug('gantt');
 
     return Promise.resolve([graph, gantt, payload]);
 };
