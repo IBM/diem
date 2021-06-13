@@ -262,6 +262,10 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload | false> 
                 return Promise.resolve(false);
             }
 
+            // set the end time of the job here
+            job.jobend = new Date();
+            doc.job.jobend = job.jobend;
+
             // get the log of the sparkjob in case of an error
             if (doc.job.error && doc.job.executor === ExecutorTypes.pyspark) {
                 utils.logInfo(`$job.handler (getPySparkJobLog): passing to getPySparkJobLog - id: ${id}`);
@@ -279,8 +283,6 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload | false> 
         }
 
         insert.$set.job = doc.toObject().job;
-
-        console.info(insert);
 
         await findOneAndUpdate(doc._id, insert).catch(async (err: any) => {
             if (err?.name && err.name.toLowerCase().includes('versionerror')) {

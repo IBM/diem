@@ -1,9 +1,10 @@
 import { utils } from '@common/utils';
 import { IntPayload, EStoreActions } from '@interfaces';
-import { IJobModel, IJobResponse, IJobSchema } from '@models';
+import { IJobModel, IJobResponse, IJobSchema, IntPayloadValues } from '@models';
 import { addTrace } from '@functions';
 import { PayloadValues } from '../../job.backend/job.functions';
 import { jobLogger } from '../../job.logger/job.logger';
+import { getGraphLinks } from '../../job.front/job.grapht';
 
 export const makePlPayload: (doc: IJobModel | boolean, job: IJobResponse, payload: IntPayload[]) => Promise<boolean> =
     async (doc: IJobModel | boolean, job: IJobResponse, payload: IntPayload[]): Promise<boolean> => {
@@ -18,6 +19,16 @@ export const makePlPayload: (doc: IJobModel | boolean, job: IJobResponse, payloa
             if (['Failed', 'Stopped', 'Completed'].includes(job.status)) {
                 // logging and stopping
                 values.log = pldoc.log;
+
+                const DBJobs: [string?, string?, IntPayloadValues[]?] = await getGraphLinks(doc).catch(
+                    async (err: any) => {
+                        err.trace = addTrace(err.trace, '@at $job.detail (makePayload)');
+
+                        return Promise.reject(err);
+                    }
+                );
+
+                values.gantt = DBJobs[1];
             }
 
             // remove the audit field

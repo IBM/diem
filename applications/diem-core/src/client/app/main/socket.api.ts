@@ -177,7 +177,7 @@ export class SocketService {
 
     private retry = (): void => {
         this.timeout = setTimeout(() => {
-            console.info('$socket.api (recconnect): reconnecting....');
+            console.info('$socket.api (reconnect): reconnecting....');
             this.connectSocket();
         }, 5000);
     };
@@ -212,7 +212,7 @@ export class SocketService {
     };
 
     private removeBodyClass = (): void => {
-        console.info('$sockt.api (remoceBodyClass): removing class: socketconn');
+        console.info('$sockt.api (removeBodyClass): removing class: socketconn');
         if (this.env) {
             this.env.nextClass('socketconn', true);
         }
