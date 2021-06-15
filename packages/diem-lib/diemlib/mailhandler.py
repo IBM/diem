@@ -16,6 +16,8 @@ from sendgrid.helpers.mail import (
     FileType,
     Disposition,
     ContentId,
+    Cc,
+    Bcc,
 )
 from sendgrid import SendGridAPIClient
 import base64
@@ -67,6 +69,33 @@ class mailhandler(object):
             subject=kwargs.get("subject"),
             html_content=kwargs.get("content"),
         )
+
+        # check for cc emails
+        if "cc" in kwargs:
+            cc_emails = kwargs.get("cc")
+            if isinstance(cc_emails, list):
+                arr = []
+                for ccli in cc_emails:
+                    if isinstance(ccli, tuple):
+                        arr.append(Cc(*ccli))
+                    else:
+                        arr.append(Cc(ccli))
+                cc_emails = arr
+
+            message.cc = [cc_emails]
+
+        # check for bcc emails
+        if "bcc" in kwargs:
+            bcc_emails = kwargs.get("bcc")
+            if isinstance(bcc_emails, list):
+                arr = []
+                for ccli in bcc_emails:
+                    if isinstance(ccli, tuple):
+                        arr.append(Bcc(*ccli))
+                    else:
+                        arr.append(Bcc(ccli))
+                bcc_emails = arr
+            message.bcc = [bcc_emails]
 
         # check if there are attachments
         if "attachments" in kwargs:
