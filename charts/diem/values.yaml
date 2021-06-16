@@ -67,7 +67,7 @@ core:
 
     ## spark configuration Values
     spark:
-      SPARK_IMAGE: quay.io/diem/pyspark:3.1.2
+      SPARK_IMAGE: quay.io/diem/pyspark:3.1.2_rhel
       SPARK_IMAGEPULLSECRETS: ""
       CALLBACK_URL: /internal/spark_callback
 
