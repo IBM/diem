@@ -40,6 +40,7 @@ ng-template(#editdropdown="")
     ng-container([formGroup]="form")
         ibm-dropdown(
             [formControlName]='question.key',
+            [id]="'drpd_' + question.key",
             [label]="question.label",
             [helperText]="question.helperText",
             [invalid]="question.invalid",
@@ -230,6 +231,7 @@ ng-template(#editautocomplete="")
         ibm-combo-box(
             [formControlName]='question.key',
             [invalid]="question.invalid",
+            [id]="'combo_' + question.key",
             [invalidText]="question.invalidText",
             [label]="question.label",
             [helperText]="question.helperText",
