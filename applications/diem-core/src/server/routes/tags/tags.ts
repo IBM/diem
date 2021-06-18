@@ -1,6 +1,7 @@
 import { utils } from '@common/utils';
 import { IRequest, EStoreActions, IntPayload, IntServerPayload, IntSharedAction } from '@interfaces';
 import { ITagsBody, ITagsModel, TagsModel } from '@models';
+import { addTrace } from '../shared';
 
 /**
  * Nothing will be rejected here, in case of an error we log the error but return an empty [] to the user
@@ -26,7 +27,7 @@ export const tags: (req: IRequest) => Promise<string[]> = async (req: IRequest):
         return Promise.resolve([]);
     }
 
-    return Promise.resolve(doc.tags);
+    return Promise.resolve(doc.tags.sort());
 };
 
 export const tagsupdate: (req: IRequest) => Promise<IRequest | any> = async (
@@ -65,7 +66,11 @@ export const tagsupdate: (req: IRequest) => Promise<IRequest | any> = async (
         doc.annotations.transid = body.transid;
     }
 
-    await doc.save();
+    await doc.save().catch(async (err) => {
+        err.trace = addTrace(err.trace, '@at $tags (tagsupdate) - save');
+
+        return Promise.reject(err);
+    });
 
     utils.logInfo(`$tags (tagsupdate): tags updated - email: ${body.email}`, req.transid, process.hrtime(hrstart));
 
