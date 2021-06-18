@@ -1105,3 +1105,10 @@ button.bx--overflow-menu {
     border-color: transparent;
     background: #42be65;
 }
+
+/* to remove when angular fixes this number input so check when carbon-component is at 10.37.0 */
+
+.bx--list-box__menu-icon {
+    border: none;
+    background: none;
+}
