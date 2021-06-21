@@ -78,8 +78,6 @@ export const configmapupdate: (req: IRequest) => Promise<IRequest | any> = async
         if (body.owner !== body.email) {
             const exists = await UserModel.exists({ email: body.owner, org: req.user.org });
 
-            console.info(exists);
-
             if (exists) {
                 doc.owner = body.owner;
             }

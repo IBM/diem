@@ -94,7 +94,5 @@ export const getGraphLinks: (pldoc: IJobSchema) => Promise<[string, string, IntP
         gantt += `${jobname}  :${starttime}, ${runtime}sec\n`;
     });
 
-    console.debug('gantt');
-
     return Promise.resolve([graph, gantt, payload]);
 };
