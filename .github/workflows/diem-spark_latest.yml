@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: "CI pyspark-3.1.2_rhel"
+name: "CI spark-3.1.2_rhel"
 
 # Controls when the action will run.
 on:
@@ -8,11 +8,11 @@ on:
   push:
     branches: [latest]
     paths:
-      - "applications/diem-spark/**/*pyspark-3.1.2_rhel*"
+      - "applications/diem-spark/**/*spark-3.1.2_rhel*"
   pull_request:
     branches: [latest]
     paths:
-      - "applications/diem-spark/**/*pyspark-3.1.2_rhel*"
+      - "applications/diem-spark/**/*spark-3.1.2_rhel*"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -37,8 +37,8 @@ jobs:
         run: echo "${{secrets.DOCKER_QUAY}}" | docker login -u="diem+ibm_deploy_robot" --password-stdin quay.io
 
       - name: Build the Docker image
-        run: docker build . --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') --file images/Dockerfile.pyspark-3.1.2_rhel --tag quay.io/diem/pyspark:latest
+        run: docker build . --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') --file images/Dockerfile.spark-3.1.2_rhel --tag quay.io/diem/spark:latest
 
       - name: Push the Docker image
-        run: docker push quay.io/diem/pyspark:latest
+        run: docker push quay.io/diem/spark:latest
         if: github.event_name == 'push' && github.ref == 'refs/heads/latest'
