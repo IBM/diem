@@ -71,9 +71,7 @@ export const createSparkPythonJob: (doc: IJobSchema) => Promise<ICapacity> = asy
         };
     }
 
-    const image: string = doc.job.params?.spark?.image
-        ? doc.job.params.spark.image
-        : sparkCredentials.image || 'txo-sets-docker-local.artifactory.swg-devops.com/etl-mgr/etl-spark-py:3.0.0';
+    const image: string = doc.job.params?.spark?.image ? doc.job.params.spark.image : 'quay.io/diem/pyspark:3.1.2_rhel';
 
     crdjob.spec.image = image;
 

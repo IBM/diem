@@ -40,5 +40,5 @@ jobs:
         run: docker build . --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') --file images/Dockerfile.spark-3.1.2_rhel --tag quay.io/diem/spark:3.1.2_rhel
 
       - name: Push the Docker image
-        run: docker push quay.io/diem/pyspark:3.1.2_rhel
+        run: docker push quay.io/diem/spark:3.1.2_rhel
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
