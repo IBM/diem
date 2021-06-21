@@ -2,11 +2,15 @@
 
 We will use the instructions from here [https://github.com/GoogleCloudPlatform/spark-on-k8s-operator](https://github.com/GoogleCloudPlatform/spark-on-k8s-operator)
 
-> We use helm 3
+## Preparing the standard operator image
 
-## Preparing the operator image
+### No extra Jars
 
-- We use a custom Operator image as we include some Cloud Object Storage Jars to connect to aws and ibm cloud (cos)
+You can use the standard spark operator image (debian) located at [gcr.io/spark-operator/spark-operator][gcr.io/spark-operator/spark-operator]  you can use for example version v1beta2-1.2.3-3.1.1
+
+### Adding Custom Jars
+
+- We could use the default Spark Operator image but as we allow to use some custom Jars (like Cloud Object Storage) we have to use this image as a base image and build our own.
 
 You can find the Operator base image going to the [GoogleCloudPlatform](https://github.com/GoogleCloudPlatform/spark-on-k8s-operator) and find the version matrix
 
@@ -14,17 +18,39 @@ You can find the Operator base image going to the [GoogleCloudPlatform](https://
 - run the npm command to build the image
 
 ```cmd
-npm run kube:spark-operator
-
-The push refers to repository [127.0.0.1:30500/bizops/spark-operator]
-1.0.0: digest: sha256:87ace624161bf3409b33b99deab9e49f14c5801ff3250bfb7fc5b7560a358998 size: 4097
+docker build -t quay.io/diem/spark-operator:2.0.0 -f images/Dockerfile-spark-operator
 ```
 
 Your image is now pushed to your local directory
 
-## CI/CD
+### CI/CD using Github Actions
 
-tbd
+see the file located at [https://github.com/IBM/diem/blob/main/applications/diem-spark/images/Dockerfile-spark-operator](https://github.com/IBM/diem/blob/main/applications/diem-spark/images/Dockerfile-spark-operator)
+
+## Building rhel (red Hat) version
+
+Step 1. clone or download the appropriate spark operator release at [https://github.com/GoogleCloudPlatform/spark-on-k8s-operator/tags] (https://github.com/GoogleCloudPlatform/spark-on-k8s-operator/tags)
+
+for example : spark-operator-chart-1.1.3 and download the spark-operator-1.1.3.tgz
+file
+
+Step 2. extract the spark-operator-1.1.3.tgz and go to the root of the project
+
+Step3. Modify the file Dockerfile.rh
+    1. change line 45 to use root -> USER root
+    2. Do # Comment out the following three lines if you do not have a RedHat subscription.
+
+Step 4. Run the following docker command
+
+```cmd
+docker build --build-arg SPARK_IMAGE=quay.io/diem/spark:3.1.2_rhel -t quay.io/diem/spark-operator:v1beta2-1.2.3-3.1.1_rhel -f Dockerfile.rh .
+```
+
+Step 5. Push the image
+
+```cmd
+docker push quay.io/diem/spark-operator:v1beta2-1.2.3-3.1.1_rhel
+```
 
 ## Installation Steps
 
