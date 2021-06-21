@@ -80,12 +80,12 @@ export const slackMsgInt: (error: IError, slackConfig?: Partial<ISlack>) => Prom
         const response: any = await postMsg(options).catch(async (err: IAxiosError) => {
             err.trace = utils.addTrace(err.trace, '$error-int (slackMsgInt)');
 
-            return utils.logError('$error-int (slackMsgInt)', err);
+            return utils.logErr('$error-int (slackMsgInt)', err);
         });
 
         utils.logInfo(
             `$error-int (slackMsgInt): - caller: ${error.caller || 'n/a'} - transid: ${
-                error.transid
+                error.transid || 'internal'
             } - status: ${response}`
         );
     } else {
