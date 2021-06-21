@@ -42,7 +42,8 @@ data = {
 }
 mq(data)
 
-startTimer()
+# not used here
+# startTimer()
 
 ###__CODE__###
 `;

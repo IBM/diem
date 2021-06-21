@@ -37,8 +37,8 @@ jobs:
         run: echo "${{secrets.DOCKER_QUAY}}" | docker login -u="diem+ibm_deploy_robot" --password-stdin quay.io
 
       - name: Build the Docker image
-        run: docker build . --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') --file images/Dockerfile-spark-3.1.1 --tag quay.io/diem/pyspark:3.1.1
+        run: docker build . --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') --file images/Dockerfile-spark-3.1.1 --tag quay.io/diem/spark:3.1.1
 
       - name: Push the Docker image
-        run: docker push quay.io/diem/pyspark:3.1.1
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' 
+        run: docker push quay.io/diem/spark:3.1.1
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'

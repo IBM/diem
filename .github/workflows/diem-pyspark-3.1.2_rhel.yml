@@ -4,13 +4,13 @@ name: "CI pyspark-3.1.2_rhel"
 
 # Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the latest branch
+  # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [latest]
+    branches: [main]
     paths:
       - "applications/diem-spark/**/*pyspark-3.1.2_rhel*"
   pull_request:
-    branches: [latest]
+    branches: [main]
     paths:
       - "applications/diem-spark/**/*pyspark-3.1.2_rhel*"
 
@@ -37,8 +37,8 @@ jobs:
         run: echo "${{secrets.DOCKER_QUAY}}" | docker login -u="diem+ibm_deploy_robot" --password-stdin quay.io
 
       - name: Build the Docker image
-        run: docker build . --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') --file images/Dockerfile.pyspark-3.1.2_rhel --tag quay.io/diem/pyspark:latest
+        run: docker build . --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') --file images/Dockerfile.pyspark-3.1.2_rhel --tag quay.io/diem/pyspark:3.1.2_rhel
 
       - name: Push the Docker image
-        run: docker push quay.io/diem/pyspark:latest
-        if: github.event_name == 'push' && github.ref == 'refs/heads/latest'
+        run: docker push quay.io/diem/pyspark:3.1.2_rhel
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
