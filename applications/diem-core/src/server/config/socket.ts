@@ -147,7 +147,7 @@ export class Server {
             `👷 $socket (start): ${this.pack.packname}@${this.pack.version}` +
             ` started up on ${this.pack.K8_SYSTEM_NAME} - pid: ${process.pid} (node ${process.version})`;
         utils.logInfo(msg);
-        await slackMsg(msg);
+        void slackMsg(msg);
     };
 
     /*

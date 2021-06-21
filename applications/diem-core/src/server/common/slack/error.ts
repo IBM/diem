@@ -51,7 +51,7 @@ export const slackMsgError: (req: IRequest, slackConfig?: Partial<ISlack>) => Pr
         const response: any = await postMsg(options).catch(async (err: IAxiosError) => {
             err.trace = utils.addTrace(err.trace, '@at $error (slackMsgError)');
 
-            await utils.logError('$error (slackrMsgError)', err);
+            utils.logErr('$error (slackrMsgError)', err);
 
             return Promise.resolve('Something went wrong posting to slack');
         });

@@ -41,14 +41,18 @@ export class Server {
                 });
             })
             .on('unhandledRejection', async (reason: any, p: any) => {
-                await utils.logError('$server.ts (unhandledRejection):', {
-                    location: 'server',
-                    message: p,
-                    name: 'unhandledrejection',
-                    reason,
-                    trace: ['@at $server (unhandledRejection)'],
-                    caller: '$server',
-                });
+                if (reason.name === 'MongoError') {
+                    // we don't do anything, to be be handled by the mongo error
+                } else {
+                    await utils.logError('$server.ts (unhandledRejection):', {
+                        location: 'server',
+                        message: p,
+                        name: 'unhandledrejection',
+                        reason,
+                        trace: ['@at $server (unhandledRejection)'],
+                        caller: '$server',
+                    });
+                }
             })
             .on('exit', async (code: any) => {
                 utils.logInfo(`$server.ts (exit): fatal error, system shutting down : ${code}`);
@@ -63,22 +67,22 @@ export class Server {
                 }
             });
 
-        utils.ev.on('internal', async (internal: IntInternal) => {
-            if (internal.err) {
+        utils.ev.on('internal', (internal: IntInternal) => {
+            if (internal.fatal) {
+                internal.trace = addTrace(internal.trace, '@at $server (internal)');
                 this.fatal = internal.fatal;
-                await utils.logError('$server.ts (internal): Notification of Error', {
+                void utils.logError('$server.ts (internal): notification of fatal error', {
                     ...internal,
                     application: utils.Env.app,
-                    error: JSON.stringify(internal.err, undefined, 2),
-                    message: internal.message,
-                    fatal: this.fatal,
-                    name: '$server (internal)',
-                    source: internal.source,
-                    pid: internal.pid || process.pid,
-                    trace: internal.trace,
                     caller: '$server',
+                    fatal: this.fatal,
+                    message: internal.message,
+                    name: '$server (internal)',
+                    pid: internal.pid || process.pid,
+                    source: internal.source,
+                    trace: internal.trace,
                 });
-            } else if (this.fatal) {
+            } else {
                 this.fatal = internal.fatal;
                 utils.logInfo(`$server.ts (internal): fatal removed by ${internal.source}`);
             }
@@ -159,6 +163,10 @@ export class Server {
                 req.headers['if-none-match'] = 'no-match-for-this';
                 if (req.session) {
                     req.session.redirectUrl = '/';
+                }
+
+                if (this.fatal) {
+                    return res.sendFile('/public/503.html', { root: path.resolve() });
                 }
 
                 res.sendFile('/public/index.html', { root: path.resolve() });

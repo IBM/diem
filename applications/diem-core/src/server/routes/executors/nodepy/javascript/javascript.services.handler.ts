@@ -106,7 +106,6 @@ export const javascriptServicesHandler: (doc: IJobSchema) => Promise<INodePyJob>
         code = await handleSnippets(code, doc.project.org);
 
         if (doc.job.params) {
-            console.info(doc.job.params);
             if (doc.job.params.connections) {
                 code = await handleConnectionParams(code, doc.job.params.connections, doc.project.org);
             }

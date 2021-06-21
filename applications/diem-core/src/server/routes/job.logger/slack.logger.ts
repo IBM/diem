@@ -6,7 +6,7 @@ import { slackMsg } from '@common/slack/slack';
 import { ISlack, utils } from '@common/utils';
 import { IJobModel, EJobTypes, IWebhooksSchema } from '@models';
 import { IError } from '@interfaces';
-import { addTrace, fmtTime, makeUrl } from '@functions';
+import { fmtTime, makeUrl } from '@functions';
 import { getwebhook } from '../webhooks/webhooks';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -194,9 +194,7 @@ export const toSlack: (doc: IJobModel) => Promise<void> = async (doc: IJobModel)
     };
 
     await slackMsg(msg, customSlack).catch(async (err: IError) => {
-        err.trace = addTrace(err.trace, '@at $slack.logger (slackMsg)');
-
-        return Promise.reject(err);
+        utils.logErr('$error (slackrMsg)', err);
     });
 
     return Promise.resolve();

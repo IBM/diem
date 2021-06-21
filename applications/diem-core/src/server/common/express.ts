@@ -7,8 +7,8 @@ import nocache from 'nocache';
 import rateLimit from 'express-rate-limit';
 import passport from 'passport';
 import MongoStore from 'connect-mongo';
+import { IntInternal, IResponse } from '@interfaces';
 import { IXorg } from '../interfaces/env';
-import { IResponse } from '../interfaces';
 import { mongoose } from './mongo';
 import { Credentials } from './cfenv';
 import { utils } from './utils';
@@ -88,18 +88,8 @@ export class Express {
         passport.use(Strategy);
         this.config = { ...this.config, ...config };
 
-        utils.ev.on('fatalError', async (status: boolean) => {
-            this.fatal = status;
-            if (this.fatal) {
-                await utils.logError('$app.ts (fatalError)', {
-                    application: utils.Env.app,
-                    message: `Fatal flag set to ${status}`,
-                    name: 'fatalError',
-                    caller: '$express',
-                });
-            } else {
-                utils.logInfo('$app.ts (fatalError): fatal removed');
-            }
+        utils.ev.on('internal', async (internal: IntInternal) => {
+            this.fatal = internal.fatal;
         });
 
         this.session = Credentials('session');
