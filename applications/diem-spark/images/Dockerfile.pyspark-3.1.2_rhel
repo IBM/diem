@@ -1,0 +1,72 @@
+FROM quay.io/diem/base-spark:3.1.2_rhel as base_spark
+
+FROM registry.access.redhat.com/ubi8/python-39 as base
+
+WORKDIR /
+
+USER root
+
+ARG img=spark-3.1.2-bin-custom-spark
+ARG install_dir=/tmp/artifacts
+ARG V_ENV=/opt/venv
+
+COPY --from=base_spark /tmp ${install_dir}/
+
+RUN mkdir -p ${install_dir}/tar
+RUN tar -xzf /tmp/artifacts/${img}.tgz -C ${install_dir}/tar
+RUN mv ${install_dir}/tar/${img}/ /opt/spark
+RUN mv /opt/spark/kubernetes/dockerfiles/spark/entrypoint.sh /opt/
+RUN mv /opt/spark/kubernetes/dockerfiles/spark/decom.sh /opt/
+RUN yum clean all && [ ! -d /var/cache/yum ] || rm -rf /var/cache/yum
+RUN [ ! -d ${install_dir} ] || rm -rf ${install_dir}
+
+WORKDIR /opt/spark/work-dir
+RUN chmod g+w /opt/spark/work-dir && chmod a+x /opt/decom.sh
+
+FROM registry.access.redhat.com/ubi8/python-39
+
+USER root
+
+COPY --from=base /opt /opt
+
+#WORKDIR /
+
+RUN yum -y upgrade && yum install -y java-11-openjdk-headless.x86_64 && \
+    rm -rf /var/lib/apt/lists/* && \
+    yum clean all && [ ! -d /var/cache/yum ] || rm -rf /var/cache/yum
+
+ADD https://github.com/krallin/tini/releases/download/v0.18.0/tini /bin/tini
+RUN chmod +x /bin/tini
+
+ARG BUILD_DATE
+ARG V_ENV=/opt/venv
+
+LABEL maintainer=guy_huinen@be.ibm.com \
+    org.label-schema.description="Diem Nodepy Application" \
+    org.label-schema.name="nodepy" \
+    org.label-schema.version=$BUILD_VERSION \
+    org.label-schema.build-date=$BUILD_DATE
+
+# Set 'spark' module defined environment variables
+ENV \
+    PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/spark/bin" \
+    SPARK_HOME="/opt/spark" \
+    SPARK_INSTALL="/opt/spark" \
+    LANG=en_US.UTF-8 \
+    NODE_ENV=production \
+    V_ENV=/opt/venv \
+    PYTHONPATH="/usr/bin/python3:/opt/venv/lib/python3.9/site-packages"
+# Custom scripts from 'spark' module
+ENV PATH="${V_ENV}/bin:$PATH"
+
+COPY jars/* /opt/spark/jars/
+COPY requirements-3.1.2.txt /opt/spark/
+
+RUN python3 -m pip install --upgrade pip
+RUN python3 -m venv ${V_ENV}
+RUN python3 -m pip install  --prefer-binary -r /opt/spark/requirements-3.1.2.txt
+
+ENTRYPOINT [ "/opt/entrypoint.sh" ]
+
+WORKDIR /opt/spark/work-dir
+RUN chmod -R 775 .
