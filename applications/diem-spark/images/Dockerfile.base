@@ -1,0 +1,14 @@
+# Spark base file
+# run this docker command to copy over the spark build into the docker file
+# docker build -t quay.io/diem/base-spark:3.1.2_rhel .
+# You can now use this image in a multilayer
+
+FROM scratch
+
+ARG img=spark-3.1.2-bin-custom-spark
+
+COPY ${img}.tgz /tmp/${img}.tgz
+
+LABEL maintainer=guy_huinen@be.ibm.com \
+    org.label-schema.description="Spark Build File" \
+    org.label-schema.name="spark"

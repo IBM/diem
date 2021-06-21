@@ -1,3 +1,5 @@
+FROM quay.io/diem/base-spark:3.1.2_rhel as base_spark
+
 FROM registry.access.redhat.com/ubi8/python-39 as base
 
 WORKDIR /
@@ -8,7 +10,7 @@ ARG img=spark-3.1.2-bin-custom-spark
 ARG install_dir=/tmp/artifacts
 ARG V_ENV=/opt/venv
 
-COPY spark/${img}.tgz ${install_dir}/${img}.tgz
+COPY --from=base_spark /tmp ${install_dir}/
 
 RUN mkdir -p ${install_dir}/tar
 RUN tar -xzf /tmp/artifacts/${img}.tgz -C ${install_dir}/tar
