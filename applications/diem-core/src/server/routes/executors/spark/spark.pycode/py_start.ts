@@ -15,18 +15,19 @@ from diemlib.main import *
 
 env = os.environ
 
-config.__id = env.get('ID', 'noop')
-config.__email = env.get('EMAIL', 'noop')
-config.__jobid = env.get('JOBID', 'noop')
-config.__name = env.get('NAME', 'noop')
+config.__id = env.get('ID', None)
+config.__email = env.get('EMAIL', None)
+config.__jobid = env.get('JOBID', None)
+config.__name = env.get('NAME', None)
 config.__filepath = env.get('FILEPATH', '/opt/spark/')
 config.__transid = env.get('TRANSID', '37e1c542-bb41-4e78-e085-6ad891f46d94')
-config.__org = env.get('ORG', 'noop')
+config.__org = env.get('ORG', None)
 config.__starttime = time.time()
 config.__jobstart = UtcNow()
-config.__url = env.get('SPARK__CALLBACK_URL','noop')
+config.__url = env.get('SPARK__CALLBACK_URL',None)
 config.__nats = False
 config.__appname = env.get('APPNAME', 'diem-core')
+config.__K8_SYSTEM = env.get('K8_SYSTEM', None)
 
 def diem_except_hook(exctype, value, traceback):
     error(value)
