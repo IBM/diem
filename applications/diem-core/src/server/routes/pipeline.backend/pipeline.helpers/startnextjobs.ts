@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* eslint-disable sonarjs/cognitive-complexity */
 import { utils } from '@common/utils';
-import { IJobResponse, IJobModel, IJobDetails, EJobStatus, EJobStatusCodes } from '@models';
+import { IJobResponse, IJobModel, IJobDetails, EJobStatus, EJobStatusCodes, EJobContinue } from '@models';
 import { addTrace } from '@functions';
 import { jobStartHandler } from '../../job.backend/job.start.handler';
 import { findOne } from './findone';
@@ -20,7 +20,8 @@ const getNextInQueue: (pldid: string, id: string) => Promise<string[]> = async (
         });
     }
 
-    const nodeIds: string[] = await getNodesFromId(id, pldoc);
+    /* get getNodesFromId returns a string[] with all nodes that are to be run after the current node */
+    const nodeIds: string[] = await getNodesFromId(pldoc.jobs, id);
     const nodes: string[] = [];
 
     // eslint-disable-next-line guard-for-in
@@ -29,17 +30,39 @@ const getNextInQueue: (pldid: string, id: string) => Promise<string[]> = async (
          * once the queue has the same number of elements as the from (can be multiple jobs)
          * this would mean that all parent jobs have completed and we can run the next job
          */
+
         if (pldoc.jobs[nodeId]) {
-            // add some piece on checking the continueing conditions
+            // add some piece on checking the continuing conditions
             if (
                 pldoc.jobs[nodeId].from &&
                 pldoc.jobs[nodeId].queue &&
                 pldoc.jobs[nodeId].queue.length === pldoc.jobs[nodeId].from.length
             ) {
+                if (pldoc.jobs[nodeId].required === EJobContinue.all) {
+                    /*
+                     * now we need to do a special check
+                     * only jobs
+                     */
+
+                    let allowed: boolean = true;
+
+                    for await (const parentId of pldoc.jobs[nodeId].queue) {
+                        if (pldoc.jobs[parentId].status !== EJobStatus.completed) {
+                            allowed = false;
+                        }
+                    }
+
+                    if (!allowed) {
+                        utils.logInfo(
+                            `$startnextjobs (getNextInQueue): job not allowed to continue - pl: ${plid} - job: ${id} - blocked job: ${nodeId} - required: ${pldoc.jobs[nodeId].required}`
+                        );
+                        continue;
+                    }
+                }
                 nodes.push(nodeId);
                 // eslint-disable-next-line max-len
                 utils.logInfo(
-                    `$startnextjobs (getNextInQueue): adding next job - pl: ${plid} - job: ${id} - adding job: ${nodeId} - node: ${nodes.length}`
+                    `$startnextjobs (getNextInQueue): adding next job - pl: ${plid} - job: ${id} - adding job: ${nodeId} - node: ${nodes.length} - required: ${pldoc.jobs[nodeId].required}`
                 );
             } else {
                 utils.logInfo(
@@ -52,7 +75,7 @@ const getNextInQueue: (pldid: string, id: string) => Promise<string[]> = async (
     return Promise.resolve(nodes);
 };
 
-const getNodesWithIdFrom: (jobs: IJobDetails, id: string) => Promise<string[]> = async (
+export const getNodesFromId: (jobs: IJobDetails, id: string) => Promise<string[]> = async (
     jobs: IJobDetails,
     id: string
 ): Promise<string[]> => {
@@ -66,21 +89,6 @@ const getNodesWithIdFrom: (jobs: IJobDetails, id: string) => Promise<string[]> =
     }
 
     return Promise.resolve(nodes);
-};
-
-export const getNodesFromId: (id: string, pldoc: IJobModel) => Promise<string[]> = async (
-    id: string,
-    pldoc: IJobModel
-): Promise<string[]> => {
-    // we have now the job and now need to find the nodeIds where the from contains the job id
-
-    const nodeIds: string[] = await getNodesWithIdFrom(pldoc.jobs, id);
-
-    if (nodeIds && nodeIds.length === 0) {
-        return Promise.resolve([]);
-    }
-
-    return Promise.resolve(nodeIds);
 };
 
 export const startNextJobs: (job: IJobResponse, pldoc: IJobModel) => Promise<number> = async (

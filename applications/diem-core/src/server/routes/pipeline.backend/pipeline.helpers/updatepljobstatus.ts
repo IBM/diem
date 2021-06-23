@@ -2,7 +2,7 @@
 import { utils } from '@common/utils';
 import { IError } from '@interfaces';
 import { addTrace } from '@functions';
-import { EJobStatus, IJobModel } from '@models';
+import { IJobModel } from '@models';
 import { findOne, findOneAndUpdate } from './findone';
 import { getNodesFromId } from './helpers';
 
@@ -28,9 +28,9 @@ export const updatePlJobStatus: (pldoc: IJobModel, job: { id: string; status: st
          * queue of that job for that pipeline
          */
 
-        const nodeIds: string[] = await getNodesFromId(job.id, pldoc);
+        const nodeIds: string[] = await getNodesFromId(pldoc.jobs, job.id);
 
-        if (nodeIds && nodeIds.length && job.status === EJobStatus.completed) {
+        if (nodeIds && nodeIds.length) {
             const nodes: any = {};
             for await (const nodeId of nodeIds) {
                 if (pldoc.jobs[nodeId] && pldoc.jobs[nodeId].queue && !pldoc.jobs[nodeId].queue.includes(job.id)) {
