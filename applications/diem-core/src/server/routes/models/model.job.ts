@@ -15,8 +15,9 @@ export enum EJobStatus {
     submitted = 'Submitted',
 }
 
-export const enum ETriggers {
-    completed = 'all_Completed',
+export const enum EJobContinue {
+    all = 'all',
+    continue = 'continue',
 }
 
 export const enum EJobTypes {

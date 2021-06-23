@@ -1,6 +1,6 @@
 import { utils } from '@common/utils';
 import { IRequest, IntServerPayload } from '@interfaces';
-import { DataModel, EJobStatus, IJobBody, IJobResponse, IJobModel } from '@models';
+import { DataModel, EJobStatus, IJobBody, IJobResponse, IJobModel, EJobContinue } from '@models';
 import { addTrace } from '@functions';
 import { makemakePlPayload } from '../pipeline.backend/pipeline.dependency';
 
@@ -40,7 +40,7 @@ const actionUpdate: (body: IJobBody) => Promise<any> = async (body: IJobBody) =>
                     doc.jobs[record.id] = {
                         from: [pipelineid],
                         queue: [],
-                        required: 'all',
+                        required: EJobContinue.all,
                         status: EJobStatus.pending,
                     };
                 }
