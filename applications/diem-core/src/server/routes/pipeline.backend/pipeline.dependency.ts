@@ -8,7 +8,7 @@ interface IDependencyBody {
     id: string;
     jobid: string;
     records?: any[];
-    completed: boolean;
+    completed: string;
     email: string;
     username: string;
     transid: string;
@@ -99,6 +99,11 @@ const pipelineDependencyUpdate: (body: IDependencyBody) => Promise<IntServerPayl
         }
     }
 
+    // indicator if the job needs to run on failure or stop
+    if (body.completed) {
+        doc.jobs[id].required = body.completed;
+    }
+
     // root is a value that will put this job back to root
     if (body.reset) {
         for (const [key, value] of Object.entries(doc.jobs)) {
@@ -152,7 +157,7 @@ export const pipelinedependency: (req: IRequest) => Promise<any> = async (req: I
     });
 
     utils.logInfo(
-        `$job.pipeline (pipeleinedependency) completed dependency Update for job ${body.id}`,
+        `$job.pipeline (pipeleinedependency): completed dependency Update for job ${body.id}`,
         req.transid,
         process.hrtime(hrstart)
     );

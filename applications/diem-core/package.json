@@ -1,7 +1,7 @@
 {
     "name": "diem-core",
     "description": "Diem Data Integration Engine Multipurpose",
-    "version": "1.4.1",
+    "version": "1.4.2",
     "author": "guy_huinen@be.ibm.com",
     "config": {
         "appname": "Diem",
@@ -21,7 +21,7 @@
         "chalk": "^4.1.1",
         "connect-mongo": "^4.4.1",
         "cookie-parser": "^1.4.5",
-        "core-js": "^3.15.0",
+        "core-js": "^3.15.1",
         "cron-parser": "^3.5.0",
         "express": "^4.17.1",
         "express-rate-limit": "^5.2.6",
@@ -34,7 +34,7 @@
         "moment": "^2.29.1",
         "mongoose": "^5.12.14",
         "nats": "^2.0.6",
-        "nocache": "^3.0.0",
+        "nocache": "^3.0.1",
         "passport": "^0.4.1",
         "passport-ci-oidc": "^2.0.4",
         "print-hrtime": "^2.0.0",

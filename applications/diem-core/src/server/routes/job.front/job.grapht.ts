@@ -1,7 +1,16 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable sonarjs/cognitive-complexity */
 import moment, { Moment } from 'moment';
-import { IJobDetails, IJobDetail, EJobTypes, DataModel, IntPayloadValues, IJobSchema } from '@models';
+import {
+    IJobDetails,
+    IJobDetail,
+    EJobTypes,
+    DataModel,
+    IntPayloadValues,
+    IJobSchema,
+    EJobStatus,
+    EJobContinue,
+} from '@models';
 import { addTrace } from '@functions';
 import { handlePayloadValues } from '../job.backend/job.functions';
 
@@ -35,7 +44,7 @@ export const getGraphLinks: (pldoc: IJobSchema) => Promise<[string, string, IntP
     // const gl: string = l > 4 ? 'TD' : 'LR';
     const gl: string = rounds_nbr > 7 ? 'TD' : 'LR';
 
-    let graph: string = `%%{init: {'themeVariables': { 'fontSize': '12px'}}}%%\ngraph ${gl};linkStyle default interpolate basis;`;
+    let graph: string = `%%{init: {'themeVariables': { 'fontSize': '12px'}}}%%\ngraph ${gl};linkStyle default interpolate basis;classDef mm_green fill:PaleGreen;classDef mm_red fill:lightcoral;;classDef mm_tan fill:Tan;`;
 
     const nodes: string[] = [];
 
@@ -44,8 +53,14 @@ export const getGraphLinks: (pldoc: IJobSchema) => Promise<[string, string, IntP
         if (value && value.from) {
             const t: string[] = value.from;
 
+            let arrow: string = '-->';
+
+            if (jobs[key].required === EJobContinue.continue) {
+                arrow = '-.->';
+            }
+
             t.forEach((ref: string) => {
-                const link: string = `${ref} --> ${key};`;
+                const link: string = `${ref} ${arrow} ${key};`;
 
                 graph += link;
             });
@@ -84,6 +99,18 @@ export const getGraphLinks: (pldoc: IJobSchema) => Promise<[string, string, IntP
             graph += `${id}[/"${doc.name}"/];`;
         } else {
             graph += `${id}("${doc.name}");`;
+        }
+
+        if (doc.job.status === EJobStatus.completed) {
+            graph += `class ${id} mm_green;`;
+        }
+
+        if (doc.job.status === EJobStatus.failed) {
+            graph += `class ${id} mm_red;`;
+        }
+
+        if (doc.job.status === EJobStatus.stopped) {
+            graph += `class ${id} mm_tan;`;
         }
 
         const runtime: number = doc.job.runtime || 0;
