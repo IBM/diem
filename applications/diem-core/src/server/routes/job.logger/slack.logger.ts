@@ -1,6 +1,5 @@
-/* eslint-disable max-len */
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable complexity */
-/* eslint-disable @typescript-eslint/quotes */
 
 import { slackMsg } from '@common/slack/slack';
 import { ISlack, utils } from '@common/utils';
@@ -9,8 +8,6 @@ import { IError } from '@interfaces';
 import { fmtTime, makeUrl } from '@functions';
 import { getwebhook } from '../webhooks/webhooks';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-// eslint-disable-next-line sonarjs/cognitive-complexity
 export const toSlack: (doc: IJobModel) => Promise<void> = async (doc: IJobModel): Promise<void> => {
     const id: string = doc._id.toString();
 
@@ -48,9 +45,6 @@ export const toSlack: (doc: IJobModel) => Promise<void> = async (doc: IJobModel)
 
     const runtime: number = doc.job.runtime || 0;
 
-    // eslint-disable-next-line max-len
-    // const info: any = `🗣 \`status: ${pipeline}${status} - job: ${url} - runby: ${runby} - email: ${email} - rt: ${runtime} - rc: ${count} - id: ${id} - pid: ${process.pid}\``;
-    // eslint-disable-next-line max-len
     const info: any = `🗣 \`status: ${jobType} ${status} - name: ${doc.name} - runby: ${runby} - email: ${email} - rt: ${runtime} - rc: ${count} - id: ${id}`;
 
     utils.logInfo(info, doc.job.transid);

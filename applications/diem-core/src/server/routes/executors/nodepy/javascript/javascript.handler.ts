@@ -1,5 +1,4 @@
 /* eslint-disable complexity */
-/* eslint-disable sonarjs/cognitive-complexity */
 
 import { ECodeLanguage, IJobSchema } from '@models';
 import { base64encode, addTrace } from '@functions';

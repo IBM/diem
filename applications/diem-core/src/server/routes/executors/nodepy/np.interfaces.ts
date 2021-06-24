@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/quotes */
-
 import { IETLJob, IUrlSchema, IJobConfig, IStmtSchema, ECodeLanguage } from '@models';
 
 // basically the job that will be sent to nodepy

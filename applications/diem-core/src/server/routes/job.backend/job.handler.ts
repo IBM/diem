@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable complexity */
-/* eslint-disable sonarjs/cognitive-complexity */
 
 import { EStoreActions, IntPayload } from '@interfaces';
 import { utils } from '@common/utils';

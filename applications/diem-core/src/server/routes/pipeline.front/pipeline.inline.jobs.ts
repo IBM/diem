@@ -53,7 +53,7 @@ const findByFilter: (filter: any, body: IQuery) => Promise<any> = async (filter:
  * @info also by gettemplate and settings
  * @input {{job: IQuery}}
  */
-// eslint-disable-next-line sonarjs/cognitive-complexity
+
 export const parseFilter: (job: IPipelineQuery) => Promise<any> = async (job: IPipelineQuery) => {
     const filter: any = {};
 

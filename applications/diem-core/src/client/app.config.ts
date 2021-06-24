@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { UrlSegment } from '@angular/router';
 
 const fahome: string = 'fa fa-home';

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable complexity */
 import { utils } from '@common/utils';
 import { Credentials } from '@common/cfenv';
@@ -7,7 +9,6 @@ import { pubSub } from '@config/pubsub';
 import { ExecutorTypes, EJobStatus } from '@models';
 import { addTrace } from '@functions';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const JSONStream: any = require('json-stream');
 
 interface IApis extends Api.Apis {
@@ -166,7 +167,6 @@ class SparkLib {
         }
     };
 
-    // eslint-disable-next-line sonarjs/cognitive-complexity
     public startWatcher: (id: string, managed?: boolean) => Promise<void> = async (
         id: string,
         managed?: boolean
@@ -188,9 +188,7 @@ class SparkLib {
             status: '',
         };
 
-        // eslint-disable-next-line max-len
         utils.logInfo(
-            // eslint-disable-next-line max-len
             `$spark.watcher (watcher): started watching - id: ${id} - group: ${this.crd.spec.group} - streams: ${
                 Object.keys(this.streams).length
             }`
@@ -301,9 +299,7 @@ class SparkLib {
                     const out: string = await this.getJobLog(obj.id).catch(async () => {
                         utils.logInfo(`$spark.watcher (managed watcher): no log found - passing to abort - id: ${id}`);
 
-                        await this.abort(id, 'watcher - deleted');
-
-                        return;
+                        await this.abort(id, 'watcher - getJobLog');
                     });
 
                     void pubSub.publish({
@@ -327,11 +323,9 @@ class SparkLib {
                 let log: any = 'Unspecified error';
 
                 log = await this.getJobLog(obj.id).catch(async () => {
-                    utils.logInfo(`$spark.watcher (managed watcher): no log found - passing to abort - id: ${id}`);
+                    utils.logInfo(`$spark.watcher (not managed watcher): no log found - passing to abort - id: ${id}`);
 
-                    await this.abort(id, 'watcher - deleted');
-
-                    return;
+                    await this.abort(id, 'watcher - getJobLog');
                 });
 
                 if (this.streams[id]) {

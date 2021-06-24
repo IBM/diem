@@ -81,8 +81,6 @@ const countByFilter: (filter: any) => Promise<any> = async (filter: any) => {
     }
 };
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
-
 export const joblog: (req: IRequest) => Promise<any> = async (req: IRequest) => {
     const hrstart: [number, number] = process.hrtime();
 

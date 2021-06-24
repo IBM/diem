@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/indent */
-/* eslint-disable sonarjs/cognitive-complexity */
 import moment, { Moment } from 'moment';
 import {
     IJobDetails,

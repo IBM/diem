@@ -1,4 +1,3 @@
-// eslint-disable-next-line camelcase
 export const py_start: () => string = () => String.raw`
 
 ### py_start ###

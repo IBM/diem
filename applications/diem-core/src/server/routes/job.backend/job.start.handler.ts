@@ -1,5 +1,3 @@
-/* eslint-disable max-len */
-/* eslint-disable @typescript-eslint/indent */
 /* eslint-disable complexity */
 /* eslint-disable sonarjs/cognitive-complexity */
 

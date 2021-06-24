@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/cognitive-complexity */
 import { utils } from '@common/utils';
 import { EJobStatus, IJobResponse, IJobModel } from '@models';
 import { findOne } from './findone';
@@ -36,7 +35,6 @@ export const checkPlCompleted: (job: IJobResponse, plid: string) => Promise<[boo
     const isstopped: boolean = Object.values(pldoc.jobs).some((obj: any) => [EJobStatus.stopped].includes(obj.status));
 
     utils.logInfo(
-        // eslint-disable-next-line max-len
         `$checkplcompleted (checkPlCompleted): incomplete: ${incomplete} - stopped: ${isstopped} - failed: ${isfailed} - pl: ${pldoc._id.toString()} - job: ${
             job.id
         }`,

@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import { utils } from '@common/utils';
 import { IError } from '@interfaces';
 import { addTrace } from '@functions';
@@ -42,7 +41,7 @@ export const updatePlJobStatus: (pldoc: IJobModel, job: { id: string; status: st
                 $set: { [f]: job.status },
                 $push: nodes,
             }).catch(async (err: any) => {
-                err.trace = ['@at $authorization (login-email)'];
+                err.trace = ['@at $updatepljobstatus (findOneAndUpdate) - nodeIds'];
                 void utils.logError(
                     `$updatepljobstatus (updatePlJobStatus): save failed - pl: ${plid} - job: ${job.id}`,
                     err
@@ -52,7 +51,7 @@ export const updatePlJobStatus: (pldoc: IJobModel, job: { id: string; status: st
             });
         } else {
             pldoc = await findOneAndUpdate(plid, { $set: { [f]: job.status } }).catch(async (err: any) => {
-                err.trace = ['@at $authorization (login-email)'];
+                err.trace = ['@at $updatepljobstatus (findOneAndUpdate)'];
                 void utils.logError(
                     `$updatepljobstatus (updatePlJobStatus): save failed - pl: ${plid} - job: ${job.id}`,
                     err
@@ -128,7 +127,7 @@ export const updatePlStatus: (pldoc: IJobModel, job: { id: string; status: strin
 ): Promise<void> => {
     const plid: string = pldoc._id.toString();
     await findOneAndUpdate(plid, { $set: { 'job.status': pldoc.job.status } }).catch(async (err: any) => {
-        err.trace = ['@at $authorization (login-email)'];
+        err.trace = ['@at $updatepljobstatus (findOneAndUpdate)'];
         void utils.logError(
             `$updatepljobstatus (updatePlStatus): save failed - pl: ${plid} - status: ${pldoc.job.status}`,
             err

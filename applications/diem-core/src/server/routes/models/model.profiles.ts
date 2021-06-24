@@ -2,8 +2,6 @@ import { mongoose } from '@common/mongo';
 import { Schema } from 'mongoose';
 import { annotationsSchema } from './model.common';
 
-// eslint-disable-next-line camelcase
-
 export enum EUserRoles {
     admin = 'admin',
     dbadmin = 'dbadmin',

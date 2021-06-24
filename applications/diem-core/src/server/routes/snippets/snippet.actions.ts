@@ -1,5 +1,4 @@
 /* eslint-disable complexity */
-/* eslint-disable @typescript-eslint/indent */
 import { utils } from '@common/utils';
 import { IRequest, EStoreActions, IntPayload, IntServerPayload, IError } from '@interfaces';
 import { ISnippetsBody, ISnippetsModel, SnippetsModel, FaIcons, EIdType, UserModel } from '@models';

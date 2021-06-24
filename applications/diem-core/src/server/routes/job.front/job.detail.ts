@@ -50,7 +50,6 @@ export const getNodes: (jobs: IJobDetails) => string[] = (jobs: IJobDetails): st
     const nodes: string[] = Object.keys(jobs); // all keys are nodes
 
     /* loop over the jobs and find from elements that don't have a key*/
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     Object.entries(jobs).forEach(([_key, value]: [string, IJobDetail]) => {
         if (value && value.from) {
             const t: string[] = value.from;
@@ -66,7 +65,6 @@ export const getNodes: (jobs: IJobDetails) => string[] = (jobs: IJobDetails): st
     return nodes;
 };
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
 export const makePayload: (doc: IJobSchema) => Promise<IModelPayload> = async (
     doc: IJobSchema
 ): Promise<IModelPayload> => {

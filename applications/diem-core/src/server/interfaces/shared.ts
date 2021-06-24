@@ -111,7 +111,6 @@ export interface IntApiRequestPayload {
     transid: string;
 }
 
-// eslint-disable-next-line no-shadow
 export enum EStoreActions {
     ADD_DATA = 'ADD_DATA',
     ADD_FORM_DATA = 'ADD_FORM_DATA',

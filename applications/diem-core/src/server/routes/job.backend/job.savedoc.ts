@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/indent */
-/* eslint-disable complexity */
-/* eslint-disable sonarjs/cognitive-complexity */
-
 import { utils } from '@common/utils';
 
 import { IJobModel } from '@models';

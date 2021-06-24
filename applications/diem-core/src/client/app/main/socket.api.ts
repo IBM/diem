@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 import { Injectable } from '@angular/core';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { Store } from '@ngrx/store';
@@ -62,14 +63,12 @@ export class SocketService {
         this.notificationService = notificationService;
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     public msg = (message: any): void => this.subject.next(message);
 
     public dispatch = (data: IntStoreState): void => {
         this.store.dispatch(data);
     };
 
-    // eslint-disable-next-line sonarjs/cognitive-complexity
     private messageHandler = (message: IntMessage): void => {
         if (message.payload) {
             /* we have back a payload so first if not an arry turn it into an arry, then handle */

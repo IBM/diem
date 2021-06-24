@@ -50,7 +50,6 @@ export const slackMsg: (m: any, slackConfig?: Partial<ISlack>) => Promise<void> 
     const options: AxiosRequestConfig = {
         data: {
             channel: slack.deploy.channel,
-            // eslint-disable-next-line camelcase
             icon_emoji: slack.emoji,
             username: `${slack.deploy.username} on ${utils.Env.K8_SYSTEM_NAME}`,
         },

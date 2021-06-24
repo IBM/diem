@@ -62,10 +62,8 @@ export class Express {
     private fatal: boolean = false;
     private assets!: any;
 
-    // eslint-disable-next-line @typescript-eslint/quotes, max-len
     private policy: string = `geolocation 'self';midi 'none';sync-xhr 'none';microphone 'self';camera 'self';magnetometer 'none';gyroscope 'none';fullscreen 'self';payment 'none';`;
 
-    // eslint-disable-next-line @typescript-eslint/quotes, max-len
     private policyApi: string = `geolocation 'none';midi 'none';sync-xhr 'none';microphone 'none';camera 'none';magnetometer 'none';gyroscope 'none';fullscreen 'none';payment 'none';`;
 
     private contentSecurityPolicy: any = {
@@ -82,7 +80,6 @@ export class Express {
         featurePolicyApiIncluded: ['/api'],
     };
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     public constructor(assets: IAsserts, config?: IExpressConfig) {
         this.assets = assets;
         passport.use(Strategy);
@@ -97,7 +94,6 @@ export class Express {
         this.start();
     }
 
-    // eslint-disable-next-line sonarjs/cognitive-complexity
     private start = (): void => {
         try {
             const csp: any = helmet.contentSecurityPolicy(this.CSP(this.assets));

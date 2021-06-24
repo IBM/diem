@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 /* eslint-disable @typescript-eslint/no-this-alias */
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';

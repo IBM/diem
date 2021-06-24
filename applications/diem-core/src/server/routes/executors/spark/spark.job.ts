@@ -1,5 +1,3 @@
-/* eslint-disable max-len */
-
 import { ICrdConfig } from 'routes/spark-operator/base.crd';
 import { utils } from '@common/utils';
 import { Credentials } from '@common/cfenv';

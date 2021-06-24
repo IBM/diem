@@ -1,7 +1,3 @@
-/* eslint-disable sonarjs/no-duplicate-string */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable camelcase */
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 import { Env, HttpService } from '@mydiem/diem-angular-util';
@@ -10,6 +6,8 @@ import { select, Store } from '@ngrx/store';
 import { catchError, take } from 'rxjs/operators';
 import { modules } from '../../app.config';
 import { MainCommonFunctions } from './main.common.functions';
+
+const guard_str: string = '$jobdetail.routing.guard (loadData): error';
 
 @Injectable()
 export class JobDetailRoutingGuard implements CanActivate {
@@ -53,7 +51,6 @@ export class JobDetailRoutingGuard implements CanActivate {
     private r_getStore = (params: any): string => params.map((o: any) => o.path).join('-');
 
     private verifyjobdetail = async (route: any): Promise<boolean> =>
-        // eslint-disable-next-line no-async-promise-executor
         new Promise<boolean>(async (resolve) => {
             console.info('$jobdetail.routing.guard (canActivate): Allowed activation as user is allowed');
             const id: string = route.params.id;
@@ -130,9 +127,7 @@ export class JobDetailRoutingGuard implements CanActivate {
 
                     this.router
                         .navigate([`/${module}/403`])
-                        .catch((routingerr: Error) =>
-                            console.error('$jobdetail.routing.guard (loadData): error', routingerr)
-                        );
+                        .catch((routingerr: Error) => console.error(guard_str, routingerr));
 
                     return Promise.resolve(false);
                 } else {
@@ -146,14 +141,12 @@ export class JobDetailRoutingGuard implements CanActivate {
             },
 
             async (err: any) => {
-                console.info('$jobdetail.routing.guard (loadData): error', err);
+                console.info(guard_str, err);
 
                 if (err.status === 404) {
                     this.router
                         .navigate([`/${module}/404`])
-                        .catch((routingerr: Error) =>
-                            console.error('$jobdetail.routing.guard (loadData): error', routingerr)
-                        );
+                        .catch((routingerr: Error) => console.error(guard_str, routingerr));
 
                     return Promise.resolve(false);
                 }
@@ -166,9 +159,7 @@ export class JobDetailRoutingGuard implements CanActivate {
 
                 this.router
                     .navigate([`/${module}/500`])
-                    .catch((routingerr: Error) =>
-                        console.error('$jobdetail.routing.guard (loadData): error', routingerr)
-                    );
+                    .catch((routingerr: Error) => console.error(guard_str, routingerr));
 
                 return Promise.resolve(false);
             }

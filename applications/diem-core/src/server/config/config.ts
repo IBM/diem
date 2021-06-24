@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 import { IExpressConfig } from '@common/express';
 
 export const css: any = [];

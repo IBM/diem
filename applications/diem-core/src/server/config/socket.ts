@@ -5,7 +5,6 @@ import { IntEnv } from '@interfaces';
 import { slackMsg } from '@common/slack/slack';
 import jwt from 'jsonwebtoken';
 import { IUserPayload } from '@models';
-import { IntInteractivePayload } from '../routes/interactive/interactive';
 import { pubSub } from './pubsub';
 
 interface IWebSocket extends WebSocket {
@@ -181,18 +180,6 @@ export class Server {
             });
         } else {
             utils.logInfo('$socket (message) cannot sent message as mo email');
-        }
-    };
-
-    public bcInteractive: (msg: IntInteractivePayload) => void = async (msg: IntInteractivePayload) => {
-        if (msg && msg.email) {
-            this.wss.clients.forEach((ws: any) => {
-                if (ws.id === msg.email) {
-                    ws.send(pubSub.toString({ ...msg.payload }));
-                }
-            });
-        } else {
-            utils.logInfo('$socket (bcInteractive) cannot sent message as mo email');
         }
     };
 }

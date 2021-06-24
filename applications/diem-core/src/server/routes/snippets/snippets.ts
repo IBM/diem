@@ -1,5 +1,3 @@
-/* eslint-disable sonarjs/cognitive-complexity */
-/* eslint-disable @typescript-eslint/indent */
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
 import { IQuery, ISnippetSchema, SnippetsModel, FaIcons, ISnippetPayload, EIdType } from '@models';

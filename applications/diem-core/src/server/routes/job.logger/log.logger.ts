@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/quotes */
 import { utils } from '@common/utils';
 import { IJobModel, IJob, JobLogModel, IJobLog } from '@models';
 import { IError } from '@interfaces';

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/indent */
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
 import { stringify } from 'yaml';
@@ -28,7 +27,6 @@ export const getwebapikey: (selector: string) => Promise<IWebApikeysSchema> = as
 
 export const getwebapikeys: (req: IRequest) => Promise<IWebApikeyPayload[]> = async (
     req: IRequest
-    // eslint-disable-next-line sonarjs/cognitive-complexity
 ): Promise<IWebApikeyPayload[]> => {
     const hrstart: [number, number] = process.hrtime();
 

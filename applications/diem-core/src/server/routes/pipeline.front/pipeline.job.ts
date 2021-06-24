@@ -4,7 +4,6 @@ import { DataModel, EJobStatus, IJobBody, IJobResponse, IJobModel, EJobContinue 
 import { addTrace } from '@functions';
 import { makemakePlPayload } from '../pipeline.backend/pipeline.dependency';
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
 const actionUpdate: (body: IJobBody) => Promise<any> = async (body: IJobBody) => {
     if (!body.id) {
         return Promise.reject({
