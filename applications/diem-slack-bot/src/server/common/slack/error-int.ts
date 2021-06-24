@@ -89,6 +89,6 @@ export const slackMsgInt: (error: IError, slackConfig?: Partial<ISlack>) => Prom
             } - status: ${response}`
         );
     } else {
-        utils.logErr(`$$error-int: disabledslack - caller: ${error.caller || 'n/a'}`);
+        utils.logErr(`$error-int: disabledslack - caller: ${error.caller || 'n/a'}`);
     }
 };
