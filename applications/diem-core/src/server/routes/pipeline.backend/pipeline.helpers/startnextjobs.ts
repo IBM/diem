@@ -124,13 +124,13 @@ export const startNextJobs: (job: IJobResponse, pldoc: IJobModel) => Promise<num
                         job.transid
                     );
                 } else {
-                    batch_doc.job.email = job.email;
+                    batch_doc.job.email = job.email; // runs under the owner of the document that triggers
                     batch_doc.job.executor = job.executor;
                     batch_doc.job.jobstart = new Date();
                     batch_doc.job.status = EJobStatus.submitted;
-                    batch_doc.job.transid = job.transid;
+                    batch_doc.job.transid = pldoc.job.transid;
                     batch_doc.job.jobid = plid;
-                    batch_doc.job.runby = job.runby;
+                    batch_doc.job.runby = pldoc.job.runby;
 
                     utils.logInfo(
                         `$startnextjobs (startNextJobs): passing to jobStartHandler - pl: ${job.jobid} - id: ${job.id} - job: ${id}`,
