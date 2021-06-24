@@ -140,37 +140,35 @@ export const webapikeyupdate: (req: IRequest) => Promise<IRequest | any> = async
         doc.webapikey = '/* redacted */';
     }
 
-    const payload: IntPayload[] = [
-        {
-            key: 'id',
-            loaded: true,
-            options: {
-                field: 'webapikey',
-            },
-            store: body.store /** not used as forcestore is enabled */,
-            type: isnew ? EStoreActions.ADD_STORE_RCD : EStoreActions.UPD_STORE_RCD,
-            values: {
-                createdby: doc.owner || doc.annotations.createdbyemail,
-                createddate: doc.annotations.createddate.toISOString(),
-                deleteicon,
-                description: doc.description,
-                editicon,
-                id: doc._id.toString(),
-                idtype: doc.idtype,
-                name: doc.name,
-                org: doc.project.org,
-                params: stringify(doc.params),
-                webapikey: doc.webapikey,
-                selector: doc.selector,
-                viewicon: `${FaIcons.viewicon}`,
-                owner: doc.owner || null,
-            },
-        },
-    ];
-
     const serverPayload: IntServerPayload = {
         message: 'WebApikeys Updated',
-        payload,
+        payload: [
+            {
+                key: 'id',
+                loaded: true,
+                options: {
+                    field: 'webapikey',
+                },
+                store: body.store /** not used as forcestore is enabled */,
+                type: isnew ? EStoreActions.ADD_STORE_RCD : EStoreActions.UPD_STORE_RCD,
+                values: {
+                    createdby: doc.owner || doc.annotations.createdbyemail,
+                    createddate: doc.annotations.createddate.toISOString(),
+                    deleteicon,
+                    description: doc.description,
+                    editicon,
+                    id: doc._id.toString(),
+                    idtype: doc.idtype,
+                    name: doc.name,
+                    org: doc.project.org,
+                    params: stringify(doc.params),
+                    webapikey: doc.webapikey,
+                    selector: doc.selector,
+                    viewicon: `${FaIcons.viewicon}`,
+                    owner: doc.owner || null,
+                },
+            },
+        ],
         success: true /** just display a success message */,
     };
 

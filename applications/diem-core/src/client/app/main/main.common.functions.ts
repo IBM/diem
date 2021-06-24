@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/indent */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable no-underscore-dangle */
+/* eslint-disable sonarjs/cognitive-complexity */
 import { Buffer } from 'buffer';
 import { saveAs } from 'file-saver';
 import { DFCommonService, DFFormService, DFStoreFunctions, IStoreMessageState } from '@mydiem/diem-forms';
@@ -148,7 +146,6 @@ export class MainCommonFunctions implements OnDestroy {
      * @memberof MainCommonFunctions
      */
     public postData = async (values: any, params: any): Promise<any> =>
-        // eslint-disable-next-line sonarjs/cognitive-complexity
         new Promise((resolve) => {
             if (this.processing && document.body) {
                 DomHandler.addClass(document.body, this.processing);
@@ -403,7 +400,6 @@ export class MainCommonFunctions implements OnDestroy {
         });
     };
 
-    // eslint-disable-next-line sonarjs/cognitive-complexity
     private findByKey = (o: any, id: string) => {
         /** Early return */
         if (o === null) {

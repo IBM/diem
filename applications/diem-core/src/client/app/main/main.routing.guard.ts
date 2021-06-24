@@ -26,7 +26,6 @@ export class MainRoutingGuard implements CanActivate {
                 /** reed the userprofile and check for the admin role */
 
                 console.info(
-                    // eslint-disable-next-line max-len
                     `$main.routing.guard (canActivate): Allowed activation as the role of ${this.user.email} (${this.env.user.rolenbr}) is passing ${access} `
                 );
 
@@ -38,7 +37,6 @@ export class MainRoutingGuard implements CanActivate {
             /** All other users that are not jobdetailing the poall route */
 
             console.info(
-                // eslint-disable-next-line max-len
                 `$main.routing.guard (canActivate): Redirecting to joball as the role of ${this.user.email} (${this.env.user.rolenbr}) is not passing ${access}`
             );
 

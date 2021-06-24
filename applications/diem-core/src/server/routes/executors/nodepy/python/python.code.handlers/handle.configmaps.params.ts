@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { IConfigmapsModel, ConfigmapsModel } from '@models';
 import { regEx } from './handle.params.util';
 
@@ -30,12 +29,7 @@ const replace: (code: string, configmap: string, org: string) => Promise<string>
 };
 
 export const handleConfigmapsParams: (code: string, configmaps: string | string[], org: string) => Promise<string> =
-    async (
-        code: string,
-        configmaps: string | string[],
-        org: string
-        // eslint-disable-next-line sonarjs/cognitive-complexity
-    ): Promise<string> => {
+    async (code: string, configmaps: string | string[], org: string): Promise<string> => {
         if (typeof configmaps === 'string') {
             code = await replace(code, configmaps, org);
         }

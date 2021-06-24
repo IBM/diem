@@ -1,7 +1,8 @@
-/* eslint-disable max-len */
 import { ConnModel, IConnSchema } from '@models';
 
 // not used : traceDirectory=/opt/spark/;traceLevel=TRACE_DIAGNOSTICS;traceFile=jcctrace.log;
+
+const truncate: string = 'TRUNCATE TABLE $TARGET';
 
 const jdbc_config_base: any = {
     db2: {
@@ -11,19 +12,19 @@ const jdbc_config_base: any = {
         connopt: '',
     },
     postgresql: {
-        truncate: 'TRUNCATE TABLE $TARGET',
+        truncate,
         driver: 'org.postgresql.Driver',
         jdbc: '',
         connopt: '',
     },
     nz: {
-        truncate: 'TRUNCATE TABLE $TARGET',
+        truncate,
         driver: 'org.netezza.Driver',
         jdbc: '',
         connopt: '',
     },
     mysql: {
-        truncate: 'TRUNCATE TABLE $TARGET',
+        truncate,
         driver: 'com.mysql.jdbc.Driver',
         jdbc: '',
         connopt: '',
@@ -35,7 +36,7 @@ export const jdbc_config: (type: string) => any = (type: string) => {
         return jdbc_config_base[type];
     } else {
         return {
-            truncate: 'TRUNCATE TABLE $TARGET',
+            truncate,
             driver: '',
             jdbc: '',
             connopt: '',

@@ -5,7 +5,6 @@ import { addTrace } from '@functions';
 import { handleWithConfig } from './spark.job.handlers/handle.spark.config';
 import { handleWithCustom } from './spark.job.handlers/handle.spark.custom';
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
 export const pyfile: (req: IRequest) => Promise<any> = async (req: IRequest): Promise<any> => {
     if (req.query.id === null) {
         return Promise.resolve('');

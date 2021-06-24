@@ -19,20 +19,10 @@ const blocks = [
         text: {
             type: 'mrkdwn',
             text: `\`\`\`
-General format: @Diem Bot <scope> <help|options>
+General format: @Diem Bot <service> <action>
 
-scope: jobs
-options: <start|stop|ouput|history> <dev|uat|prod> <$id|$name>
-
-scope:
-connection|configmap|webhook
-options: <$id|$selector> <get>
-
-scope: announcement
-options: <new>
-
-scope: utils
-options: <to_base64|from_base64|guid|join|randstring> <$value>
+Action is depending on the service requested
+Type @Diem Bot <service> help for more information
             \`\`\``,
         },
     },
@@ -55,7 +45,7 @@ export const payloads = {
     }),
 };
 
-export const homeHandler = async (event: any): Promise<any> => {
+export const homeHandler = async (event: any): Promise<boolean | any> => {
     if (event.tab === 'home') {
         utils.logInfo(`$event.home (handleHome): tab: home - user: ${event.user}`);
 
@@ -64,7 +54,7 @@ export const homeHandler = async (event: any): Promise<any> => {
             view: payloads.welcome_home(undefined),
         });
 
-        return;
+        return Promise.resolve(false);
     }
 
     if (event.tab === 'messages') {
@@ -77,7 +67,7 @@ export const homeHandler = async (event: any): Promise<any> => {
 
         if (!history?.messages?.length) {
             utils.logInfo(`$event.home (handleHome): tab: messages - user: ${event.user}`);
-            await api.callAPIMethodPost(
+            void api.callAPIMethodPost(
                 'chat.postMessage',
                 payloads.welcome_message({
                     channel: event.channel,
@@ -87,6 +77,6 @@ export const homeHandler = async (event: any): Promise<any> => {
             utils.logInfo(`$event.home (handleHome): tab: messages - returning user: ${event.user}`);
         }
 
-        return;
+        return Promise.resolve(false);
     }
 };

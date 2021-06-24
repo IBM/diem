@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { regEx } from './handle.params.util';
 
 export const handleValues: (code: string, values: { [index: string]: string }) => Promise<string> = async (

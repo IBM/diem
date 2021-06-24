@@ -14,8 +14,6 @@ interface IServicesReturn {
 export const services: (req: IRequest) => Promise<IServicesReturn> = async (
     req: IRequest
 ): Promise<IServicesReturn> => {
-    // eslint-disable-next-line no-async-promise-executor
-
     const hrstart: [number, number] = process.hrtime();
 
     const body: IServices = { ...req.body };

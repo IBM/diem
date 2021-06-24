@@ -152,7 +152,6 @@ export class ModalComponent implements OnDestroy {
         }
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public onHide = (): void => {
         this.close();
     };

@@ -94,12 +94,6 @@ export class Server {
     }
 
     public start = async (): Promise<void> => {
-        // we suppress console error
-        // eslint-disable-next-line no-console
-        // console.error = () => {
-        // no console.log
-        // };
-
         /*** The require packages */
 
         const app: any = new Express(assets, expressConfig).app;
@@ -457,7 +451,6 @@ export class Server {
             req.token = profile; /** For easy access */
 
             utils.logCyan(
-                // eslint-disable-next-line max-len
                 `$server (secAuth): ok - email: ${email} (${name}) - org: ${req.user.org} - role: ${req.user.role} (${req.user.rolenbr}) - method: ${method} - ti: ${req.transid}`
             );
 

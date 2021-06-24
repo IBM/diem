@@ -3,7 +3,10 @@ import { IRequest, IResponse } from '@interfaces';
 import { isVerified } from '../../config/verifysignature';
 import { homeHandler, messageHandler } from '../routes';
 
-export const eventHandler: (req: IRequest, res: IResponse) => Promise<any> = async (req, res) => {
+export const eventHandler: (req: IRequest, res: IResponse) => Promise<IResponse> = async (
+    req,
+    res
+): Promise<IResponse> => {
     // return if not is verified
     if (!isVerified(req)) {
         utils.logInfo('$event (eventHandler): unverfied request');
@@ -41,9 +44,19 @@ export const eventHandler: (req: IRequest, res: IResponse) => Promise<any> = asy
         // handle the events event
 
         // console.info('main event', event);
-        void handleEvent(event.event);
+        const response: boolean | any = await handleEvent(event.event).catch(async (err) => {
+            err.trace = utils.addTrace(err.trace, '@at $event.handler (eventHandler) - response');
 
-        return res.status(200).send();
+            void utils.logError('$event.handler (eventHandler) - response', err);
+
+            return res.status(200).send();
+        });
+
+        if (response === false) {
+            return res.status(200).send();
+        } else {
+            return res.status(200).send(response);
+        }
     }
 
     utils.logInfo(`$event (eventHandler): cannot handle this type of event: ${event}`);
@@ -51,14 +64,28 @@ export const eventHandler: (req: IRequest, res: IResponse) => Promise<any> = asy
     return res.status(404).send();
 };
 
-const handleEvent = async (event: any): Promise<any> => {
+const handleEvent: (event: any) => Promise<boolean | any> = async (event: any): Promise<boolean | any> => {
+    let response: boolean | any;
+
     if (['message', 'app_mention'].includes(event.type)) {
-        return void messageHandler(event);
+        response = await messageHandler(event).catch(async (err) => {
+            err.trace = utils.addTrace(err.trace, '@at $event.handler (handleEvent) - messageHandler');
+
+            return Promise.reject(err);
+        });
+    } else if (event.type === 'app_home_opened') {
+        response = await homeHandler(event).catch(async (err) => {
+            err.trace = utils.addTrace(err.trace, '@at $event.handler (handleEvent) - homeHandler');
+
+            return Promise.reject(err);
+        });
+    } else {
+        utils.logInfo(`$event (handleEvent): not handled event: ${event.type}`);
+
+        return Promise.resolve(false);
     }
 
-    if (event.type === 'app_home_opened') {
-        return void homeHandler(event);
-    }
+    utils.logInfo(`$event (handleEvent): handled event: ${event.type}`);
 
-    utils.logInfo(`$event (handleEvent): not handled event: ${event.type}`);
+    return Promise.resolve(response);
 };

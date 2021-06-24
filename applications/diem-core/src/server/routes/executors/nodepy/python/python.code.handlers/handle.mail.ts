@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/cognitive-complexity */
 import { Credentials } from '@common/cfenv';
 import { getConfigmap } from './handle.configmaps';
 

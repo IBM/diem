@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/indent */
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
 import { IQuery, IWebhookPayload, IWebhooksSchema, WebhooksModel, FaIcons, EIdType } from '@models';
@@ -27,7 +26,6 @@ export const getwebhook: (selector: string) => Promise<IWebhooksSchema> = async 
 
 export const getwebhooks: (req: IRequest) => Promise<IWebhookPayload[]> = async (
     req: IRequest
-    // eslint-disable-next-line sonarjs/cognitive-complexity
 ): Promise<IWebhookPayload[]> => {
     const hrstart: [number, number] = process.hrtime();
 

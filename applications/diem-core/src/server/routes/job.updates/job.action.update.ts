@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /* eslint-disable sonarjs/cognitive-complexity */
 import { parse } from 'yaml';
 import { EStoreActions, IntPayload, IntServerPayload, IntSharedAction } from '@interfaces';
@@ -34,7 +35,6 @@ export const mergeDeep: any = (target: any, source: any) => {
     return target;
 };
 
-// eslint-disable-next-line sonarjs/cognitive-complexity, complexity
 export const actionUpdate: (body: IJobBody) => Promise<any> = async (body: IJobBody) => {
     /* get the id here */
 

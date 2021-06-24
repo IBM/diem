@@ -32,8 +32,6 @@ export const servicesOutHandler: (job: Partial<IJobResponse>) => Promise<any> = 
 };
 
 export const getservice: (req: IRequest) => Promise<any> = async (req: IRequest): Promise<any> => {
-    // eslint-disable-next-line no-async-promise-executor
-
     const hrstart: [number, number] = process.hrtime();
 
     const body: IServices = { ...req.body };

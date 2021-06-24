@@ -9,6 +9,7 @@ import { slackMsg } from '@common/slack/slack';
 import { slackMsgInt } from '@common/slack/error-int';
 import { eventHandler, interactionsHander, api } from '../routes/routes';
 import { addTrace } from '../routes/functions';
+import { loadServiceDoc } from '../routes/service.doc';
 
 export class Server {
     public pack: IntEnv;
@@ -104,7 +105,7 @@ export class Server {
                 return res.status(400).send();
             })
             .all('*', limiter, (req: IRequest, res: IResponse) => {
-                utils.logInfo(`@server.ts (.all) - other request - url - ${req.url} - method: ${req.method}`);
+                utils.logInfo(`@server.ts (*) - other request - url - ${req.url} - method: ${req.method}`);
                 res.status(404).json({ message: 'This page cannot be found' });
             });
 
@@ -120,6 +121,8 @@ export class Server {
             await slackMsg(msg);
             void api.whoAmI();
         });
+
+        void loadServiceDoc();
     };
 
     private logErrors = async (

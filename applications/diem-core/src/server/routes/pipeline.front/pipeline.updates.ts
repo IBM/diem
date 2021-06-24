@@ -11,7 +11,6 @@ import { getGraphLinks } from '../job.front/job.grapht';
  * @param {*} reject
  * @returns
  */
-// eslint-disable-next-line sonarjs/cognitive-complexity
 const actionPlUpdate: (body: IJobBody) => Promise<any> = async (body: IJobBody) => {
     if (!body.id || !body.jobid) {
         return Promise.reject({

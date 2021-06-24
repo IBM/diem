@@ -3,12 +3,9 @@ import { IntPythonRestJob } from '../../np.interfaces';
 
 export const py_rest_services: (doc: IJobSchema) => string = (doc: IJobSchema): string => {
     if (!doc.url) {
-        const err: any = {
-            message: `No config file found - job: ${doc._id}`,
-            trace: ['@at $handle.nodepy.transfer (py_rest)'],
-        };
-
-        return err;
+        return String.raw`
+error("No Url")
+`;
     }
 
     const url: IntPythonRestJob['url'] = doc.url;

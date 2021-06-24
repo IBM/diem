@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/indent */
 import { mongoose } from '@common/mongo';
 import { Schema } from 'mongoose';
 import { annotationsSchema, IJobSchemaAnnotations, projectSchema } from './model.common';

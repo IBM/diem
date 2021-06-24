@@ -1,6 +1,6 @@
 import { utils } from '@common/utils';
 import { parse } from 'yaml';
-import { IArgsBody, EComponents } from '@interfaces';
+import { IArgsBody, EComponents, IError } from '@interfaces';
 import { api, thisbot } from '../routes';
 import { serviceHandler } from './service.handler';
 import { payloads } from './home.handler';
@@ -75,26 +75,32 @@ export const getProfile = async (event: any): Promise<any> => {
     return profile_resp.profile;
 };
 
-export const messageHandler = async (event: any): Promise<any> => {
+export const messageHandler: (event: any) => Promise<boolean | any> = async (event: any): Promise<boolean | any> => {
     if (event.subtype) {
-        utils.logInfo(`$event.message (messageHandler): not handled message: ${event.subtype}`);
+        utils.logInfo(`$message.handler (messageHandler): not handled message: ${event.subtype}`);
 
-        return;
+        return Promise.resolve(false);
     }
 
-    console.info('event', event);
+    console.info('event logger:', event);
 
     const body = argsParser(event);
 
     //console.info('body', body);
 
     if (components[body.component] && body.component in components) {
-        utils.logInfo(`$event.message (messageHandler): component: ${body.id}`);
-        components[body.component](event, body);
+        utils.logInfo(`$message.handler (messageHandler): component: ${body.component} - service: ${body.id}`);
+        const response: boolean | any = await components[body.component](event, body).catch(async (err: IError) => {
+            err.trace = utils.addTrace(err.trace, '@at $message.handler (messageHandler) - components');
 
-        return;
+            return Promise.reject(err);
+        });
+
+        return Promise.resolve(response);
     } else {
-        return void otherMethod(event, body);
+        await otherMethod(event, body);
+
+        return Promise.resolve(false);
     }
 };
 

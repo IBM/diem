@@ -1,6 +1,6 @@
 import { jdbc_config } from '../spark.job.handlers/hendle.spark.common';
 import { ITgt } from '../spark.interfaces';
-// eslint-disable-next-line camelcase
+
 export const py_tgt_jdbc: (tgt: ITgt) => string = (tgt: ITgt) => String.raw`
 
 ### py_tgt_jdbc ###

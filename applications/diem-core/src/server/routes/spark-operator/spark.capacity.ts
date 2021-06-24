@@ -1,6 +1,5 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable complexity */
-/* eslint-disable max-len */
 
 import { utils } from '@common/utils';
 import * as Api from 'kubernetes-client';
@@ -69,7 +68,6 @@ setCap();
  * @param {IETLJob} job
  * @returns
  */
-// eslint-disable-next-line sonarjs/cognitive-complexity
 export const caclCap: (doc: IJobSchema, crdjob: ICrdConfig) => ICrdConfig = (
     doc: IJobSchema,
     crdjob: ICrdConfig

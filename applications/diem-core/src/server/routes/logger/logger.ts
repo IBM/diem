@@ -3,7 +3,7 @@ import { utils } from '@common/utils';
 import { ILoggerModel, loggerModel } from '@models';
 import { addTrace } from '@functions';
 
-const logger: (log: IntMQLog, transid: string) => Promise<void> = async (log: IntMQLog): Promise<void> => {
+const logger: (log: IntMQLog) => Promise<void> = async (log: IntMQLog): Promise<void> => {
     const doc: ILoggerModel = new loggerModel(log);
     await doc.save().catch(async (err) => {
         err.trace = addTrace(err.trace, '@at $logger (logger) - save');
@@ -28,6 +28,7 @@ export const toMQ = async (
             execution: utils.hrTime(hrstart),
             profile: req.token ? req.token : req.user ? req.user : undefined,
             org: req.user?.org || 'anonymous',
+            transid: req.transid,
         },
         browser: err ? req.headers : utils.browser(req),
         err,
@@ -43,5 +44,5 @@ export const toMQ = async (
         type,
     };
 
-    await logger(log, req.transid);
+    await logger(log);
 };

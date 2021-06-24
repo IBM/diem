@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import { utils } from '@common/utils';
 import { EJobStatus, IJobResponse, IJobSchema } from '@models';
 import { pubSub } from '@config/pubsub';

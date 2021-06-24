@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/indent */
 import mongoose from 'mongoose';
 import { IntInternal } from '../interfaces/shared';
 import { utils } from './utils';

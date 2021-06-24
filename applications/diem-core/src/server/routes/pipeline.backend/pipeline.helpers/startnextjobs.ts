@@ -1,5 +1,3 @@
-/* eslint-disable max-len */
-/* eslint-disable sonarjs/cognitive-complexity */
 import { utils } from '@common/utils';
 import { IJobResponse, IJobModel, IJobDetails, EJobStatus, EJobStatusCodes, EJobContinue } from '@models';
 import { addTrace } from '@functions';
@@ -24,7 +22,6 @@ const getNextInQueue: (pldid: string, id: string) => Promise<string[]> = async (
     const nodeIds: string[] = await getNodesFromId(pldoc.jobs, id);
     const nodes: string[] = [];
 
-    // eslint-disable-next-line guard-for-in
     for await (const nodeId of nodeIds) {
         /* at the beginning the queue is empty, when a job completed, it's add to the queue
          * once the queue has the same number of elements as the from (can be multiple jobs)
@@ -60,7 +57,7 @@ const getNextInQueue: (pldid: string, id: string) => Promise<string[]> = async (
                     }
                 }
                 nodes.push(nodeId);
-                // eslint-disable-next-line max-len
+
                 utils.logInfo(
                     `$startnextjobs (getNextInQueue): adding next job - pl: ${plid} - job: ${id} - adding job: ${nodeId} - node: ${nodes.length} - required: ${pldoc.jobs[nodeId].required}`
                 );
@@ -124,13 +121,13 @@ export const startNextJobs: (job: IJobResponse, pldoc: IJobModel) => Promise<num
                         job.transid
                     );
                 } else {
-                    batch_doc.job.email = job.email;
+                    batch_doc.job.email = job.email; // runs under the owner of the document that triggers
                     batch_doc.job.executor = job.executor;
                     batch_doc.job.jobstart = new Date();
                     batch_doc.job.status = EJobStatus.submitted;
-                    batch_doc.job.transid = job.transid;
+                    batch_doc.job.transid = pldoc.job.transid;
                     batch_doc.job.jobid = plid;
-                    batch_doc.job.runby = job.runby;
+                    batch_doc.job.runby = pldoc.job.runby;
 
                     utils.logInfo(
                         `$startnextjobs (startNextJobs): passing to jobStartHandler - pl: ${job.jobid} - id: ${job.id} - job: ${id}`,

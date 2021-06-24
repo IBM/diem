@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 /***
  * @module slack-error-int
  */
@@ -60,7 +59,6 @@ export const slackMsgInt: (error: IError, slackConfig?: Partial<ISlack>) => Prom
     const options: AxiosRequestConfig = {
         data: {
             channel: slack.internal.channel,
-            // eslint-disable-next-line camelcase
             icon_emoji: slack.emoji,
             username: `${slack.internal.username} on ${utils.Env.K8_SYSTEM_NAME}`,
         },

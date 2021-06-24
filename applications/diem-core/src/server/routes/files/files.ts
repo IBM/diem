@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/cognitive-complexity */
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
 import { cos } from '@common/cos';

@@ -1,4 +1,3 @@
-// eslint-disable-next-line camelcase
 export const py_opt_dropcolumns: (drop: string) => string = (drop: string) => String.raw`
 
 ### py_opt_dropcolumns ###

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import jwt from 'jsonwebtoken';
 import { IntPassportUser, IProfile, IRequest, IXorg } from '@interfaces';
 import { utils } from '@common/utils';

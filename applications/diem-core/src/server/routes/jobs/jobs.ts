@@ -8,7 +8,6 @@ import { findByFilter, countByFilter } from '../job.backend/job.functions';
  * @info also by gettemplate and settings
  * @input {{job: IQuery}}
  */
-// eslint-disable-next-line sonarjs/cognitive-complexity
 export const parseFilter: (job: IQuery) => any = (job: IQuery) => {
     const filter: any = {};
 

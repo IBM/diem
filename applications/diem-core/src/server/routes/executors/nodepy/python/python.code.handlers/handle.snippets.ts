@@ -24,7 +24,6 @@ export const handleSnippets: (code: string, org: string) => Promise<string> = as
     const snippets: string[] | null = code.match(/(\b__INCLUDE__.*\b)/gi);
 
     if (snippets && snippets.length > 0) {
-        // eslint-disable-next-line guard-for-in
         for (const snippetFound of snippets) {
             const snippetKeyword: string = snippetFound.replace('__INCLUDE__', '');
 

@@ -69,9 +69,7 @@ export const extract__: any = (obj: any, sep = '__') => {
 };
 
 export const expand: any = (obj: any, sep = '__') => {
-    // eslint-disable-next-line guard-for-in
     for (const key in obj) {
-        // eslint-disable-next-line no-console
         if (Object.prototype.hasOwnProperty.call(obj, key) && key.toString().includes(sep)) {
             parseDotNotation(key, obj[key], obj, sep);
         }

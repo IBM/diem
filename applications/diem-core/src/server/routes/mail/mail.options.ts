@@ -1,5 +1,3 @@
-/* eslint-disable max-len */
-/* eslint-disable @typescript-eslint/indent */
 import { utils } from '@common/utils';
 import { EJobStatus } from '@models';
 import { IMailContentValues, IMailContent, IMailElements } from './mail.interfaces';

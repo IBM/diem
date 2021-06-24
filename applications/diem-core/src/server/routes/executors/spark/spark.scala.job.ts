@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import { utils } from '@common/utils';
 import { EJobStatus, IJobResponse, IJobSchema } from '@models';
 import { pubSub } from '@config/pubsub';
@@ -25,7 +24,6 @@ const getEnvVars: (org: string, configmaps: string | string[]) => Promise<IEnvVa
     let envVars: IEnvVars = {};
 
     if (Array.isArray(configmaps)) {
-        // eslint-disable-next-line guard-for-in
         for await (const configmap of configmaps) {
             const doc = await getConfigmap(configmap, org);
 

@@ -4,8 +4,6 @@ import { utils } from '@common/utils';
 import { IWebApikeysModel, WebApikeysModel } from '@models';
 
 const getToken: (id: string) => Promise<boolean> = async (id: string): Promise<boolean> => {
-    // eslint-disable-next-line no-async-promise-executor
-
     const hrstart: [number, number] = process.hrtime();
 
     try {
