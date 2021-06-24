@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/indent */
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     ChangeDetectionStrategy,
@@ -266,7 +264,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this.check('parseConfig');
     };
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     private getForm = (values: any): IStoreFormState => ({
         error: false,
         form: {
@@ -312,7 +309,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
         }
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     private ActionReset = (_action: any) => {
         this.DSF.updateForm(this.getForm(this.config ? this.config.resetvalues : {}));
     };

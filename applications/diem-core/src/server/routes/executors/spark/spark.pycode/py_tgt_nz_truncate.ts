@@ -1,5 +1,5 @@
 import { ITgt } from '../spark.interfaces';
-// eslint-disable-next-line camelcase
+
 export const py_tgt_nz_truncate: (tgt: ITgt) => string = (tgt: ITgt) =>
     String.raw`
 ### py_tgt_nz_truncate ###

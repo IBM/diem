@@ -12,7 +12,6 @@ export { getservice } from './services/getservice';
 export { getsnippets } from './snippets/snippets';
 export { gettemplates } from './templates/templates';
 export { getwebhooks } from './webhooks/webhooks';
-export { interactive, interactiverun } from './interactive/interactive';
 export { jobactions } from './job.front/job.actions';
 export { jobdetail } from './job.front/job.detail';
 export { jobdetail_json, jobpipeline_json } from './job.front/job.json';

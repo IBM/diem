@@ -1,8 +1,3 @@
-/* eslint-disable sonarjs/cognitive-complexity */
-/* eslint-disable no-useless-escape */
-
-/* eslint-disable max-len */
-
 import { IConnSchema, IJobConfig, IJobSchema, ITemplatesModel } from '@models';
 import { addTrace } from '@functions';
 import { ISrc, ITgt } from '../spark.interfaces';
@@ -19,7 +14,7 @@ import {
 import { lookupTemplate } from '../../../job.front/job.template';
 import { getConnection } from './hendle.spark.common';
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
+const codestring: string = '###__CODE__###';
 
 export const handleWithConfig: (doc: IJobSchema) => Promise<string> = async (doc: IJobSchema): Promise<string> => {
     const id: string = doc._id.toString();
@@ -41,7 +36,7 @@ export const handleWithConfig: (doc: IJobSchema) => Promise<string> = async (doc
             ? `.master("local[${doc.job.audit.spark.executor_cores}]")`
             : '';
 
-    code = code.replace('###__CODE__###', py_session(local));
+    code = code.replace(codestring, py_session(local));
 
     if (config.source) {
         const source: IJobConfig['source'] = config.source;
@@ -77,7 +72,7 @@ export const handleWithConfig: (doc: IJobSchema) => Promise<string> = async (doc
                 ? py_src.replace(/\$PARTITION/g, py_partition(src.partition))
                 : py_src.replace(/\$PARTITION/g, '\n###__CODE__###');
 
-        code = code.replace('###__CODE__###', py_src);
+        code = code.replace(codestring, py_src);
 
         if (
             src.dropcolumns &&
@@ -87,9 +82,9 @@ export const handleWithConfig: (doc: IJobSchema) => Promise<string> = async (doc
         ) {
             const opt_dropcolumns: string = py_opt_dropcolumns(`.drop("${src.dropcolumns.join('"),.drop("')}")`);
 
-            code = code.replace('###__CODE__###', opt_dropcolumns);
+            code = code.replace(codestring, opt_dropcolumns);
         } else {
-            code = code.replace('###__CODE__###', 'df_tgt = df_src###__CODE__###');
+            code = code.replace(codestring, 'df_tgt = df_src###__CODE__###');
         }
     }
 
@@ -111,7 +106,7 @@ export const handleWithConfig: (doc: IJobSchema) => Promise<string> = async (doc
         tgt.truncate = !!tgt.truncate;
 
         const target_txt: string = tgt.type === 'nz' ? py_tgt_nz(tgt) : py_tgt_jdbc(tgt);
-        code = code.replace('###__CODE__###', target_txt);
+        code = code.replace(codestring, target_txt);
     }
 
     // here we create the final construct

@@ -23,7 +23,6 @@ export const handleConfigmaps: (code: string, org: string, configmaps: string | 
     // const configmaps: any = code.match(/(\b#INCLUDE__\S+\b)/gi);
 
     if (Array.isArray(configmaps)) {
-        // eslint-disable-next-line guard-for-in
         for await (const configmap of configmaps) {
             const doc = await getConfigmap(configmap, org);
 

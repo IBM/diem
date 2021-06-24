@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/indent */
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
 import { stringify } from 'yaml';
@@ -28,7 +27,6 @@ export const getconfigmap: (selector: string) => Promise<IConfigmapSchema> = asy
 
 export const getconfigmaps: (req: IRequest) => Promise<IConfigmapPayload[]> = async (
     req: IRequest
-    // eslint-disable-next-line sonarjs/cognitive-complexity
 ): Promise<IConfigmapPayload[]> => {
     const hrstart: [number, number] = process.hrtime();
 

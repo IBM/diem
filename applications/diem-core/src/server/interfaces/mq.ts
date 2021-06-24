@@ -22,6 +22,7 @@ export interface IntMQLog {
             msec: number;
             sec: number;
         };
+        transid: string;
     };
     browser: {
         [index: string]: any;

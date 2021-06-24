@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ConnModel, IConnSchema } from '@models';
 import { regEx, json } from './handle.params.util';
 

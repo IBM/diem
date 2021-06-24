@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
-/* eslint-disable @typescript-eslint/indent */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     ChangeDetectionStrategy,
@@ -141,7 +139,6 @@ export class JobAllComponent implements OnInit, OnDestroy {
         }
     };
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     private ActionFromStore = async (action: any) => {
         const store: string = this.DSF.r_getStore(action.params.store);
 

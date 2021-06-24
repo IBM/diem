@@ -1,7 +1,5 @@
 /* eslint-disable complexity */
 /* eslint-disable sonarjs/cognitive-complexity */
-/* eslint-disable no-useless-escape */
-/* eslint-disable max-len */
 import { IJobSchema } from '@models';
 import { handleConnectionParams } from '../../nodepy/python/python.code.handlers/handle.connection.params';
 import { handleConfigmaps } from '../../nodepy/python/python.code.handlers/handle.configmaps';
@@ -11,8 +9,6 @@ import { handleCos } from '../../nodepy/python/python.code.handlers/handle.cos';
 import { handleFiles } from '../../nodepy/python/python.code.handlers/handle.files';
 import { handleValues } from '../../nodepy/python/python.code.handlers/handle.values';
 import { handleConfigmapsParams } from '../../nodepy/python/python.code.handlers/handle.configmaps.params';
-
-// eslint-disable-next-line sonarjs/cognitive-complexity
 
 export const handleWithCustom: (doc: IJobSchema) => Promise<string> = async (doc: IJobSchema): Promise<string> => {
     const id: string = doc._id.toString();

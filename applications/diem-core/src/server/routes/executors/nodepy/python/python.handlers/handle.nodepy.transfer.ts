@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/quotes */
-/* eslint-disable max-len */
-
 import { addTrace } from '@functions';
 import { IConnSchema, IJobSchema, ITemplatesModel } from '@models';
 import { lookupTemplate } from '../../../../job.front/job.template';

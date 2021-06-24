@@ -16,6 +16,7 @@ const loggerSchema: Schema = new Schema(
                 sec: Number,
             },
             org: String,
+            transid: String,
         },
         browser: Object,
         err: Object,

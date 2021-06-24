@@ -19,8 +19,6 @@ interface IApiJobReturn {
 }
 
 export const apijob: (req: IRequest) => Promise<IApiJobReturn> = async (req: IRequest): Promise<IApiJobReturn> => {
-    // eslint-disable-next-line no-async-promise-executor
-
     const hrstart: [number, number] = process.hrtime();
 
     const body: IApiJob = { ...req.body };

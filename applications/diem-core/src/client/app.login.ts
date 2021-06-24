@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/indent */
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { DTS, Env } from '@mydiem/diem-angular-util';

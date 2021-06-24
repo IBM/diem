@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     ChangeDetectionStrategy,
@@ -282,7 +281,6 @@ export class JobDetailComponent implements OnInit, OnDestroy {
         this.check('ActionValues');
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     private ActionReset = (_action: any) => {
         this.DSF.updateForm(this.getForm(this.config ? this.config.resetvalues : {}));
     };

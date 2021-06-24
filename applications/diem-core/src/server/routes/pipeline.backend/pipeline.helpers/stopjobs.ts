@@ -1,9 +1,7 @@
-/* eslint-disable max-len */
 import { utils } from '@common/utils';
 import { IJobModel, DataModel, EJobTypes, EJobStatusCodes, EJobStatus } from '@models';
 import { jobStop } from '../../job.front/job.stop';
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
 export const stopJobs: (pldoc: IJobModel) => Promise<void> = async (pldoc: IJobModel): Promise<void> => {
     for await (const [key, value] of Object.entries(pldoc.jobs)) {
         const doc: IJobModel | null = await DataModel.findOne({ _id: key }).exec();

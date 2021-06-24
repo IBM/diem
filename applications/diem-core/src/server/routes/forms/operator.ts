@@ -57,9 +57,9 @@ export const getFormQuestionsUpdate: (req: IRequest) => Promise<any> = async (re
 
         return Promise.resolve(doc);
     } catch (err) {
-        utils.logInfo(`$operator (getFormQuestionsUpdate) => ${err.message}`);
+        utils.logInfo(`$operator (getFormQuestionsUpdate): error => ${err.message}`);
 
-        err.trace = addTrace(err.trace, '$operator (getFormQuestions)');
+        err.trace = addTrace(err.trace, operator);
         err.form = req.query.form;
 
         return Promise.reject(err);

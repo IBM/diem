@@ -1,4 +1,3 @@
-// eslint-disable-next-line sonarjs/cognitive-complexity
 const Dot2Json: any = (): void => {
     const parseDotNotation: any = (str: string, val: any, obj: any) => {
         let currentObj: any = obj;
