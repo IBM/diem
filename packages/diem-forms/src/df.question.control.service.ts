@@ -193,6 +193,14 @@ export class DFQuestionControlService {
             validators.push(Validators.maxLength(question.maxLength));
         }
 
+        if (question && question.max) {
+            validators.push(Validators.max(question.max));
+        }
+
+        if (question && question.min) {
+            validators.push(Validators.min(question.min));
+        }
+
         return validators;
     };
 }

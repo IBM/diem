@@ -39,7 +39,7 @@ const URL_LOADER: string = 'url-loader';
 const URL_LOADER_PATH: string = 'public/fonts/[name].[ext]';
 
 module.exports = {
-    mode: 'production',
+    mode: 'development',
 
     cache: false,
 
@@ -50,7 +50,7 @@ module.exports = {
         ],
     },
 
-    devtool: 'eval',
+    devtool: 'eval-cheap-module-source-map',
 
     optimization: {
         moduleIds: 'deterministic',
