@@ -70,6 +70,7 @@ export interface IQuestionBase {
     editMode?: string /** indicates if a the view template should be in edit mode */;
     fromEnv?: any;
     helperText?: string;
+    invalidText?: string;
     hidden?: boolean | string /** indicates if a question should be hidden or not, it still exists */;
     iconStyle?: string;
     invalid?: string | boolean;

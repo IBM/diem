@@ -133,6 +133,15 @@ export class DFQuestionComponent implements OnDestroy, OnInit {
 
         return false;
     }
+
+    get isInvalid(): boolean {
+        if (this.question.key) {
+            return this.form.controls[this.question.key].invalid;
+        }
+
+        return false;
+    }
+
     get isVisible(): boolean {
         let x: boolean = true;
 
