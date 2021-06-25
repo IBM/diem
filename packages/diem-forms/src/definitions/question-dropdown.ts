@@ -11,9 +11,7 @@ export interface IDropdownQuestion {
     filter: boolean;
     items: IItem[];
     optionsInfo: any[];
-    style?: any;
     url?: string;
-    helperText?: string;
     dropUp: boolean;
     itemValueKey: string;
 }
@@ -26,9 +24,7 @@ export class DropdownQuestion extends QuestionBase<string> implements IDropdownQ
     public filter: boolean;
     public items: IItem[] = [];
     public optionsInfo: any[] = [];
-    public style: any;
     public url: string;
-    public helperText?: string;
     public dropUp: boolean;
     public itemValueKey: string;
 
@@ -40,9 +36,7 @@ export class DropdownQuestion extends QuestionBase<string> implements IDropdownQ
         this.filter = options.filter;
         this.items = options.items || [];
         this.optionsInfo = options.optionsInfo;
-        this.style = options.style;
         this.url = options.url;
-        this.helperText = options.helperText;
         this.dropUp = options.dropUp || false;
         this.itemValueKey = options.itemValueKey || 'value';
     }

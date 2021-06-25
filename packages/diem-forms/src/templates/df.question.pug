@@ -10,15 +10,16 @@ ng-template(#edittextbox="")
     ng-container([formGroup]="form")
         ibm-label(
             [helperText]="question.helperText",
-            [invalid]="question.invalid",
             [invalidText]="question.invalidText",
+            [invalid]="isInvalid",
         ) {{question.label}}
             input(
                 ibmText="",
                 [formControlName]='question.key',
                 [type]='question.type',
-                [invalid]="question.invalid",
+                [invalid]="isInvalid",
                 [readonly]='question.readOnly && evalStr(question.readOnly)',
+                [size]="question.size",
                 [theme]="question.theme",
                 [placeholder]="question.placeHolder",
                 [autocomplete]="false"
@@ -43,12 +44,13 @@ ng-template(#editdropdown="")
             [id]="'drpd_' + question.key",
             [label]="question.label",
             [helperText]="question.helperText",
-            [invalid]="question.invalid",
+            [invalid]="isInvalid",
             [invalidText]="question.invalidText",
             [theme]="question.theme",
             [itemValueKey]="question.itemValueKey",
             [placeholder]="question.placeHolder",
             [dropUp] = "question.dropUp",
+            [size]="question.size",
             (selected)="onAction(question.action,$event)",
         )
             ibm-dropdown-list([items]="question.items")
@@ -93,7 +95,9 @@ ng-template(#editnumber="")
             [theme]="question.theme",
             [min]="question.min",
             [max]="question.max",
-            [invalid]="question.invalid",
+            [step]="question.step",
+            [size]="question.size",
+            [invalid]="isInvalid",
             [invalidText]="question.invalidText",
             [attr.readonly]='question.readOnly && evalStr(question.readOnly)'
         )
@@ -116,7 +120,7 @@ ng-template(#edittextarea="")
             ibmTextArea='',
             [formControlName]='question.key',
             [placeholder]="question.placeHolder",
-            [invalid]="question.invalid",
+            [invalid]="isInvalid",
             [theme]="question.theme",
             [rows]="question.rows",
             [cols]="question.cols",
@@ -230,12 +234,13 @@ ng-template(#editautocomplete="")
     ng-container([formGroup]="form")
         ibm-combo-box(
             [formControlName]='question.key',
-            [invalid]="question.invalid",
+            [invalid]="isInvalid",
             [id]="'combo_' + question.key",
             [invalidText]="question.invalidText",
             [label]="question.label",
             [helperText]="question.helperText",
             [items]="question.items",
+            [size]="question.size",
             [type]="question.type",
             [itemValueKey]="question.itemValueKey",
             (selected)="onSelect($event)",
@@ -280,7 +285,7 @@ ng-template(#editcalendar="")
             [placeholder]="question.placeHolder",
             language="en",
             theme="dark",
-            [invalid]="question.invalid",
+            [invalid]="isInvalid",
             [invalidText]="question.invalidText",
             [dateFormat]="question.dateFormat",
         )

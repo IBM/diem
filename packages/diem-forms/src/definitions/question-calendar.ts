@@ -24,7 +24,6 @@ export class CalendarQuestion extends QuestionBase<string> implements ICalendarQ
     public ngDateFormat: string;
     public readonlyInput: boolean;
     public placeholder: string;
-    public invalidText: string;
 
     public constructor(options: any = {}) {
         super(options);
@@ -38,6 +37,5 @@ export class CalendarQuestion extends QuestionBase<string> implements ICalendarQ
         this.ngDateFormat = options.ngDateFormat || 'dd.mm.yy';
         this.readonlyInput = options.readonlyInput || undefined;
         this.placeholder = options.placeHolder || 'Enter Date';
-        this.invalidText = options.invalidText || 'Incorrect Value';
     }
 }

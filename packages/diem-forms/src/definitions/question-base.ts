@@ -11,14 +11,17 @@ export class QuestionBase<T> implements IQuestionBase {
     public disabledWhen: string;
     public editMode?: string;
     public editOnly?: boolean;
+    public helperText?: string;
     public hidden?: boolean | string;
     public iconClass?: string;
     public iconStyle?: string;
-    public invalid?: string | boolean;
     public items: IItem[];
+    public invalidText?: string;
     public key?: string;
     public label?: string;
     public labelStyle?: any;
+    public max?: number | null;
+    public min?: number | null;
     public maxLength?: number;
     public minLength?: number;
     public model?: any;
@@ -29,6 +32,7 @@ export class QuestionBase<T> implements IQuestionBase {
     public readTypeClass?: string;
     public required?: boolean;
     public requiredWhen?: string;
+    public size?: string;
     public subClass?: string;
     public subStyle?: string;
     public style?: any;
@@ -47,8 +51,6 @@ export class QuestionBase<T> implements IQuestionBase {
     }[];
 
     public constructor(options: {
-        invalid?: string | boolean;
-        items: IItem[];
         dependency?: {
             type: string;
             key: string;
@@ -58,39 +60,33 @@ export class QuestionBase<T> implements IQuestionBase {
             keepValue: boolean;
         }[];
         action?: any;
-        cache: boolean;
         class?: string;
-        controlType?: string;
         compute: string;
         computeWhenComposed: string;
         disabled: boolean;
         disabledWhen: string;
         displayName?: string;
         editMode?: string;
+        helperText?: string;
         fromEnv?: any;
         hidden?: boolean | string;
         iconClass?: string;
         iconStyle?: string;
+        invalidText: string;
+        items: IItem[];
         key?: string;
         label?: string;
         labelStyle?: any;
-        max?: number;
-        maxLength?: number;
-        minLength?: number;
         order?: number;
         placeHolder: string;
-        invalidText: string;
         readMode?: string;
         readOnly?: boolean | string;
         readTypeClass?: string;
         required?: boolean;
         requiredWhen?: string;
-        separator: string;
-        size?: number;
+        size: string; // xl sm
         style?: any;
-        tags: boolean;
         subClass?: string;
-        text?: string;
         typeClass?: string;
         typeStyle?: string;
         value?: any;
@@ -98,16 +94,16 @@ export class QuestionBase<T> implements IQuestionBase {
     }) {
         this.action = options.action;
         this.class = options.class;
-        this.dependency = options.dependency;
         this.compute = options.compute;
         this.computeWhenComposed = options.computeWhenComposed;
+        this.dependency = options.dependency;
         this.disabled = options.disabled || false;
         this.disabledWhen = options.disabledWhen;
-        this.requiredWhen = options.requiredWhen;
         this.editMode = options.editMode;
+        this.helperText = options.helperText;
         this.hidden = options.hidden || false;
         this.iconClass = options.iconClass;
-        this.invalid = options.invalid;
+        this.invalidText = options.invalidText || 'Incorrect Value';
         this.items = options.items;
         this.key = options.key;
         this.label = options.label;
@@ -118,10 +114,12 @@ export class QuestionBase<T> implements IQuestionBase {
         this.readOnly = options.readOnly || false;
         this.readTypeClass = options.readTypeClass;
         this.required = !!options.required;
+        this.requiredWhen = options.requiredWhen;
+        this.size = options.size;
+        this.style = options.style;
         this.subClass = options.subClass || '';
         this.typeClass = options.typeClass;
         this.typeStyle = options.typeStyle;
-        this.style = options.style;
         this.value = options.value;
         this.visible = options.visible;
     }
