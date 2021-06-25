@@ -45,7 +45,7 @@ ng-template(#elseBlock="")
 ng-template(#header="")
     .bx--col-lg-11(*ngIf="config && config.header")
         i([ngClass]="config.header.headerIcon")
-        .productive-heading-04.ex--header Job Name: {{records.name}}
+        .productive-heading-04.ex--header Job: {{records.name}}
             .productive-heading-01
                 span Job Id - {{records.id}}
                 ng-container(*ngIf='records.schedule__nextExecutionTime')
