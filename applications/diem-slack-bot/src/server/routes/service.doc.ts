@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { IError } from '@interfaces';
 import { utils } from '@common/utils';
+import { slackDebug } from '@common/slack/slack.debug';
 
 const services_url: string | undefined = process.env.services_url;
 const service_doc: string | undefined = process.env.service_doc;
@@ -32,20 +33,25 @@ export const loadServiceDoc = async () => {
         .catch(async (err: IError) => {
             const error: any = {
                 trace: ['@at $service.doc (serviceHandler) - axios'],
-                message: 'Axios post error',
+                message: 'Axios services post error',
                 url: services_url,
+                id: service_doc,
                 err: err.response?.data ? err.response.data : 'no data',
             };
 
-            void utils.logError('$service.doc (loadServiceDoc) - view_submission', error);
+            void utils.logError('$service.doc (loadServiceDoc)', error);
 
             return;
         });
 
     if (response?.data?.out) {
-        console.info(response.data.out);
+        void slackDebug('Slack response from service document', response.data.out);
         services = response.data.out;
     }
 
     utils.logInfo(`$service.doc (loadServiceDoc) - service doc: ${service_doc} - service url: ${services_url}`);
+};
+
+export const reloadServiceDoc = async () => {
+    void loadServiceDoc();
 };

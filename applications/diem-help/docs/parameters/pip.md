@@ -3,7 +3,7 @@
 
 > This describes the usuage of the parameters section in your job. For more details see the respective section.
 
-## Pyrhon Modules (pip)
+## Python Modules (pip)
 
 You can install your custom module via the pip flag
 

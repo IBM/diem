@@ -4,7 +4,11 @@
 
 ## Example
 
-## Using in Slack
+### Using in Slack
+
+Add the slack parameter to the parameters in the job. Add the reference to the webhook and optionaly specify the status.
+
+All jobs statuses meeting these criteria will be sent to your custom slack channel.
 
 ```yml
 # API Key (Pipelines and Jobs)

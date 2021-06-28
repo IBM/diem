@@ -9,6 +9,7 @@ export interface ISlack {
     emoji: string;
     deploy: { channel?: string; username?: string };
     internal: { channel?: string; username?: string };
+    debug: { channel?: string; username?: string };
     url: string;
 }
 
@@ -58,10 +59,15 @@ class Utils {
                     channel: this.SLACK.internal.channel,
                     username: this.SLACK.internal.username,
                 },
+                debug: {
+                    channel: this.SLACK.debug.channel,
+                    username: this.SLACK.debug.username,
+                },
                 url: this.slackWebHook,
             };
         } else {
             return {
+                debug: {},
                 deploy: {},
                 emoji: '',
                 internal: {},
@@ -181,8 +187,8 @@ class Utils {
 
     public now = (): any => moment(new Date().getTime()).format('YYYY-MM-DD-HH.mm.ss.000000');
 
-    public top: (promise: Promise<any>) => Promise<any> = async (promise: Promise<any>): Promise<any> =>
-        promise.then((data: any) => [undefined, data]).catch((err: Error) => [err]);
+    public top: (Promise: Promise<any>) => Promise<any> = async (Promise: Promise<any>): Promise<any> =>
+        Promise.then((data: any) => [undefined, data]).catch((err: Error) => [err]);
 
     public emit = (event: string, msg: any) => {
         this.ev.emit(event, msg);

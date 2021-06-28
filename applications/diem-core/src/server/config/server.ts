@@ -293,9 +293,9 @@ export class Server {
                     stack: err.stack,
                 };
 
-                if (err && err.return) {
+                if (err?.return) {
                     res.status(err.status || 200).send(err.return);
-                } else if (err && err.displayerr) {
+                } else if (err?.displayerr) {
                     res.status(err.status || 401).send({ displayerr: err.displayerr });
                 } else {
                     /**
