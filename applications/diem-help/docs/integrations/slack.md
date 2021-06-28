@@ -1,5 +1,7 @@
 # Slack-Bot Integration
 
+> Connect Diem to Slack via a bot
+
 ![config1](../../../diem-help/docs/images/integrations/slackbot.png)
 
 ## What you need

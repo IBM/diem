@@ -54,7 +54,7 @@ export const homeHandler = async (event: any): Promise<boolean | any> => {
             view: payloads.welcome_home(undefined),
         });
 
-        return Promise.resolve(false);
+        return Promise.resolve(null);
     }
 
     if (event.tab === 'messages') {
@@ -77,6 +77,6 @@ export const homeHandler = async (event: any): Promise<boolean | any> => {
             utils.logInfo(`$event.home (handleHome): tab: messages - returning user: ${event.user}`);
         }
 
-        return Promise.resolve(false);
+        return Promise.resolve(null);
     }
 };

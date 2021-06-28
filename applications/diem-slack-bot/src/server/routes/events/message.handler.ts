@@ -2,6 +2,7 @@ import { utils } from '@common/utils';
 import { parse } from 'yaml';
 import { IArgsBody, EComponents, IError } from '@interfaces';
 import { api, thisbot } from '../routes';
+import { reloadServiceDoc, services } from '../service.doc';
 import { serviceHandler } from './service.handler';
 import { payloads } from './home.handler';
 
@@ -20,6 +21,16 @@ const argsParser: (event: any) => IArgsBody = (event: any): IArgsBody => {
     id = args[1];
     action = args[2];
     payload = args[3];
+
+    if (services) {
+        for (const service of services) {
+            if (service.name === id) {
+                id = service.id;
+                action = args[1];
+                payload = args[2];
+            }
+        }
+    }
 
     if (event.blocks) {
         const code_base = event.blocks[0].elements.find((el: any) => el.type === 'rich_text_preformatted');
@@ -79,19 +90,32 @@ export const messageHandler: (event: any) => Promise<boolean | any> = async (eve
     if (event.subtype) {
         utils.logInfo(`$message.handler (messageHandler): not handled message: ${event.subtype}`);
 
-        return Promise.resolve(false);
+        return Promise.resolve(null);
     }
 
-    console.info('event logger:', event);
+    // void slackDebug({ 'event logger:', event);
 
     const body = argsParser(event);
 
-    //console.info('body', body);
+    if (body.id === 'reloadservicedoc') {
+        void reloadServiceDoc();
+
+        void replyMethod(event, body, 'Servicedoc reload completed');
+
+        return Promise.resolve(null);
+    }
 
     if (components[body.component] && body.component in components) {
         utils.logInfo(`$message.handler (messageHandler): component: ${body.component} - service: ${body.id}`);
         const response: boolean | any = await components[body.component](event, body).catch(async (err: IError) => {
             err.trace = utils.addTrace(err.trace, '@at $message.handler (messageHandler) - components');
+
+            void replyMethod(
+                event,
+                body,
+                'Sorry, but an error happened',
+                `Sorry, but an error happened\nReason of there error: ${err.err}`
+            );
 
             return Promise.reject(err);
         });
@@ -100,7 +124,7 @@ export const messageHandler: (event: any) => Promise<boolean | any> = async (eve
     } else {
         await otherMethod(event, body);
 
-        return Promise.resolve(false);
+        return Promise.resolve(null);
     }
 };
 
@@ -122,6 +146,29 @@ const otherMethod = async (event: any, body: IArgsBody): Promise<any> => {
             thread_ts: event.thread_ts ? event.thread_ts : event.event_ts,
             channel: event.channel,
             text: ':questions123: Sorry, but this is a command i do not understand, try: @Diem Bot help',
+        }
+    );
+
+    utils.logInfo(`$event.handler (handleMessages): Invalid method called - method: ${body.id} - user: ${event.user}`);
+};
+
+const replyMethod = async (event: any, body: IArgsBody, text: string, data: string = text): Promise<any> => {
+    await api.callAPIMethodPost(
+        'chat.postMessage',
+
+        {
+            thread_ts: event.thread_ts ? event.thread_ts : event.event_ts,
+            channel: event.channel,
+            text,
+            blocks: [
+                {
+                    type: 'section',
+                    text: {
+                        type: 'mrkdwn',
+                        text: `\`\`\`${data}\`\`\``,
+                    },
+                },
+            ],
         }
     );
 

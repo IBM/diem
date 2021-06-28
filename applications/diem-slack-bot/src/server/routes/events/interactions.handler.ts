@@ -51,7 +51,7 @@ export const interactionsHander: (req: IRequest, res: IResponse) => Promise<any>
 
             void utils.logError('$interactions.handler (interactionsHander) - view_submission', err);
 
-            return;
+            return Promise.reject(err);
         });
 
         return;

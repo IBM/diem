@@ -22,6 +22,18 @@ export const services: (req: IRequest) => Promise<IServicesReturn> = async (
     body.transid = utils.guid();
     body.serviceid = body.id;
 
+    if (!body.serviceid.match(/^[0-9a-fA-F]{24}$/)) {
+        const err: any = {
+            status: 406,
+            return: `Invalid id: ${body.serviceid}`,
+        };
+
+        // no error logging will be done here, it will be caused by the external application
+        // void utils.logError('$services (services) (interactionsHander) - id match', err);
+
+        return Promise.reject(err);
+    }
+
     /**
      * get the code for the pyfile
      *

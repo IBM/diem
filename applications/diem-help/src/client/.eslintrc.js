@@ -22,15 +22,19 @@ module.exports = {
     ],
     extends: [
         'plugin:@angular-eslint/recommended',
+        'prettier',
+        'plugin:sonarjs/recommended',
         '../../src/webpack/eslintrc-base.js',
+        'plugin:prettier/recommended',
     ],
-    'rules': {
+    rules: {
         'no-restricted-syntax': [
             'error',
             {
-                'selector': 'CallExpression[callee.object.name="console"][callee.property.name!=/^(warn|error|info|debug|trace)$/]',
-                'message': 'Unexpected property on console object was called'
-            }
-        ]
-    }
+                selector:
+                    'CallExpression[callee.object.name="console"][callee.property.name!=/^(warn|error|info|debug|trace)$/]',
+                message: 'Unexpected property on console object was called',
+            },
+        ],
+    },
 };
