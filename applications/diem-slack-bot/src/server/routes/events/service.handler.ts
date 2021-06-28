@@ -2,6 +2,7 @@
 import axios from 'axios';
 import { IArgsBody, IError } from '@interfaces';
 import { utils } from '@common/utils';
+import { slackDebug } from '@common/slack/slack.debug';
 import { api } from '../routes';
 
 const services_url: string | undefined = process.env.services_url;
@@ -15,8 +16,10 @@ export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean 
     if (!services_url) {
         utils.logInfo('$service.handler (serviceHandler): no service_url');
 
-        return Promise.resolve(false);
+        return Promise.resolve(null);
     }
+
+    void slackDebug('Slack response from body logger', body);
 
     const result = await axios
         .post(services_url, body, {
@@ -33,26 +36,22 @@ export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean 
             return Promise.reject(error);
         });
 
-    console.info('body logger:', body);
-
     // start with setting some default data
 
     if (!result?.data?.out) {
-        console.info('result.data', result.data);
-
-        return Promise.resolve(false);
+        return Promise.resolve(null);
     }
 
     const response: any = result.data.out;
 
-    console.info('response logger', response);
+    void slackDebug('Slack response from backend response', response);
 
     if (response.method) {
         await api.callAPIMethodPost(response.method, {
             ...response.payload,
         });
 
-        return Promise.resolve(false);
+        return Promise.resolve(null);
     }
 
     /*  the part where we are not using slack methods in the code themselved */
@@ -102,5 +101,5 @@ export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean 
         }
     );
 
-    return Promise.resolve(false);
+    return Promise.resolve(null);
 };

@@ -44,15 +44,13 @@ export const eventHandler: (req: IRequest, res: IResponse) => Promise<IResponse>
         // handle the events event
 
         // console.info('main event', event);
-        const response: boolean | any = await handleEvent(event.event).catch(async (err) => {
+        const response: null | Record<string, unknown> = await handleEvent(event.event).catch(async (err) => {
             err.trace = utils.addTrace(err.trace, '@at $event.handler (eventHandler) - response');
 
-            void utils.logError('$event.handler (eventHandler) - response', err);
-
-            return res.status(200).send();
+            return Promise.reject(err);
         });
 
-        if (response === false) {
+        if (response === null) {
             return res.status(200).send();
         } else {
             return res.status(200).send(response);
@@ -64,7 +62,7 @@ export const eventHandler: (req: IRequest, res: IResponse) => Promise<IResponse>
     return res.status(404).send();
 };
 
-const handleEvent: (event: any) => Promise<boolean | any> = async (event: any): Promise<boolean | any> => {
+const handleEvent: (event: any) => Promise<null | any> = async (event: any): Promise<boolean | any> => {
     let response: boolean | any;
 
     if (['message', 'app_mention'].includes(event.type)) {
@@ -82,7 +80,7 @@ const handleEvent: (event: any) => Promise<boolean | any> = async (event: any): 
     } else {
         utils.logInfo(`$event (handleEvent): not handled event: ${event.type}`);
 
-        return Promise.resolve(false);
+        return Promise.resolve(null);
     }
 
     utils.logInfo(`$event (handleEvent): handled event: ${event.type}`);

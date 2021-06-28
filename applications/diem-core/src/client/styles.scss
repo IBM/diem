@@ -10,9 +10,6 @@
 #c6c6c6 $active-ui
 #8d8d8d #8d8d8d
 
-
-
-
 */
 
 @import '~@fortawesome/fontawesome-free/css/all.min.css';
@@ -59,7 +56,6 @@ body {
 }
 
 /* remove this blue border from focus except button */
-*:focus:not(.bx--btn--primary),
 *:active:not(.bx--btn--primary) {
     outline: 0;
 }
@@ -117,7 +113,6 @@ fieldset {
     .bx--text-input,
     .bx--dropdown,
     .bx--combo-box,
-    .bx--number,
     .bx--number input[type='number'],
     .ex--radiogroup,
     .bx--content:not(.ex--band) {
@@ -128,6 +123,12 @@ fieldset {
     .readonly {
         background-color: $ui-01;
     }
+}
+
+// number input drop icons before and after
+.bx--number__control-btn:after,
+.bx--number__control-btn:before {
+    background-color: $ui-02;
 }
 
 .bx--text-input {
@@ -159,18 +160,6 @@ body.editmode {
     span {
         margin-left: 0.3125rem;
         margin-top: 0.625rem;
-    }
-}
-
-/* to color the fields invalid when in edit mode */
-
-input.ng-invalid,
-.ng-invalid.bx--text-area,
-df-question .ng-invalid .ex--radiogroup,
-ibm-dropdown.ng-invalid .bx--dropdown {
-    border: 0.0625rem solid $danger;
-    &:focus {
-        outline: 0.125rem solid $danger;
     }
 }
 
