@@ -68,7 +68,7 @@ export const services: (req: IRequest) => Promise<IServicesReturn> = async (
             return Promise.reject(err);
         });
 
-    utils.logInfo(`$services (services) - job ${body.id}`, req.transid, process.hrtime(hrstart));
+    utils.logInfo(`$services (services): incoming result - job ${body.id}`, req.transid, process.hrtime(hrstart));
 
     let payload: any = {};
 

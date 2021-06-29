@@ -62,6 +62,9 @@ export interface ServicesJob {
     transid: string;
     params: any;
     language: keyof typeof ECodeLanguage;
+    serviceid: string;
+    org: string;
+    email: string;
 }
 
 export interface IJobResponse {

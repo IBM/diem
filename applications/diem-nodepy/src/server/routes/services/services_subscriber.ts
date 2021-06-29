@@ -1,7 +1,8 @@
 import { NatsConnection, ServerInfo, Subscription } from 'nats';
 import { fromBuff, toBuff } from '@config/nats_connect';
-import { IPayload } from '@interfaces';
+import { IError, IPayload } from '@interfaces';
 import { utils } from '@config/utils';
+import { addTrace } from '../shared/functions';
 import { handler } from './services.handler';
 
 const queue: string = 'nodepy';
@@ -21,7 +22,7 @@ class Subscriber {
         try {
             this.nc = nc;
         } catch (err) {
-            console.error('$nats_subscriber (publish): connect error:', err);
+            console.error('$services_subscriber (publish): connect error:', err);
 
             return;
         }
@@ -37,7 +38,7 @@ class Subscriber {
 
         void this.subs();
 
-        utils.logInfo(`$nats_subscriber (subscribe): connected : client ${this.client}`);
+        utils.logInfo(`$services_subscriber (subscribe): connected : client ${this.client}`);
 
         return Promise.resolve();
     };
@@ -48,7 +49,14 @@ class Subscriber {
             const subject: string = msg.subject;
 
             if (payload && typeof payload === 'object' && payload.client) {
-                const data = await handler(payload.data);
+                const data = await handler(payload.data).catch(async (err: IError) => {
+                    err.trace = addTrace(err.trace, '@at $services_subscriber (subs)');
+
+                    data.error = err;
+
+                    void utils.logError('$services_subscriber (subs): error', err);
+                });
+
                 const confirmed: boolean = msg.respond(
                     toBuff({
                         client: this.client,

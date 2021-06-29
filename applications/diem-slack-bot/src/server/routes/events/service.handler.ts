@@ -38,14 +38,28 @@ export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean 
 
     // start with setting some default data
 
+    //console.debug(result.data);
+
     if (!result?.data?.out) {
         return Promise.resolve(null);
     }
 
     const response: any = result.data.out;
 
-    void slackDebug('Slack response from backend response', response);
+    if (result.data.error) {
+        /* if there is an error then out will probaly be a message with some generic text
+         * so we will log the response with the error
+         */
 
+        void slackDebug('Slack response from backend response', { out: response, error: result.data.error });
+    } else {
+        void slackDebug('Slack response from backend response', response);
+    }
+
+    /* response method is a slack specific action
+     * like chat.post
+     * to be returned by the backend
+     */
     if (response.method) {
         await api.callAPIMethodPost(response.method, {
             ...response.payload,

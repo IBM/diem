@@ -13,7 +13,7 @@ export const servicesNodepy: (job: ServicesJob) => Promise<any> = async (job: Se
         } catch (error) {
             console.error(
                 red,
-                `$services.nodepy ${process.pid} ${id}: folder ${id} not deelted - folder might already have been removed`
+                `$services.nodepy ${process.pid} ${id}: folder ${id} not deleted - folder might already have been removed`
             );
         }
     };
@@ -53,13 +53,16 @@ export const servicesNodepy: (job: ServicesJob) => Promise<any> = async (job: Se
 
     let data: any = {};
 
-    console.info(response_string);
-
     try {
         data = JSON.parse(response_string);
     } catch (err) {
         data = {
-            data: response_string,
+            id: job.id,
+            org: job.org,
+            serviceid: job.serviceid,
+            email: job.email,
+            error: response_string,
+            out: { message: 'An error happened and data cannot be produced' },
         };
     }
 
