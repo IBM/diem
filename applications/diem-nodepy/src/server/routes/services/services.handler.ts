@@ -11,24 +11,6 @@ const base64decode: (file: string) => string = (file: string) => {
     return buff.toString('utf8');
 };
 
-export const servicesHandler: (req: any, res: any) => any = async (req: any, res: any) => {
-    if (req.method === 'GET') {
-        return res.status(200).json({
-            message: 'Only Post is allowed',
-        });
-    }
-
-    const job: ServicesJob = { ...req.body };
-
-    try {
-        const resp: any = await handler(job);
-
-        return res.status(200).json(resp);
-    } catch (err) {
-        return res.status(500).json(err);
-    }
-};
-
 export const handler: (job: ServicesJob) => any = async (job: ServicesJob): Promise<IHandler> => {
     if (!job.id) {
         return Promise.reject({
@@ -62,8 +44,6 @@ export const handler: (job: ServicesJob) => any = async (job: ServicesJob): Prom
         err.caller = 'NodePy services.handler (handler): writeFile';
         err.message = `Executor: Could not save the file for job ${id}`;
         err.trace = addTrace(err.trace, '@at $services.handler (handler): writeFile');
-
-        void utils.logError(`$services.handler (handler): savefile - job: ${id}`, err);
 
         return Promise.reject(err);
     });

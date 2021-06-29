@@ -7,27 +7,31 @@ import { serviceHandler } from './service.handler';
 import { payloads } from './home.handler';
 
 const argsParser: (event: any) => IArgsBody = (event: any): IArgsBody => {
-    const message = event.text.replace(thisbot.key, '').replaceAll('\n', ' ');
+    //const message = event.text.replace(thisbot.key, '').replaceAll('\n', ' ');
+    const message = event.text.replace(thisbot.key, '').split('\n')[0];
 
-    const args = message.split(' ').map((item: string) => item.toLowerCase().trim());
+    const args_array = message.split(' ').map((item: string) => item.toLowerCase().trim());
 
     let component: EComponents;
-    let action: string; // args[2]
-    let id: string; // args[1]
-    let params: { [index: string]: any } | undefined; // args[4]
-    let payload: { [index: string]: any } | string | undefined; // args[3]
+    let action: string; // args_array[2]
+    let id: string; // args_array[1]
+    let params: { [index: string]: any } | undefined; // args_array[4]
+    let payload: { [index: string]: any } | string | undefined; // args_array[3]
+    let args: [string] | [] = [];
 
-    component = args[0];
-    id = args[1];
-    action = args[2];
-    payload = args[3];
+    console.debug(args_array, args_array.length);
+
+    component = args_array[0];
+    id = args_array[1];
+    action = args_array[2];
+    args = args_array.slice(3);
 
     if (services) {
         for (const service of services) {
             if (service.name === id) {
                 id = service.id;
-                action = args[1];
-                payload = args[2];
+                action = args_array[1];
+                args = args_array.slice(2);
             }
         }
     }
@@ -74,6 +78,7 @@ const argsParser: (event: any) => IArgsBody = (event: any): IArgsBody => {
             payload,
             event,
             user: event.user,
+            args,
         },
     };
 };

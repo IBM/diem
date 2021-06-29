@@ -31,12 +31,14 @@ export const slackDebug: (title: string, data: any) => Promise<void> = async (
         url: slack.url,
     };
 
+    const json: string = JSON.stringify(data, null, 2).replace(/`/g, '/`');
+
     options.data.blocks = [
         {
             type: 'section',
             text: {
                 type: 'mrkdwn',
-                text: `\`\`\`${JSON.stringify(data, null, 2)}\`\`\``,
+                text: `\`\`\`${json}\`\`\``,
             },
         },
     ];
