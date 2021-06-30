@@ -18,7 +18,7 @@ export const postMsg: (options: AxiosRequestConfig) => Promise<any> = async (
 
         if (err.code === 'ENOTFOUND' || err.code === 'EAI_AGAIN') {
             err.status = 404;
-            err.trace = ['@at $axios (postMsg) - no connection'];
+            err.trace = ['@at $axios (postMsg): no connection'];
 
             // no need to reject here, it's an error with the slack service so we don't want to get into a loop
         } else if (axiosError.response) {
@@ -30,11 +30,11 @@ export const postMsg: (options: AxiosRequestConfig) => Promise<any> = async (
                     : 'no message';
             err.status = axiosError.response.status;
             err.statusText = axiosError.response.statusText;
-            err.trace = ['@at $axios (postMsg) - response'];
+            err.trace = ['@at $axios (postMsg): response'];
 
             // no need to reject here, it's an error with the slack service so we don't want to get into a loop
         } else {
-            err.trace = ['@at $axios (postMsg)'];
+            err.trace = ['@at $axios (postMsg): other'];
         }
 
         return Promise.reject(err);
