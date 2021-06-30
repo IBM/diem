@@ -91,7 +91,7 @@ export class Server {
                     return eventHandler(req, res).catch(async (err) => {
                         err.trace = addTrace(err.trace, '@at $server (start)');
 
-                        void utils.logErr('$server.ts (start)', err);
+                        void utils.logError('$server.ts (start)', err);
 
                         return res.status(200).send();
                     });

@@ -22,7 +22,8 @@ const blocks = [
 General format: @Diem Bot <service> <action>
 
 Action is depending on the service requested
-Type @Diem Bot <service> help for more information
+Type "@Diem Bot service help" for more information
+If you are in the Bot App, just type "service help"
             \`\`\``,
         },
     },

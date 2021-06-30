@@ -31,6 +31,22 @@ export const callAPIMethodPost = async (method: any, payload: any) => {
     return result.data;
 };
 
+export const callAPIMethodPostFile = async (method: string, payload: any) => {
+    const result = await axios.post(`${apiUrl}/${method}`, payload, {
+        headers: { Authorization: `Bearer ${token}`, 'content-type': 'application/x-www-form-urlencoded' },
+    });
+
+    return result.data;
+};
+
+const callAPIFileGet = async (url: string) => {
+    const result = await axios.get(url, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return Promise.resolve(result.data);
+};
+
 /**
  * helper function to call GET methods of Slack API
  */
@@ -71,8 +87,10 @@ const getChannels = async (userId: string, channels: any, cursor: any): Promise<
 };
 
 export const api = {
-    callAPIMethodPost,
+    callAPIFileGet,
     callAPIMethodGet,
+    callAPIMethodPost,
+    callAPIMethodPostFile,
     getChannels,
     whoAmI,
 };

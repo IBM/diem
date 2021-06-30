@@ -1,9 +1,11 @@
 /* eslint-disable max-len */
+import { URLSearchParams } from 'url';
 import axios from 'axios';
 import { IArgsBody, IError } from '@interfaces';
 import { utils } from '@common/utils';
 import { slackDebug } from '@common/slack/slack.debug';
 import { api } from '../routes';
+import { replyMethod } from './message.handler';
 
 const services_url: string | undefined = process.env.services_url;
 
@@ -15,11 +17,22 @@ export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean 
 ): Promise<boolean | any> => {
     if (!services_url) {
         utils.logInfo('$service.handler (serviceHandler): no service_url');
+        void replyMethod(
+            payload,
+            body,
+            'Sorry, something went wrong',
+            'Sorry, something went wrongPlese try later again'
+        );
 
         return Promise.resolve(null);
     }
 
-    void slackDebug('Slack response from body logger', body);
+    // if it's not a mongoose id, the reply to the user that it's not a valid id
+    if (!body.id?.match(/^[0-9a-fA-F]{24}$/)) {
+        void replyMethod(payload, body, 'Sorry, this is an invalid id', `Sorry, but this is an invalid id: ${body.id}`);
+
+        return Promise.resolve(null);
+    }
 
     const result = await axios
         .post(services_url, body, {
@@ -51,7 +64,7 @@ export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean 
          * so we will log the response with the error
          */
 
-        void slackDebug('Slack response from backend response', { out: response, error: result.data.error });
+        void slackDebug('Slack error response from backend response', { out: response, error: result.data.error });
     } else {
         void slackDebug('Slack response from backend response', response);
     }
@@ -61,9 +74,7 @@ export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean 
      * to be returned by the backend
      */
     if (response.method) {
-        await api.callAPIMethodPost(response.method, {
-            ...response.payload,
-        });
+        await api.callAPIMethodPost(response.method, response.payload);
 
         return Promise.resolve(null);
     }
@@ -74,8 +85,6 @@ export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean 
     const text: string = `Your data for ${body.params.action || 'your request'}`;
     const channel: string = payload.channel;
     const thread_ts = payload.thread_ts || payload.ts;
-
-    //console.info('result', payload);
 
     /* out could be a string, an object to be parsed or a form
      * only in case of an object , we stringify it
@@ -89,6 +98,22 @@ export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean 
         }
     } else {
         out = response;
+    }
+
+    if (out.length > 1000) {
+        const params = new URLSearchParams();
+
+        params.append('channels', channel);
+        params.append('content', out);
+        params.append('title', body.id);
+        params.append('filetype', 'javascript');
+        params.append('thread_ts', thread_ts);
+
+        const resp = await api.callAPIMethodPostFile('files.upload', params);
+
+        utils.logInfo(`$service.handler (callAPIMethodPostFile): response: ${resp.ok}`);
+
+        return Promise.resolve(null);
     }
 
     // the default for slack blocks
