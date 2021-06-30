@@ -537,6 +537,7 @@ export interface IJobResponse {
     outl?: any;
     runby: string;
     runtime: number | null;
+    serviceid?: string;
     special?: string;
     status: EJobStatusCodes;
     transid: string;

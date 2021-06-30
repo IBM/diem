@@ -5,7 +5,7 @@ import { IRequest, IError, EStoreActions } from '@interfaces';
 import { pubSub } from '@config/pubsub';
 import { publisher } from '@config/nats_publisher';
 import { IJobResponse } from '@models';
-import { base64encode, addTrace } from '@functions';
+import { addTrace } from '@functions';
 import { prepareNodePyServicesJob, IServices } from '../executors/nodepy/np.create.services';
 import { INodePyJob } from '../executors/nodepy/np.interfaces';
 
@@ -64,7 +64,7 @@ export const getservice: (req: IRequest) => Promise<any> = async (req: IRequest)
 
     try {
         void publisher.publish(channel, {
-            code: base64encode(nodepyJob.code),
+            code: nodepyJob.code,
             transid: req.transid,
             id,
         });
@@ -96,7 +96,7 @@ export const getservice: (req: IRequest) => Promise<any> = async (req: IRequest)
                 store: jobdetail,
                 targetid: id,
                 options: {
-                    field: 'servicesout',
+                    field: body.outfield || 'servicesout',
                 },
                 type: EStoreActions.UPD_STORE_FORM_RCD,
                 values: {

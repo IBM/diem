@@ -19,6 +19,7 @@ export interface IServices {
     token: string;
     transid: string;
     params?: any;
+    outfield?: string;
 }
 
 export const prepareNodePyServicesJob: (body: IServices) => Promise<INodePyJob> = async (
@@ -35,9 +36,19 @@ export const prepareNodePyServicesJob: (body: IServices) => Promise<INodePyJob> 
 
     // a job can be called via url or via body
     const serviceid: string = body.serviceid;
+
+    let selector: any = { _id: serviceid };
+
+    // we can also have a service by name, in this case we check if it's not a mongo id
+    if (!serviceid.match(/^[0-9a-fA-F]{24}$/)) {
+        selector = {
+            name: serviceid,
+        };
+    }
+
     const params: any = body.params || {};
 
-    const doc: IJobSchema | null = await DataModel.findOne({ _id: serviceid })
+    const doc: IJobSchema | null = await DataModel.findOne(selector)
         .lean()
         .exec()
         .catch(async (err: any) => {

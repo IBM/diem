@@ -32,7 +32,7 @@ export const loadServiceDoc = async () => {
         )
         .catch(async (err: IError) => {
             const error: any = {
-                trace: ['@at $service.doc (serviceHandler) - axios'],
+                trace: ['@at $service.doc (loadServiceDoc) - axios'],
                 message: 'Axios services post error',
                 url: services_url,
                 id: service_doc,
