@@ -51,8 +51,6 @@ export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean 
 
     // start with setting some default data
 
-    //console.debug(result.data);
-
     if (!result?.data?.out) {
         return Promise.resolve(null);
     }
