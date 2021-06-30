@@ -1,15 +1,16 @@
 /* eslint-disable max-len */
-import { URLSearchParams } from 'url';
 import axios from 'axios';
 import { IArgsBody, IError } from '@interfaces';
 import { utils } from '@common/utils';
 import { slackDebug } from '@common/slack/slack.debug';
 import { api } from '../routes';
+import { postMsg, IAxiosError, AxiosRequestConfig } from '../../common/slack/axios';
 import { replyMethod } from './message.handler';
 
 const services_url: string | undefined = process.env.services_url;
 
 const token: string | undefined = process.env.diem_token;
+const bot_token: string | undefined = process.env.bot_token;
 
 export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean | any> = async (
     payload: any,
@@ -62,9 +63,9 @@ export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean 
          * so we will log the response with the error
          */
 
-        void slackDebug('Slack error response from backend response', { out: response, error: result.data.error });
+        void slackDebug('error response from Diem', { out: response, error: result.data.error });
     } else {
-        void slackDebug('Slack response from backend response', response);
+        void slackDebug('response from Diem', response);
     }
 
     /* response method is a slack specific action
@@ -99,17 +100,28 @@ export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean 
     }
 
     if (out.length > 1000) {
-        const params = new URLSearchParams();
+        const params = {
+            channels: channel,
+            content: out,
+            title: body.id,
+            filetype: 'javascript',
+            thread_ts,
+        };
 
-        params.append('channels', channel);
-        params.append('content', out);
-        params.append('title', body.id);
-        params.append('filetype', 'javascript');
-        params.append('thread_ts', thread_ts);
+        const options: AxiosRequestConfig = {
+            params,
+            method: 'POST',
+            url: 'https://slack.com/api/files.upload',
+            headers: { Authorization: `Bearer ${bot_token}` },
+        };
 
-        const resp = await api.callAPIMethodPostFile('files.upload', params);
+        const resp: any = await postMsg(options).catch(async (err: IAxiosError) => {
+            err.trace = utils.addTrace(err.trace, '@at $service.handler (Mslacksg): postMsg');
 
-        utils.logInfo(`$service.handler (callAPIMethodPostFile): response: ${resp.ok}`);
+            return utils.logErr(`$service.handler (serviceHandler): length:${out.length} error`, err);
+        });
+
+        utils.logInfo(`$service.handler (serviceHandler): response: ${resp}`);
 
         return Promise.resolve(null);
     }

@@ -5,7 +5,6 @@
  * @module slack
  */
 
-import { URLSearchParams } from 'url';
 import { ISlack, utils } from '../utils';
 import { postMsg, IAxiosError, AxiosRequestConfig } from './axios';
 
@@ -20,12 +19,10 @@ export const slackDebug: (title: string, data: any) => Promise<void> = async (
     if (!slack.url || !slack || !slack.deploy || !slack.debug.channel) {
         utils.logInfo(`$slack.debug (slackMsg): no deploy channel on ${utils.Env.K8_SYSTEM_NAME}`);
 
-        return;
+        return Promise.resolve();
     }
 
     const new_data: any = JSON.parse(JSON.stringify(data));
-
-    new URLSearchParams();
 
     let json: string = JSON.stringify(new_data, null, 2).replace(/`/g, '/`');
 
@@ -48,29 +45,29 @@ export const slackDebug: (title: string, data: any) => Promise<void> = async (
         json = `truncated for size: ${json.substring(0, 1000)}`;
     }
 
-    const params = new URLSearchParams();
-
-    params.append('channels', slack.debug.channel);
-    params.append('content', json);
-    params.append('title', title || 'Slack Backend Response');
-    params.append('filetype', 'javascript');
+    const params: any = {
+        channels: slack.debug.channel,
+        content: json,
+        title: title || 'Slack Backend Response',
+        filetype: 'javascript',
+    };
 
     const options: AxiosRequestConfig = {
         params,
         method: 'POST',
         url: 'https://slack.com/api/files.upload',
-        headers: { Authorization: `Bearer ${token}`, 'content-type': 'application/x-www-form-urlencoded' },
+        headers: { Authorization: `Bearer ${token}` },
     };
 
-    if (!process.env.disableslack) {
-        const response: any = await postMsg(options).catch(async (err: IAxiosError) => {
-            err.trace = utils.addTrace(err.trace, '@at $slack (slackMsg): postMsg');
+    const response: any = await postMsg(options).catch(async (err: IAxiosError) => {
+        err.trace = utils.addTrace(err.trace, '@at $slack.debug (slackMsg): postMsg');
 
-            return utils.logErr('$slack.debug (slackMsg): error', err);
-        });
+        utils.logErr('$slack.debug (slackMsg): error', err);
 
-        utils.logInfo(`$slack.debug (slackMsg): reply status: ${response}`);
-    } else {
-        utils.logErr('$slack.debug (slackMsg): slack disabled');
-    }
+        return Promise.resolve();
+    });
+
+    utils.logInfo(`$slack.debug (slackMsg): reply status: ${response}`);
+
+    return Promise.resolve();
 };
