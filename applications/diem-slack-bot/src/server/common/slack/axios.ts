@@ -21,7 +21,6 @@ export const postMsg: (options: AxiosRequestConfig) => Promise<any> = async (
             err.trace = ['@at $axios (postMsg) - no connection'];
 
             // no need to reject here, it's an error with the slack service so we don't want to get into a loop
-            return Promise.resolve({ status: 503 });
         } else if (axiosError.response) {
             err.message =
                 axiosError.response && axiosError.response.data
@@ -34,13 +33,21 @@ export const postMsg: (options: AxiosRequestConfig) => Promise<any> = async (
             err.trace = ['@at $axios (postMsg) - response'];
 
             // no need to reject here, it's an error with the slack service so we don't want to get into a loop
-            return Promise.resolve({ status: 503 });
         } else {
             err.trace = ['@at $axios (postMsg)'];
         }
 
         return Promise.reject(err);
     });
+
+    if (resp.data?.error) {
+        return Promise.reject({
+            status: resp.status,
+            err: resp.data.error,
+            ok: resp.data.ok,
+            trace: ['@at $axios (postMsg) - response'],
+        });
+    }
 
     return Promise.resolve(resp.status);
 };

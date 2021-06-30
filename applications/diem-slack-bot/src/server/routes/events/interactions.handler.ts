@@ -1,3 +1,4 @@
+import { slackDebug } from '@common/slack/slack.debug';
 import { utils } from '@common/utils';
 import { EComponents, IRequest, IResponse, IArgsBody, IError } from '@interfaces';
 import { isVerified } from '../../config/verifysignature';
@@ -19,18 +20,6 @@ export const interactionsHander: (req: IRequest, res: IResponse) => Promise<any>
 
         const id = payload.view.callback_id;
 
-        if (!id.match(/^[0-9a-fA-F]{24}$/)) {
-            const err: any = {
-                message: 'Invalid id',
-                id,
-                trace: '@at $interactions.handler (interactionsHander) - view_submission',
-            };
-
-            void utils.logError('$interactions.handler (interactionsHander) - view_submission', err);
-
-            return;
-        }
-
         const args: IArgsBody = {
             id,
             component: EComponents.service,
@@ -44,7 +33,19 @@ export const interactionsHander: (req: IRequest, res: IResponse) => Promise<any>
             },
         };
 
-        //console.info('args', payload.view.state.values);
+        void slackDebug('Slack response from view_submission', args);
+
+        if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+            const err: any = {
+                message: 'Invalid id',
+                id,
+                trace: '@at $interactions.handler (interactionsHander) - view_submission',
+            };
+
+            void utils.logError('$interactions.handler (interactionsHander) - view_submission', err);
+
+            return;
+        }
 
         await serviceHandler(payload, args).catch(async (err: IError) => {
             err.trace = utils.addTrace(err.trace, '@at $interactions.handler (interactionsHander) - view_submission');
@@ -75,6 +76,8 @@ export const interactionsHander: (req: IRequest, res: IResponse) => Promise<any>
                 user: payload.user,
             },
         };
+
+        void slackDebug('Slack response from block_actions', args);
 
         void serviceHandler(payload, args).catch(async (err: IError) => {
             err.trace = utils.addTrace(err.trace, '@at $interactions.handler (interactionsHander) - view_submission');

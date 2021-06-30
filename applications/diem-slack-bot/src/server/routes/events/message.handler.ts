@@ -1,6 +1,7 @@
 import { utils } from '@common/utils';
 import { parse } from 'yaml';
 import { IArgsBody, EComponents, IError } from '@interfaces';
+import { slackDebug } from '@common/slack/slack.debug';
 import { api, thisbot } from '../routes';
 import { reloadServiceDoc, services } from '../service.doc';
 import { serviceHandler } from './service.handler';
@@ -18,8 +19,6 @@ const argsParser: (event: any) => IArgsBody = (event: any): IArgsBody => {
     let params: { [index: string]: any } | undefined; // args_array[4]
     let payload: { [index: string]: any } | string | undefined; // args_array[3]
     let args: [string] | [] = [];
-
-    console.debug(args_array, args_array.length);
 
     component = args_array[0];
     id = args_array[1];
@@ -39,7 +38,7 @@ const argsParser: (event: any) => IArgsBody = (event: any): IArgsBody => {
     if (event.blocks) {
         const code_base = event.blocks[0].elements.find((el: any) => el.type === 'rich_text_preformatted');
         if (code_base) {
-            const params_tmp: string = code_base.elements[0].text;
+            const params_tmp: string = code_base.elements[0].text || code_base.elements[0].url;
 
             payload = params_tmp;
 
@@ -83,6 +82,49 @@ const argsParser: (event: any) => IArgsBody = (event: any): IArgsBody => {
     };
 };
 
+const fileParser: (event: any) => any = async (event: any): Promise<any> => {
+    //const message = event.text.replace(thisbot.key, '').replaceAll('\n', ' ');
+
+    const file_share: any = event.files[0];
+
+    const component: EComponents = EComponents.service;
+    const action: string = file_share.title;
+    let id: string; // args_array[1]
+    let payload: { [index: string]: any } | string | undefined; // args_array[3]
+    let args: [string] | [] = [];
+
+    args = [file_share.mode];
+    id = file_share.title;
+    payload = file_share.preview;
+
+    if (services) {
+        for (const service of services) {
+            if (service.name === id) {
+                id = service.id;
+            }
+        }
+    }
+
+    if (file_share.url_private) {
+        utils.logInfo('$message.handler (fileParser): looking up data');
+        payload = await api.callAPIFileGet(file_share.url_private);
+    }
+
+    return Promise.resolve({
+        component,
+        id,
+        params: {
+            action,
+            component,
+            id,
+            payload,
+            event,
+            user: event.user,
+            args,
+        },
+    });
+};
+
 export const getProfile = async (event: any): Promise<any> => {
     const profile_resp = await api.callAPIMethodGet('users.profile.get', {
         user: event.user,
@@ -92,15 +134,22 @@ export const getProfile = async (event: any): Promise<any> => {
 };
 
 export const messageHandler: (event: any) => Promise<boolean | any> = async (event: any): Promise<boolean | any> => {
-    if (event.subtype) {
+    let body: any;
+    if (event.subtype === 'file_share' && thisbot.key.includes(event.user)) {
+        utils.logInfo(`$message.handler (messageHandler): excluding files posted by bot: ${event.user}`);
+
+        return Promise.resolve(null);
+    } else if (event.subtype === 'file_share') {
+        body = await fileParser(event);
+    } else if (event.subtype) {
         utils.logInfo(`$message.handler (messageHandler): not handled message: ${event.subtype}`);
 
         return Promise.resolve(null);
+    } else {
+        body = argsParser(event);
     }
 
     // void slackDebug({ 'event logger:', event);
-
-    const body = argsParser(event);
 
     if (body.id === 'reloadservicedoc') {
         void reloadServiceDoc();
@@ -112,6 +161,9 @@ export const messageHandler: (event: any) => Promise<boolean | any> = async (eve
 
     if (components[body.component] && body.component in components) {
         utils.logInfo(`$message.handler (messageHandler): component: ${body.component} - service: ${body.id}`);
+
+        void slackDebug('Slack response from messageHandler', body);
+
         const response: boolean | any = await components[body.component](event, body).catch(async (err: IError) => {
             err.trace = utils.addTrace(err.trace, '@at $message.handler (messageHandler) - components');
 
@@ -157,7 +209,8 @@ const otherMethod = async (event: any, body: IArgsBody): Promise<any> => {
     utils.logInfo(`$event.handler (handleMessages): Invalid method called - method: ${body.id} - user: ${event.user}`);
 };
 
-const replyMethod = async (event: any, body: IArgsBody, text: string, data: string = text): Promise<any> => {
+// reply method can be used to reply to an incoming message
+export const replyMethod = async (event: any, body: IArgsBody, text: string, data: string = text): Promise<any> => {
     await api.callAPIMethodPost(
         'chat.postMessage',
 
