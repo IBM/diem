@@ -180,7 +180,7 @@ export const actionUpdate: (body: IJobBody) => Promise<any> = async (body: IJobB
         doc.config = mergeDeep(doc.toObject().config || {}, env2);
     }
 
-    if (body.job__params) {
+    if (body.job__params === '') {
         if (Object.entries(body.job__params).length > 0) {
             let yaml: any;
             try {
