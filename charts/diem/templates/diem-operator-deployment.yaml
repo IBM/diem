@@ -36,6 +36,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ .Values.common.name }}-config
+            - configMapRef:
+                name: {{ .Values.operator.name }}-config
             - secretRef:
                 name: {{ .Values.common.name }}-secret
           resources: {}
