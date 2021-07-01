@@ -26,7 +26,7 @@ export const slackDebug: (title: string, data: any) => Promise<void> = async (
 
     let json: string = JSON.stringify(new_data, null, 2).replace(/`/g, '/`');
 
-    if (json.length > 8000 && new_data.params?.payload) {
+    if (json.length > 7900 && new_data.params?.payload) {
         if (typeof new_data.params.payload === 'string') {
             new_data.params.payload = `truncated for size: ${new_data.params.payload.substring(0, 100)}`;
         } else {
@@ -36,12 +36,12 @@ export const slackDebug: (title: string, data: any) => Promise<void> = async (
         json = JSON.stringify(new_data, null, 2).replace(/`/g, '/`');
     }
 
-    if (json.length > 8000 && new_data.params?.event) {
+    if (json.length > 7900 && new_data.params?.event) {
         new_data.params.event = 'truncated for size';
         json = JSON.stringify(new_data, null, 2).replace(/`/g, '/`');
     }
 
-    if (json.length > 8000) {
+    if (json.length > 7900) {
         json = `truncated for size: ${json.substring(0, 1000)}`;
     }
 

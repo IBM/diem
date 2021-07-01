@@ -5,7 +5,7 @@ numpy==1.20.3 --only-binary=numpy
 pandas==1.2.5
 PyJwt==2.1.0
 ibm-cos-sdk==2.10.0
-sqlalchemy==1.4.19
+sqlalchemy==1.4.20
 ibm_db==3.0.4
 statsmodels==0.12.2
 SciPy==1.7.0
