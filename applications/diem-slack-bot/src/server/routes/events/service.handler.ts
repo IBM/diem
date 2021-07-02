@@ -1,10 +1,11 @@
 /* eslint-disable max-len */
+import { URLSearchParams } from 'url';
 import axios from 'axios';
 import { IArgsBody, IError } from '@interfaces';
 import { utils } from '@common/utils';
 import { slackDebug } from '@common/slack/slack.debug';
+import { IAxiosError, IAxiosForm, postMsgForm } from '@common/slack/axios';
 import { api } from '../routes';
-import { postMsg, IAxiosError, AxiosRequestConfig } from '../../common/slack/axios';
 import { replyMethod } from './message.handler';
 
 const services_url: string | undefined = process.env.services_url;
@@ -63,9 +64,9 @@ export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean 
          * so we will log the response with the error
          */
 
-        void slackDebug('error response from Diem', { out: response, error: result.data.error });
+        void slackDebug('$service.handler (serviceHandler): error response', result.data);
     } else {
-        void slackDebug('response from Diem', response);
+        void slackDebug('$service.handler (serviceHandler): response', result.data);
     }
 
     /* response method is a slack specific action
@@ -99,29 +100,39 @@ export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean 
         out = response;
     }
 
+    // if the length is > 1000 we will sent the response as a snippet to the user
     if (out.length > 1000) {
-        const params = {
+        if (out.length > 100000) {
+            out = 'Sorry, but your request exceeded the maximum limit of 100.000 lines';
+        }
+
+        const params: { [index: string]: any } = {
             channels: channel,
-            content: out,
             title: body.id,
             filetype: 'javascript',
             thread_ts,
+            content: out,
         };
 
-        const options: AxiosRequestConfig = {
-            params,
-            method: 'POST',
+        const formData = new URLSearchParams();
+
+        Object.keys(params).forEach((key) => {
+            formData.append(key, params[key]);
+        });
+
+        const options: IAxiosForm = {
+            formData,
             url: 'https://slack.com/api/files.upload',
-            headers: { Authorization: `Bearer ${bot_token}` },
+            headers: { Authorization: `Bearer ${bot_token}`, 'Content-Type': 'application/x-www-form-urlencoded' },
         };
 
-        const resp: any = await postMsg(options).catch(async (err: IAxiosError) => {
+        const resp: any = await postMsgForm(options).catch(async (err: IAxiosError) => {
             err.trace = utils.addTrace(err.trace, '@at $service.handler (Mslacksg): postMsg');
 
             return utils.logErr(`$service.handler (serviceHandler): length:${out.length} error`, err);
         });
 
-        utils.logInfo(`$service.handler (serviceHandler): response: ${resp}`);
+        utils.logInfo(`$service.handler (serviceHandler): slack reply status: ${resp}`);
 
         return Promise.resolve(null);
     }

@@ -88,13 +88,15 @@ export class Server {
             })
             .post(`${this.pack.apppath}`, limiter, (req: IRequest, res: IResponse) => {
                 if (req.body.type) {
-                    return eventHandler(req, res).catch(async (err) => {
+                    void eventHandler(req, res).catch(async (err) => {
                         err.trace = addTrace(err.trace, '@at $server (start)');
 
                         void utils.logError('$server.ts (start)', err);
-
-                        return res.status(200).send();
                     });
+
+                    utils.logInfo('$server.ts (start): aknowledgement');
+
+                    return res.status(200).send();
                 }
 
                 utils.logInfo('$server.ts (start): unknown event');
