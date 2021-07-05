@@ -1,0 +1,41 @@
+{
+  "name": "diem-jupyterhub",
+  "description": "Home Module for Leap",
+  "version": "0.1.0",
+  "author": "guy_huinen@be.ibm.com",
+  "config": {
+    "jupyter_pyspark": "127.0.0.1:30500/jupyter/jupyter-pyspark",
+    "jupyter_nodepy": "127.0.0.1:30500/jupyter/jupyter-nodepy",
+    "jupyter_experimental": "127.0.0.1:30500/jupyter/jupyter-experimental"
+  },
+  "devDependencies": {
+    "del-cli": "^4.0.0",
+    "ncp": "^2.0.0",
+    "npm-run-all": "^4.1.5"
+  },
+  "keywords": [
+    "diem"
+  ],
+  "license": "ISC",
+  "private": true,
+  "scripts": {
+    "jupyter_pyspark:build": "docker build -t $npm_package_config_jupyter_pyspark -f docker/jupyter-pyspark/Dockerfile .",
+    "jupyter_pyspark:copy_jars": "ncp ../diem-spark/jars ./docker/jupyter-pyspark/local/jars",
+    "jupyter_pyspark:copy_req": "ncp ../diem-spark/requirements.txt ./docker/jupyter-pyspark/local/requirements.txt",
+    "jupyter_pyspark:del_jars": "del ./docker/jupyter-pyspark/local/jars",
+    "jupyter_pyspark:push": "docker push $npm_package_config_jupyter_pyspark",
+    "jupyter_pyspark": "npm-run-all jupyter_pyspark:del_jars jupyter_pyspark:copy_jars jupyter_pyspark:copy_req jupyter_pyspark:build jupyter_pyspark:push",
+    "jupyter_nodepy:build": "docker build -t $npm_package_config_jupyter_nodepy -f docker/jupyter-nodepy/Dockerfile .",
+    "jupyter_nodepy:copy_jars": "ncp ../diem-nodepy/jars ./docker/jupyter-nodepy/local/jars",
+    "jupyter_nodepy:copy_req": "ncp ../diem-nodepy/requirements.txt ./docker/jupyter-nodepy/local/requirements.txt",
+    "jupyter_nodepy:del_jars": "del ./docker/jupyter-nodepy/local/jars",
+    "jupyter_nodepy:push": "docker push $npm_package_config_jupyter_nodepy",
+    "jupyter_nodepy": "npm-run-all jupyter_nodepy:del_jars jupyter_nodepy:copy_jars jupyter_nodepy:copy_req jupyter_nodepy:build jupyter_nodepy:push",
+    "jupyter_experimental:build": "docker build -t $npm_package_config_jupyter_experimental -f docker/jupyter-experimental/Dockerfile .",
+    "jupyter_experimental:copy_jars": "ncp ../diem-nodepy/jars ./docker/jupyter-experimental/local/jars",
+    "jupyter_experimental:copy_req": "ncp ../diem-nodepy/requirements.txt ./docker/jupyter-experimental/local/requirements.txt",
+    "jupyter_experimental:del_jars": "del ./docker/jupyter-experimental/local/jars",
+    "jupyter_experimental:push": "docker push $npm_package_config_jupyter_experimental",
+    "jupyter_experimental": "npm-run-all jupyter_experimental:del_jars jupyter_experimental:copy_jars jupyter_experimental:copy_req jupyter_experimental:build jupyter_experimental:push"
+  }
+}
