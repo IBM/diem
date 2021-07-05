@@ -33,7 +33,7 @@ export const interactionsHander: (req: IRequest, res: IResponse) => Promise<any>
             },
         };
 
-        void slackDebug('Slack response from view_submission', args);
+        void slackDebug('$interactions.handler (parameters): view_submission', args);
 
         if (!id.match(/^[0-9a-fA-F]{24}$/)) {
             const err: any = {
@@ -77,7 +77,7 @@ export const interactionsHander: (req: IRequest, res: IResponse) => Promise<any>
             },
         };
 
-        void slackDebug('Slack response from block_actions', args);
+        void slackDebug('$interactions.handler (parameters): block_actions', args);
 
         void serviceHandler(payload, args).catch(async (err: IError) => {
             err.trace = utils.addTrace(err.trace, '@at $interactions.handler (interactionsHander) - view_submission');

@@ -45,7 +45,7 @@ export const loadServiceDoc = async () => {
         });
 
     if (response?.data?.out) {
-        void slackDebug('Slack response from service document', response.data.out);
+        void slackDebug('$service.doc (loadServiceDoc): response', response.data);
         services = response.data.out;
     }
 

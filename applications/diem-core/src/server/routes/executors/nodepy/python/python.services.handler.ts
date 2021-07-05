@@ -16,7 +16,7 @@ import { handleFiles } from './python.code.handlers/handle.files';
 import { handleCos } from './python.code.handlers/handle.cos';
 import { handleMail } from './python.code.handlers/handle.mail';
 import { handleValues, setValues } from './python.code.handlers/handle.values';
-import { handlePip } from './python.code.handlers/handle.pip';
+import { handlePipServices } from './python.code.handlers/handle.pip.services';
 
 // ideal is to make this an env variable as it's the same path as spark in spark operator uses
 const filepath: string = '/tmp/spark-local-dir';
@@ -70,7 +70,7 @@ export const pythonServicesHandler: (doc: IJobSchema) => Promise<INodePyJob> = a
 
             // pip packages
             if (doc.job.params.pip) {
-                code = await handlePip(code, doc);
+                code = await handlePipServices(code, doc);
             }
 
             if (doc.job.params.values) {

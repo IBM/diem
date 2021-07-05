@@ -34,10 +34,11 @@ export const servicesNodepy: (job: ServicesJob) => Promise<any> = async (job: Se
         response = spawnSync('python3', ['-u', `${path.resolve()}/workdir/${id}/${id}.py`, job.params], {
             env: {
                 PATH: process.env.PATH,
+                PYTHONPATH: `${path.resolve()}/workdir/${id}/workdir/`,
                 APPPATH: process.env.APPPATH,
                 CLASSPATH: '/opt/spark/jars/*',
             },
-            cwd: `${path.resolve()}/workdir/${id}/workdir`,
+            cwd: `${path.resolve()}/workdir/${id}`,
         });
     }
 
