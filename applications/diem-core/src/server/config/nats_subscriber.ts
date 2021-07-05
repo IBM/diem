@@ -57,7 +57,7 @@ class Subscriber {
                 );
                 void this.subs_handler(msg, payload);
                 if (payload.meta && payload.meta.size === 0) {
-                    await new Promise((resolve) => setTimeout(resolve, 25));
+                    await new Promise((resolve) => setTimeout(resolve, 25, null));
                 }
             }
         }
