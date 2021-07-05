@@ -1,0 +1,45 @@
+hub:
+  service:
+    type: ClusterIP
+  baseUrl: /jupyter
+  config:
+    Authenticator:
+      admin_users:
+        - hubuser
+    DummyAuthenticator:
+      password: "hubpassword"
+    JupyterHub:
+      admin_access: true
+      authenticator_class: dummy
+proxy:
+  service:
+    type: ClusterIP
+    nodePorts:
+      http:
+      https:
+
+singleuser:
+  defaultUrl: "/lab"
+  storage:
+    type: none
+    extraVolumes:
+      - name: jupyter-shared
+        persistentVolumeClaim:
+          claimName: jupyter-pvc-claim
+    extraVolumeMounts:
+      - name: jupyter-shared
+        mountPath: /home/shared
+        subPath: local
+  profileList:
+    - display_name: "Spark environment"
+      description: "The Jupyter spark image!"
+      kubespawner_override:
+        image: quay.io/diem/jupyterhub:pyspark_3.8.8_1
+    - display_name: "NodePy environment"
+      description: "The Jupyter NodePy image"
+      kubespawner_override:
+        image: quay.io/diem/jupyterhub:nodepy_3.8.8_1
+    - display_name: "Experimental environment"
+      description: "The Jupyter experimental image"
+      kubespawner_override:
+        image: quay.io/diem/jupyterhub:experimental_3.8.8_1

@@ -122,7 +122,8 @@
                     { "title": "Local Setup", "name": "localsetup", "location": "installing/localsetup.md" },
                     { "title": "Spark", "name": "spark", "location": "installing/spark.md" },
                     { "title": "Spark Operator", "name": "spark-operator", "location": "installing/spark-operator.md" },
-                    { "title": "Openshift", "name": "openshift", "location": "installing/openshift.md" }
+                    { "title": "Openshift", "name": "openshift", "location": "installing/openshift.md" },
+                    { "title": "JupyterHub", "name": "jupyterhub", "location": "installing/jupyterhub.md" }
                 ]
             }
         },
