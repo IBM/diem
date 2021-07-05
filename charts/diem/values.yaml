@@ -52,7 +52,7 @@ core:
     # -- image location
     image: quay.io/diem/core
     # -- image version
-    version: 1.4.0
+    version: 1.5.0
     # -- number of replicas
     replicas: 1
     # -- port to listen
@@ -136,7 +136,7 @@ nodepy:
   port: 80
   replicas: 1
   tier: backend
-  version: 1.0.9
+  version: 1.1.0
 
 operator:
   # -- name of the deployment
@@ -150,7 +150,11 @@ operator:
   port: 80
   replicas: 1
   tier: backend
-  version: 1.0.4
+  version: 1.0.5
+
+  config:
+    # -- important, the path the application will run under
+    NAMESPACE: default
 
 ## enable the spark Operator
 ## for more details see
@@ -179,7 +183,7 @@ help:
   deployment:
     replicas: 1
     image: quay.io/diem/help
-    version: 1.2.0
+    version: 1.2.1
     path: /diem-help
     port: 80
   config:

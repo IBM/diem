@@ -6,7 +6,7 @@ class Watcher {
         console.info('starting...');
         const operator = new Operator();
 
-        await operator.Informer('', 'v1', 'pods', 'default');
+        await operator.Informer('', 'v1', 'pods');
     };
 }
 

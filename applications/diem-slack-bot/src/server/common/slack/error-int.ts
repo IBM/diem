@@ -84,7 +84,7 @@ export const slackMsgInt: (error: IError, slackConfig?: Partial<ISlack>) => Prom
         });
 
         utils.logInfo(
-            `$$error-int (slackMsgInt): - caller: ${error.caller || 'n/a'} - transid: ${
+            `$error-int (slackMsgInt): - caller: ${error.caller || 'n/a'} - transid: ${
                 error.transid
             } - status: ${response}`
         );

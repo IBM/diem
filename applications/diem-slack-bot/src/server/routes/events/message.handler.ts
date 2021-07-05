@@ -162,7 +162,7 @@ export const messageHandler: (event: any) => Promise<boolean | any> = async (eve
     if (components[body.component] && body.component in components) {
         utils.logInfo(`$message.handler (messageHandler): component: ${body.component} - service: ${body.id}`);
 
-        void slackDebug('Slack response from messageHandler', body);
+        void slackDebug('$message.handler (messageHandler): parameters', body);
 
         const response: boolean | any = await components[body.component](event, body).catch(async (err: IError) => {
             err.trace = utils.addTrace(err.trace, '@at $message.handler (messageHandler) - components');
