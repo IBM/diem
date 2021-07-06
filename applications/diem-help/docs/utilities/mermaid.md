@@ -1,4 +1,6 @@
-# Test
+# Mermaid Diagrams
+
+> Mermaid Diagrams are being used by Diem to represent flows
 
 ## State Diagram
 
@@ -88,41 +90,4 @@ graph TD
   C -->|One| D[Laptop]
   C -->|Two| E[iPhone]
   C -->|Three| F[fa:fa-car Car]
-```
-
-## Sequence Diagram
-
-```mermaid
-sequenceDiagram
-    participant Alice
-    participant Bob
-    Alice->>John: Hello John, how are you?
-    loop Healthcheck
-        John->>John: Fight against hypochondria
-    end
-    Note right of John: Rational thoughts <br/>prevail!
-    John-->>Alice: Great!
-    John->>Bob: How about you?
-    Bob-->>John: Jolly good!
-```
-
-## Class Diagram
-
-```mermaid
-classDiagram
-Class01 <|-- AveryLongClass : Cool
-<<interface>> Class01
-Class09 --> C2 : Where am i?
-Class09 --* C3
-Class09 --|> Class07
-Class07 : equals()
-Class07 : Object[] elementData
-Class01 : size()
-Class01 : int chimp
-Class01 : int gorilla
-class Class10 {
-  <<service>>
-  int id
-  size()
-}
 ```
