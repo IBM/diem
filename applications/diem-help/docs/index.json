@@ -103,7 +103,8 @@
             "section": {
                 "title": "Utilities",
                 "items": [
-                    { "title": "Flow Charts", "name": "test", "location": "utilities/mermaid.md" },
+                    { "title": "Graphviz", "name": "graphviz", "location": "utilities/graphviz.md" },
+                    { "title": "Mermaid", "name": "mermaid", "location": "utilities/mermaid.md" },
                     { "title": "DB2 Snippets", "name": "db2-snippet", "location": "utilities/db2-snippets.md" },
                     {
                         "title": "DB2 Partitioning",
