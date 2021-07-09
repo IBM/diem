@@ -138,7 +138,7 @@ export class AceCodeEditorComponent implements OnInit, ControlValueAccessor, OnC
         let calcmode: string = 'text';
 
         if (key) {
-            key.toLowerCase();
+            key = key.toLowerCase();
             if (key.includes('url')) {
                 calcmode = 'json';
             } else if (key.includes('py')) {
