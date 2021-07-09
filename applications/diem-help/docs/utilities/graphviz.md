@@ -477,3 +477,98 @@ f
 ```
 
 ![svg](../../../diem-help/docs/images/utilities/output_16_0.svg)
+
+***
+
+#### Update statement with select
+
+```python
+src = """
+digraph {
+
+    label="UPDATE WITH SELECT"
+
+    fontsize=11
+
+    # graph settings
+    compound=true
+    ratio=0.8
+    style="solid"
+    color= "#DDDDDB"
+    fontname=Arial
+    fontsize=11
+    labelloc=t
+
+    # node settings
+    node [
+        color= "#e5e5e5"
+        fillcolor="#d0e2ff"
+        shape=box
+        style="filled,radial,bold,rounded"
+        fontname=Arial
+        fontsize=10
+      ]
+
+    #edge setting
+    edge [
+      arrowsize=0.5
+      ]
+
+    T [label="cloud.revenue" shape=doublecircle]
+
+    subgraph cluster_1 {
+
+            # subgraph styling
+            style="solid"
+            color= "#DDDDDB"
+            label="Update Select"
+            labeljust=l
+
+            D -> C [constraint=false arrowhead=none]
+        }
+
+    C -> T [ltail=cluster_1 arrowhead=vee]
+}
+"""
+f= Source(src)
+f
+```
+
+![svg](../../../diem-help/docs/images/utilities/output_18_0.svg)
+
+***
+
+#### Update with statement
+
+```python
+src = """
+digraph {
+
+    fontsize=11
+
+    label="UPDATE TABLE"
+
+    # graph settings
+    fontname=Arial
+    labelloc=t
+
+    # node settings
+    node [
+        color= "#e5e5e5"
+        fillcolor="#d0e2ff"
+        shape=doublecircle
+        style="filled,bold"
+        fontname=Arial
+        fontsize=10
+      ]
+
+    T [label="cloud.revenue"]
+    B [label="Update Statement" shape=terminator labelloc="b"]
+    B -> T
+}
+"""
+f= Source(src)
+f
+```
+
+![svg](../../../diem-help/docs/images/utilities/output_20_0.svg)

@@ -39,6 +39,14 @@ graph TD
 
 ## Spark
 
+### High Level flow
+
+A Job is being executed from Diem, which creates a k8 crd that is sent to the spark-operator which in turn creates a spark-application (driver and executors)
+
+![spark](../../../diem-help/docs/images/architecture/execution_spark.png =900x)
+
+### Detailed flow
+
  ```mermaid
   graph TD
   U1((User))
