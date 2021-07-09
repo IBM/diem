@@ -169,3 +169,5 @@ his is a better partitiong
 2
 
 20/12/10 18:15:09 INFO JDBCRelation: Number of partitions: 8, WHERE clauses of these partitions: "RID" < 4094 or "RID" is null, "RID" >= 4094 AND "RID" < 8188, "RID" >= 8188 AND "RID" < 12282, "RID" >= 12282 AND "RID" < 16376, "RID" >= 16376 AND "RID" < 20470, "RID" >= 20470 AND "RID" < 24564, "RID" >= 24564 AND "RID" < 28658, "RID" >= 28658
+
+![distribution](../../../diem-help/docs/images/utilities/partitioning2.png)
