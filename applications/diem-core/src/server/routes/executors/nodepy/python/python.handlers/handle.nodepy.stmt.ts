@@ -10,7 +10,7 @@ const makeConn: (target: string, connection: IConnSchema) => Promise<string> = a
 ): Promise<string> => {
     const conn: string = py_jdbc(connection);
 
-    return conn.replace(/\$TARGET/g, target);
+    return conn.replace('$TARGET', target);
 };
 
 const py_stmt: (doc: IJobSchema) => Promise<string> = async (doc: IJobSchema): Promise<string> => {
@@ -121,7 +121,11 @@ export const handleNodeStmtJob: (code: string, doc: IJobSchema) => Promise<strin
     code: string,
     doc: IJobSchema
 ): Promise<string> => {
-    const pystmt: string = await py_stmt(doc);
+    let pystmt: string = await py_stmt(doc);
+
+    if (pystmt.includes('$$')) {
+        pystmt = pystmt.split('$$').join('$$$$');
+    }
 
     return Promise.resolve(code.replace('###__CODE__###', pystmt));
 };
