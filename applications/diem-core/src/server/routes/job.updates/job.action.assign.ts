@@ -19,7 +19,6 @@ export const actionAssign: (body: IJobBody) => Promise<any> = async (body: IJobB
     }
 
     doc.set({
-        ...body,
         annotations: {
             createdbyemail: body.email,
             createdbyname: body.username,

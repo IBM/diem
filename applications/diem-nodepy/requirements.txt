@@ -25,3 +25,4 @@ openpyxl==3.0.7
 tabulate==0.8.9
 slack_sdk==3.7.0
 pynpm == 0.1.2
+graphviz==0.16
