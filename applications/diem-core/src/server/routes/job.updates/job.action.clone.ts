@@ -35,6 +35,15 @@ export const actionClone: (body: IJobBody) => Promise<any> = async (body: IJobBo
     doc.job.error = null;
     const name: string = doc.name;
 
+    doc.events = [
+        {
+            created: new Date(),
+            createdbyemail: body.email,
+            createdbyname: body.username,
+            event: `Cloned from ${body.id}`,
+        },
+    ];
+
     const id: string = newId();
 
     if (doc.jobs && Object.keys(doc.jobs).length > 0) {
