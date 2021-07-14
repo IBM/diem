@@ -35,12 +35,21 @@ export const mergeDeep: any = (target: any, source: any) => {
     return target;
 };
 
+const changedFields: (body: IJobBody) => string = (body: IJobBody) => {
+    const { action, annotations, jobid, id, email, username, transid, sessionid, org, jobs, log, graph, ...rest } =
+        body;
+
+    return Object.keys(rest).join(', ');
+};
+
 export const actionUpdate: (body: IJobBody) => Promise<any> = async (body: IJobBody) => {
     /* get the id here */
 
     let isNew: boolean = false;
 
     let doc: IJobModel | null;
+
+    const changedfields: string = changedFields(body);
 
     if (!body.id) {
         doc = new DataModel();
@@ -295,6 +304,17 @@ export const actionUpdate: (body: IJobBody) => Promise<any> = async (body: IJobB
             transid: body.transid,
         },
     });
+
+    if (changedfields !== '') {
+        doc.events.unshift({
+            created: new Date(),
+            createdbyemail: body.email,
+            createdbyname: body.username,
+            event: isNew ? `Created with id ${id}` : `Updated Fields: ${changedfields}`,
+        });
+    }
+
+    // eslint-disable-next-line no-redeclare
 
     try {
         const upd_doc: any = await doc.save().catch(async (err: any) => {

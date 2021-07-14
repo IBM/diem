@@ -6,14 +6,12 @@ import { addTrace } from '@functions';
 import { actionClone } from './job.action.clone';
 import { actionUpdate } from './job.action.update';
 import { actionDelete } from './job.action.delete';
-import { actionNew } from './job.action.new';
 import { actionAssign } from './job.action.assign';
 
 const actions: any = {
     assign: actionAssign,
     clone: actionClone,
     delete: actionDelete,
-    new: actionNew,
     update: actionUpdate,
 };
 

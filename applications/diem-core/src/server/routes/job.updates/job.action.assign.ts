@@ -18,6 +18,32 @@ export const actionAssign: (body: IJobBody) => Promise<any> = async (body: IJobB
         });
     }
 
+    if (doc.annotations.createdbyemail === body.email) {
+        const serverPayload: IntServerPayload = {
+            message: 'Job Not Updated, same user',
+            success: true /** just display a success message */,
+            payload: [
+                {
+                    key: 'id',
+                    loaded: true,
+                    store: detail_store /** not used as forcestore is enabled */,
+                    targetid: doc._id.toString(),
+                    type: EStoreActions.UPD_STORE_FORM_RCD,
+                    values: {},
+                },
+            ],
+        };
+
+        return Promise.resolve(serverPayload);
+    }
+
+    doc.events.unshift({
+        created: new Date(),
+        createdbyemail: body.email,
+        createdbyname: body.username,
+        event: `Reassigned from ${doc.annotations.createdbyname} (${doc.annotations.createdbyemail}) to ${body.username} (${body.email})`,
+    });
+
     doc.set({
         annotations: {
             createdbyemail: body.email,

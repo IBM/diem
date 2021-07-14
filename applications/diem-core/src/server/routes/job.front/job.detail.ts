@@ -199,6 +199,7 @@ export const makePayload: (doc: IJobSchema) => Promise<IModelPayload> = async (
         ...doc.project,
         ...custom,
         about: doc.about,
+        events: doc.events,
         job__params,
         graph: DBJob[0],
         gantt: DBJob[1],
