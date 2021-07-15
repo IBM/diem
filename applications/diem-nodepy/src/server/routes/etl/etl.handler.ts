@@ -3,13 +3,8 @@ import path from 'path';
 import { utils } from '@config/utils';
 import { IError, IntJob, ECodeLanguage } from '@interfaces';
 import { publisher } from '@config/nats_publisher';
+import { base64decode, randstring } from '@shared/functions';
 import { etlNodepy } from './etl.nodepy';
-
-const base64decode: (file: string) => string = (file: string) => {
-    const buff: Buffer = Buffer.from(file, 'base64');
-
-    return buff.toString('utf8');
-};
 
 export const handler: (job: IntJob) => any = async (job: IntJob): Promise<void> => {
     if (!job.id) {
@@ -19,20 +14,22 @@ export const handler: (job: IntJob) => any = async (job: IntJob): Promise<void> 
         });
     }
 
-    const id: string = job.id;
+    job.rand = randstring();
 
-    utils.logInfo(`$etl.handler (handler): new request - job: ${id}`, job.transid);
+    const sid = `${job.id}-${job.rand}`;
+
+    utils.logInfo(`$etl.handler (handler): new request - job: ${sid}`, job.transid);
 
     // clean up the file and fill in the missing data
     const code: string = base64decode(job.code);
 
-    await fs.mkdir(`${path.resolve()}/workdir/${id}/workdir`, { recursive: true }).catch(async (err: IError) => {
+    await fs.mkdir(`${path.resolve()}/workdir/${sid}/workdir`, { recursive: true }).catch(async (err: IError) => {
         err.caller = 'rest.handler (handler): mkdir';
-        err.message = `Executor: Could not create the folder for job ${id}`;
+        err.message = `Executor: Could not create the folder for job ${sid}`;
 
-        void utils.logError(`$etl.handler (handler): mkdir - job: ${id}`, err);
+        void utils.logError(`$etl.handler (handler): mkdir - job: ${sid}`, err);
 
-        publisher.publish('job', id, {
+        publisher.publish('job', job.id, {
             ...job,
             count: null,
             error: err.message,
@@ -44,16 +41,16 @@ export const handler: (job: IntJob) => any = async (job: IntJob): Promise<void> 
 
     const extention: string = job.language === ECodeLanguage.javascript ? 'js' : 'py';
 
-    await fs.writeFile(`${path.resolve()}/workdir/${id}/${id}.${extention}`, code).catch(async (error: Error) => {
+    await fs.writeFile(`${path.resolve()}/workdir/${sid}/${sid}.${extention}`, code).catch(async (error: Error) => {
         const err: IError = {
             ...error,
             caller: 'rest.handler (handler): writeFile',
-            message: `Executor: Could not save the file for job ${id}`,
+            message: `Executor: Could not save the file for job ${sid}`,
         };
 
-        void utils.logError(`$etl.handler (handler): savefile - job: ${id}`, err);
+        void utils.logError(`$etl.handler (handler): savefile - job: ${sid}`, err);
 
-        void publisher.publish('job', id, {
+        void publisher.publish('job', job.id, {
             ...job,
             count: null,
             error: err.message,

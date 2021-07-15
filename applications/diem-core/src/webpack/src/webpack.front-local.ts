@@ -35,9 +35,6 @@ const env: IntEnv = {
     VERSION: process.env.npm_package_version,
 };
 
-const URL_LOADER: string = 'url-loader';
-const URL_LOADER_PATH: string = 'public/fonts/[name].[ext]';
-
 module.exports = {
     mode: 'development',
 
@@ -48,6 +45,14 @@ module.exports = {
             `${(global as any).__basedir}/src/config/vendor.prod.ts`,
             `${(global as any).__basedir}/src/client/main.ts`,
         ],
+    },
+
+    output: {
+        chunkFilename: 'public/js/[name][chunkhash].js',
+        filename: 'public/js/bundle[chunkhash].js',
+        path: `${(global as any).__basedir}/`,
+        publicPath: `${env.APPPATH}/`,
+        assetModuleFilename: assets,
     },
 
     devtool: 'eval-cheap-module-source-map',
@@ -95,55 +100,28 @@ module.exports = {
                     },
                 ],
             },
-
             {
-                loader: 'file-loader',
-                options: {
-                    name: assets,
-                },
+                type: 'asset/resource',
                 test: /\.(png|jpe?g|gif|ico)$/,
             },
             {
-                loader: URL_LOADER,
-                options: {
-                    limit: 10000,
-                    mimetype: 'application/font-woff',
-                    name: URL_LOADER_PATH,
-                },
+                type: 'asset/resource',
                 test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
             },
             {
-                loader: URL_LOADER,
-                options: {
-                    limit: 10000,
-                    mimetype: 'application/font-woff',
-                    name: URL_LOADER_PATH,
-                },
+                type: 'asset/resource',
                 test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
             },
             {
-                loader: URL_LOADER,
-                options: {
-                    limit: 10000,
-                    mimetype: 'application/octet-stream',
-                    name: URL_LOADER_PATH,
-                },
+                type: 'asset/resource',
                 test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
             },
             {
-                loader: 'file-loader',
-                options: {
-                    name: assets,
-                },
+                type: 'asset/resource',
                 test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
             },
             {
-                loader: URL_LOADER,
-                options: {
-                    limit: 10000,
-                    mimetype: 'image/svg+xml',
-                    name: 'public/assets/[name].[hash].[ext]',
-                },
+                type: 'asset/inline',
                 test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
             },
             {
@@ -151,13 +129,6 @@ module.exports = {
                 test: /[/\\]@angular[/\\]core[/\\].+\.js$/,
             },
         ],
-    },
-
-    output: {
-        chunkFilename: 'public/js/[name][chunkhash].js',
-        filename: 'public/js/bundle[chunkhash].js',
-        path: `${(global as any).__basedir}/`,
-        publicPath: `${env.APPPATH}/`,
     },
 
     plugins: [

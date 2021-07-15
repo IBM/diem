@@ -49,7 +49,7 @@ config.__nats = True
 config.__appname = '${process.env.NAME}'
 config.__K8_SYSTEM = '${process.env.K8_SYSTEM}'
 
-os.remove(f"{config.__id}.py")
+os.remove(sys.argv[0])
 
 def diem_except_hook(exctype, value, traceback):
     error(value)

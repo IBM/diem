@@ -54,6 +54,7 @@ export interface IntJob {
     jobend: Date;
     runtime: number | null;
     out?: any;
+    rand: string;
 }
 
 export interface ServicesJob {
@@ -65,6 +66,7 @@ export interface ServicesJob {
     serviceid: string;
     org: string;
     email: string;
+    rand: string;
 }
 
 export interface IJobResponse {
