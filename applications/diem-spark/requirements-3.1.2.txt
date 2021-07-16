@@ -1,17 +1,17 @@
 JPype1==1.3.0
 PyJwt==2.1.0
 SciPy==1.7.0
-cython==0.29.23
+cython==0.29.24
 ibm-cos-sdk==2.10.0
 ibm_db==3.0.4
 jaydebeapi==1.2.3
 jinja2==3.0.1
-jsonPath-ng==1.5.2
+jsonPath-ng==1.5.3
 matplotlib==3.4.2
 numpy==1.20.0 --only-binary=numpy
-pandas==1.2.5
-pymongo[tls]==3.11.4
-requests==2.25.1
+pandas==1.3.0
+pymongo[tls]==3.12.0
+requests==2.26.0
 scikit-learn==0.24.2
 seaborn==0.11.1
 sendgrid==6.7.1

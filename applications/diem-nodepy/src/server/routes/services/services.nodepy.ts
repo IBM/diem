@@ -6,39 +6,40 @@ import { ServicesJob, red, ECodeLanguage } from '@interfaces';
 
 export const servicesNodepy: (job: ServicesJob) => Promise<any> = async (job: ServicesJob): Promise<any> => {
     const cleanup: () => void = (): void => {
+        const sid = `${job.id}-${job.rand}`;
         try {
-            rimraf.sync(`${path.resolve()}/workdir/${id}`);
+            rimraf.sync(`${path.resolve()}/workdir/${sid}`);
 
-            utils.logInfo(`$services.nodepy ${process.pid} ${id}: removed folder ${id}`, job.transid);
+            utils.logInfo(`$services.nodepy ${process.pid} ${sid}: removed folder ${sid}`, job.transid);
         } catch (error) {
             console.error(
                 red,
-                `$services.nodepy ${process.pid} ${id}: folder ${id} not deleted - folder might already have been removed`
+                `$services.nodepy ${process.pid} ${sid}: folder ${sid} not deleted - folder might already have been removed`
             );
         }
     };
 
-    const id: string = job.id;
+    const sid = `${job.id}-${job.rand}`;
 
     let response: SpawnSyncReturns<Buffer>;
 
     if (job.language === ECodeLanguage.javascript) {
-        response = spawnSync('node', [`${path.resolve()}/workdir/${id}/${id}.js`, job.params], {
+        response = spawnSync('node', [`${path.resolve()}/workdir/${sid}/${sid}.js`, job.params], {
             env: {
                 PATH: `/home/app/.local/bin:${process.env.PATH}`,
             },
-            cwd: `${path.resolve()}/workdir/${id}/workdir`,
+            cwd: `${path.resolve()}/workdir/${sid}/workdir`,
             stdio: ['pipe', 'pipe', 'pipe'],
         });
     } else {
-        response = spawnSync('python3', ['-u', `${path.resolve()}/workdir/${id}/${id}.py`, job.params], {
+        response = spawnSync('python3', ['-u', `${path.resolve()}/workdir/${sid}/${sid}.py`, job.params], {
             env: {
                 PATH: process.env.PATH,
-                PYTHONPATH: `${path.resolve()}/workdir/${id}/workdir/`,
+                PYTHONPATH: `${path.resolve()}/workdir/${sid}/workdir/`,
                 APPPATH: process.env.APPPATH,
                 CLASSPATH: '/opt/spark/jars/*',
             },
-            cwd: `${path.resolve()}/workdir/${id}`,
+            cwd: `${path.resolve()}/workdir/${sid}`,
         });
     }
 

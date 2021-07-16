@@ -354,6 +354,16 @@ const outSchema: Schema = new Schema(
     { _id: false } /*** don't add an _id to documents */
 );
 
+const eventSchema: Schema = new Schema(
+    {
+        created: Date,
+        createdbyemail: String,
+        createdbyname: String,
+        event: String,
+    },
+    { _id: false } /*** don't add an _id to documents */
+);
+
 export interface IScheduleSchema {
     cronNbr: number | null;
     cronTime: string | null;
@@ -428,11 +438,16 @@ export interface IJobSchema {
     annotations: IJobSchemaAnnotations;
     config?: IJobConfig;
     custom?: ICustomSchema;
-    stmt?: IStmtSchema;
     description: string;
-    log: IJob[];
+    events: {
+        created: Date;
+        createdbyemail: string;
+        createdbyname: string;
+        event: string;
+    }[];
     job: IJob;
     jobs: IJobDetails;
+    log: IJob[];
     name: string;
     out: {
         out: any;
@@ -443,6 +458,7 @@ export interface IJobSchema {
         orgscope: string;
     };
     schedule: IScheduleSchema;
+    stmt?: IStmtSchema;
     mail: IMailSchema;
     tags: string[];
     type: keyof typeof EJobTypes;
@@ -458,6 +474,7 @@ const dataSchema: Schema = new Schema(
         config: configSchema,
         custom: customSchema,
         description: String,
+        events: [eventSchema],
         job: jobSchema,
         jobs: Object,
         log: [jobSchema],
