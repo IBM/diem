@@ -1,4 +1,4 @@
-# v3.1.2_rhel_2021-07-01
+# v3.1.2_rhel_2021-07-16
 FROM quay.io/diem/base-spark:3.1.2_rhel as base_spark
 
 FROM registry.access.redhat.com/ubi8/python-39 as base
