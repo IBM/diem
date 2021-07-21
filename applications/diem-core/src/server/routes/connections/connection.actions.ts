@@ -1,6 +1,6 @@
 import { utils } from '@common/utils';
 import { EStoreActions, IError, IntPayload, IntServerPayload, IRequest } from '@interfaces';
-import { ConnModel, IConnBody, IConnModel, IConnSchema, FaIcons } from '@models';
+import { ConnModel, IConnBody, IConnModel, IConnSchema, FaIcons, EIdType } from '@models';
 import { addTrace } from '@functions';
 
 export const connnew: (body: IConnBody) => Promise<any> = async (body: IConnBody) => {
@@ -53,7 +53,7 @@ export const connnew: (body: IConnBody) => Promise<any> = async (body: IConnBody
     return Promise.resolve(serverPayload);
 };
 
-export const connupdate: (body: IConnBody) => Promise<any> = async (body: IConnBody) => {
+export const connupdate: (body: Partial<IConnBody>) => Promise<any> = async (body: Partial<IConnBody>) => {
     /* get the id here */
 
     if (!body.id) {
@@ -77,6 +77,12 @@ export const connupdate: (body: IConnBody) => Promise<any> = async (body: IConnB
 
     if (body.expires && Array.isArray(body.expires) && body.expires.length === 0) {
         body.expires = null;
+    }
+
+    // if it's personal and not the user prevent update of password
+    if (doc.idtype === EIdType.personal && doc.owner !== body.email) {
+        delete body.owner;
+        delete body.password;
     }
 
     doc.set({
