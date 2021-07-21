@@ -29,6 +29,7 @@ export const createSparkPythonJob: (doc: IJobSchema) => Promise<ICapacity> = asy
 
     crdjob.spec.sparkConf = {
         'spark.sql.execution.arrow.pyspark.enabled': 'true',
+        'spark.pyspark.python': '/opt/app-root/bin/python',
         'spark.sql.execution.arrow.pyspark.fallback.enabled': 'true',
         'spark.sql.adaptive.enabled': doc.job.params?.spark?.adaptive ? 'true' : 'false',
         'spark.driver.extraClassPath': stocator,
@@ -53,6 +54,7 @@ export const createSparkPythonJob: (doc: IJobSchema) => Promise<ICapacity> = asy
         SPARK__CALLBACK_URL: sparkCredentials.callback_url,
         APPNAME: process.env.NAME,
         K8_SYSTEM: process.env.K8_SYSTEM,
+        KUBERNETES_TLS_VERSIONS: 'TLSv1.2,TLSv1.3',
     };
 
     if (doc.job.params?.files) {
