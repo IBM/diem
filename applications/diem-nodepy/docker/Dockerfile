@@ -13,7 +13,7 @@ LABEL maintainer=guy_huinen@be.ibm.com \
 USER root
 
 # silently update (-y) yum and install java openjdk headless
-RUN dnf -y update && dnf -y upgrade && dnf install -y java-11-openjdk-headless.x86_64 &&\
+RUN dnf -y upgrade && dnf install -y java-11-openjdk-headless.x86_64 &&\
     rm -rf /var/lib/apt/lists/*;
 
 WORKDIR /
