@@ -66,6 +66,7 @@
                 "items": [
                     { "title": "Connections", "name": "int_connections", "location": "integrations/connections.md" },
                     { "title": "Web Hooks", "name": "int_webhooks", "location": "integrations/webhooks.md" },
+                    { "title": "API Keys", "name": "int_apikeys", "location": "integrations/apikeys.md" },
                     { "title": "Files", "name": "int_files", "location": "integrations/files.md" },
                     { "title": "Config Maps", "name": "int_configmaps", "location": "integrations/configmaps.md" },
                     { "title": "Tags", "name": "int_tags", "location": "integrations/tags.md" },
@@ -74,10 +75,21 @@
                         "title": "Code Snippets",
                         "name": "int_codesnippets",
                         "location": "integrations/codesnippets.md"
-                    },
-                    { "title": "Box Integration", "name": "int_box", "location": "integrations/box.md" },
-                    { "title": "GitHub Integration", "name": "int_git", "location": "integrations/git.md" },
-                    { "title": "Slack Bot Integration", "name": "int_slack", "location": "integrations/slack.md" }
+                    }
+                ]
+            }
+        },
+        {
+            "section": {
+                "title": "External Integrations",
+                "items": [
+                    { "title": "Box Integration", "name": "int_box", "location": "external_integrations/box.md" },
+                    { "title": "GitHub Integration", "name": "int_git", "location": "external_integrations/git.md" },
+                    {
+                        "title": "Slack Bot Integration",
+                        "name": "int_slack",
+                        "location": "external_integrations/slack.md"
+                    }
                 ]
             }
         },
@@ -86,7 +98,7 @@
                 "title": "Rest Services",
                 "items": [
                     { "title": "Job Rest", "name": "jobrest", "location": "rest/jobrest.md" },
-                    { "title": "Services Rest", "name": "servicesrest", "location": "rest/servicesrest.md" }
+                    { "title": "Serverless Rest)", "name": "servicesrest", "location": "rest/servicesrest.md" }
                 ]
             }
         },
