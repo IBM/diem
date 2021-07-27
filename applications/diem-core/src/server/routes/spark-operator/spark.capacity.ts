@@ -2,14 +2,14 @@
 /* eslint-disable complexity */
 
 import { utils } from '@common/utils';
-import * as Api from 'kubernetes-client';
 import { IJobParams, IJobSchema } from '@models';
+import { cluster } from '../../config/cluster';
 import { ICrdConfig } from './base.crd';
 
 export interface IBaseCapacity {
     nodes: number;
     cores: number;
-    memory: string;
+    memory: number;
     mem_mb: number;
     mem_gb: number;
     mem_core: number;
@@ -17,29 +17,17 @@ export interface IBaseCapacity {
 
 const capacity: IBaseCapacity = {
     cores: 0,
-    memory: '',
+    memory: 0,
     mem_mb: 0,
     mem_gb: 0,
     mem_core: 0,
     nodes: 0,
 };
 
-const setCap: () => void = async () => {
-    const apiClient: Api.ApiClient = Api.Client1_13;
+const getCap: () => void = async () => {
+    const mem_mb = cluster.capacity.memory;
 
-    const client: Api.ApiRoot = new apiClient({ version: '1.13' });
-
-    const node: any = await client.api.v1.nodes.get();
-
-    const status: any = node.body.items[0].status;
-
-    const mem_mb = Number(status.capacity.memory.replace('Ki', ''));
-
-    capacity.mem_gb = 0;
-
-    if (typeof mem_mb === 'number') {
-        capacity.mem_gb = Math.ceil((mem_mb / 1024 / 1024) * 0.8);
-    }
+    capacity.mem_gb = Math.ceil((mem_mb / 1024 / 1024) * 0.8);
 
     /**
      *
@@ -49,9 +37,9 @@ const setCap: () => void = async () => {
      * now
      * cpu (8-4) x 3 = 12  for prod  (32-4) x 3 = 84
      */
-    capacity.cores = Number(status.capacity.cpu - 4);
-    capacity.memory = status.capacity.memory;
-    capacity.nodes = node.body.items.length;
+    capacity.cores = cluster.capacity.cpu;
+    capacity.memory = cluster.capacity.memory;
+    capacity.nodes = cluster.capacity.nodes;
 
     capacity.mem_core = Math.round(capacity.mem_gb / capacity.cores);
 
@@ -59,8 +47,6 @@ const setCap: () => void = async () => {
         `$spark.capacity (setCap): nodes: ${capacity.nodes} - cores: ${capacity.cores} - memory: ${capacity.memory}`
     );
 };
-
-setCap();
 
 /**
  *
@@ -73,6 +59,8 @@ export const caclCap: (doc: IJobSchema, crdjob: ICrdConfig) => ICrdConfig = (
     crdjob: ICrdConfig
 ): ICrdConfig => {
     // in case we habe only one node, we can only run in local mode, this will be seen by the pyfile loading
+
+    getCap();
 
     const id: string = doc._id.toString();
 

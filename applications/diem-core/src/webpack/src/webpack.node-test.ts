@@ -103,10 +103,6 @@ module.exports = {
     plugins: [
         new ForkTsCheckerWebpackPlugin(),
 
-        new webpack.DefinePlugin({
-            'process.env': JSON.stringify(Json2Dot()),
-        }),
-
         new NodeMonPlugin({
             nodeArgs: [`--inspect=0.0.0.0:${debugport}`],
             watch: path.resolve('./server'),
