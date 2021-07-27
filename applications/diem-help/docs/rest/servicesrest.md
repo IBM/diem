@@ -4,7 +4,7 @@
 
 ## API Key
 
-In order to use these restfull services you must first create an API Key as described here [Creating API Keys](../int_apikeys)
+In order to use these restfull services you must first create an API Key as described here [Creating API Keys](./diem-help/int_apikeys)
 
 ## EndPoint
 
