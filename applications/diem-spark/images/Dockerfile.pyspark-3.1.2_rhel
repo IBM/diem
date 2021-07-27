@@ -18,7 +18,7 @@ RUN tar -xzf /tmp/artifacts/${img}.tgz -C ${install_dir}/tar
 RUN mv ${install_dir}/tar/${img}/ /opt/spark
 RUN mv /opt/spark/kubernetes/dockerfiles/spark/entrypoint.sh /opt/
 RUN mv /opt/spark/kubernetes/dockerfiles/spark/decom.sh /opt/
-RUN yum clean all && [ ! -d /var/cache/yum ] || rm -rf /var/cache/yum
+RUN dnf clean all && [ ! -d /var/cache/dnf ] || rm -rf /var/cache/dnf
 RUN [ ! -d ${install_dir} ] || rm -rf ${install_dir}
 
 WORKDIR /opt/spark/work-dir
@@ -32,9 +32,9 @@ COPY --from=base /opt /opt
 
 #WORKDIR /
 
-RUN yum -y upgrade && yum install -y java-11-openjdk-headless.x86_64 && \
+RUN dnf -y upgrade && dnf install -y java-11-openjdk-headless.x86_64 && \
     rm -rf /var/lib/apt/lists/* && \
-    yum clean all && [ ! -d /var/cache/yum ] || rm -rf /var/cache/yum
+    dnf clean all && [ ! -d /var/cache/dnf ] || rm -rf /var/cache/dnf
 
 ADD https://github.com/krallin/tini/releases/download/v0.18.0/tini /bin/tini
 RUN chmod +x /bin/tini
