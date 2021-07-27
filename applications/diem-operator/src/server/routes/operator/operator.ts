@@ -137,6 +137,7 @@ export default class Operator {
         this.kc.loadFromDefault();
         this.k8sApi = this.kc.makeApiClient(CoreV1Api);
         this.ns = process.env.NAMESPACE || 'default';
+        void this.baseparam();
     }
 
     /**
@@ -204,5 +205,13 @@ export default class Operator {
         console.info(`$operator (Informer): starting informer ${id}...`);
 
         await informer.start();
+    };
+
+    private baseparam = async () => {
+        const nodelist: any = await this.k8sApi.listNode();
+
+        const nodes: number = nodelist.body.items.length;
+        const capacity: number = nodelist.body.items[0].status.capacity;
+        console.info(nodes, capacity);
     };
 }

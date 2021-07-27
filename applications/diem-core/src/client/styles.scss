@@ -427,6 +427,15 @@ df-panel,
     }
 }
 
+/* to make the drop down in the pagination transparent */
+.bx--pagination {
+    .bx--select--inline {
+        .bx--select-input {
+            background-color: transparent;
+        }
+    }
+}
+
 /* modal fixes to support dynamic forms */
 .bx--modal-content df-buttons {
     position: fixed;
