@@ -98,7 +98,7 @@
                 "title": "Rest Services",
                 "items": [
                     { "title": "Job Rest", "name": "jobrest", "location": "rest/jobrest.md" },
-                    { "title": "Serverless Rest)", "name": "servicesrest", "location": "rest/servicesrest.md" }
+                    { "title": "Serverless Rest", "name": "servicesrest", "location": "rest/servicesrest.md" }
                 ]
             }
         },
