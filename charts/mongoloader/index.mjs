@@ -1,5 +1,3 @@
-/* jshint esversion: 8 */
-
 import mongoose from 'mongoose';
 import fs from 'fs';
 
