@@ -212,6 +212,7 @@ export default class Operator {
 
         const nodes: number = nodelist.body.items.length;
         const capacity: number = nodelist.body.items[0].status.capacity;
-        console.info(nodes, capacity);
+        console.info(`$operator: available nodes: ${nodes}`);
+        console.info('$operator: current capacity:', capacity);
     };
 }
