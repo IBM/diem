@@ -1,9 +1,6 @@
-FROM node:16.2.0-alpine
+FROM node:16.2.0-alpine as base
 
-LABEL maintainer=guy_huinen@be.ibm.com \
-    org.label-schema.description="Diem Mongo Loader" \
-    org.label-schema.name="core" \
-    org.label-schema.version=$BUILD_VERSION
+RUN apk update && apk --no-cache upgrade --available
 
 ENV LANG=en_US.UTF-8 HOME=/home/app NODE_ENV=production
 
@@ -16,5 +13,21 @@ COPY index.mjs $HOME/index.mjs
 COPY data $HOME/data
 
 RUN chmod -R 775 .
+
+FROM scratch
+
+COPY --from=base / /
+
+ARG BUILD_DATE
+
+LABEL maintainer=guy_huinen@be.ibm.com \
+    org.label-schema.description="Diem Mongo Loader" \
+    org.label-schema.name="mongoloader" \
+    org.label-schema.version=$BUILD_VERSION \
+    org.label-schema.build-date=$BUILD_DATE
+
+ENV LANG=en_US.UTF-8 HOME=/home/app NODE_ENV=production
+
+WORKDIR $HOME
 
 CMD [ "node", "index.mjs" ]

@@ -21,7 +21,7 @@ COPY --from=base / /
 ARG BUILD_DATE
 
 LABEL maintainer=guy_huinen@be.ibm.com \
-    org.label-schema.description="Diem Core Application" \
+    org.label-schema.description="Diem Core" \
     org.label-schema.name="core" \
     org.label-schema.version=$BUILD_VERSION \
     org.label-schema.build-date=$BUILD_DATE
