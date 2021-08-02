@@ -1,4 +1,4 @@
-FROM node:16.5.0-alpine3.14
+FROM node:16.6.0-alpine3.14
 
 LABEL maintainer=guy_huinen@be.ibm.com
 LABEL com.ibm.service.name=etl-manager
