@@ -16,28 +16,29 @@ interface IApis extends Api.Apis {
 }
 
 enum ETypes {
-    'ADDED',
-    'DELETED',
-    'MODIFIED',
+    added = 'ADDED',
+    deleted = 'DELETED',
+    modified = 'MODIFIED',
 }
 
 enum EStates {
-    'DELETED',
-    'FAILING',
-    'RUNNING',
-    'SUBMISSION_FAILED',
-    'SUBMITTED',
-    'SUCCEEDING',
-    'COMPLETED',
+    deleted = 'DELETED',
+    failing = 'FAILING',
+    failed = 'FAILED',
+    running = 'RUNNING',
+    submission_failed = 'SUBMISSION_FAILED',
+    submitted = 'SUBMITTED',
+    succeeding = 'SUCCEEDING',
+    completed = 'COMPLETED',
 }
 
 interface EApplicationState {
-    state: keyof typeof EStates;
+    state: EStates;
     errorMessage?: string;
 }
 
 interface ISparkObject {
-    type: keyof typeof ETypes;
+    type: ETypes;
     object: {
         metadata: { name: string };
         status: {
@@ -251,7 +252,7 @@ class SparkLib {
 
             // no status , not interesting then
             if (!data.object?.status) {
-                utils.logInfo(`$spark.watcher (watcher): Pod Info - id: ${obj.id} - type: ${data.type}`);
+                utils.logInfo(`$spark.watcher (watcher): Pod status update - id: ${obj.id} - type: ${data.type}`);
 
                 return;
             }
@@ -274,8 +275,8 @@ class SparkLib {
             // we now have everything that is not in status deleted or failing
             // a simple console info about an event for this pod, only if the stream status changes
             if (
-                ['MODIFIED', 'ADDED'].includes(data.type) &&
-                !['DELETED', 'FAILING', 'SUBMISSION_FAILED'].includes(applicationState.state) &&
+                [ETypes.modified, ETypes.added].includes(data.type) &&
+                ![EStates.deleted, EStates.failing, EStates.submission_failed].includes(applicationState.state) &&
                 this.streams[id]?.status !== applicationState.state
             ) {
                 utils.logInfo(
@@ -285,13 +286,13 @@ class SparkLib {
 
             if (managed && this.streams[id] && this.streams[id]?.status !== applicationState.state) {
                 this.streams[id].status = applicationState.state;
-                if (applicationState.state === 'RUNNING') {
+                if (applicationState.state === EStates.running) {
                     utils.logInfo(`$spark.watcher (managed watcher): set running - id: ${id}`);
                     void pubSub.publish({
                         ...obj,
                         status: EJobStatus.running,
                     });
-                } else if (applicationState.state === 'COMPLETED') {
+                } else if (applicationState.state === EStates.completed) {
                     utils.logInfo(
                         `$spark.watcher (managed watcher): collecting log and publishing Completed - id: ${id}`
                     );
@@ -315,7 +316,10 @@ class SparkLib {
                 this.streams[id].status = applicationState.state;
             }
 
-            if (['FAILING', 'SUBMISSION_FAILED'].includes(applicationState.state) && !this.streams[id]?.log) {
+            if (
+                [EStates.failed, EStates.failing, EStates.submission_failed].includes(applicationState.state) &&
+                !this.streams[id]?.log
+            ) {
                 utils.logInfo(
                     `$spark.watcher (watcher): collecting log and publishing failed - id: ${obj.id} - type: ${data.type} - status: ${applicationState.state}`
                 );
@@ -339,7 +343,7 @@ class SparkLib {
                 });
             }
 
-            if (data.type === 'DELETED') {
+            if (data.type === ETypes.deleted) {
                 utils.logInfo(
                     `$spark.watcher (watcher): passing to abort - id: ${obj.id} - type: ${data.type} - status: ${applicationState.state}`
                 );
