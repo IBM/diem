@@ -1,4 +1,5 @@
 import * as http from 'http';
+import { Socket } from 'net';
 import * as WebSocket from 'ws';
 import { utils } from '@common/utils';
 import { IntEnv } from '@interfaces';
@@ -124,7 +125,7 @@ export class Server {
                 return socket.destroy();
             }
 
-            this.wss.handleUpgrade(request, socket, head, (ws: any): boolean => {
+            this.wss.handleUpgrade(request, socket as Socket, head, (ws: any): boolean => {
                 ws.id = cookie.email;
                 ws.org = cookie.xorg?.current?.org;
 

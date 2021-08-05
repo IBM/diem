@@ -240,7 +240,7 @@ class SparkLib {
 
             // it's not for us
             if (obj.id !== id) {
-                await this.abort(id, `watcher - wrong id: ${id}`);
+                await this.abort(id, `watcher - wrong id: ${id} - name: ${name}`);
 
                 return;
             }

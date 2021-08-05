@@ -18,7 +18,7 @@ export const getFormQuestions: (req: IRequest) => Promise<any> = async (req: IRe
 
     if (cache[req.query.form]) {
         utils.logInfo(
-            '$operator (getFormQuestions) - using cache',
+            '$operator (getFormQuestions): using cache',
             `form: ${req.query.form} - ti: ${req.transid}`,
             process.hrtime(hrstart)
         );
