@@ -18,7 +18,7 @@ export const tags: (req: IRequest) => Promise<string[]> = async (req: IRequest):
     const doc: ITags | null = await TagsModel.findOne({ org: req.user.org }, {}).lean().exec();
 
     utils.logInfo(
-        `$tags (tags) - email: ${req.user.email} - org: ${req.user.org}`,
+        `$tags (tags): email: ${req.user.email} - org: ${req.user.org}`,
         req.transid,
         process.hrtime(hrstart)
     );
