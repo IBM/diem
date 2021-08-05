@@ -45,7 +45,7 @@ export const jobupdates: (req: IRequest) => Promise<any> = async (req: IRequest)
     try {
         const serverPayload: ISocketPayload = await actions[body.action]({ ...body });
         utils.logInfo(
-            `$job.update (jobupdates) document ${body.id} saved - email: ${body.email}`,
+            `$job.update (jobupdates): id: ${body.id} - action: ${body.action} - email: ${body.email}`,
             req.transid,
             process.hrtime(hrstart)
         );

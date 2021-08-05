@@ -11,7 +11,7 @@ import { getConfigmap } from '../nodepy/python/python.code.handlers/handle.confi
 import { addVolume, getCosCredentials, ICos } from './spark.job';
 
 const stocator: string = '/opt/cos/stocator-1.1.3.jar';
-const encoder: string = '-Ddb2.jcc.charsetDecoderEncoder=3';
+const encoder: string = '-Ddb2.jcc.charsetDecoderEncoder=3 -Dlog4j.debug=true';
 
 interface IEnvVars {
     [index: string]: string;
