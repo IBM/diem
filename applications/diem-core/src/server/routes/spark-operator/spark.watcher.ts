@@ -235,12 +235,16 @@ class SparkLib {
                 return;
             }
 
+            // in case you want to debug the data
+            //console.dir(data, { depth: null });
+
             const name: string = data.object.metadata.name;
             obj.id = name.substring(1, name.length - 1);
 
             // it's not for us
             if (obj.id !== id) {
-                await this.abort(id, `watcher - wrong id: ${id} - name: ${name}`);
+                // await this.abort(id, `watcher - wrong id: ${id} - name: ${name}`);
+                utils.logInfo(`$spark.watcher (watcher): skipping - id: ${id} - spark application name: ${name}`);
 
                 return;
             }
