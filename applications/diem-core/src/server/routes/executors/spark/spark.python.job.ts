@@ -118,7 +118,7 @@ export const createSparkPythonJob: (doc: IJobSchema) => Promise<ICapacity> = asy
         void pubSub.publish(pjob);
     });
 
-    await sparkWatcher.startWatcher(id).catch(async (err) => {
+    await sparkWatcher.startWatcher(id, false).catch(async (err) => {
         err.trace = addTrace(err.trace, '@at $spark.job (startWatcher)');
 
         void utils.emit('error', err);

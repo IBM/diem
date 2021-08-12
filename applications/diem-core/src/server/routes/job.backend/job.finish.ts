@@ -1,8 +1,6 @@
 import { utils } from '@common/utils';
-import { IError } from '@interfaces';
-import { IJobModel, IJob, ExecutorTypes } from '@models';
+import { IJobModel, IJob } from '@models';
 import { addTrace } from '@functions';
-import { deleteJob } from '../executors/spark/spark.job';
 import { jobLogger } from '../job.logger/job.logger';
 import { sparkWatcher } from '../spark-operator/spark.watcher';
 
@@ -33,11 +31,13 @@ export const jobFinish: (doc: IJobModel) => Promise<[IJobModel, any]> = async (
 
     const insert: any = { $set: {} };
 
-    if (doc.job.executor === ExecutorTypes.pyspark) {
+    /* code removed in favor of the TTL
+    if (doc.job.executor === ExecutorTypes.pipeline) {
         await deleteJob(id).catch((err: IError) => {
             err.trace = addTrace(err.trace, '@at $job.finish (jobFinish) - deleteJob');
         });
     }
+    */
 
     if (!doc.job.jobend) {
         doc.job.jobend = new Date();
