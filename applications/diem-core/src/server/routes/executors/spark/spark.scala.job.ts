@@ -66,6 +66,17 @@ export const createSparkScalaJob: (doc: IJobSchema) => Promise<ICapacity> = asyn
         //'spark.yarn.maxAppAttempts': 1,  //  put this in the job somewhere
     };
 
+    if (doc.job.params?.spark?.sparkConf) {
+        try {
+            const t: any = JSON.parse(doc.job.params.spark.sparkConf);
+            crdjob.spec.sparkConf = { ...crdjob.spec.sparkConf, ...t };
+
+            // console.dir(crdjob.spec.sparkConf, { depth: null });
+        } catch (err) {
+            //*
+        }
+    }
+
     if (!doc.job.params?.spark?.location || !doc.job.params?.spark?.mainclass) {
         return Promise.reject({
             message: 'No scala configuration provided',
