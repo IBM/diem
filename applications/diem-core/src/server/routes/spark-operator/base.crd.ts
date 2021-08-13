@@ -74,7 +74,7 @@ export const crdconfig: () => ICrdConfig = (): ICrdConfig => ({
         namespace: sparkCredentials.namespace,
     },
     spec: {
-        timeToLiveSeconds: 10,
+        timeToLiveSeconds: -1,
         imagePullPolicy: 'Always',
         mainApplicationFile: 'dummy',
         mode: 'cluster',
