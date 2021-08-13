@@ -62,7 +62,7 @@ export const addVolume: (crdjob: ICrdConfig, volume: string) => ICrdConfig = (
     const volumename: string = 'spark-local-dir-1';
     const filepath: string = '/tmp/spark-local-dir';
 
-    utils.logInfo(`$spark.scala (createSparkScalaJob): mounting volume - volume: ${volume} - name: ${volumename}`);
+    utils.logInfo(`$spark.job (addVolume): mounting volume - volume: ${volume} - name: ${volumename}`);
 
     crdjob.spec.volumes = [
         {

@@ -18,8 +18,8 @@ export const logLogger: (doc: IJobModel) => Promise<void> = async (doc: IJobMode
         jobstart: doc.job.jobstart || null,
     };
 
-    void JobLogModel.collection.insertOne(joblog).catch(async (err: IError) => {
-        err.trace = addTrace(err.trace, '@at $log.logger (jobLogger) - logLogger');
+    await JobLogModel.collection.insertOne(joblog).catch(async (err: IError) => {
+        err.trace = addTrace(err.trace, '@at $log.logger (logLogger)');
 
         return Promise.reject(err);
     });

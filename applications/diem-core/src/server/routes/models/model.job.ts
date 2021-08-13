@@ -72,6 +72,7 @@ export interface IJobParams {
         type?: 'scala' | 'pyspark' | 'git';
         location?: string;
         mainclass?: string;
+        sparkConf?: string;
     };
     files?: boolean | IParamsFiles;
     slack?: {

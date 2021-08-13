@@ -168,9 +168,9 @@ class SparkLib {
         }
     };
 
-    public startWatcher: (id: string, managed?: boolean) => Promise<void> = async (
+    public startWatcher: (id: string, managed: boolean) => Promise<void> = async (
         id: string,
-        managed?: boolean
+        managed: boolean
     ): Promise<void> => {
         if (!this.apis[this.crd.spec.group]) {
             utils.logInfo(`$spark.watcher (watcher): no sparkapplications detected - id: ${id}`);
@@ -192,7 +192,7 @@ class SparkLib {
         utils.logInfo(
             `$spark.watcher (watcher): started watching - id: ${id} - group: ${this.crd.spec.group} - streams: ${
                 Object.keys(this.streams).length
-            }`
+            } - managed: ${managed}`
         );
 
         this.streams[id].stream.pipe(this.streams[id].jsonstream);
@@ -200,7 +200,7 @@ class SparkLib {
         this.streams[id].stream.on('error', async (err: IError) => {
             if (this.streams[id]) {
                 utils.logInfo(`$spark.watcher (watcher): restart errored stream - id: ${id}`);
-                await this.startWatcher(id);
+                await this.startWatcher(id, managed);
             } else {
                 if (err.message === 'aborted') {
                     utils.logInfo(`$spark.watcher (watcher): stream aborted - id: ${id}`);
@@ -288,7 +288,7 @@ class SparkLib {
                 );
             }
 
-            if (managed && this.streams[id] && this.streams[id]?.status !== applicationState.state) {
+            if (managed && this.streams[id]?.status !== applicationState.state) {
                 this.streams[id].status = applicationState.state;
                 if (applicationState.state === EStates.running) {
                     utils.logInfo(`$spark.watcher (managed watcher): set running - id: ${id}`);
@@ -296,7 +296,7 @@ class SparkLib {
                         ...obj,
                         status: EJobStatus.running,
                     });
-                } else if (applicationState.state === EStates.completed) {
+                } else if (applicationState.state === EStates.succeeding) {
                     utils.logInfo(
                         `$spark.watcher (managed watcher): collecting log and publishing Completed - id: ${id}`
                     );
@@ -359,14 +359,14 @@ class SparkLib {
         this.streams[id].jsonstream.on('end', async () => {
             if (this.streams[id]) {
                 utils.logInfo(`$spark.watcher (watcher): restart watching id: ${id}`);
-                await this.startWatcher(id);
+                await this.startWatcher(id, managed);
             }
         });
 
         this.streams[id].jsonstream.on('aborted', async () => {
             if (this.streams[id]) {
                 utils.logInfo(`$spark.watcher (watcher): restart aborted jsonstream stream for id: ${id}`);
-                await this.startWatcher(id);
+                await this.startWatcher(id, managed);
             }
         });
 
