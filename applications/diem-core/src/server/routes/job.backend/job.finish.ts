@@ -31,8 +31,8 @@ export const jobFinish: (doc: IJobModel) => Promise<[IJobModel, any]> = async (
 
     const insert: any = { $set: {} };
 
-    /* code removed in favor of the TTL
-    if (doc.job.executor === ExecutorTypes.pipeline) {
+    /* exclude scala job
+    if (doc.job.executor === ExecutorTypes.pyspark && doc.type === EJobTypes.pipeline) {
         await deleteJob(id).catch((err: IError) => {
             err.trace = addTrace(err.trace, '@at $job.finish (jobFinish) - deleteJob');
         });

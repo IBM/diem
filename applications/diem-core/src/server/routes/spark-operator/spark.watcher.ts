@@ -296,7 +296,7 @@ class SparkLib {
                         ...obj,
                         status: EJobStatus.running,
                     });
-                } else if (applicationState.state === EStates.completed) {
+                } else if (applicationState.state === EStates.succeeding) {
                     utils.logInfo(
                         `$spark.watcher (managed watcher): collecting log and publishing Completed - id: ${id}`
                     );
