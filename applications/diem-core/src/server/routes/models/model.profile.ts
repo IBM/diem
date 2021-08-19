@@ -23,7 +23,7 @@ const profileSchema: Schema = new Schema(
     } /*** don't add an _id to documents */
 );
 
-profileSchema.index({ email: 1 }, { unique: true });
+profileSchema.index({ email: 1 });
 
 export interface IProfileModel extends IProfileSchema, mongoose.Document {
     _id: string;
