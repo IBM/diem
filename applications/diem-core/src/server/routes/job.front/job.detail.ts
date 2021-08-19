@@ -221,7 +221,7 @@ export const jobdetail: (req: IRequest) => Promise<IModelPayload | any> = async 
     req: IRequest
 ): Promise<IModelPayload | any> => {
     const id: string = req.body.id;
-    if (!id || (id && !mongoose.Types.ObjectId.isValid(id))) {
+    if (!id || (id && !mongoose.isValidObjectId(id))) {
         return Promise.reject({
             return: { message: 'No or incorrect Document ID Provided' },
             status: 404,

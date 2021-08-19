@@ -78,7 +78,7 @@ const userSchema: Schema = new Schema(
     {
         _id: { type: Schema.Types.ObjectId, auto: true },
         annotations: annotationsSchema,
-        email: String,
+        email: { type: String, index: true, required: true, unique: true },
         org: String,
         role: String,
     },
@@ -88,7 +88,7 @@ const userSchema: Schema = new Schema(
     } /*** don't add an _id to documents */
 );
 
-userSchema.index({ email: 1, org: 1 }, { unique: true });
+userSchema.index({ email: 1, org: 1 });
 
 export interface IUserModel extends IUserSchema, mongoose.Document {
     _id: string;
