@@ -28,7 +28,7 @@ export interface ITags {
 const tagsSchema: Schema = new Schema(
     {
         annotations: annotationsSchema,
-        org: { type: String, index: true, required: true },
+        org: { type: String, index: true, required: true, unique: true },
         tags: [String],
     },
     {
@@ -38,7 +38,7 @@ const tagsSchema: Schema = new Schema(
     }
 );
 
-tagsSchema.index({ org: 1 }, { unique: true });
+tagsSchema.index({ org: 1 });
 
 export interface ITagsModel extends ITags, mongoose.Document {
     _id: string;

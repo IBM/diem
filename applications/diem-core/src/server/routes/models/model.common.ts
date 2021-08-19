@@ -69,7 +69,7 @@ export const annotationsSchema: Schema = new Schema(
 
 export const projectSchema: Schema = new Schema(
     {
-        org: { type: String, index: true, required: true },
+        org: { type: String, index: true, required: true, unique: true },
         orgscope: String,
     },
 

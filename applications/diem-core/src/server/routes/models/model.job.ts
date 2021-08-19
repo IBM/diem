@@ -497,7 +497,6 @@ const dataSchema: Schema = new Schema(
     }
 );
 
-dataSchema.index({ 'project.org': 1 }, { unique: true });
 dataSchema.index({ 'project.org': 1, type: 1 });
 
 /**

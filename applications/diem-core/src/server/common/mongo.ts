@@ -76,13 +76,11 @@ class Mongo {
                 connectTimeoutMS: 10000,
                 keepAlive: true,
                 ssl: true,
-                sslCA: [Buffer.from(this.credentials.ca, 'base64')],
+                sslCA: Buffer.from(this.credentials.ca, 'base64').toString(),
                 sslValidate: false,
                 useCreateIndex: true,
-                poolSize: 10,
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
-                connectWithNoPrimary: true,
             };
             utils.logInfo(`$mongo (connect): connecting to the Mongo Service using SSL - pid: ${process.pid}`);
         } else {
@@ -91,7 +89,6 @@ class Mongo {
                 serverSelectionTimeoutMS: 10000,
                 keepAlive: true,
                 useCreateIndex: true,
-                poolSize: 10,
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
             };
