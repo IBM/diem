@@ -82,47 +82,20 @@ const argsParser: (event: any) => IArgsBody = (event: any): IArgsBody => {
     };
 };
 
-const fileParser: (event: any) => any = async (event: any): Promise<any> => {
+const fileParser: (event: any, body: IArgsBody) => any = async (event: any, body: IArgsBody): Promise<IArgsBody> => {
     //const message = event.text.replace(thisbot.key, '').replaceAll('\n', ' ');
 
     const file_share: any = event.files[0];
 
-    const component: EComponents = EComponents.service;
-    const action: string = file_share.title;
-    let id: string; // args_array[1]
-    let payload: { [index: string]: any } | string | undefined; // args_array[3]
-    let args: [string] | [] = [];
-
-    args = [file_share.mode];
-    id = file_share.title;
-    payload = file_share.preview;
-
-    if (services) {
-        for (const service of services) {
-            if (service.name === id) {
-                id = service.id;
-            }
-        }
-    }
+    //id = file_share.title;
+    body.params.payload = file_share.preview;
 
     if (file_share.url_private) {
         utils.logInfo('$message.handler (fileParser): looking up data');
-        payload = await api.callAPIFileGet(file_share.url_private);
+        body.params.payload = file_share.url_private;
     }
 
-    return Promise.resolve({
-        component,
-        id,
-        params: {
-            action,
-            component,
-            id,
-            payload,
-            event,
-            user: event.user,
-            args,
-        },
-    });
+    return Promise.resolve(body);
 };
 
 export const getProfile = async (event: any): Promise<any> => {
@@ -140,7 +113,8 @@ export const messageHandler: (event: any) => Promise<boolean | any> = async (eve
 
         return Promise.resolve(null);
     } else if (event.subtype === 'file_share') {
-        body = await fileParser(event);
+        body = argsParser(event);
+        body = await fileParser(event, body);
     } else if (event.subtype) {
         utils.logInfo(`$message.handler (messageHandler): not handled message: ${event.subtype}`);
 
