@@ -40,6 +40,22 @@ spec:
                 name: {{ .Values.operator.name }}-config
             - secretRef:
                 name: {{ .Values.common.name }}-secret
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: spec.nodeName
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
           resources: {}
           terminationMessagePath: "/dev/termination-log"
           terminationMessagePolicy: File
