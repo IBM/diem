@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/cognitive-complexity */
 import { utils } from '@common/utils';
 import { IJobResponse, IJobModel, IJobDetails, EJobStatus, EJobStatusCodes, EJobContinue } from '@models';
 import { addTrace } from '@functions';
@@ -62,8 +63,9 @@ const getNextInQueue: (pldid: string, id: string) => Promise<string[]> = async (
                     `$startnextjobs (getNextInQueue): adding next job - pl: ${plid} - job: ${id} - adding job: ${nodeId} - node: ${nodes.length} - required: ${pldoc.jobs[nodeId].required}`
                 );
             } else {
+                const ql: number = pldoc.jobs[nodeId].queue?.length ? pldoc.jobs[nodeId].queue.length : -1;
                 utils.logInfo(
-                    `$startnextjobs (getNextInQueue): no next job - pl: ${plid} - job: ${id} - node: ${nodeId}  - queue: ${pldoc.jobs[nodeId].queue.length} - from: ${pldoc.jobs[nodeId].from.length}`
+                    `$startnextjobs (getNextInQueue): no next job - pl: ${plid} - job: ${id} - node: ${nodeId}  - queue: ${ql} - from: ${pldoc.jobs[nodeId].from.length}`
                 );
             }
         }
@@ -96,7 +98,7 @@ export const startNextJobs: (job: IJobResponse, pldoc: IJobModel) => Promise<num
 
     // nodeIds length is always greater then 0
     let d: string[] = await getNextInQueue(plid, job.id).catch(async (err: any) => {
-        err.trace = ['startnextjobs (startNextJobs)'];
+        err.trace = ['@at $startnextjobs (startNextJobs) - getNextInQueue'];
 
         return Promise.reject(err);
     });
@@ -109,7 +111,7 @@ export const startNextJobs: (job: IJobResponse, pldoc: IJobModel) => Promise<num
                 if (!batch_doc) {
                     const err: any = {
                         message: `No config file found - id: ${job.id} - batch_job: ${id}`,
-                        trace: ['@at $startnextjobs (startNextJobs)'],
+                        trace: ['@at $startnextjobs (startNextJobs) - batch_doc'],
                     };
 
                     return Promise.reject(err);

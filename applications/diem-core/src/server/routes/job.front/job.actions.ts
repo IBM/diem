@@ -34,7 +34,7 @@ export const jobHandleStop: (doc: IJobModel, body: { id: string; email: string; 
         if (isPl) {
             // if the stop request comes from a pipeline
             utils.logInfo(
-                `$job.actions (jobactions): stop request - passing to stopJobs - pl: ${body.id} - email: ${body.email}`,
+                `$job.actions (jobHandleStop): passing to stopJobs - pl: ${body.id} - email: ${body.email}`,
                 body.transid
             );
 
