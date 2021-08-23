@@ -32,7 +32,11 @@ export const updatePlJobStatus: (pldoc: IJobModel, job: { id: string; status: st
         if (nodeIds && nodeIds.length) {
             const nodes: any = {};
             for await (const nodeId of nodeIds) {
-                if (pldoc.jobs[nodeId] && pldoc.jobs[nodeId].queue && !pldoc.jobs[nodeId].queue.includes(job.id)) {
+                // if there's no queue then add an empty queue
+                if (!pldoc.jobs[nodeId]?.queue) {
+                    nodes[`jobs.${nodeId}.queue`] = [];
+                }
+                if (!pldoc.jobs[nodeId].queue.includes(job.id)) {
                     nodes[`jobs.${nodeId}.queue`] = job.id;
                 }
             }
