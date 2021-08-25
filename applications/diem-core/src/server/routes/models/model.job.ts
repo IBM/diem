@@ -512,7 +512,7 @@ export interface IJobModel extends IJobSchema, mongoose.Document {
 
 export const DataModel = mongoose.model<IJobModel>('jobs', dataSchema);
 
-export const newId: () => string = () => mongoose.Types.ObjectId().toString();
+export const newId: () => string = () => new mongoose.Types.ObjectId().toString();
 
 export interface IntPayloadValues extends IJob {
     href: string;

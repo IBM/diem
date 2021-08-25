@@ -190,8 +190,8 @@ export const plStartHandler: (pldoc: IJobModel) => Promise<void> = async (pldoc:
                 batch_doc.job.transid = pldoc.job.transid;
                 batch_doc.job.jobid = plid;
                 batch_doc.job.runby = pldoc.job.runby || 'pipeline';
-                void jobStartHandler(batch_doc).catch(async (err) => {
-                    err.trace = addTrace(err.trace, '@at $pipeline.start.handler (plStartHandler)');
+                await jobStartHandler(batch_doc).catch(async (err) => {
+                    err.trace = addTrace(err.trace, '@at $pipeline.start.handler (plStartHandler) - batchJobs');
 
                     return Promise.reject(err);
                 });

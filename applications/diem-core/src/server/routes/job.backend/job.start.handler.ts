@@ -205,7 +205,7 @@ export const jobStartHandler: (doc: IJobModel) => Promise<void> = async (doc: IJ
     );
 
     await createNodePyJob(doc.toObject()).catch(async (err: any) => {
-        err.trace = addTrace(err.trace, '@at $job.start.handler ( createNodePyJob)');
+        err.trace = addTrace(err.trace, '@at $job.start.handler (createNodePyJob)');
 
         // we just log the error here
         return errHandler(err);

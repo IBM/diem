@@ -91,7 +91,11 @@ export const createNodePyJob: (doc: IJobSchema) => Promise<void> = async (doc: I
         return Promise.reject(err);
     });
 
-    void nodePyRequestJob(nodepyJob); // don't do anything here.. errors are handled via socket
+    await nodePyRequestJob(nodepyJob).catch(async (err: IError) => {
+        err.trace = addTrace(err.trace, '@at $np.create (createNodePyJob) - request');
+
+        return Promise.reject(err);
+    });
 
     return Promise.resolve();
 };

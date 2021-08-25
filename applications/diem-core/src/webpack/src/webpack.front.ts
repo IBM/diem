@@ -222,6 +222,7 @@ module.exports = {
             swSrc: `${(global as any).__basedir}/src/webpack/src/service-worker.js`,
             swDest: `${(global as any).__basedir}/public/js/service-worker.js`,
             exclude: [/\.pug$/, /\.ttf$/, /\.eot$/],
+            maximumFileSizeToCacheInBytes: 2500000,
         }),
     ],
 

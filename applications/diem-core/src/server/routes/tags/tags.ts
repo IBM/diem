@@ -45,6 +45,8 @@ export const tagsupdate: (req: IRequest) => Promise<IRequest | any> = async (
 
     let doc: ITagsModel | null = await TagsModel.findOne({ org: body.org }).exec();
 
+    const tags_l: string[] = body.tags.map((tag: string) => tag.trim());
+
     if (doc === null) {
         doc = new TagsModel({
             annotations: {
@@ -56,15 +58,18 @@ export const tagsupdate: (req: IRequest) => Promise<IRequest | any> = async (
                 transid: body.transid,
             },
             org: body.org,
-            tags: body.tags,
+            tags: tags_l,
         });
     } else {
-        doc.tags = body.tags;
+        doc.tags = tags_l;
         doc.annotations.modifiedbyname = body.username;
         doc.annotations.modifiedbyemail = body.email;
         doc.annotations.modifieddate = new Date();
         doc.annotations.transid = body.transid;
     }
+
+    // there might be trimmed tags
+    body.tags = tags_l;
 
     await doc.save().catch(async (err) => {
         err.trace = addTrace(err.trace, '@at $tags (tagsupdate) - save');
