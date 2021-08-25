@@ -1,3 +1,4 @@
+import { writeFileSync } from 'fs';
 import mongoose from 'mongoose';
 import { IntInternal } from '../interfaces/shared';
 import { utils } from './utils';
@@ -72,11 +73,14 @@ class Mongo {
         let options: Partial<mongoose.ConnectOptions> = {};
 
         if (this.credentials.ca) {
+            const sslCA: string = Buffer.from(this.credentials.ca, 'base64').toString();
+            const fn: string = 'ssl.pem';
+            writeFileSync(fn, sslCA);
             options = {
                 connectTimeoutMS: 10000,
                 keepAlive: true,
                 ssl: true,
-                sslCA: Buffer.from(this.credentials.ca, 'base64').toString(),
+                sslCA: fn,
                 sslValidate: false,
             };
             utils.logInfo(`$mongo (connect): connecting to the Mongo Service using SSL - pid: ${process.pid}`);
