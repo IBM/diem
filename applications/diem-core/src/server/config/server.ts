@@ -41,7 +41,7 @@ export class Server {
                 });
             })
             .on('unhandledRejection', async (reason: any, p: any) => {
-                if (reason.name === 'MongoError') {
+                if (reason.name === 'MongoServerError') {
                     // we don't do anything, to be be handled by the mongo error
                 } else {
                     await utils.logError('$server.ts (unhandledRejection):', {
