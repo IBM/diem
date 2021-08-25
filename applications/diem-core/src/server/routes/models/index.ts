@@ -1,4 +1,4 @@
-export { Aggregate, Document, Model, Error as MongoError } from 'mongoose';
+export { Aggregate, Document, Model, Error as MongoServerError } from 'mongoose';
 export { IJobSchemaAnnotations } from './model.common';
 
 export * from './model.common';

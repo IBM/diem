@@ -1,7 +1,7 @@
 import { mongoose } from '@common/mongo';
 import { Schema } from 'mongoose';
 import { annotationsSchema } from './model.common';
-export { Aggregate, Document, Model, Error as MongoError } from 'mongoose';
+export { Aggregate, Document, Model, Error as MongoServerError } from 'mongoose';
 
 export interface ITagsBody {
     [key: string]: any;

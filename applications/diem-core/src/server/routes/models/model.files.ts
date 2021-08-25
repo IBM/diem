@@ -1,5 +1,5 @@
 import { IJobSchemaAnnotations } from './model.common';
-export { Aggregate, Document, Model, Error as MongoError } from 'mongoose';
+export { Aggregate, Document, Model, Error as MongoServerError } from 'mongoose';
 
 export interface IFilesBody {
     description: string;

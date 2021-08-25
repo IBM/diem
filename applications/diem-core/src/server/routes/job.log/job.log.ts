@@ -52,8 +52,8 @@ const parseFilter: (job: IQuery) => any = (job: IQuery) => {
 
 const findByFilter: (filter: any, body: IQuery) => Promise<any> = async (filter: any, body: IQuery) => {
     try {
-        // @ts-ignore TS2589
         const docs: IJobLog[] = await JobLogModel.find(filter)
+            .collation({ locale: 'en' })
             .skip(body.first || 0)
             .limit(body.rows || 0)
             .sort({ jobstart: -1 })

@@ -2,7 +2,7 @@ import { mongoose } from '@common/mongo';
 import { Schema } from 'mongoose';
 import { annotationsSchema, projectSchema, IJobSchemaAnnotations } from './model.common';
 import { EJobTypes } from './model.job';
-export { Aggregate, Document, Model, Error as MongoError } from 'mongoose';
+export { Aggregate, Document, Model, Error as MongoServerError } from 'mongoose';
 
 export interface ITemplatesBody {
     description: string;
