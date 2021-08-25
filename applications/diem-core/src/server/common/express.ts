@@ -262,6 +262,7 @@ export class Express {
         saveUninitialized: false,
         secret: this.session ? this.session.secret : undefined,
         store: MongoStore.create({
+            // @ts-ignore TS2322
             client: mongoose.connection.getClient(),
             stringify: false,
         }),

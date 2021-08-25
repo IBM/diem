@@ -17,9 +17,8 @@ export const findOneAndUpdate: (id: string, update: any) => Promise<IJobModel> =
     id: string,
     update: any
 ): Promise<IJobModel> => {
-    const doc: IJobModel | null = await DataModel.findByIdAndUpdate({ _id: id }, update, {
+    const doc: IJobModel | null = await DataModel.findByIdAndUpdate(id, update, {
         new: true,
-        useFindAndModify: false,
     }).exec();
 
     if (doc === null) {
