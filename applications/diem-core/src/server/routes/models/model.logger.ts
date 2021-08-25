@@ -2,32 +2,50 @@ import { IntMQLogBase } from '@interfaces';
 import { mongoose } from '@common/mongo';
 import { Schema } from 'mongoose';
 
+const annotationsSchema: Schema = new Schema(
+    {
+        profile: {
+            email: String,
+            name: String,
+        },
+        execution: {
+            msec: Number,
+            sec: Number,
+        },
+        org: String,
+        transid: String,
+    },
+
+    {
+        _id: false,
+        versionKey: false,
+    } /*** don't add an _id to documents */
+);
+
+const requestSchema: Schema = new Schema(
+    {
+        body: Object,
+        params: Object,
+        query: String,
+        url: String,
+    },
+
+    {
+        _id: false,
+        versionKey: false,
+    } /*** don't add an _id to documents */
+);
+
 const loggerSchema: Schema = new Schema(
     {
         logid: { type: String, required: true, index: true },
         created: { type: Date, required: true, index: true },
-        annotations: {
-            profile: {
-                email: String,
-                name: String,
-            },
-            execution: {
-                msec: Number,
-                sec: Number,
-            },
-            org: String,
-            transid: String,
-        },
+        annotations: annotationsSchema,
         browser: Object,
         err: Object,
         event: String,
         module: Object,
-        request: {
-            body: Object,
-            params: Object,
-            query: String,
-            url: String,
-        },
+        request: requestSchema,
         status: Number,
         type: String,
     },

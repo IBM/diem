@@ -2,7 +2,7 @@ import { mongoose } from '@common/mongo';
 import { Schema } from 'mongoose';
 import { projectSchema } from './model.common';
 
-export interface IJobLog {
+interface IJobLogSchema {
     count: number | null;
     email: string;
     error?: string | null;
@@ -20,8 +20,11 @@ export interface IJobLog {
     runby: string;
     runtime: number | null;
     status: string;
-    type: string;
     transid: string;
+    type: string;
+}
+
+export interface IJobLog extends IJobLogSchema {
     nbr?: number;
     statusicon?: string;
     out?: any[] | string;
@@ -34,7 +37,6 @@ export interface IJobLog {
 const jobLogSchema: Schema = new Schema(
     {
         _id: { type: Schema.Types.ObjectId, auto: true },
-        logid: { type: String, required: true },
         count: Number,
         email: String,
         error: String,
@@ -42,14 +44,15 @@ const jobLogSchema: Schema = new Schema(
         jobend: Date,
         jobid: String,
         jobstart: { type: Date, required: true, index: true },
+        logid: { type: String, required: true },
         name: String,
         params: Object,
         project: projectSchema,
         runby: String,
         runtime: Number,
         status: String,
-        type: String,
         transid: { type: String, required: true, default: 'noop' },
+        type: String,
     },
     {
         collection: 'joblog',
@@ -58,7 +61,7 @@ const jobLogSchema: Schema = new Schema(
     }
 );
 
-export interface IJobLogModel extends IJobLog, mongoose.Document {
+export interface IJobLogModel extends IJobLogSchema, mongoose.Document {
     _id: string;
 }
 

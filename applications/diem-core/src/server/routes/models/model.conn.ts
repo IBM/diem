@@ -1,6 +1,6 @@
 import { mongoose } from '@common/mongo';
 import { Schema } from 'mongoose';
-export { Aggregate, Document, Model, Error as MongoError } from 'mongoose';
+export { Aggregate, Document, Model, Error as MongoServerError } from 'mongoose';
 import { annotationsSchema, EIdType, IJobSchemaAnnotations, projectSchema } from './model.common';
 
 export interface IConnSchema {

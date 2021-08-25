@@ -1,7 +1,7 @@
 import { mongoose } from '@common/mongo';
 import { Schema } from 'mongoose';
 import { annotationsSchema, projectSchema, IJobSchemaAnnotations } from './model.common';
-export { Aggregate, Schema, Document, Model, Error as MongoError } from 'mongoose';
+export { Aggregate, Schema, Document, Model, Error as MongoServerError } from 'mongoose';
 
 type IIdtype = 'personal' | 'functional';
 
