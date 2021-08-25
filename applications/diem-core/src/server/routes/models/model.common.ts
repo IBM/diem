@@ -1,6 +1,6 @@
 import { mongoose } from '@common/mongo';
 import { IntServerPayload } from '@interfaces';
-export const newObjectId: () => mongoose.Types.ObjectId = () => mongoose.Types.ObjectId();
+export const newObjectId: () => mongoose.Types.ObjectId = () => new mongoose.Types.ObjectId();
 import { Schema } from 'mongoose';
 
 export interface ISocketPayload extends IntServerPayload {

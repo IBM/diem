@@ -1,3 +1,4 @@
+import { writeFileSync } from 'fs';
 import mongoose from 'mongoose';
 import { IntInternal } from '../interfaces/shared';
 import { utils } from './utils';
@@ -69,18 +70,18 @@ class Mongo {
             return Promise.resolve();
         }
 
-        let options: Partial<mongoose.ConnectionOptions> = {};
+        let options: Partial<mongoose.ConnectOptions> = {};
 
         if (this.credentials.ca) {
+            const sslCA: string = Buffer.from(this.credentials.ca, 'base64').toString();
+            const fn: string = 'ssl.pem';
+            writeFileSync(fn, sslCA);
             options = {
                 connectTimeoutMS: 10000,
                 keepAlive: true,
                 ssl: true,
-                sslCA: Buffer.from(this.credentials.ca, 'base64').toString(),
+                sslCA: fn,
                 sslValidate: false,
-                useCreateIndex: true,
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
             };
             utils.logInfo(`$mongo (connect): connecting to the Mongo Service using SSL - pid: ${process.pid}`);
         } else {
@@ -88,9 +89,6 @@ class Mongo {
                 connectTimeoutMS: 10000,
                 serverSelectionTimeoutMS: 10000,
                 keepAlive: true,
-                useCreateIndex: true,
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
             };
             utils.logInfo(`$mongo (connect): connecting to the Mongo Service - pid: ${process.pid}`);
         }
@@ -108,8 +106,6 @@ class Mongo {
 
             return Promise.reject();
         }
-
-        mongoose.set('useCreateIndex', true);
 
         if (!mongoose.connection) {
             return Promise.reject({ message: 'no connection' });
