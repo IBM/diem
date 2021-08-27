@@ -2,8 +2,7 @@ import { jdbc_config } from '../spark.job.handlers/hendle.spark.common';
 import { ISrc } from '../spark.interfaces';
 
 export const py_conn_src: (src: ISrc, partition: string) => string = (src: ISrc, partition: string) => String.raw`
-
-### py_conn_src ###
+### py_conn_src (py_conn_src) ###
 
 sql = """(${src.sql}) A"""
 

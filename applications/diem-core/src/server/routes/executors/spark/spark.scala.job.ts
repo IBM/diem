@@ -8,7 +8,7 @@ import { spark, sparkCredentials } from '../../spark-operator/spark.base';
 import { caclCap } from '../../spark-operator/spark.capacity';
 import { sparkWatcher } from '../../spark-operator/spark.watcher';
 import { getConfigmap } from '../nodepy/python/python.code.handlers/handle.configmaps';
-import { addVolume, getCosCredentials, ICos } from './spark.job';
+import { addVolume, getCosCredentials, ICos } from './spark.common';
 
 const stocator: string = '/opt/cos/stocator-1.1.3.jar';
 const encoder: string = '-Ddb2.jcc.charsetDecoderEncoder=3 -Dlog4j.debug=true';

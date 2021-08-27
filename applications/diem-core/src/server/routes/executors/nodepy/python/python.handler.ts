@@ -4,11 +4,11 @@
 import { EJobTypes, IJobSchema, ECodeLanguage } from '@models';
 import { base64encode, addTrace } from '@functions';
 import { INodePyJob } from '../np.interfaces';
-import { handleNodePyTransferJob } from './python.handlers/handle.nodepy.transfer';
-import { handleNodePyCustomJob } from './python.handlers/handle.nodepy.custom';
-import { handleNodeStmtJob } from './python.handlers/handle.nodepy.stmt';
-import { handleNodePySelect } from './python.handlers/handle.nodepy.select';
-import { handleNodePyRestJob } from './python.handlers/handle.nodepy.rest';
+import { handleNodePyTransferJob } from './nodepy.job.handlers/handle.nodepy.transfer';
+import { handleNodePyCustomJob } from './nodepy.job.handlers/handle.nodepy.custom';
+import { handleNodeStmtJob } from './nodepy.job.handlers/handle.nodepy.stmt';
+import { handleNodePySelect } from './nodepy.job.handlers/handle.nodepy.select';
+import { handleNodePyRestJob } from './nodepy.job.handlers/handle.nodepy.rest';
 import { handleConnectionParams } from './python.code.handlers/handle.connection.params';
 import { handleConfigmapsParams } from './python.code.handlers/handle.configmaps.params';
 import { handlePrintStatement } from './python.code.handlers/handle.print.statement';
@@ -23,8 +23,7 @@ import { handlePip } from './python.code.handlers/handle.pip';
 // ideal is to make this an env variable as it's the same path as spark in spark operator uses
 const filepath: string = '/tmp/spark-local-dir';
 
-const py_start: (doc: IJobSchema) => string = (doc: IJobSchema): string => String.raw`
-### py_start ###
+const py_start: (doc: IJobSchema) => string = (doc: IJobSchema): string => String.raw`### python.handler (py_start) ###
 
 import os
 import sys

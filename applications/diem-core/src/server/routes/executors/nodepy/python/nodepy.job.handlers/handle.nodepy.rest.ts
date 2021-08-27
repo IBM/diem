@@ -3,15 +3,12 @@ import { IntPythonRestJob } from '../../np.interfaces';
 
 const py_rest: (doc: IJobSchema) => string = (doc: IJobSchema): string => {
     if (!doc.url) {
-        return String.raw`
-error("No Url")
-`;
+        return String.raw`error("No Url")`;
     }
 
     const url: IntPythonRestJob['url'] = doc.url;
 
-    return String.raw`
-### py_rest ###
+    return String.raw`### handle.nodepy.rest (py_rest) ###
 
 urltype = '${url.type}'
 

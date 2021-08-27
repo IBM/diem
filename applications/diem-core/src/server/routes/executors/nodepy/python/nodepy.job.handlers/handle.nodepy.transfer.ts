@@ -12,8 +12,7 @@ const py_truncate: (truncate: boolean, target: string, connection: IConnSchema) 
     const truncate_sql: string = jdbc_config(connection.type).truncate.replace(/\$TARGET/g, target);
 
     if (!truncate) {
-        return String.raw`
-### py_truncate ###
+        return String.raw`### handle.nodepy.transfer (py_truncate) ###
 
 # No truncation
 
@@ -23,7 +22,7 @@ const py_truncate: (truncate: boolean, target: string, connection: IConnSchema) 
 
     return `
 
-### py_truncate ###
+### handle.nodepy.transfer (py_truncate) ###
 
 try:
 
@@ -109,7 +108,7 @@ const py_transfer: (doc: IJobSchema) => Promise<string> = async (doc: IJobSchema
 
     return `
 
-### py_transfer ###
+### handle.nodepy.transfer (py_transfer) ###
 
 import jpype
 import jpype.imports

@@ -1,6 +1,6 @@
 export const py_opt_dropcolumns: (drop: string) => string = (drop: string) => String.raw`
 
-### py_opt_dropcolumns ###
+### py_opt_dropcolumns (py_opt_dropcolumns) ###
 
 df_tmp = df_src${drop}
 

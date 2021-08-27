@@ -1,13 +1,8 @@
-export const py_start: () => string = () => String.raw`
-
-### py_start ###
+export const py_start: () => string = () => String.raw`### py_start (py_start) ###
 
 import os
 import sys
 import time
-
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import *
 
 import diemlib.config as config
 from diemlib.main import *
@@ -28,6 +23,9 @@ config.__nats = False
 config.__appname = env.get('APPNAME', 'diem-core')
 config.__K8_SYSTEM = env.get('K8_SYSTEM', None)
 
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import *
+
 def diem_except_hook(exctype, value, traceback):
     error(value)
 sys.excepthook = diem_except_hook
@@ -45,5 +43,4 @@ mq(data)
 # not used here
 # startTimer()
 
-###__CODE__###
-`;
+###__CODE__###`;

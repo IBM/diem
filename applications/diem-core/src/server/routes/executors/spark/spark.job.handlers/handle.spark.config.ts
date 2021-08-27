@@ -2,21 +2,16 @@ import { IConnSchema, IJobConfig, IJobSchema, ITemplatesModel } from '@models';
 import { addTrace } from '@functions';
 import { ISrc, ITgt } from '../spark.interfaces';
 
-import {
-    py_start,
-    py_partition,
-    py_opt_dropcolumns,
-    py_tgt_jdbc,
-    py_session,
-    py_conn_src,
-    py_tgt_nz,
-} from '../spark.pycode/py';
+import { py_partition, py_opt_dropcolumns, py_tgt_jdbc, py_session, py_conn_src, py_tgt_nz } from '../spark.pycode/py';
 import { lookupTemplate } from '../../../job.front/job.template';
 import { getConnection } from './hendle.spark.common';
 
 const codestring: string = '###__CODE__###';
 
-export const handleWithConfig: (doc: IJobSchema) => Promise<string> = async (doc: IJobSchema): Promise<string> => {
+export const handleWithConfig: (doc: IJobSchema, code: string) => Promise<string> = async (
+    doc: IJobSchema,
+    code: string
+): Promise<string> => {
     const id: string = doc._id.toString();
     if (!doc.config) {
         const err: any = {
@@ -28,8 +23,6 @@ export const handleWithConfig: (doc: IJobSchema) => Promise<string> = async (doc
     }
 
     const config: IJobConfig = doc.config;
-
-    let code: string = py_start();
 
     const local: string =
         doc.job.params?.spark?.local && doc.job.audit?.spark?.executor_cores
