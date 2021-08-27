@@ -2,7 +2,7 @@ import { ITgt } from '../spark.interfaces';
 
 export const py_tgt_nz_truncate: (tgt: ITgt) => string = (tgt: ITgt) =>
     String.raw`
-### py_tgt_nz_truncate ###
+### py_tgt_nz_truncate (py_tgt_nz_truncate) ###
 
 try:
     sql = "TRUNCATE TABLE ${tgt.target}"

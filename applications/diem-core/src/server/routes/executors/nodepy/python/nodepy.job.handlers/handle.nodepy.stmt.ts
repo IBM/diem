@@ -53,7 +53,7 @@ const py_stmt: (doc: IJobSchema) => Promise<string> = async (doc: IJobSchema): P
         .join(';');
 
     return `
-### py_stmt ###
+### handle.nodepy.stmt (py_stmt) ###
 
 import jpype
 import jpype.imports

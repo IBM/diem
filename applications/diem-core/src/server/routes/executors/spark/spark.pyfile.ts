@@ -4,6 +4,7 @@ import { DataModel, EJobTypes, IJobSchema, ECodeLanguage } from '@models';
 import { addTrace } from '@functions';
 import { handleWithConfig } from './spark.job.handlers/handle.spark.config';
 import { handleWithCustom } from './spark.job.handlers/handle.spark.custom';
+import { py_start } from './spark.pycode/py';
 
 export const pyfile: (req: IRequest) => Promise<any> = async (req: IRequest): Promise<any> => {
     if (req.query.id === null) {
@@ -21,11 +22,11 @@ export const pyfile: (req: IRequest) => Promise<any> = async (req: IRequest): Pr
         });
     }
 
-    let code: string = '';
+    let code: string = py_start();
 
     /* a regular spark job */
     if (doc.type === EJobTypes.pyspark) {
-        code = await handleWithConfig(doc).catch(async (err: any) => {
+        code = await handleWithConfig(doc, code).catch(async (err: any) => {
             err.trace = addTrace(err.trace, '@at $spark.pyfiles (pyfile) - handleWithConfig');
 
             return Promise.reject(err);
@@ -38,7 +39,7 @@ export const pyfile: (req: IRequest) => Promise<any> = async (req: IRequest): Pr
 
     /* a custom job using spark */
     if (doc.type === EJobTypes.pycustom && doc.custom && doc.custom.executor === ECodeLanguage.pyspark) {
-        code = await handleWithCustom(doc).catch(async (err: any) => {
+        code = await handleWithCustom(doc, code).catch(async (err: any) => {
             err.trace = addTrace(err.trace, '@at $spark.pyfiles (pyfile) - handleWithCustom ');
 
             return Promise.reject(err);

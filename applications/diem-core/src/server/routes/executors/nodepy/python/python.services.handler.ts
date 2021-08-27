@@ -4,9 +4,9 @@
 import { EJobTypes, IJobSchema, ECodeLanguage } from '@models';
 import { base64encode, addTrace } from '@functions';
 import { INodePyJob } from '../np.interfaces';
-import { handleNodePyServicesCustomJob } from './python.handlers/handle.nodepy.services.custom';
-import { handleNodePyServicesSelect } from './python.handlers/handle.nodepy.services.select';
-import { handleNodePyServicesRestJob } from './python.handlers/handle.nodepy.services.rest';
+import { handleNodePyServicesCustomJob } from './nodepy.job.handlers/handle.nodepy.services.custom';
+import { handleNodePyServicesSelect } from './nodepy.job.handlers/handle.nodepy.services.select';
+import { handleNodePyServicesRestJob } from './nodepy.job.handlers/handle.nodepy.services.rest';
 import { handleConnectionParams } from './python.code.handlers/handle.connection.params';
 import { handleConfigmapsParams } from './python.code.handlers/handle.configmaps.params';
 import { handlePrintStatement } from './python.code.handlers/handle.print.statement';
@@ -21,7 +21,9 @@ import { handlePipServices } from './python.code.handlers/handle.pip.services';
 // ideal is to make this an env variable as it's the same path as spark in spark operator uses
 const filepath: string = '/tmp/spark-local-dir';
 
-const py_start_services: (doc: IJobSchema) => string = (doc: IJobSchema): string => String.raw`### py_start ###
+const py_start_services: (doc: IJobSchema) => string = (
+    doc: IJobSchema
+): string => String.raw`### python.services.handler (py_start) ###
 
 import time
 import os

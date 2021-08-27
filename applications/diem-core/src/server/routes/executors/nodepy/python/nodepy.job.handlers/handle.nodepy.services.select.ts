@@ -25,7 +25,7 @@ export const py_select_services: (doc: IJobSchema) => Promise<string> = async (d
     const jdbc: string = `${connection.jdbc}${jdbc_config(connection.type).jdbc}`.replace(';;', ';');
 
     return `
-### py_select ###
+### handle.nodepy.services.select (py_select) ###
 
 import requests
 from sys import exit

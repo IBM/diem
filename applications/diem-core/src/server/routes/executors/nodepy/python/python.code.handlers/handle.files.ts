@@ -10,8 +10,7 @@ export const handleFiles: (code: string, files: { name: string; value: string }[
             }
         }
 
-        const file_part: string = String.raw`
-### Manual Files ###
+        const file_part: string = String.raw`### handle.files (handleFiles) ###
 ${insert}
 ###__CODE__###`;
 

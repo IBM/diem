@@ -31,7 +31,7 @@ export const py_stmt_services: (job: IntPythonStmtJob) => Promise<string> = asyn
     const tgt_conn: string = await makeConn('tgt_conn', connection);
 
     return `
-### py_stmt ###
+### handle.nodepy.stmt (py_stmt) ###
 
 import jpype
 import jpype.imports

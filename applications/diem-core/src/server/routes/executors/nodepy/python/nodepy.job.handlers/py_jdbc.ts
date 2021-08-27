@@ -7,8 +7,7 @@ export const py_jdbc: (connection: IConnSchema) => string = (connection: IConnSc
     const jdbc: string = `${connection.jdbc}${extrastring}`.replace(';;', ';');
     const connopt: string = jdbc_config(connection.type).connopt || '';
 
-    return String.raw`
-### py_jdbc ###
+    return String.raw`### py_jdbc (py_jdbc) ###
 
 def getconn():
     try:

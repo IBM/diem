@@ -4,7 +4,7 @@ import { py_tgt_nz_truncate } from './py_tgt_nz_truncate';
 export const py_tgt_nz: (tgt: ITgt) => string = (tgt: ITgt) =>
     String.raw`
 
-### py_tgt_nz ###
+### py_tgt_nz (py_tgt_nz) ###
 
 from pyspark.sql.functions import regexp_replace, col
 import jaydebeapi
