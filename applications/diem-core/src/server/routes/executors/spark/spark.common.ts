@@ -48,7 +48,7 @@ export const deleteJob: (id: string) => Promise<any> = async (id: string): Promi
 
         return Promise.resolve(true);
     } catch (err) {
-        err.trace = addTrace(err.trace, '@at $spark.job (deleteJob)');
+        err.trace = addTrace(err.trace, '@at $spark.common (deleteJob)');
         err.id = id;
 
         return Promise.reject(err);
@@ -62,7 +62,7 @@ export const addVolume: (crdjob: ICrdConfig, volume: string) => ICrdConfig = (
     const volumename: string = 'spark-local-dir-1';
     const filepath: string = '/tmp/spark-local-dir';
 
-    utils.logInfo(`$spark.job (addVolume): mounting volume - volume: ${volume} - name: ${volumename}`);
+    utils.logInfo(`$spark.common (addVolume): mounting volume - volume: ${volume} - name: ${volumename}`);
 
     crdjob.spec.volumes = [
         {

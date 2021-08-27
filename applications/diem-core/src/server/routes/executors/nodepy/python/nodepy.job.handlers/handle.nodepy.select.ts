@@ -25,7 +25,7 @@ const py_select: (doc: IJobSchema) => Promise<string> = async (doc: IJobSchema):
     const jdbc: string = `${connection.jdbc}${jdbc_config(connection.type).jdbc}`.replace(';;', ';');
 
     return `
-### py_select ###
+### handle.nodepy.select (py_select) ###
 
 import jaydebeapi
 import pandas as pd

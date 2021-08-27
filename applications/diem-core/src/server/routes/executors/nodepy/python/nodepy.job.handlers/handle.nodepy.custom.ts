@@ -2,8 +2,7 @@ import { addTrace } from '@functions';
 import { IJobSchema, ITemplatesModel } from '@models';
 import { lookupTemplate } from '../../../../job.front/job.template';
 
-const py_end: () => string = (): string => String.raw`
-### py_end ###
+const py_end: () => string = (): string => String.raw`### handle.nodepy.custom (py_end) ###
 
 time.sleep(0.1)
 endjob()
@@ -37,7 +36,7 @@ export const handleNodePyCustomJob: (code: string, doc: IJobSchema) => Promise<s
     }
 
     try {
-        const custom: string = `### custom ###\n${custom_code}\n\n###__CODE__###`;
+        const custom: string = `### handle.nodepy.custom (handleNodePyCustomJob) ###\n\n${custom_code}\n\n###__CODE__###`;
 
         code = code.replace('###__CODE__###', custom);
 

@@ -3,7 +3,7 @@ import { ITgt } from '../spark.interfaces';
 
 export const py_tgt_jdbc: (tgt: ITgt) => string = (tgt: ITgt) => String.raw`
 
-### py_tgt_jdbc ###
+### py_tgt_jdbc (py_tgt_jdbc) ###
 
 try:
     df_tgt\

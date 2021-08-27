@@ -45,11 +45,8 @@ export const handleMail: (code: string, mail_params: any, org: string, configmap
         }
     }
 
-    const mail_code = String.raw`
+    const mail_code = String.raw`### handle.mail (handleMail) ###
 
-### py_pipinstall ###
-
-import diemlib.config as config
 from diemlib.mailhandler import mailhandler
 
 config.api_key = '${api_key}'

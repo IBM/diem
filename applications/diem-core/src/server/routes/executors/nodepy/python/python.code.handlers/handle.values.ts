@@ -16,7 +16,7 @@ export const setValues: (code: string, values: { [index: string]: string }) => P
     values: { [index: string]: string }
 ): Promise<string> => {
     const values_part: string = String.raw`
-### Values obj ###
+### handle.values (setValues) ###
 values = ${JSON.stringify(values)}
 ###__CODE__###
      `;
