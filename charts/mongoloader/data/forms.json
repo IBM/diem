@@ -1270,7 +1270,7 @@
                 "key": "upload",
                 "order": 2,
                 "multiple": true,
-                "maxFileSize": 10,
+                "maxFileSize": 100,
                 "filesQuestion": "files",
                 "visible": true,
                 "class": "bx--col-lg-8 bx--col-padding"

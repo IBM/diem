@@ -43,3 +43,6 @@ lib/
 packages/diem-lib/dist
 .vscode
 **/.vscode
+
+# JetBrains IDEs
+.idea
