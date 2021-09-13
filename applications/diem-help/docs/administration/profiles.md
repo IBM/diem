@@ -30,15 +30,15 @@
 
 ## Roles and access
 
-| Role               | Field     | Nbr | Description                                                    |
-| ------------------ | --------- | --- | -------------------------------------------------------------- |
-| Admin              | admin     | 100 | Can perform all actions                                        |
-| Manager            | manager   | 80  | Can perform all editor actions, manage passwords and add users |
-| Editor             | editor    | 60  | Can perform all editor actions, manage passwords               |
-| Editor No Password | editor_np | 20  | Can perform all editor actions                                 |
-| DBAdmin            | dbadmin   | 40  | Can only see and manage passwords                              |
-| Depositor          | depositor | 10  | Can read, run stop jobs, can update depositor fields (params)  |
-| Reader             | reader    | 1   | Can only read documents                                        |
-| No Access          | noaccess  | 0   | Additional Security check                                      |
+| Role      | Field     | Nbr | Description                                                    |
+| --------- | --------- | --- | -------------------------------------------------------------- |
+| Admin     | admin     | 100 | Can perform all actions                                        |
+| Manager   | manager   | 80  | Can perform all editor actions, manage passwords and add users |
+| Editor    | editor    | 60  | Can perform all editor actions, manage passwords               |
+| Operator  | operator  | 20  | Can perform all editor actions                                 |
+| DBAdmin   | dbadmin   | 40  | Can only see and manage passwords                              |
+| Depositor | depositor | 10  | Can read, run stop jobs, can update depositor fields (params)  |
+| Reader    | reader    | 1   | Can only read documents                                        |
+| No Access | noaccess  | 0   | Additional Security check                                      |
 
 {.bx--data-table}

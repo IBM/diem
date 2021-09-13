@@ -224,7 +224,7 @@
   },
   {
     "_id": "configmaps",
-    "_rev": "30-965eb10169f60d4a5bfaa1e5287758b2",
+    "_rev": "34-7d095a8c5d0129082aaea3dc0748f377",
     "config": {
       "locals": {
         "formName": "configmaps.table",
@@ -263,7 +263,8 @@
                 "modalOptions": {
                   "header": "Add a new Configmap",
                   "size": "lg"
-                }
+                },
+                "values": { "idtype": "functional" }
               }
             }
           ]
@@ -396,7 +397,7 @@
                 "key": "owner",
                 "label": "Owner",
                 "required": true,
-                "computeWhenComposed": "this.env.user.email",
+                "compute": "this.env.user.email",
                 "readOnly": "this.form.value.idtype && this.form.value.idtype==='personal'",
                 "placeHolder": "Enter the Owner",
                 "class": "bx--col-lg-4 bx--col-padding",
@@ -540,7 +541,7 @@
   },
   {
     "_id": "connections",
-    "_rev": "113-17b814cdead10a9e4f623976d8560da3",
+    "_rev": "120-a25407600e873e6141950d09bab85240",
     "scope": "page",
     "app": "etl-mgr",
     "config": {
@@ -692,7 +693,7 @@
                   "prevalidate": true,
                   "store": "conn"
                 },
-                "values": {},
+                "values": { "idtype": "functional" },
                 "modalOptions": {
                   "header": "Add a new Connection",
                   "size": "lg"
@@ -799,6 +800,7 @@
                 "typeClass": "bx--text-input",
                 "filter": false,
                 "required": true,
+                "invalidText": "A Type is required",
                 "items": [
                   { "content": "DB2", "value": "db2" },
                   { "content": "Netezza", "value": "nz" },
@@ -816,6 +818,7 @@
                 "class": "bx--col-lg-4 bx--col-padding",
                 "typeClass": "bx--text-input",
                 "type": "text",
+                "invalidText": "An alias is required",
                 "order": 3
               },
               {
@@ -829,6 +832,7 @@
                 "class": "bx--col-lg-5 bx--col-padding",
                 "typeClass": "bx--text-input",
                 "type": "text",
+                "invalidText": "Owner is required",
                 "order": 5
               },
               {
@@ -837,6 +841,7 @@
                 "label": "Type",
                 "class": "bx--col-lg-4 bx--col-padding",
                 "required": true,
+                "invalidText": "Function or Personal is required",
                 "items": [
                   { "label": "Personal", "value": "personal" },
                   { "label": "Functional", "value": "functional" }
@@ -859,10 +864,13 @@
                 "key": "user",
                 "label": "User",
                 "required": true,
+                "readOnly": "this.form.value.idtype && this.form.value.idtype==='personal'",
+                "disabledWhen": "this.form.value.idtype ==='personal' && (this.form.value.owner !== this.env.user.email)",
                 "placeHolder": "Enter the User Id",
                 "class": "bx--col-lg-5 bx--col-padding",
                 "typeClass": "bx--text-input",
                 "type": "text",
+                "invalidText": "Userid is required",
                 "order": 7
               },
               {
@@ -870,11 +878,13 @@
                 "key": "password",
                 "label": "Password",
                 "required": true,
+                "readOnly": "this.form.value.idtype && this.form.value.idtype==='personal'",
                 "placeHolder": "Enter the Users Password",
                 "disabledWhen": "this.form.value.idtype ==='personal' && (this.form.value.owner !== this.env.user.email)",
                 "class": "bx--col-lg-5 bx--col-padding",
                 "typeClass": "bx--text-input",
                 "type": "text",
+                "invalidText": "Password is required",
                 "order": 8
               },
               {
@@ -886,6 +896,7 @@
                 "class": "bx--col-lg-16 bx--col-padding",
                 "typeClass": "bx--text-input",
                 "type": "text",
+                "invalidText": "A JDBC string is required",
                 "order": 19
               },
               {
@@ -896,6 +907,7 @@
                 "typeClass": "bx--text-input",
                 "placeHolder": "Enter a description about this connection",
                 "required": true,
+                "invalidText": "A description is required",
                 "type": "text",
                 "order": 23
               },
@@ -1110,7 +1122,7 @@
   },
   {
     "_id": "files",
-    "_rev": "38-bcf6e781494d075b4fba1566d71b39e6",
+    "_rev": "39-ba9ddf18f22c9147d42a667cda1c895f",
     "config": {
       "locals": {
         "formName": "files.table",
@@ -1270,7 +1282,7 @@
                 "key": "upload",
                 "order": 2,
                 "multiple": true,
-                "maxFileSize": 10,
+                "maxFileSize": 100,
                 "filesQuestion": "files",
                 "visible": true,
                 "class": "bx--col-lg-8 bx--col-padding"
@@ -1361,7 +1373,7 @@
   },
   {
     "_id": "jobdetail",
-    "_rev": "653-3b173bf3246a1c4a1880985a2deb4282",
+    "_rev": "712-54440e0ef894d3f327116dbf5356f4ea",
     "config": {
       "headerTmpl": "header",
       "header": {
@@ -1650,10 +1662,12 @@
                 "label": "Name",
                 "editMode": "this.env.user.rolenbr > 10",
                 "placeHolder": "Enter the job name",
-                "invalidText": "This is not correct",
+                "invalidText": "Maximum 60 Characters are allowed",
+                "helperText": "A Maximum 60 Characters is allowed",
                 "required": true,
                 "class": "bx--col-lg-5 bx--col-padding bx--form-item",
                 "typeClass": "bx--text-input readonly",
+                "maxLength": 60,
                 "type": "text",
                 "order": 1
               },
@@ -1661,6 +1675,7 @@
                 "controlType": "textbox",
                 "key": "description",
                 "required": true,
+                "invalidText": "A description is required",
                 "label": "Description",
                 "editMode": "this.env.user.rolenbr > 10",
                 "class": "bx--col-lg-8 bx--col-padding",
@@ -1672,6 +1687,7 @@
                 "controlType": "dropdown",
                 "key": "type",
                 "required": true,
+                "invalidText": "A value is required",
                 "label": "Type",
                 "placeHolder": "Select ...",
                 "class": "bx--col-lg-3 bx--col-padding",
@@ -1682,7 +1698,7 @@
                 "style": { "width": "100%" },
                 "items": [
                   { "content": "Data Transfer", "value": "pyspark" },
-                  { "content": "Python Custom", "value": "pycustom" },
+                  { "content": "Custom Code", "value": "pycustom" },
                   { "content": "SQL Statement", "value": "pystmt" },
                   { "content": "Pipeline", "value": "pipeline" },
                   { "content": "Params", "value": "params" },
@@ -1849,13 +1865,13 @@
                     "key": "stmt__templatename",
                     "readOnly": true,
                     "visible": "this.form.value.templateid",
-                    "class": "bx--col-lg-3 bx--col-padding",
+                    "class": "bx--col-lg-4 bx--col-padding",
                     "typeClass": "bx--text-input",
                     "order": 6
                   },
                   {
                     "controlType": "overflow",
-                    "class": "bx--col-lg-2 bx--col-padding",
+                    "class": "bx--col-lg-1 bx--col-padding",
                     "visible": true,
                     "readMode": true,
                     "placement": "top",
@@ -1916,6 +1932,7 @@
                     "key": "stmt__sql",
                     "class": "bx--col-lg-16",
                     "typeClass": "bx--text-input",
+                    "readOnly": "! (this.form.value.templateid === null || this.form.value.templateid === undefined)",
                     "mode": "yaml",
                     "style": { "min-height": "600px" },
                     "order": 12
@@ -2022,44 +2039,6 @@
                 "header": { "label": "Custom Code" },
                 "questions": [
                   {
-                    "controlType": "textbox",
-                    "label": "Template used",
-                    "placeHolder": "No Template Selected",
-                    "key": "custom__templatename",
-                    "readOnly": true,
-                    "class": "bx--col-lg-4 bx--col-padding",
-                    "typeClass": "bx--text-input",
-                    "order": 4
-                  },
-                  {
-                    "controlType": "button",
-                    "label": "Load From Template",
-                    "type": "secondary",
-                    "size": "field",
-                    "visible": "! this.formSpecs.readmode",
-                    "class": "bx--col-lg-7 bx--col-padding e-align",
-                    "iconClass": "far fa-file-code mgl-10",
-                    "action": {
-                      "type": "modalform",
-                      "locals": {
-                        "formName": "code.template.dialog",
-                        "readmode": "this.formSpecs.readmode",
-                        "filterStore": "template.filter",
-                        "store": "template.store",
-                        "loaded": false,
-                        "reset": ["id"],
-                        "toStore": true,
-                        "fromStore": true
-                      },
-                      "values": { "noop": "all" },
-                      "modalOptions": {
-                        "header": "Select Custom Template",
-                        "size": "lg"
-                      }
-                    },
-                    "order": 5
-                  },
-                  {
                     "controlType": "dropdown",
                     "label": "Executor Type",
                     "key": "custom__executor",
@@ -2071,31 +2050,80 @@
                       { "content": "PySpark", "value": "pyspark" },
                       { "content": "JavaScript", "value": "javascript" }
                     ],
-                    "order": 6
+                    "order": 1
                   },
                   {
-                    "controlType": "button",
-                    "label": "",
-                    "type": "ghost",
-                    "size": "sm",
+                    "controlType": "text",
+                    "class": "bx--col-lg-8 bx--col-padding",
+                    "order": 2
+                  },
+                  {
+                    "controlType": "textbox",
+                    "label": "Template used",
+                    "placeHolder": "No Template Selected",
+                    "key": "custom__templatename",
+                    "readOnly": true,
+                    "class": "bx--col-lg-4 bx--col-padding",
+                    "typeClass": "bx--text-input",
+                    "order": 3
+                  },
+                  {
+                    "controlType": "overflow",
+                    "class": "bx--col-lg-1 bx--col-padding",
                     "visible": true,
                     "readMode": true,
-                    "style": { "float": "right" },
-                    "class": "bx--col-lg-2 b-align",
-                    "iconClass": "fa fa-expand fa-lg c-gray",
-                    "action": {
-                      "type": "modalform",
-                      "locals": {
-                        "formName": "code.pycustom.fullscreen.dialog",
-                        "readmode": "this.formSpecs.readmode"
+                    "placement": "top",
+                    "offset": { "x": -100, "y": 150 },
+                    "buttons": [
+                      {
+                        "label": "Fullscreen",
+                        "visible": true,
+                        "action": {
+                          "type": "modalform",
+                          "locals": {
+                            "formName": "code.pycustom.fullscreen.dialog",
+                            "readmode": "this.formSpecs.readmode"
+                          },
+                          "modalOptions": {
+                            "header": "Fullscreen dialog",
+                            "arialabel": "fullscreen",
+                            "size": "lg"
+                          }
+                        }
                       },
-                      "modalOptions": {
-                        "header": "Fullscreen dialog",
-                        "arialabel": "fullscreen",
-                        "size": "lg"
+                      {
+                        "label": "Use Template",
+                        "visible": "! this.formSpecs.readmode",
+                        "action": {
+                          "type": "modalform",
+                          "locals": {
+                            "formName": "code.template.dialog",
+                            "filterStore": "template.filter",
+                            "store": "template.store",
+                            "loaded": false,
+                            "reset": ["id"],
+                            "toStore": true,
+                            "fromStore": true
+                          },
+                          "modalOptions": {
+                            "header": "Select Custom Template",
+                            "size": "lg"
+                          }
+                        }
+                      },
+                      {
+                        "label": "Remove Template",
+                        "visible": "! this.formSpecs.readmode && this.form.value.templateid",
+                        "action": {
+                          "type": "update",
+                          "params": {
+                            "url": "/etl-mgr/user/removetemplate",
+                            "processing": true
+                          }
+                        }
                       }
-                    },
-                    "order": 8
+                    ],
+                    "order": 4
                   },
                   {
                     "controlType": "codeeditor",
@@ -2219,7 +2247,7 @@
                     "class": "bx--col-lg-10 bx--col-padding ",
                     "typeClass": "bx--text-input",
                     "label": "Parameters for SQL Statements",
-                    "mode": "yaml",
+                    "mode": "json",
                     "style": { "min-height": "250px" },
                     "order": 100
                   }
@@ -2263,19 +2291,21 @@
                   {
                     "controlType": "number",
                     "key": "source__fetchsize",
-                    "class": "bx--col-lg-2 bx--col-padding",
+                    "class": "bx--col-lg-3 bx--col-padding",
                     "label": "Fetchsize",
                     "typeClass": "bx--text-input",
-                    "maxLength": 15,
-                    "minAmount": 0,
-                    "step": "1",
+                    "max": 500000,
+                    "min": 1,
+                    "invalidText": "A number between 1 and 500.000",
+                    "helperText": "Enter a number between 1 and 500.000",
+                    "step": 1000,
                     "order": 2
                   },
                   {
                     "controlType": "textbox",
                     "key": "source__partition__partitioncolumn",
                     "label": "Partition Column",
-                    "class": "bx--col-lg-2 bx--col-padding",
+                    "class": "bx--col-lg-3 bx--col-padding",
                     "typeClass": "bx--text-input",
                     "type": "text",
                     "order": 3
@@ -2297,45 +2327,43 @@
                   {
                     "controlType": "number",
                     "key": "source__partition__lowerbound",
-                    "class": "bx--col-lg-2",
+                    "class": "bx--col-lg-3",
                     "label": "Lowerbound",
                     "typeClass": "bx--text-input",
-                    "maxLength": 15,
-                    "minAmount": -99999999,
-                    "step": "1",
+                    "min": 0,
+                    "step": 1,
                     "order": 6
                   },
                   {
                     "controlType": "number",
                     "key": "source__partition__upperbound",
                     "label": "UpperBound",
-                    "class": "bx--col-lg-2",
+                    "class": "bx--col-lg-3",
                     "typeClass": "bx--text-input",
-                    "maxLength": 15,
-                    "minAmount": 0,
-                    "step": "1",
+                    "min": 0,
+                    "step": 1,
                     "order": 7
                   },
                   {
                     "controlType": "number",
                     "key": "source__partition__numpartitions",
                     "label": "Partitions",
-                    "class": "bx--col-lg-2",
+                    "class": "bx--col-lg-3",
                     "typeClass": "bx--text-input",
-                    "maxLength": 3,
-                    "minAmount": 0,
-                    "step": "1",
+                    "max": 10000,
+                    "min": 1,
+                    "step": 1,
                     "order": 8
                   },
                   {
                     "controlType": "number",
                     "key": "source__partition__maxcpu",
                     "label": "Maximum CPU",
-                    "class": "bx--col-lg-2",
+                    "class": "bx--col-lg-3",
                     "typeClass": "bx--text-input",
-                    "maxLength": 3,
-                    "minAmount": 0,
-                    "step": "1",
+                    "max": 99,
+                    "invalidText": "Maximum 99 cpu are allowed",
+                    "helperText": "Enter the maximum number of cpu to be allocated",
                     "order": 9
                   },
                   {
@@ -2364,11 +2392,14 @@
                     "controlType": "number",
                     "key": "target__batchsize",
                     "label": "Batchsize",
-                    "class": "bx--col-lg-2 bx--col-padding",
+                    "class": "bx--col-lg-3 bx--col-padding",
                     "typeClass": "bx--text-input",
-                    "maxLength": 15,
-                    "minAmount": 0,
-                    "order": 20
+                    "max": 500000,
+                    "min": 1,
+                    "order": 20,
+                    "step": 1000,
+                    "invalidText": "A number between 1 and 500.000",
+                    "helperText": "Enter a number between 1 and 500.000"
                   },
                   {
                     "controlType": "checkbox",
@@ -2394,66 +2425,78 @@
                 "header": { "label": "Statement" },
                 "questions": [
                   {
+                    "controlType": "text",
+                    "class": "bx--col-lg-11 bx--col-padding",
+                    "order": 1
+                  },
+                  {
                     "controlType": "textbox",
                     "key": "source__templatename",
                     "label": "Template used",
                     "placeHolder": "No Template Selected",
                     "readOnly": true,
                     "class": "bx--col-lg-4 bx--col-padding",
+                    "visible": "this.form.value.templateid",
                     "typeClass": "bx--text-input",
-                    "order": 100
+                    "order": 2
                   },
                   {
-                    "controlType": "button",
-                    "label": "Load From Template",
-                    "type": "secondary",
-                    "size": "field",
-                    "visible": "! this.formSpecs.readmode",
-                    "class": "bx--col-lg-10 bx--col-padding e-align",
-                    "iconClass": "far fa-file-code mgl-1",
-                    "action": {
-                      "type": "modalform",
-                      "locals": {
-                        "formName": "code.template.dialog",
-                        "readmode": "this.formSpecs.readmode",
-                        "filterStore": "template.filter",
-                        "store": "template.store",
-                        "loaded": false,
-                        "reset": ["id"],
-                        "toStore": true,
-                        "fromStore": true
-                      },
-                      "values": { "noop": "all" },
-                      "modalOptions": {
-                        "header": "Select SQL Template",
-                        "size": "lg"
-                      }
-                    },
-                    "order": 110
-                  },
-                  {
-                    "controlType": "button",
-                    "label": "",
-                    "type": "ghost",
-                    "size": "sm",
+                    "controlType": "overflow",
+                    "class": "bx--col-lg-1 bx--col-padding",
                     "visible": true,
                     "readMode": true,
-                    "style": { "float": "right" },
-                    "class": "bx--col-lg-2 b-align",
-                    "iconClass": "fa fa-expand fa-lg c-gray",
-                    "action": {
-                      "type": "modalform",
-                      "locals": {
-                        "formName": "code.pyspark.fullscreen.dialog",
-                        "readmode": "this.formSpecs.readmode"
+                    "placement": "top",
+                    "offset": { "x": -100, "y": 150 },
+                    "buttons": [
+                      {
+                        "label": "Fullscreen",
+                        "visible": true,
+                        "action": {
+                          "type": "modalform",
+                          "locals": {
+                            "formName": "code.pyspark.fullscreen.dialog",
+                            "readmode": "this.formSpecs.readmode"
+                          },
+                          "modalOptions": {
+                            "header": "SQL Editor",
+                            "size": "lg",
+                            "arialabel": "fullscreen"
+                          }
+                        }
                       },
-                      "modalOptions": {
-                        "header": "SQL Editor",
-                        "arialabel": "fullscreen",
-                        "size": "lg"
+                      {
+                        "label": "Use Template",
+                        "visible": "! this.formSpecs.readmode",
+                        "action": {
+                          "type": "modalform",
+                          "locals": {
+                            "formName": "code.template.dialog",
+                            "filterStore": "template.filter",
+                            "store": "template.store",
+                            "loaded": false,
+                            "reset": ["id"],
+                            "toStore": true,
+                            "fromStore": true
+                          },
+                          "modalOptions": {
+                            "header": "Select Custom Template",
+                            "size": "lg"
+                          }
+                        }
+                      },
+                      {
+                        "label": "Remove Template",
+                        "visible": "! this.formSpecs.readmode && this.form.value.templateid",
+                        "action": {
+                          "type": "update",
+                          "params": {
+                            "url": "/etl-mgr/user/removetemplate",
+                            "processing": true
+                          }
+                        }
                       }
-                    },
-                    "order": 120
+                    ],
+                    "order": 3
                   },
                   {
                     "controlType": "codeeditor",
@@ -2506,7 +2549,10 @@
                         "url": "/etl-mgr/user/getservice",
                         "processing": true
                       },
-                      "values": { "serviceid": "5fda50d2034c3d284e6171e4" }
+                      "values": {
+                        "serviceid": "widget_doc_sql_internal_graph",
+                        "outfield": "servicesout"
+                      }
                     }
                   },
                   {
@@ -2744,7 +2790,6 @@
                 "typeClass": "bx--text-input pdt-5 fs-14",
                 "label": "Mail Recepients",
                 "class": "bx--col-lg-8 bx--col-padding",
-                "style": { "height": "auto" },
                 "hidden": false,
                 "disabled": false,
                 "multiple": true,
@@ -2811,10 +2856,35 @@
           {
             "hidden": "! this.form.value.id",
             "header": {
+              "label": "Event Log",
+              "class": "bx--grid",
+              "panelClass": "ex--menu-panel-button",
+              "iconClass": "fas fa-check-double",
+              "style": { "background": "none", "padding": 0 }
+            },
+            "questions": [
+              {
+                "controlType": "table",
+                "class": "bx--col-lg-16",
+                "style": { "height": "200px" },
+                "locals": {
+                  "loaded": true,
+                  "fromStore": true,
+                  "toStore": true,
+                  "formName": "jobs.details.events.table",
+                  "store": "jobdetail.store",
+                  "options": { "field": "events" }
+                }
+              }
+            ]
+          },
+          {
+            "hidden": "! this.form.value.id",
+            "header": {
               "label": "About",
               "class": "bx--grid",
               "panelClass": "ex--menu-panel-button",
-              "iconClass": "fa fa-history",
+              "iconClass": "fas fa-info-circle",
               "style": { "background": "none", "padding": 0 }
             },
             "questions": [
@@ -3092,7 +3162,7 @@
         "type": "dataTable",
         "preload": true,
         "paginator": false,
-        "emptyMessage": "No Records for this selection or you miss the authority to view them",
+        "emptyMessage": "No output yet",
         "class": "ex--table-white",
         "size": "sh",
         "scrollable": true,
@@ -3102,10 +3172,40 @@
         "columns": [
           {
             "field": "out",
-            "class": "interactive",
-            "header": "Log Output",
+            "header": "Job Output",
             "specs": { "special": true }
           }
+        ]
+      },
+      {
+        "id": "jobs.details.events.table",
+        "type": "dataTable",
+        "preload": true,
+        "paginator": false,
+        "emptyMessage": "No Events logged yet",
+        "class": "ex--table-white",
+        "size": "sh",
+        "scrollable": true,
+        "tableStyle": { "table-layout": "fixed", "white-space": "pre-wrap" },
+        "params": { "query": { "first": 0, "rows": 100 } },
+        "columns": [
+          {
+            "field": "created",
+            "header": "Created",
+            "width": "13%",
+            "specs": { "format": "dd-MMM-yy HH:mm:ss" }
+          },
+          {
+            "field": "createdbyemail",
+            "header": "Created By Email",
+            "width": "15%"
+          },
+          {
+            "field": "createdbyname",
+            "header": "Created By Name",
+            "width": "15%"
+          },
+          { "field": "event", "header": "Event" }
         ]
       },
       {
@@ -3121,12 +3221,7 @@
         "tableStyle": { "table-layout": "fixed", "white-space": "pre-wrap" },
         "params": { "query": { "first": 0, "rows": 100 } },
         "columns": [
-          {
-            "field": "out",
-            "class": "interactive",
-            "header": "",
-            "specs": { "special": true }
-          }
+          { "field": "out", "header": "", "specs": { "special": true } }
         ]
       },
       {
@@ -3822,7 +3917,7 @@
           {
             "field": "name",
             "header": "Name",
-            "width": "40%",
+            "width": "70%",
             "style": {
               "background-color": "#4589ff",
               "font-weight": "bold",
@@ -4070,7 +4165,7 @@
                 "style": { "height": "200px" },
                 "locals": {
                   "loaded": true,
-                  "fromStore": true,
+                  "fromStore": false,
                   "toStore": true,
                   "flatten": false,
                   "formName": "template.lookup.table",
@@ -4105,6 +4200,7 @@
                 "key": "stmt__sql",
                 "class": "bx--col-lg-16 scrollto",
                 "typeClass": "bx--text-input",
+                "readOnly": "this.form.value.templateid",
                 "mode": "sql",
                 "style": { "min-height": "750px" },
                 "order": 1
@@ -4803,7 +4899,7 @@
   },
   {
     "_id": "jobs",
-    "_rev": "117-95ea4b218c523b07b4b89dde14181fd2",
+    "_rev": "119-ef0c530e18d909150f94a833530eeb7b",
     "scope": "page",
     "app": "etl-mgr",
     "config": {
@@ -5021,8 +5117,8 @@
             "specs": { "link": true, "target": "_self" },
             "style": { "font-weight": "bold", "word-break": "break-word" }
           },
-          { "field": "source", "header": "Source", "width": "8%" },
-          { "field": "target", "header": "Target", "width": "8%" },
+          { "field": "source", "header": "Source", "width": "10%" },
+          { "field": "target", "header": "Target", "width": "10%" },
           {
             "field": "statusicon",
             "header": "",
@@ -5034,7 +5130,7 @@
             "field": "status",
             "header": "Status",
             "width": "8%",
-            "style": { "font-weight": "bold" }
+            "style": { "font-weight": "bold", "padding": 0 }
           },
           { "field": "type", "header": "Type", "width": "6%" },
           {
@@ -5042,7 +5138,7 @@
             "header": "",
             "width": "2%",
             "specs": { "icon": true },
-            "style": { "text-align": "center", "visible": true }
+            "style": { "text-align": "center", "padding": 0 }
           },
           {
             "field": "jobstart",
@@ -5749,7 +5845,7 @@
   },
   {
     "_id": "profiles",
-    "_rev": "15-4af0c8f7c6a6a36a710fdacd3591ff58",
+    "_rev": "16-76748d50033a6b4d2d96ba6f41d45707",
     "config": {
       "locals": {
         "formName": "profiles.table",
@@ -5877,7 +5973,7 @@
                 "items": [
                   { "content": "Manager", "value": "manager" },
                   { "content": "Editor", "value": "editor" },
-                  { "content": "Editor (NP)", "value": "editor_np" },
+                  { "content": "Operator", "value": "operator" },
                   { "content": "DB Admin", "value": "dbadmin" },
                   { "content": "Depositor", "value": "depositor" },
                   { "content": "Reader", "value": "reader" }
@@ -5938,7 +6034,7 @@
                 "items": [
                   { "content": "Manager", "value": "manager" },
                   { "content": "Editor", "value": "editor" },
-                  { "content": "Editor (NP)", "value": "editor_np" },
+                  { "content": "Operator", "value": "operator" },
                   { "content": "DB Admin", "value": "dbadmin" },
                   { "content": "Depositor", "value": "depositor" },
                   { "content": "Reader", "value": "reader" }
@@ -6081,7 +6177,7 @@
   },
   {
     "_id": "snippets",
-    "_rev": "40-45fe6d338fbdebcc79aad97e9d2ab726",
+    "_rev": "41-f11d2f032871c844a574c25685fb3b20",
     "config": {
       "locals": {
         "formName": "snippets.table",
@@ -6116,6 +6212,7 @@
               "action": {
                 "type": "modalform",
                 "locals": { "formName": "snippets.dialog" },
+                "values": { "idtype": "functional" },
                 "modalOptions": {
                   "header": "Add a new code snippet",
                   "size": "lg",
@@ -6255,7 +6352,7 @@
                 "key": "owner",
                 "label": "Owner",
                 "required": true,
-                "computeWhenComposed": "this.env.user.email",
+                "compute": "this.env.user.email",
                 "readOnly": "this.form.value.idtype && this.form.value.idtype==='personal'",
                 "placeHolder": "Enter the Owner",
                 "class": "bx--col-lg-4 bx--col-padding",
@@ -6538,7 +6635,7 @@
   },
   {
     "_id": "templates",
-    "_rev": "36-e20e5871f33d1b01ecf3353dabc02373",
+    "_rev": "42-14b945db90e67010bedf83e482cdb892",
     "config": {
       "locals": {
         "formName": "templates.table",
@@ -6584,7 +6681,7 @@
           {
             "field": "name",
             "header": "Name",
-            "width": "15%",
+            "width": "20%",
             "style": { "font-weight": "bold" }
           },
           { "field": "type", "header": "Type", "width": "10%" },
@@ -6601,7 +6698,8 @@
                 "type": "modalform",
                 "locals": {
                   "formName": "templates.view.dialog",
-                  "loaded": true
+                  "loaded": true,
+                  "readmode": true
                 },
                 "modalOptions": { "header": "View Template", "size": "lg" }
               }
@@ -6684,7 +6782,7 @@
                 "key": "name",
                 "label": "Name",
                 "required": true,
-                "class": "bx--col-lg-4 bx--col-padding",
+                "class": "bx--col-lg-5 bx--col-padding",
                 "order": 0
               },
               {
@@ -6692,16 +6790,14 @@
                 "key": "type",
                 "placeHolder": "Select ...",
                 "label": "Activity Type",
-                "class": "bx--col-lg-4 bx--col-padding",
+                "class": "bx--col-lg-3 bx--col-padding",
                 "editable": true,
                 "filter": false,
+                "required": true,
                 "items": [
                   { "content": "Data Transfer", "value": "pyspark" },
                   { "content": "Custom Code", "value": "pycustom" },
-                  { "content": "SQL Statement", "value": "pystmt" },
-                  { "content": "URL Get/Post", "value": "urlgetpost" },
-                  { "content": "Pipeline", "value": "pipeline" },
-                  { "content": "none", "value": "none" }
+                  { "content": "SQL Statement", "value": "pystmt" }
                 ],
                 "order": 2
               },
@@ -6740,17 +6836,26 @@
         "groups": [
           {
             "questions": [
-              { "controlType": "textbox", "hidden": true, "key": "id" },
+              {
+                "controlType": "textbox",
+                "hidden": false,
+                "key": "id",
+                "style": {
+                  "position": "absolute",
+                  "right": "4rem",
+                  "top": "1rem"
+                }
+              },
               {
                 "controlType": "codeeditor",
                 "key": "template",
-                "label": "SQL Statement",
+                "label": "Custom Code",
                 "required": true,
                 "class": "bx--col-lg-16 bx--col-padding",
                 "typeClass": "bx--text-input",
                 "mode": "sql",
                 "theme": "chrome",
-                "style": { "min-height": "300px" },
+                "style": { "min-height": "25rem" },
                 "order": 2
               }
             ],
@@ -6814,7 +6919,7 @@
   },
   {
     "_id": "webapikeys",
-    "_rev": "11-f3901df0b42b375782111ea6703d1a9d",
+    "_rev": "14-5b3c154f203a949aefe6290f9852a57b",
     "config": {
       "locals": {
         "formName": "webapikeys.table",
@@ -6849,6 +6954,7 @@
               "action": {
                 "type": "modalform",
                 "locals": { "formName": "webapikeys.dialog" },
+                "values": { "idtype": "functional" },
                 "modalOptions": { "header": "Add a new Api Key", "size": "lg" }
               }
             }
@@ -6983,7 +7089,7 @@
                 "key": "owner",
                 "label": "Owner",
                 "required": true,
-                "computeWhenComposed": "this.env.user.email",
+                "compute": "this.env.user.email",
                 "readOnly": "this.form.value.idtype && this.form.value.idtype==='personal'",
                 "placeHolder": "Enter the Owner",
                 "class": "bx--col-lg-4 bx--col-padding",
@@ -7122,7 +7228,7 @@
   },
   {
     "_id": "webhooks",
-    "_rev": "19-014187488da9ae9f497e65b746223a96",
+    "_rev": "21-5c1e48e6f0953c7992f96bde4f36094b",
     "config": {
       "locals": {
         "formName": "webhooks.table",
@@ -7157,6 +7263,7 @@
               "action": {
                 "type": "modalform",
                 "locals": { "formName": "webhooks.dialog" },
+                "values": { "idtype": "functional" },
                 "modalOptions": { "header": "Add a new webhook", "size": "lg" }
               }
             }
@@ -7289,7 +7396,7 @@
                 "key": "owner",
                 "label": "Owner",
                 "required": true,
-                "computeWhenComposed": "this.env.user.email",
+                "compute": "this.env.user.email",
                 "readOnly": "this.form.value.idtype && this.form.value.idtype==='personal'",
                 "placeHolder": "Enter the Owner",
                 "class": "bx--col-lg-4 bx--col-padding",

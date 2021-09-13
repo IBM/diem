@@ -12,7 +12,7 @@ import { IXorg } from '../interfaces/env';
 import { mongoose } from './mongo';
 import { Credentials } from './cfenv';
 import { utils } from './utils';
-import { Strategy } from './authorisation';
+import { Strategy } from './authentication';
 
 export const limiter = rateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute

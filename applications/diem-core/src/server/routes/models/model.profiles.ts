@@ -7,8 +7,8 @@ export enum EUserRoles {
     dbadmin = 'dbadmin',
     depositor = 'depositor',
     editor = 'editor',
-    editor_np = 'editor-np',
     manager = 'manager',
+    operator = 'operator',
     reader = 'reader',
 }
 
@@ -17,7 +17,7 @@ export enum EUserRolesNbr {
     manager = 80,
     editor = 60,
     dbadmin = 40,
-    editor_np = 20,
+    operator = 20,
     depositor = 10,
     reader = 1,
     noaccess = 0,
