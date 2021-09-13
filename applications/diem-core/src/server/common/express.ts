@@ -298,9 +298,9 @@ export class Express {
             directives: {
                 connectSrc: ["'self'", 'wss:', 'data: https', 'blob: https', '*.com'],
                 defaultSrc: ["'self'"],
-                fontSrc: ["'self'", '*.com'],
+                fontSrc: ["'self'", '*.com', '* data:'],
                 frameSrc: ["'self'", 'https://*'],
-                imgSrc: ["'self'", 'data: https', 'blob: https', '*.com'],
+                imgSrc: ["'self'", '* data:', 'blob: https', '*.com'],
                 scriptSrc: ["'self'", unsafe, `'${t.join("' '")}'`],
                 styleSrc: ["'self'", '*.com', "'unsafe-inline'", unsafe],
             },
