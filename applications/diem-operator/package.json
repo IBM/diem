@@ -13,7 +13,7 @@
     "license": "ISC",
     "dependencies": {
         "@kubernetes/client-node": "^0.15.1",
-        "axios": "^0.21.1",
+        "axios": "^0.21.2",
         "js-yaml": "^4.1.0",
         "moment": "^2.29.1",
         "nats": "^2.2.0",
