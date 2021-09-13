@@ -1,10 +1,10 @@
 {
   "name": "mongoloader",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "load mongo data for diem",
   "main": "index.mjs",
   "dependencies": {
-    "mongoose": "^5.13.4"
+    "mongoose": "^6.0.5"
   },
   "scripts": {
     "build": "docker build -t quay.io/diem/mongoloader ."
