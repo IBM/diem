@@ -13,7 +13,7 @@ scikit-learn==0.24.2
 matplotlib==3.4.3
 jinja2==3.0.1
 seaborn==0.11.1
-sqlparse==0.4.1
+sqlparse==0.4.2
 pymongo[tls]==3.12.0
 pyarrow==5.0.0
 sendgrid==6.8.0
