@@ -47,7 +47,7 @@ Step 4. Run the following docker command
 - quay.io/diem/spark-operator:3.1.2-1.1.6-rhel:  3.1.2 the spark version, 1.1.6 is the spark-operator version, rhel stands for Red Hat Enterprise Linux
 
 ```cmd
-docker build --build-arg SPARK_IMAGE=quay.io/diem/spark:3.1.2_rhel -t quay.io/diem/spark-operator:3.1.2-1.1.6-rhel -f Dockerfile.rh .
+docker build --build-arg SPARK_IMAGE=quay.io/diem/spark:3.1.2_rhel -t quay.io/diem/spark-operator:3.1.2-1.1.7-rhel -f Dockerfile.rh .
 ```
 
 > The image will be build from a base spark image, then that build will be copied over to our rhel image
@@ -55,7 +55,7 @@ docker build --build-arg SPARK_IMAGE=quay.io/diem/spark:3.1.2_rhel -t quay.io/di
 Step 5. Push the image
 
 ```cmd
-docker push quay.io/diem/spark-operator:v1beta2-1.2.3-3.1.2_rhel
+docker push quay.io/diem/spark-operator:3.1.2-1.1.7-rhel
 ```
 
 ## Installation Steps

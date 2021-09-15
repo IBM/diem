@@ -89,7 +89,7 @@ spark:
   type: scala
   location: cos://diem-core-uat-mni.mycos/DataUser.jar
   mainclass: com.ibm.esil.es.mi.datauser.DataUser
+  volume: true
+  image:
+
 ```
-
-
-
