@@ -95,7 +95,7 @@ export interface IETLJob {
     jobend?: Date | null;
     name: string;
     params?: IJobParams;
-    runby: string;
+    runby?: string;
     status: EJobStatusCodes;
     transid: string;
     org: string;
@@ -552,7 +552,7 @@ export interface IJobResponse {
     org: string;
     out?: any;
     outl?: any;
-    runby: string;
+    runby?: string;
     runtime: number | null;
     serviceid?: string;
     special?: string;

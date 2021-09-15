@@ -112,7 +112,7 @@ export const joblog: (req: IRequest) => Promise<any> = async (req: IRequest) => 
             row.nbr = nbr;
             row.statusicon = StatusConfig[row.status].statusicon || 'fa fa-question';
             row.erroricon = row.error ? 'far fa-file-code fa-lg c-red' : undefined;
-            row.outicon = row.out ? 'far fa-file-code fa-lg c-green' : undefined;
+            row.outicon = out ? 'far fa-file-code fa-lg c-green' : undefined;
             row.auditicon = row.audit ? 'far fa-file-code fa-lg' : undefined;
             row.audit = row.audit ? JSON.stringify(row.audit, undefined, 2).replace(/\\n/g, '\n') : undefined;
             row.out = out;

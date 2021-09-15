@@ -270,7 +270,7 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload | false> 
 
             // get the log of the sparkjob in case of an error
             if (doc.job.error && doc.job.executor === ExecutorTypes.pyspark) {
-                utils.logInfo(`$job.handler (getPySparkJobLog): passing to getPySparkJobLog - id: ${id}`);
+                utils.logInfo(`$job.handler (jobHandler): passing to getPySparkJobLog - id: ${id}`);
 
                 doc = await getPySparkJobLog(doc);
             }
