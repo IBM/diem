@@ -62,7 +62,6 @@ interface IObj {
     jobend: Date | null;
     jobid: string;
     name: string;
-    runby: string;
     runtime: number | null;
     transid: string;
     org: string;
@@ -220,7 +219,6 @@ class SparkLib {
                 id: '',
                 jobid: '',
                 jobend: null,
-                runby: '',
                 transid: '',
                 org: '',
             };
@@ -321,7 +319,7 @@ class SparkLib {
             }
 
             if (
-                [EStates.failed, EStates.failing, EStates.submission_failed].includes(applicationState.state) &&
+                [EStates.failed, EStates.submission_failed].includes(applicationState.state) &&
                 !this.streams[id]?.log
             ) {
                 utils.logInfo(
@@ -331,7 +329,7 @@ class SparkLib {
                 let log: any = 'Unspecified error';
 
                 log = await this.getJobLog(obj.id).catch(async () => {
-                    utils.logInfo(`$spark.watcher (not managed watcher): no log found - passing to abort - id: ${id}`);
+                    utils.logInfo(`$spark.watcher (unmanaged watcher): no log found - passing to abort - id: ${id}`);
 
                     await this.abort(id, 'watcher - getJobLog');
                 });

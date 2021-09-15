@@ -27,7 +27,7 @@ export const getQueue: () => void = async (): Promise<void> => {
 
         const id: string = doc._id.toString();
         doc.job.transid = utils.guid();
-        doc.job.email = doc.annotations.createdbyemail;
+        doc.job.email = doc.job.email || doc.annotations.createdbyemail;
         doc.job.runby = 'schedule';
         doc.job.jobid = id; // scheduled job can never be part of a pipeline
 

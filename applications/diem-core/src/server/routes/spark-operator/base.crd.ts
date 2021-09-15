@@ -48,10 +48,10 @@ export interface ICrdConfig {
             coreRequest?: string;
         };
         restartPolicy: {
-            onFailureRetries: number;
-            onFailureRetryInterval: number;
-            onSubmissionFailureRetries: number;
-            onSubmissionFailureRetryInterval: number;
+            onFailureRetries?: number;
+            onFailureRetryInterval?: number;
+            onSubmissionFailureRetries?: number;
+            onSubmissionFailureRetryInterval?: number;
             type: string;
         };
         type: string;
@@ -74,7 +74,7 @@ export const crdconfig: () => ICrdConfig = (): ICrdConfig => ({
         namespace: sparkCredentials.namespace,
     },
     spec: {
-        timeToLiveSeconds: -1,
+        timeToLiveSeconds: 10,
         imagePullPolicy: 'Always',
         mainApplicationFile: 'dummy',
         mode: 'cluster',
@@ -100,11 +100,7 @@ export const crdconfig: () => ICrdConfig = (): ICrdConfig => ({
             instances: 1,
         },
         restartPolicy: {
-            onFailureRetries: 1,
-            onFailureRetryInterval: 10,
-            onSubmissionFailureRetries: 5,
-            onSubmissionFailureRetryInterval: 20,
-            type: 'OnFailure',
+            type: 'Never',
         },
         type: 'Python',
     },

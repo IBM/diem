@@ -76,7 +76,7 @@ export const jobFinish: (doc: IJobModel) => Promise<[IJobModel, any]> = async (
 
     insert.$set.log = doc.toObject().log;
 
-    utils.logInfo(`$job.finish (getPySparkJobLog): passing to jobLogger - id: ${id}`);
+    utils.logInfo(`$job.finish (jobFinish): passing to jobLogger - id: ${id}`);
 
     await jobLogger(doc).catch(async (err: any) => {
         err.trace = addTrace(err.trace, '@at $job.finish (jobStop)');
