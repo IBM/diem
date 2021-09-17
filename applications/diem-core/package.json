@@ -181,7 +181,7 @@
         "lock": "npm install --package-lock",
         "start": "node ./server/server.js",
         "webpack:build": "rm -rf ./src/webpack/lib && ./node_modules/.bin/tsc -p ./src/webpack/tsconfig.json",
-        "webpack:front": "cross-env webpackenv=front webpack --mode  production",
+        "webpack:front": "cross-env webpackenv=front webpack --mode production",
         "webpack:front-local": "cross-env webpackenv=front-local node ./node_modules/.bin/webpack -w --mode development",
         "webpack:node": "webpackenv=node webpack --mode production",
         "webpack:node-local": "cross-env webpackenv=node-local webpack -w --mode development",
