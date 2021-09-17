@@ -28,6 +28,7 @@ interface IModelPayload extends IJobModel {
     createdbyemail: string;
     createdbyname: string;
     createddate: string;
+    custom__code?: string;
     description: string;
     modifiedbyemail: string;
     modifiedbyname: string;
@@ -250,14 +251,20 @@ export const jobdetail: (req: IRequest) => Promise<IModelPayload | any> = async 
         return {};
     }
 
-    try {
-        utils.logInfo(
-            `$job.detail (jobdetail): job detail requested - job: ${id}`,
-            req.transid,
-            process.hrtime(hrstart)
-        );
+    utils.logInfo(`$job.detail (jobdetail): job detail requested - job: ${id}`, req.transid, process.hrtime(hrstart));
 
-        return Promise.resolve(makePayload(doc));
+    try {
+        const payload: IModelPayload = await makePayload(doc);
+
+        /**
+         *
+         * @info remove any custom code for rolenbr less then 20
+         */
+        if (payload.custom__code && req.user.rolenbr < 20) {
+            payload.custom__code = undefined;
+        }
+
+        return Promise.resolve(payload);
     } catch (err) {
         if (err.message && err.message.includes('Cast to ObjectI')) {
             return Promise.resolve({});

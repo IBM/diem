@@ -1,10 +1,10 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
-import { IOrgsModel, OrgsModel, FaIcons, IProfilesBody } from '@models';
+import { IOrgsModel, OrgsModel, FaIcons, IProfilesBody, IUserSchema, UserModel } from '@models';
 import { addTrace } from '@functions';
 
-const viewSecurity: number = 60;
-const editSecurity: number = 80;
+const viewSecurity: number[] = [100, 80, 40, 20, 10, 5, 1];
+const editSecurity: number[] = [100, 80, 1];
 
 interface IntOrgsPayload {
     createdby: string;
@@ -25,9 +25,11 @@ export const listorgs: (req: IRequest) => Promise<IntOrgsPayload[] | unknown> = 
 
     const body: IProfilesBody = { ...req.body };
 
+    body.org = req.user.org;
+    body.rolenbr = req.user.rolenbr;
     body.user = req.user.email;
 
-    if (req.user.rolenbr < viewSecurity) {
+    if (!viewSecurity.includes(body.rolenbr)) {
         utils.logInfo(
             `$orgs (listorgs): not allowed - email: ${req.user.email} - role: ${req.user.role} - org: ${req.user.org}`,
             req.transid,
@@ -37,16 +39,29 @@ export const listorgs: (req: IRequest) => Promise<IntOrgsPayload[] | unknown> = 
         return Promise.resolve({});
     }
 
-    body.org = req.user.org;
-    body.rolenbr = req.user.rolenbr;
+    let docs: IOrgsModel[] | [] = [];
 
-    const docs: IOrgsModel[] | [] = await OrgsModel.find({}, {})
-        .exec()
-        .catch(async (err: any) => {
-            err.trace = addTrace(err.trace, '@at $orgs (listorgs)');
+    if (body.rolenbr === 100) {
+        docs = await OrgsModel.find({}, {})
+            .exec()
+            .catch(async (err: any) => {
+                err.trace = addTrace(err.trace, '@at $orgs (listorgs) - admin');
 
-            return Promise.reject(err);
-        });
+                return Promise.reject(err);
+            });
+    } else {
+        const myorgs: IUserSchema[] = await UserModel.find({ email: body.user }, { org: 1 }).lean().exec();
+
+        const myorgsl: string[] = myorgs.map((myorg: IUserSchema) => myorg.org);
+
+        docs = await OrgsModel.find({ org: { $in: myorgsl } }, {})
+            .exec()
+            .catch(async (err: any) => {
+                err.trace = addTrace(err.trace, '@at $orgs (listorgs) - user');
+
+                return Promise.reject(err);
+            });
+    }
 
     utils.logInfo(`$Orgs (Orgs) - email: ${req.user.email}}`, req.transid, process.hrtime(hrstart));
 
@@ -63,7 +78,13 @@ export const listorgs: (req: IRequest) => Promise<IntOrgsPayload[] | unknown> = 
             viewicon: `${FaIcons.viewicon}`,
         };
 
-        if (req.user.rolenbr >= editSecurity) {
+        /**
+         * security
+         *
+         * @remarks
+         * user needs to be orgmanager(1) or having more then 60
+         */
+        if (editSecurity.includes(body.rolenbr)) {
             payload[i].deleteicon = `${FaIcons.deleteicon}`;
             payload[i].editicon = `${FaIcons.editicon}`;
         }

@@ -64,6 +64,8 @@ ibm-panel(id="userPanel", role="menu", [expanded]="userPanel")
     div.pd-20.mgr-10.c-white
         h4 {{env.user.name}}
         div {{env.user.email}}
+        br
+        div ({{env.user.role}})
     a.ex--menu-panel-button.ex--menu-panel-button-active(role='menuitem', routerLink="/profile")
         i.fa.fa-user
         span my Profile

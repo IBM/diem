@@ -4,22 +4,25 @@ import { annotationsSchema } from './model.common';
 
 export enum EUserRoles {
     admin = 'admin',
-    dbadmin = 'dbadmin',
-    depositor = 'depositor',
-    editor = 'editor',
     manager = 'manager',
+    editor = 'editor',
+    dbmanager = 'dbmanager',
     operator = 'operator',
+    depositor = 'depositor',
     reader = 'reader',
+    orgmanager = 'orgmanager',
+    noaccess = 'noaccess',
 }
 
 export enum EUserRolesNbr {
     admin = 100,
     manager = 80,
     editor = 60,
-    dbadmin = 40,
+    dbmanager = 40,
     operator = 20,
     depositor = 10,
-    reader = 1,
+    reader = 5,
+    orgmanager = 1,
     noaccess = 0,
 }
 

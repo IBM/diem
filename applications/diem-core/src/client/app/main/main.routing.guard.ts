@@ -26,7 +26,7 @@ export class MainRoutingGuard implements CanActivate {
                 /** reed the userprofile and check for the admin role */
 
                 console.info(
-                    `$main.routing.guard (canActivate): Allowed activation as the role of ${this.user.email} (${this.env.user.rolenbr}) is passing ${access} `
+                    `$main.routing.guard (canActivate): Allowed activation as the rolenbr of ${this.user.email} (${this.env.user.rolenbr}) is passing ${access} `
                 );
 
                 return true;
@@ -37,14 +37,12 @@ export class MainRoutingGuard implements CanActivate {
             /** All other users that are not jobdetailing the poall route */
 
             console.info(
-                `$main.routing.guard (canActivate): Redirecting to joball as the role of ${this.user.email} (${this.env.user.rolenbr}) is not passing ${access}`
+                `$main.routing.guard (canActivate): Redirecting to 401 as the rolenbr of ${this.user.email} (${this.env.user.rolenbr}) is not passing ${access}`
             );
 
             this.router
-                .navigate(['jobs'])
+                .navigate(['401'])
                 .catch((err: Error) => console.error('$main.routing.guard (canActivate): error', err));
-
-            return false;
 
             return false;
         } else {
