@@ -256,10 +256,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
         }
         this.storeName = this.DSF.r_getStore(this.config.store);
 
-        this.contentTmpl =
-            this.module && this.module.access && this.env.user.rolenbr >= this.module.access
-                ? this.contentTemplate
-                : this.noAccessTemplate;
+        this.contentTmpl = this.module?.access?.includes(this.env.user.rolenbr)
+            ? this.contentTemplate
+            : this.noAccessTemplate;
 
         this.check('parseConfig');
     };

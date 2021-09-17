@@ -124,12 +124,14 @@ E = Edit or Perform Actions
 
 | Role             | manager (80) | editor (60) | dbmanager (40) | operator (20) | depositor (10) | reader (5) | orgmanager (1) |
 | ---------------- | ------------ | ----------- | -------------- | ------------- | -------------- | ---------- | -------------- |
-| **Jobs**         | E            | E           | E              | E             | E              | R          | R              |
+| **Jobs**         |              |             |                |               |                |            |                |
+| view             | E            | E           | E              | E             | R              | R          | R              |
+| actions10        | E            | E           | E              | E             | N              | N          | N              |
 | **Job Detail**   |              |             |                |               |                |            |                |
 | general          | E            | E           | E              | E             | R              | R          | R              |
 | code             | E            | E           | R              | R             | N              | N          | N              |
 | parameters       | E            | E           | E              | E             | E              | R          | N              |
-| actions          | E            | E           | E              | E             | E              | N          | N              |
+| actions          | E            | E           | E              | E             | E*             | N          | N              |
 | **Integrations** |              |             |                |               |                |            |                |
 | connections      | E            | E           | E              | N             | N              | N          | N              |
 | webhooks         | E            | E           | E              | N             | N              | N          | N              |
@@ -139,7 +141,8 @@ E = Edit or Perform Actions
 | tags             | E            | E           | E              | R             | N              | N          | N              |
 | templates        | E            | E           | E              | R             | N              | N          | N              |
 | code snippets    | E            | E           | E              | R             | N              | N          | N              |
-| **Job Log**      | R            | R           | R              | R             | R              | R          | R              |
+| **Job Log**      |              |             |                |               |                |            |                |
+| view             | R            | R           | R              | R             | R              | R          | R              |
 | **Settings**     |              |             |                |               |                |            |                |
 | Organizations    | R            | R           | R              | R             | R              | R          | R              |
 | Organization     | E            | R           | R              | R             | R              | R          | E              |
@@ -147,3 +150,5 @@ E = Edit or Perform Actions
 | Profile          | R            | R           | R              | R             | R              | R          | R              |
 
 {.bx--data-table}
+
+E* limited to job start stop and edit document

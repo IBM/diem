@@ -1,8 +1,11 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
-import { IUserSchema, UserModel, ProfilePayloadValues, IQuery, FaIcons } from '@models';
+import { IUserSchema, UserModel, ProfilePayloadValues, IQuery, FaIcons, IProfilesBody } from '@models';
 import { addTrace } from '@functions';
 import { userProfile } from './profile.actions';
+
+const viewSecurity: number[] = [100, 80, 40, 20, 10, 5, 1];
+const editSecurity: number[] = [100, 80, 1];
 
 export const getProfiles: (body: IQuery) => Promise<any> = async (body: IQuery) => {
     const users: IUserSchema[] = await UserModel.find({ org: body.org })
@@ -24,7 +27,13 @@ export const getProfiles: (body: IQuery) => Promise<any> = async (body: IQuery) 
                 role: row.role,
             };
 
-            if (body.rolenbr && body.rolenbr > 60) {
+            /**
+             * security
+             *
+             * @remarks
+             * user needs to be orgmanager(1) or having more then 60
+             */
+            if (body.rolenbr && editSecurity.includes(body.rolenbr)) {
                 payload[i].deleteicon = `${FaIcons.deleteicon}`;
                 payload[i].editicon = `${FaIcons.editicon}`;
             }
@@ -41,7 +50,7 @@ export const getProfiles: (body: IQuery) => Promise<any> = async (body: IQuery) 
 export const listprofiles: (req: IRequest) => Promise<any> = async (req: IRequest) => {
     const hrstart: [number, number] = process.hrtime();
 
-    const body: IQuery = req.body.query ? req.body.query : req.body;
+    const body: IProfilesBody = req.body.query ? req.body.query : req.body;
 
     if (body.id) {
         if (body.id === 'profile') {
@@ -65,8 +74,19 @@ export const listprofiles: (req: IRequest) => Promise<any> = async (req: IReques
         });
     }
 
-    body.rolenbr = req.user.rolenbr;
     body.org = req.user.org;
+    body.rolenbr = req.user.rolenbr;
+    body.user = req.user.email;
+
+    if (!viewSecurity.includes(body.rolenbr)) {
+        utils.logInfo(
+            `$profiles (listprofiles): not allowed - email: ${req.user.email} - role: ${req.user.role} - org: ${req.user.org}`,
+            req.transid,
+            process.hrtime(hrstart)
+        );
+
+        return Promise.resolve({});
+    }
 
     const users: any[] = await getProfiles(body).catch(async (err: any) => {
         err.trace = addTrace(err.trace, '@at $profiles (orgusers)');
