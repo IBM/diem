@@ -1,7 +1,7 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
 import { stringify } from 'yaml';
-import { IOrg, OrgsModel } from '@models';
+import { IOrg, IUserSchema, OrgsModel, UserModel } from '@models';
 
 interface IOrgPayload {
     email: string;
@@ -13,6 +13,7 @@ interface IOrgBody {
     email: string;
     org: string;
     role: string;
+    rolenbr: number;
     transid: string;
     id: string;
 }
@@ -48,8 +49,8 @@ export const listorg: (req: IRequest) => Promise<any> = async (req: IRequest) =>
     const body: IOrgBody = { ...req.body };
 
     body.email = req.user.email;
-
     body.role = req.user.xorg.current.role;
+    body.rolenbr = req.user.rolenbr;
 
     let org: string = body.id;
 
@@ -63,6 +64,22 @@ export const listorg: (req: IRequest) => Promise<any> = async (req: IRequest) =>
     if (body.id.includes('organization')) {
         utils.logInfo(`$orgs (Orgs) - using default email: ${body.email} - org: ${req.user.org}`, body.transid);
         org = req.user.org;
+    }
+
+    if (body.rolenbr !== 100) {
+        const myorgs: IUserSchema[] = await UserModel.find({ email: body.email }, { org: 1 }).lean().exec();
+
+        const myorgsl: string[] = myorgs.map((myorg: IUserSchema) => myorg.org);
+
+        if (!myorgsl.includes(org)) {
+            utils.logInfo(
+                `$org (listorg): not allowed - email: ${req.user.email} - role: ${req.user.role} - org: ${req.user.org}`,
+                req.transid,
+                process.hrtime(hrstart)
+            );
+
+            return Promise.resolve({ description: 'You are not allowed to view this organization' });
+        }
     }
 
     const doc: IOrg | null = await OrgsModel.findOne({ org }, {})

@@ -33,7 +33,7 @@ interface IRouteModules {
     title: string;
     template: string;
     iconclass: string;
-    access: number;
+    access: number | number[];
 }
 
 type IRoutes = {
@@ -154,57 +154,63 @@ export const appRoutes: IRoutes = {
                     title: 'Overview',
                     template: 'aboutintegrations',
                     iconclass: fahome,
-                    access: 1,
+                    access: [100, 80, 60, 40, 20],
                 },
                 {
                     component: 'connections',
                     title: 'Connections',
                     template: 'connections',
                     iconclass: 'fas fa-link',
-                    access: 40,
+                    access: [100, 80, 60, 40, 20],
                 },
                 {
                     component: 'webhooks',
                     title: 'Webhooks',
                     template: 'webhooks',
                     iconclass: fausers,
-                    access: 40,
+                    access: [100, 80, 60, 40, 20],
                 },
                 {
                     component: 'webapikeys',
                     title: 'Api Keys',
                     template: 'webapikeys',
                     iconclass: 'fab fa-servicestack',
-                    access: 40,
+                    access: [100, 80, 60, 40, 20],
                 },
                 {
                     component: 'files',
                     title: 'Files',
                     template: 'files',
                     iconclass: 'fas fa-file-import',
-                    access: 40,
+                    access: [100, 80, 60, 40, 20],
                 },
                 {
                     component: 'configmaps',
                     title: 'Config Maps',
                     template: 'configmaps',
                     iconclass: 'fas fa-cogs',
-                    access: 40,
+                    access: [100, 80, 60, 40, 20],
                 },
-                { component: 'tags', title: 'Tags', template: 'tags', iconclass: 'fa fa-tags', access: 20 },
+                {
+                    component: 'tags',
+                    title: 'Tags',
+                    template: 'tags',
+                    iconclass: 'fa fa-tags',
+                    access: [100, 80, 60, 40, 20],
+                },
                 {
                     component: 'templates',
                     title: 'Templates',
                     template: 'templates',
                     iconclass: 'fa fa-code',
-                    access: 40,
+                    access: [100, 80, 60, 40, 20],
                 },
                 {
                     component: 'snippets',
                     title: 'Code Snippets',
                     template: 'snippets',
                     iconclass: 'fas fa-file-code',
-                    access: 40,
+                    access: [100, 80, 60, 40, 20],
                 },
             ],
         },
@@ -224,29 +230,35 @@ export const appRoutes: IRoutes = {
                     title: 'Overview',
                     template: 'aboutsettings',
                     iconclass: fahome,
-                    access: 1,
+                    access: [100, 80, 60, 40, 20, 10, 5, 1],
                 },
                 {
                     component: 'organization',
                     title: 'Organization',
                     template: 'organization',
                     iconclass: 'fa fa-life-ring',
-                    access: 1,
+                    access: [100, 80, 60, 40, 20, 10, 5, 1],
                 },
                 {
                     component: 'organizations',
                     title: 'Organizations',
                     template: 'organizations',
                     iconclass: 'fa fa-sitemap',
-                    access: 40,
+                    access: [100, 80, 60, 40, 20, 10, 1],
                 },
-                { component: 'profile', title: 'Profile', template: 'profile', iconclass: 'fa fa-user', access: 1 },
+                {
+                    component: 'profile',
+                    title: 'Profile',
+                    template: 'profile',
+                    iconclass: 'fa fa-user',
+                    access: [100, 80, 60, 40, 20, 10, 5, 1],
+                },
                 {
                     component: 'profiles',
                     title: 'Profiles',
                     template: 'profiles',
                     iconclass: fausers,
-                    access: 40,
+                    access: [100, 80, 60, 40, 20, 10, 1],
                 },
             ],
         },
@@ -273,36 +285,36 @@ export const appRoutes: IRoutes = {
                     title: 'Overview',
                     template: 'aboutsettings',
                     iconclass: fahome,
-                    access: 100,
+                    access: [100],
                 },
                 {
                     component: 'admin_organization',
                     title: 'Organization',
                     template: 'organization',
                     iconclass: 'fa fa-life-ring',
-                    access: 100,
+                    access: [100],
                 },
                 {
                     component: 'admin_organizations',
                     title: 'Organizations',
                     template: 'organizations',
                     iconclass: 'fa fa-sitemap',
-                    access: 100,
+                    access: [100],
                 },
-                { component: 'profile', title: 'Profile', template: 'profile', iconclass: 'fa fa-user', access: 1 },
+                { component: 'profile', title: 'Profile', template: 'profile', iconclass: 'fa fa-user', access: [100] },
                 {
                     component: 'admin_profiles',
                     title: 'Profiles',
                     template: 'profiles',
                     iconclass: fausers,
-                    access: 100,
+                    access: [100],
                 },
                 {
                     component: 'admin_tasks',
                     title: 'Tasks',
                     template: 'admin_tasks',
                     iconclass: 'fa fa-cog',
-                    access: 100,
+                    access: [100],
                 },
             ],
         },
@@ -337,18 +349,13 @@ export const menus: any[] = [
     {
         name: 'Integrations',
         value: ['/aboutintegrations'],
-        visible: true,
+        visible: '[100,80,60,40,20].includes(this.env.user.rolenbr)',
     },
     {
         name: 'Job Log',
         value: ['/joblog/'],
         visible: true,
     },
-    /*  {
-        name: 'Interactive',
-        value: ['/interactive'],
-        visible: 'true',
-    }, */
     {
         name: 'Settings',
         value: ['/aboutsettings'],
@@ -357,21 +364,11 @@ export const menus: any[] = [
     {
         name: 'Admin',
         value: ['/admin_about'],
-        visible: 'this.env.user.rolenbr === 100',
+        visible: '[100].includes(this.env.user.rolenbr)',
     },
 ];
 
 export const subMenus: any[] = [
-    {
-        internal: false,
-        name: 'Access Manager',
-        value: '../access-mgr',
-    },
-    {
-        internal: false,
-        name: 'Admin Manager',
-        value: '../admin-mgr',
-    },
     {
         internal: true,
         name: 'Terms of Use',
