@@ -28,7 +28,7 @@ export class MailHandler {
         const body: IMailBody = {
             attachments: this.makeAttachments(mail.attachments || []),
             cc: this.makeRecipients(mail.cc || []),
-            from: 'cloudsup@us.ibm.com',
+            from: sendmail.userid,
             html: mail.html,
             subject: mail.subject,
             to: this.makeRecipients(mail.recipients),

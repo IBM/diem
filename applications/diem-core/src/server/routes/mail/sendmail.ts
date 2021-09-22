@@ -1,12 +1,12 @@
-import { Credentials } from '@common/cfenv';
 import { utils } from '@common/utils';
 import sgMail from '@sendgrid/mail';
 import { ClientResponse } from '@sendgrid/client/src/response';
 import { addTrace } from '@functions';
+import { getConfigmap } from '../executors/nodepy/python/python.code.handlers/handle.configmaps';
 
 export { ClientResponse };
 
-const credentials: string = Credentials('sendgrid').api;
+// const credentials: string = Credentials('sendgrid').api;
 
 const unique: (myArr: any[], prop: string) => any[] = (myArr: any[], prop: string) =>
     myArr.filter(
@@ -20,9 +20,22 @@ const unique: (myArr: any[], prop: string) => any[] = (myArr: any[], prop: strin
  * @function sendMail : the sendmail function
  */
 class SendMail {
+    public api_key: string = '';
+    public userid: string = '';
+
     public constructor() {
-        sgMail.setApiKey(credentials);
+        void this.loadKey();
     }
+
+    public loadKey = async () => {
+        const doc = await getConfigmap('sendgrid', 'sysadmin');
+        if (doc) {
+            this.api_key = doc.configmap.api;
+            this.userid = doc.configmap.userid;
+            sgMail.setApiKey(this.api_key);
+            utils.logInfo('$sendmail (loadkey): sendgrid api key loaded');
+        }
+    };
 
     /**
      * @param {IMailBody} body - the content of the mail
