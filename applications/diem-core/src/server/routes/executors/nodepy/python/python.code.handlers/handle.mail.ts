@@ -1,24 +1,26 @@
-import { Credentials } from '@common/cfenv';
 import { getConfigmap } from './handle.configmaps';
 
 export const handleMail: (code: string, mail_params: any, org: string, configmap?: string) => Promise<string> = async (
     code: string,
     mail_params: any,
     org: string,
-    id?: string
+    configmap?: string
 ): Promise<string> => {
     let api_key: string = '';
 
     let mail_options: string = '';
 
-    if (id) {
-        const doc = await getConfigmap(id, org);
+    let doc;
 
-        if (doc && doc.configmap && doc.configmap.api_key) {
-            api_key = doc.configmap.api_key;
-        }
+    if (configmap) {
+        doc = await getConfigmap(configmap, org);
     } else {
-        api_key = Credentials('sendgrid').api;
+        // api_key = Credentials('sendgrid').api;
+        doc = await getConfigmap('sendgrid', 'sysadmin');
+    }
+
+    if (doc && doc.configmap && doc.configmap.api_key) {
+        api_key = doc.configmap.api_key;
     }
 
     if (mail_params.content) {
