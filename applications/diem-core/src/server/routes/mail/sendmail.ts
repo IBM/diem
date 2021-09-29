@@ -30,7 +30,7 @@ class SendMail {
     public loadKey = async () => {
         const doc = await getConfigmap('sendgrid', 'sysadmin');
         if (doc) {
-            this.api_key = doc.configmap.api;
+            this.api_key = doc.configmap.api_key;
             this.userid = doc.configmap.userid;
             sgMail.setApiKey(this.api_key);
             utils.logInfo('$sendmail (loadkey): sendgrid api key loaded');
