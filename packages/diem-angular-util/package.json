@@ -1,7 +1,7 @@
 {
     "name": "@mydiem/diem-angular-util",
     "description": "Diem Angular Base Utilities",
-    "version": "2.7.0",
+    "version": "2.7.1",
     "author": "guy_huinen@be.ibm.com",
     "bugs": "https://github.ibm.com/CIO-SETS/leap-dashboard/issues",
     "devDependencies": {
@@ -10,7 +10,7 @@
         "@angular/compiler-cli": "^12.2.8",
         "@angular/core": "^12.2.8",
         "@angular/platform-browser": "^12.2.8",
-        "@mydiem/aot-fixer-pug": "^1.0.3",
+        "@mydiem/aot-fixer-pug": "^1.1.0",
         "@types/core-js": "^2.5.5",
         "@types/node": "^16.10.2",
         "@types/webpack-env": "^1.16.2",
