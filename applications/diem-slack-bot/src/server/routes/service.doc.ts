@@ -22,6 +22,18 @@ export const loadServiceDoc = async () => {
         return;
     }
 
+    if (!token) {
+        const error: any = {
+            trace: ['@at service.doc (loadServiceDoc)'],
+            message: 'No token',
+            url: services_url,
+        };
+
+        void utils.logError('$service.doc (loadServiceDoc) - token', error);
+
+        return;
+    }
+
     const response: AxiosResponse<any> | void = await axios
         .post(
             services_url,

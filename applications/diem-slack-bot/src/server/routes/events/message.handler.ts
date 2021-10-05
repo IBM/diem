@@ -99,7 +99,7 @@ const fileParser: (event: any, body: IArgsBody) => any = async (event: any, body
 };
 
 export const getProfile = async (event: any): Promise<any> => {
-    const profile_resp = await api.callAPIMethodGet('users.profile.get', {
+    const profile_resp: any = await api.callAPIMethodGet('users.profile.get', {
         user: event.user,
     });
 

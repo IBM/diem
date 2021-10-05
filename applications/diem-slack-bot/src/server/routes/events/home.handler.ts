@@ -61,7 +61,7 @@ export const homeHandler = async (event: any): Promise<boolean | any> => {
     if (event.tab === 'messages') {
         // only send initial message for the first time users opens the messages tab,
         // we can check for that by requesting the message history
-        const history = await api.callAPIMethodGet('conversations.history', {
+        const history: any = await api.callAPIMethodGet('conversations.history', {
             channel: event.channel,
             limit: 1,
         });
