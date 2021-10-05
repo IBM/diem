@@ -55,14 +55,15 @@ export const deleteJob: (id: string) => Promise<any> = async (id: string): Promi
     }
 };
 
-export const addVolume: (crdjob: ICrdConfig, volume: string) => ICrdConfig = (
+export const addVolume: (crdjob: ICrdConfig, volume: string, id: string) => ICrdConfig = (
     crdjob: ICrdConfig,
-    volume: string
+    volume: string,
+    id: string
 ): ICrdConfig => {
     const volumename: string = 'spark-local-dir-1';
-    const filepath: string = '/tmp/spark-local-dir';
+    const mountPath: string = '/tmp/spark-local-dir';
 
-    utils.logInfo(`$spark.common (addVolume): mounting volume - volume: ${volume} - name: ${volumename}`);
+    utils.logInfo(`$spark.common (addVolume): mounting volume - volume: ${volume} - name: ${volumename} - id: ${id}`);
 
     crdjob.spec.volumes = [
         {
@@ -76,18 +77,25 @@ export const addVolume: (crdjob: ICrdConfig, volume: string) => ICrdConfig = (
     crdjob.spec.driver.volumeMounts = [
         {
             name: volumename,
-            mountPath: filepath,
+            mountPath,
         },
     ];
 
     crdjob.spec.executor.volumeMounts = [
         {
             name: volumename,
-            mountPath: filepath,
+            mountPath,
         },
     ];
 
-    crdjob.spec.driver.envVars.FILEPATH = filepath;
+    crdjob.spec.driver.envVars.mountPath = mountPath;
+
+    crdjob.spec.sparkConf[
+        `spark.kubernetes.driver.volumes.persistentVolumeClaim.${volumename}.mount.subPath`
+    ] = `spark/${id}`;
+    crdjob.spec.sparkConf[
+        `spark.kubernetes.executor.volumes.persistentVolumeClaim.${volumename}.mount.subPath`
+    ] = `spark/${id}`;
 
     return crdjob;
 };
