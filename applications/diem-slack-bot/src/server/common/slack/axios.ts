@@ -74,7 +74,9 @@ export interface IAxiosForm {
 
 export const postMsgForm: (options: IAxiosForm) => Promise<any> = async (options: IAxiosForm): Promise<any> => {
     const resp = await axios
-        .post(options.url, options.formData, { headers: options.headers })
+        .post<URLSearchParams, AxiosResponse<IAxiosResponse>>(options.url, options.formData, {
+            headers: options.headers,
+        })
         .catch(async (axiosError: AxiosError) => {
             const err: any = {
                 code: axiosError.code || 'n/a',
@@ -107,7 +109,7 @@ export const postMsgForm: (options: IAxiosForm) => Promise<any> = async (options
             return Promise.reject(err);
         });
 
-    if ((resp.data as unknown as IAxiosResponse).error) {
+    if (resp.data?.error) {
         const _resp: IAxiosResponse = resp.data as unknown as IAxiosResponse;
 
         return Promise.reject({
