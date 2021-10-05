@@ -23,12 +23,14 @@ export const postMsg: (options: AxiosRequestConfig) => Promise<any> = async (
             // no need to reject here, it's an error with the slack service so we don't want to get into a loop
             return Promise.resolve({ status: 503 });
         } else if (axiosError.response) {
-            err.message =
-                axiosError.response && axiosError.response.data
-                    ? axiosError.response.data.message
-                        ? axiosError.response.data.message
-                        : JSON.stringify(axiosError.response.data, undefined, 2)
-                    : 'no message';
+            err.message = 'no message';
+            if (axiosError.response?.data) {
+                try {
+                    err.message = JSON.stringify(axiosError.response.data, undefined, 2);
+                } catch (_) {
+                    err.message = axiosError.response.data;
+                }
+            }
             err.status = axiosError.response.status;
             err.statusText = axiosError.response.statusText;
             err.trace = ['@at $axios (postMsg) - response'];

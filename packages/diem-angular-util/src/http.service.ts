@@ -10,7 +10,7 @@ import {
     HttpResponse,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { EMPTY, Observable, throwError as observableThrowError } from 'rxjs';
+import { EMPTY, Observable, throwError } from 'rxjs';
 import { catchError, last, map } from 'rxjs/operators';
 import { Env } from './env';
 import { DTS } from './dts';
@@ -150,7 +150,7 @@ export class HttpService {
                 return EMPTY;
             }
 
-            return observableThrowError(err);
+            return throwError(() => err);
         }
     };
 
@@ -180,7 +180,9 @@ export class HttpService {
 
         const transid: string = this.dts.guid();
 
-        h['X-Request-Id'] = transid;
+        if (!this.env.getField('external_api')) {
+            h['X-Request-Id'] = transid;
+        }
 
         let transids: string[] = this.env.getField('transids') || [];
 
@@ -224,7 +226,10 @@ export class HttpService {
 
         const transid: string = this.dts.guid();
 
-        h['X-Request-Id'] = transid;
+        // set a field with value external_api when using cors requests that don't allow this header
+        if (!this.env.getField('external_api')) {
+            h['X-Request-Id'] = transid;
+        }
 
         const xorg: string = this.env.getField('xorg');
 

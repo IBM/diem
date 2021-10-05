@@ -24,7 +24,7 @@ module.exports = {
         sourceType: 'module',
         createDefaultProgram: true,
     },
-    plugins: ['@typescript-eslint', 'sonarjs', 'prettier', 'import', 'jsdoc', 'prototype-pollution-security-rules'],
+    plugins: ['@typescript-eslint', 'sonarjs', 'prettier', 'import', 'jsdoc'],
     extends: [
         'prettier',
         'plugin:sonarjs/recommended',
@@ -32,11 +32,6 @@ module.exports = {
         'plugin:prettier/recommended',
     ],
     rules: {
-        /** prototype-pollution-security-rules rules**/
         'sonarjs/cognitive-complexity': ['error', 30],
-        'prototype-pollution-security-rules/detect-merge': 1,
-        'prototype-pollution-security-rules/detect-merge-objects': 1,
-        'prototype-pollution-security-rules/detect-merge-options': 1,
-        'prototype-pollution-security-rules/detect-deep-extend': 1,
     },
 };

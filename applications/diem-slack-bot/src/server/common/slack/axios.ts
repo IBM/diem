@@ -9,6 +9,11 @@ export interface IAxiosError extends AxiosError {
     title: string;
 }
 
+interface IAxiosResponse {
+    error: any;
+    ok: string;
+}
+
 export const postMsg: (options: AxiosRequestConfig) => Promise<any> = async (
     options: AxiosRequestConfig
 ): Promise<any> => {
@@ -24,12 +29,14 @@ export const postMsg: (options: AxiosRequestConfig) => Promise<any> = async (
 
             // no need to reject here, it's an error with the slack service so we don't want to get into a loop
         } else if (axiosError.response) {
-            err.message =
-                axiosError.response && axiosError.response.data
-                    ? axiosError.response.data.message
-                        ? axiosError.response.data.message
-                        : JSON.stringify(axiosError.response.data, undefined, 2)
-                    : 'no message';
+            err.message = 'no message';
+            if (axiosError.response?.data) {
+                try {
+                    err.message = JSON.stringify(axiosError.response.data, undefined, 2);
+                } catch (_) {
+                    err.message = axiosError.response.data;
+                }
+            }
             err.status = axiosError.response.status;
             err.statusText = axiosError.response.statusText;
             err.trace = ['@at $axios (postMsg): response'];
@@ -42,11 +49,13 @@ export const postMsg: (options: AxiosRequestConfig) => Promise<any> = async (
         return Promise.reject(err);
     });
 
-    if (resp.data?.error) {
+    if ((resp.data as unknown as IAxiosResponse).error) {
+        const _resp: IAxiosResponse = resp.data as unknown as IAxiosResponse;
+
         return Promise.reject({
             status: resp.status,
-            err: resp.data.error,
-            ok: resp.data.ok,
+            err: _resp.error,
+            ok: _resp.ok,
             trace: ['@at $axios (postMsg) - response'],
         });
     }
@@ -64,7 +73,7 @@ export interface IAxiosForm {
 }
 
 export const postMsgForm: (options: IAxiosForm) => Promise<any> = async (options: IAxiosForm): Promise<any> => {
-    const resp: Partial<AxiosResponse> = await axios
+    const resp = await axios
         .post(options.url, options.formData, { headers: options.headers })
         .catch(async (axiosError: AxiosError) => {
             const err: any = {
@@ -78,12 +87,14 @@ export const postMsgForm: (options: IAxiosForm) => Promise<any> = async (options
 
                 // no need to reject here, it's an error with the slack service so we don't want to get into a loop
             } else if (axiosError.response) {
-                err.message =
-                    axiosError.response && axiosError.response.data
-                        ? axiosError.response.data.message
-                            ? axiosError.response.data.message
-                            : JSON.stringify(axiosError.response.data, undefined, 2)
-                        : 'no message';
+                err.message = 'no message';
+                if (axiosError.response?.data) {
+                    try {
+                        err.message = JSON.stringify(axiosError.response.data, undefined, 2);
+                    } catch (_) {
+                        err.message = axiosError.response.data;
+                    }
+                }
                 err.status = axiosError.response.status;
                 err.statusText = axiosError.response.statusText;
                 err.trace = ['@at $axios (postMsg): response'];
@@ -96,11 +107,13 @@ export const postMsgForm: (options: IAxiosForm) => Promise<any> = async (options
             return Promise.reject(err);
         });
 
-    if (resp.data?.error) {
+    if ((resp.data as unknown as IAxiosResponse).error) {
+        const _resp: IAxiosResponse = resp.data as unknown as IAxiosResponse;
+
         return Promise.reject({
             status: resp.status,
-            err: resp.data.error,
-            ok: resp.data.ok,
+            err: _resp.error,
+            ok: _resp.ok,
             trace: ['@at $axios (postMsg) - response'],
         });
     }

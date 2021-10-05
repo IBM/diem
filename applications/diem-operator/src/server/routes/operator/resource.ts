@@ -338,7 +338,7 @@ export default class Operator {
     private async applyAxiosKubeConfigAuth(request: AxiosRequestConfig): Promise<void> {
         const opts: https.RequestOptions = {};
         await this.kc.applytoHTTPSOptions(opts);
-        if (opts.headers?.Authorization) {
+        if (opts.headers?.Authorization && typeof opts.headers.Authorization === 'string') {
             request.headers = request.headers ?? {};
             request.headers.Authorization = opts.headers.Authorization;
         }
