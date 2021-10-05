@@ -139,7 +139,7 @@ export const createSparkScalaJob: (doc: IJobSchema) => Promise<ICapacity> = asyn
 
     // adding a volume if there is a volume provisioned and if the flag is on
     if (sparkCredentials.volume && doc.job?.params?.spark?.volume) {
-        crdjob = addVolume(crdjob, sparkCredentials.volume);
+        crdjob = addVolume(crdjob, sparkCredentials.volume, id);
     }
 
     /*  add some logic for assigning capacity */

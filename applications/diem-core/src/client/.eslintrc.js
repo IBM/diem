@@ -19,7 +19,6 @@ module.exports = {
         'prettier',
         'import',
         'jsdoc',
-        'prototype-pollution-security-rules',
     ],
     extends: [
         'plugin:@angular-eslint/recommended',
@@ -37,10 +36,5 @@ module.exports = {
                 message: 'Unexpected property on console object was called',
             },
         ],
-        /** prototype-pollution-security-rules rules**/
-        'prototype-pollution-security-rules/detect-merge': 1,
-        'prototype-pollution-security-rules/detect-merge-objects': 1,
-        'prototype-pollution-security-rules/detect-merge-options': 1,
-        'prototype-pollution-security-rules/detect-deep-extend': 1,
     },
 };

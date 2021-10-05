@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import { URLSearchParams } from 'url';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { IArgsBody, IError } from '@interfaces';
 import { utils } from '@common/utils';
 import { slackDebug } from '@common/slack/slack.debug';
@@ -29,6 +29,18 @@ export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean 
         return Promise.resolve(null);
     }
 
+    if (!token) {
+        utils.logInfo('$service.handler (serviceHandler): no token');
+        void replyMethod(
+            payload,
+            body,
+            'Sorry, something went wrong',
+            'Sorry, something went wrongPlese try later again'
+        );
+
+        return Promise.resolve(null);
+    }
+
     // if it's not a mongoose id, the reply to the user that it's not a valid id
     if (!body.id?.match(/^[0-9a-fA-F]{24}$/)) {
         void replyMethod(payload, body, 'Sorry, this is an invalid id', `Sorry, but this is an invalid id: ${body.id}`);
@@ -36,7 +48,7 @@ export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean 
         return Promise.resolve(null);
     }
 
-    const result = await axios
+    const result: AxiosResponse<IArgsBody> = await axios
         .post(services_url, body, {
             headers: { 'x-api-key': token },
         })
@@ -53,13 +65,13 @@ export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean 
 
     // start with setting some default data
 
-    if (!result?.data?.out) {
+    if (!(result.data as any)?.out) {
         return Promise.resolve(null);
     }
 
-    const response: any = result.data.out;
+    const response: any = (result.data as any).out;
 
-    if (result.data.error) {
+    if ((result.data as any).error) {
         /* if there is an error then out will probaly be a message with some generic text
          * so we will log the response with the error
          */
