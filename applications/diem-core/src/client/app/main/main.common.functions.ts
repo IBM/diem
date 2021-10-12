@@ -50,6 +50,16 @@ export class MainCommonFunctions implements OnDestroy {
         this.transferdata = undefined;
     }
 
+    public get historyDocs(): any {
+        return this._historyDocs;
+    }
+
+    public set historyDoc(doc: any) {
+        this._historyDocs = this._historyDocs.filter((el: any) => el.id !== doc.id);
+
+        this._historyDocs = [doc, ...this._historyDocs];
+    }
+
     public loadConfig = async (form: string, noParse: boolean = false): Promise<any> =>
         new Promise((resolve, reject) => {
             this.loaded = false;
@@ -364,16 +374,6 @@ export class MainCommonFunctions implements OnDestroy {
                     resolve(data);
                 });
         });
-
-    public get historyDocs(): any {
-        return this._historyDocs;
-    }
-
-    public set historyDoc(doc: any) {
-        this._historyDocs = this._historyDocs.filter((el: any) => el.id !== doc.id);
-
-        this._historyDocs = [doc, ...this._historyDocs];
-    }
 
     public evalStr: any = (str: string): any => {
         try {

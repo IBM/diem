@@ -1,9 +1,17 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
-import { ChangeDetectionStrategy, Component, ElementRef, ViewChild, HostListener } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    ViewChild,
+    HostListener,
+    ChangeDetectorRef,
+} from '@angular/core';
 import { Env, HttpService } from '@mydiem/diem-angular-util';
 import { menus, subMenus } from '../app.config';
 import { appConfig } from './../app.config';
 import { tmpl } from './templates/site.header.pug.tmpl';
+import { SiteService } from './site.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,14 +33,21 @@ export class SiteHeaderComponent {
     public userPanel: boolean = false;
     public appPanel: boolean = false;
 
+    public component?: string;
+
     public mexpanded: boolean = false;
 
     private httpService: HttpService;
 
-    public constructor(env: Env, httpService: HttpService) {
+    private SS: SiteService;
+    private cd: ChangeDetectorRef;
+
+    public constructor(env: Env, httpService: HttpService, SS: SiteService, cd: ChangeDetectorRef) {
         this.menus = menus;
         this.subMenus = subMenus;
         this.env = env;
+        this.SS = SS;
+        this.cd = cd;
 
         if (env.user && env.user.xorg) {
             const orgs: string[] = env.user.xorg.orgs;
@@ -43,6 +58,13 @@ export class SiteHeaderComponent {
         }
 
         this.httpService = httpService;
+
+        this.SS.componentUpdate.subscribe((component) => {
+            if (this.menus.some((menu: any) => menu.name === component)) {
+                this.component = component;
+                this.check('component change');
+            }
+        });
     }
 
     @HostListener('focusout', ['$event'])
@@ -90,4 +112,9 @@ export class SiteHeaderComponent {
         this.userPanel = false;
         this.appPanel = false;
     }
+
+    private check = (from: string) => {
+        console.info(`%c$site.header.component (check): called by => ${from}`, 'color:red');
+        this.cd.markForCheck();
+    };
 }
