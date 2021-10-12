@@ -342,7 +342,7 @@ export const appConfig: IAppConfig = {
 
 export const menus: any[] = [
     {
-        name: 'All jobs',
+        name: 'All Jobs',
         value: ['/jobs'],
         visible: true,
     },

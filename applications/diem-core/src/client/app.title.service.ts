@@ -3,6 +3,7 @@ import { DTS } from '@mydiem/diem-angular-util';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { appConfig } from './app.config';
+import { SiteService } from './site/site.service';
 
 @Injectable({
     providedIn: 'root',
@@ -11,11 +12,14 @@ export class TitleService {
     private router: Router;
     private activatedRoute: ActivatedRoute;
     private dts: DTS;
+    private SS: SiteService;
+    private component?: string = undefined;
 
-    public constructor(activatedRoute: ActivatedRoute, router: Router, dts: DTS) {
+    public constructor(activatedRoute: ActivatedRoute, router: Router, dts: DTS, SS: SiteService) {
         this.router = router;
         this.activatedRoute = activatedRoute;
         this.dts = dts;
+        this.SS = SS;
     }
 
     public init = (): void => {
@@ -32,6 +36,13 @@ export class TitleService {
                 }),
                 switchMap((route: any) => (route ? route.data : [])),
                 map((data: any) => {
+                    if (data.title && data.title !== this.component) {
+                        this.component = data.title;
+                        if (this.component) {
+                            this.SS.updateComponent(this.component);
+                        }
+                    }
+
                     if (data.title && data.params && data.params.id) {
                         /** If a route has a title set (e.g. data: {title: "Foo"}) then we use it */
 

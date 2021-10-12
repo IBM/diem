@@ -39,6 +39,12 @@ class Utils {
 
     private sKey: string = 'as5HjIILYjdjet';
 
+    public constructor() {
+        this.ev = new EventEmitter();
+        this.jwtToken = Credentials('jwttoken') || `${this.Env.appcookie}`;
+        this.slackHook = Credentials('slackhook') || false;
+    }
+
     public get jwtTokenKey(): string {
         return this.jwtToken;
     }
@@ -84,12 +90,6 @@ class Utils {
 
     public get slackWebHook(): string {
         return this.slackHook;
-    }
-
-    public constructor() {
-        this.ev = new EventEmitter();
-        this.jwtToken = Credentials('jwttoken') || `${this.Env.appcookie}`;
-        this.slackHook = Credentials('slackhook') || false;
     }
 
     public browser = (req: any): { agent: string; ip: string } => {
