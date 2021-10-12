@@ -13,6 +13,7 @@ import {
 import { TermsComponent } from './app/terms/terms.component';
 import { MessagesComponent } from './app/messages/messages.component';
 import { AppIconsModule } from './app.icons.module';
+import { SiteService } from './site/site.service';
 
 @NgModule({
     declarations: [TermsComponent, MessagesComponent],
@@ -30,6 +31,6 @@ import { AppIconsModule } from './app.icons.module';
         TabsModule,
         NotificationModule,
     ],
-    providers: [DTS, HttpClientModule, HttpService],
+    providers: [DTS, HttpClientModule, HttpService, SiteService],
 })
 export class AppSharedModule {}

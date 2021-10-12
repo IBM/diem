@@ -8,7 +8,9 @@ ibm-header(
     ibm-header-navigation
         ng-container(*ngFor="let menu of menus")
             li.h-100(role='menuitem',*ngIf="evalStr(menu.visible)")
-                a.bx--header__menu-item(routerLink="{{menu.value}}") {{menu.name}}
+                a.bx--header__menu-item(
+                    [ngClass]="{'bx--header__menu-item--current' : menu.name === component}",
+                    routerLink="{{menu.value}}") {{menu.name}}
     ibm-header-global
         ibm-header-navigation.disabled
             li(role="menuitem",aria-label="Socket")

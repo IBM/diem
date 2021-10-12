@@ -1,4 +1,4 @@
-FROM node:16.10.0-alpine3.14 as base
+FROM node:16.11.0-alpine3.14 as base
 
 RUN apk update && apk --no-cache upgrade --available
 
