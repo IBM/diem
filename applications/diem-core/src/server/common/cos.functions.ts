@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import { cos } from './cos';
 import { utils } from './utils';
 

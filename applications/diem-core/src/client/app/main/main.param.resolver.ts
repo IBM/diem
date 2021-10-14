@@ -7,5 +7,6 @@ export class MainParamResolver implements Resolve<any> {
         /** */
     }
 
+    // eslint-disable-next-line class-methods-use-this
     public resolve = async (route: ActivatedRouteSnapshot): Promise<any> => route.params;
 }

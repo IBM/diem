@@ -3,6 +3,15 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
+const getUrl: any = (x: any): any => {
+    const obj: any[] = [];
+    x.forEach((el: any) => {
+        obj.push(el.path);
+    });
+
+    return obj;
+};
+
 @Injectable()
 
 /**
@@ -23,16 +32,7 @@ export class MainRouterService {
             while (currentRoute.children[0] !== undefined) {
                 currentRoute = currentRoute.children[0];
             }
-            this.routerSubject.next({ url: this.getUrl(currentRoute.url.value) });
+            this.routerSubject.next({ url: getUrl(currentRoute.url.value) });
         });
     }
-
-    private getUrl: any = (x: any): any => {
-        const obj: any[] = [];
-        x.forEach((el: any) => {
-            obj.push(el.path);
-        });
-
-        return obj;
-    };
 }

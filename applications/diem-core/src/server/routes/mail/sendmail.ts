@@ -44,6 +44,7 @@ class SendMail {
      * @memberof SendMail
      * @return Promise after the mail has been send
      */
+    // eslint-disable-next-line class-methods-use-this
     public sendMail = async (body: any, transid: string): Promise<any> => {
         if (body.to) {
             body.to = unique(body.to, 'email');
