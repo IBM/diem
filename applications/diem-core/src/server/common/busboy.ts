@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import busboy from 'busboy';
 import { IError, IFile, IRequest } from '../interfaces/shared';
 

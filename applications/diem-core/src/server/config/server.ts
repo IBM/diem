@@ -21,6 +21,12 @@ import { login } from './authorization';
 import assets from './assets.json';
 import { WSS } from './socket';
 
+const removeToken = (req: IRequest): void => {
+    if (req.session && req.session.applications && req.session.applications[utils.Env.app]) {
+        delete req.session.applications[utils.Env.app].token;
+    }
+};
+
 export class Server {
     public pack: IntEnv;
 
@@ -336,12 +342,6 @@ export class Server {
         }
     };
 
-    private removeToken = (req: IRequest): void => {
-        if (req.session && req.session.applications && req.session.applications[utils.Env.app]) {
-            delete req.session.applications[utils.Env.app].token;
-        }
-    };
-
     private secAuth = async (req: IRequest, res: IResponse, next: () => any): Promise<any> => {
         const hrstart: [number, number] = process.hrtime();
         let token: string | undefined;
@@ -460,7 +460,7 @@ export class Server {
                 `$server (secAuth): verification error - email: ${email} - name: ${name} - method: ${method} - ti: ${req.transid}`
             );
 
-            this.removeToken(req);
+            removeToken(req);
 
             return Login();
         }

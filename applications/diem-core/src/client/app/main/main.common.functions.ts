@@ -337,6 +337,7 @@ export class MainCommonFunctions implements OnDestroy {
             );
     };
 
+    // eslint-disable-next-line class-methods-use-this
     public guid = () => {
         const _p8: any = (s: boolean) => {
             const p: string = `${Math.random().toString(16)}000000000`.substr(2, 8);

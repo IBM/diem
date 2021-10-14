@@ -11,6 +11,98 @@ const queue: string = 'core';
 const core_channel: string = 'core.*';
 const global_core_channel: string = 'global.core.*';
 
+const json_handler = async (json_array: any) => {
+    let i: number = -10;
+
+    let out: any[] = [];
+    let base: any;
+    for await (const json of json_array) {
+        let parsed_json: any;
+        i = i + 10;
+
+        try {
+            parsed_json = JSON.parse(json);
+            if (parsed_json.serviceid) {
+                await pubSub.publishService(parsed_json);
+            } else {
+                // let's add a timeout so that the messages have sufficient time to be processed
+
+                if (!base && parsed_json.out && !parsed_json.status) {
+                    base = { ...parsed_json };
+                    out.push(parsed_json.out);
+                } else if (parsed_json.out && !parsed_json.status) {
+                    out.push(parsed_json.out);
+                }
+
+                if (parsed_json.status) {
+                    if (base) {
+                        base.out = out.map((_out: any) => ({ out: _out }));
+                        base.outl = true;
+                        parsed_json = { ...parsed_json, ...base };
+                        void pubSub.publish(parsed_json);
+
+                        base = undefined;
+                        out = [];
+                    } else {
+                        void pubSub.publish(parsed_json);
+                    }
+                }
+            }
+        } catch (err) {
+            utils.logInfo('$nats_subscriber (subs): job - unparsable json');
+        }
+    }
+
+    if (base) {
+        base.out = out.map((_out: any) => ({ out: _out }));
+        base.outl = true;
+        void pubSub.publish(base);
+        base = undefined;
+        out = [];
+    }
+};
+
+const global_subs_handler = async (msg: Msg, payload: INatsPayload) => {
+    const subject: string = msg.subject;
+
+    let msg_type: string;
+
+    if (subject.includes('.')) {
+        msg_type = subject.split('.')[2]; // global.core.xxx
+    } else {
+        msg_type = subject;
+    }
+
+    switch (msg_type) {
+        case 'info':
+            utils.logCyan(`$nats_subscriber (global.${msg_type}): client: ${payload.client} - data: ${payload.data}`);
+            break;
+
+        case 'error':
+            utils.logCyan(`$nats_subscriber (global.${msg_type}): client: ${payload.client}`);
+
+            void pubSub.publish(payload.data);
+            break;
+
+        case 'users':
+            utils.logCyan(`$nats_subscriber (global.${msg_type}): client: ${payload.client}`);
+
+            WSS.bc(payload.data);
+            break;
+
+        case 'user':
+            utils.logCyan(`$nats_subscriber (global.${msg_type}): client: ${payload.client}`);
+
+            const data: { email: string; payload: string } = payload.data;
+
+            WSS.bcUser({ email: data.email, payload: data.payload });
+            break;
+
+        default:
+            utils.logCyan(`$nats_subscriber (global.${msg_type}): client: ${payload.client}`);
+    }
+};
+
 class Subscriber {
     private nc!: NatsConnection;
     private info!: ServerInfo;
@@ -69,59 +161,8 @@ class Subscriber {
 
             // if it's not the payload we need, we cannot handle it
             if (payload && typeof payload === 'object' && payload.client) {
-                void this.global_subs_handler(msg, payload);
+                void global_subs_handler(msg, payload);
             }
-        }
-    };
-
-    private json_handler = async (json_array: any) => {
-        let i: number = -10;
-
-        let out: any[] = [];
-        let base: any;
-        for await (const json of json_array) {
-            let parsed_json: any;
-            i = i + 10;
-
-            try {
-                parsed_json = JSON.parse(json);
-                if (parsed_json.serviceid) {
-                    await pubSub.publishService(parsed_json);
-                } else {
-                    // let's add a timeout so that the messages have sufficient time to be processed
-
-                    if (!base && parsed_json.out && !parsed_json.status) {
-                        base = { ...parsed_json };
-                        out.push(parsed_json.out);
-                    } else if (parsed_json.out && !parsed_json.status) {
-                        out.push(parsed_json.out);
-                    }
-
-                    if (parsed_json.status) {
-                        if (base) {
-                            base.out = out.map((_out: any) => ({ out: _out }));
-                            base.outl = true;
-                            parsed_json = { ...parsed_json, ...base };
-                            void pubSub.publish(parsed_json);
-
-                            base = undefined;
-                            out = [];
-                        } else {
-                            void pubSub.publish(parsed_json);
-                        }
-                    }
-                }
-            } catch (err) {
-                utils.logInfo('$nats_subscriber (subs): job - unparsable json');
-            }
-        }
-
-        if (base) {
-            base.out = out.map((_out: any) => ({ out: _out }));
-            base.outl = true;
-            void pubSub.publish(base);
-            base = undefined;
-            out = [];
         }
     };
 
@@ -164,7 +205,7 @@ class Subscriber {
                         `$nats_subscriber (${msg_type}): client: ${payload.client} - incoming buffered data: ${json_array.length}`
                     );
                     // await new Promise((resolve) => setTimeout(resolve, 50));
-                    await this.json_handler(json_array);
+                    await json_handler(json_array);
                 } else {
                     utils.logCyan(`$nats_subscriber (${msg_type}): client: ${payload.client} - incoming data`);
                     void pubSub.publish(payload.data);
@@ -187,49 +228,6 @@ class Subscriber {
 
         if (!['timer', 'info', 'job'].includes(msg_type)) {
             utils.logCyan(`$nats_subscriber (${msg_type}): client: ${payload.client}`);
-        }
-    };
-
-    private global_subs_handler = async (msg: Msg, payload: INatsPayload) => {
-        const subject: string = msg.subject;
-
-        let msg_type: string;
-
-        if (subject.includes('.')) {
-            msg_type = subject.split('.')[2]; // global.core.xxx
-        } else {
-            msg_type = subject;
-        }
-
-        switch (msg_type) {
-            case 'info':
-                utils.logCyan(
-                    `$nats_subscriber (global.${msg_type}): client: ${payload.client} - data: ${payload.data}`
-                );
-                break;
-
-            case 'error':
-                utils.logCyan(`$nats_subscriber (global.${msg_type}): client: ${payload.client}`);
-
-                void pubSub.publish(payload.data);
-                break;
-
-            case 'users':
-                utils.logCyan(`$nats_subscriber (global.${msg_type}): client: ${payload.client}`);
-
-                WSS.bc(payload.data);
-                break;
-
-            case 'user':
-                utils.logCyan(`$nats_subscriber (global.${msg_type}): client: ${payload.client}`);
-
-                const data: { email: string; payload: string } = payload.data;
-
-                WSS.bcUser({ email: data.email, payload: data.payload });
-                break;
-
-            default:
-                utils.logCyan(`$nats_subscriber (global.${msg_type}): client: ${payload.client}`);
         }
     };
 }

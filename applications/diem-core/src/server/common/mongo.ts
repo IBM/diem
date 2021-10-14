@@ -18,6 +18,21 @@ interface ICredentials {
     ca?: string;
 }
 
+const setFatal: any = async (err: any): Promise<void> => {
+    const internal: IntInternal = {
+        ...err,
+        fatal: true,
+        message: err.message || 'Mongo Connection Error',
+        pid: process.pid,
+        source: err.source,
+        trace: utils.addTrace(err.trace, '@at $mongo (setFatal)'),
+    };
+
+    utils.emit('internal', internal);
+
+    return Promise.resolve();
+};
+
 class Mongo {
     private tm: any;
 
@@ -32,26 +47,11 @@ class Mongo {
         void this.go();
     }
 
-    private setFatal: any = async (err: any): Promise<void> => {
-        const internal: IntInternal = {
-            ...err,
-            fatal: true,
-            message: err.message || 'Mongo Connection Error',
-            pid: process.pid,
-            source: err.source,
-            trace: utils.addTrace(err.trace, '@at $mongo (setFatal)'),
-        };
-
-        utils.emit('internal', internal);
-
-        return Promise.resolve();
-    };
-
     private go: any = async () => {
         await this.start().catch(async (err) => {
             err.trace = utils.addTrace(err.trace, '@at $mongo (go)');
             err.source = '$mongo (go)';
-            await this.setFatal(err);
+            await setFatal(err);
         });
 
         return Promise.resolve();
@@ -140,7 +140,7 @@ class Mongo {
             err.message = err.message;
             err.trace = utils.addTrace(err.trace, '@at $mongo (connection) - on error');
             err.reason = JSON.stringify(err.reason);
-            await this.setFatal(err);
+            await setFatal(err);
         });
 
         mongoose.connection.on('connected', () => {
@@ -181,7 +181,7 @@ class Mongo {
              * The a timeout that will try to reconnect in 30 seconds
              */
 
-            await this.setFatal({
+            await setFatal({
                 message: 'mongo disconnected',
                 trace: ['@at $mongo (connection) - on disconnect'],
             });

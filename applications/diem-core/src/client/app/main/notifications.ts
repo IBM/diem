@@ -10,6 +10,7 @@ export class PushNotificationsService {
         this.permission = this.isSupported() ? 'default' : 'denied';
     }
 
+    // eslint-disable-next-line class-methods-use-this
     public isSupported = (): boolean => 'Notification' in window;
 
     public requestPermission = async (): Promise<void> => {

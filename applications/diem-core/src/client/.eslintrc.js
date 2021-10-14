@@ -13,15 +13,15 @@ module.exports = {
     },
     plugins: [
         '@typescript-eslint',
-        '@angular-eslint',
-        '@angular-eslint/template',
+        //'@angular-eslint',
+        //'@angular-eslint/template',
         'sonarjs',
         'prettier',
         'import',
         'jsdoc',
     ],
     extends: [
-        'plugin:@angular-eslint/recommended',
+        //'plugin:@angular-eslint/recommended',
         'prettier',
         'plugin:sonarjs/recommended',
         '../../src/webpack/eslintrc-base.js',

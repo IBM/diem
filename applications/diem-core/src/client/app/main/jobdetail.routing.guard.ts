@@ -9,6 +9,18 @@ import { MainCommonFunctions } from './main.common.functions';
 
 const guard_str: string = '$jobdetail.routing.guard (loadData): error';
 
+const r_getStore = (params: any): string => params.map((o: any) => o.path).join('-');
+
+const isEmpty = (obj: any) => {
+    for (const key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            return false;
+        }
+    }
+
+    return true;
+};
+
 @Injectable()
 export class JobDetailRoutingGuard implements CanActivate {
     public store: Store<any>;
@@ -48,8 +60,6 @@ export class JobDetailRoutingGuard implements CanActivate {
         }
     };
 
-    private r_getStore = (params: any): string => params.map((o: any) => o.path).join('-');
-
     private verifyjobdetail = async (route: any): Promise<boolean> =>
         new Promise<boolean>(async (resolve) => {
             console.info('$jobdetail.routing.guard (canActivate): Allowed activation as user is allowed');
@@ -59,7 +69,7 @@ export class JobDetailRoutingGuard implements CanActivate {
 
             await this.MCF.loadConfig(module, true)
                 .then(async (config: IConfig) => {
-                    const storeName: string = `${config.store}.${this.r_getStore(route._urlSegment.segments)}`;
+                    const storeName: string = `${config.store}.${r_getStore(route._urlSegment.segments)}`;
 
                     return this.getData(storeName)
                         .then(async (data: any) => {
@@ -119,7 +129,7 @@ export class JobDetailRoutingGuard implements CanActivate {
                     values,
                 };
 
-                if (this.isEmpty(values)) {
+                if (isEmpty(values)) {
                     this.store.dispatch({
                         payload: false,
                         type: 'HIDE',
@@ -203,14 +213,4 @@ export class JobDetailRoutingGuard implements CanActivate {
                     }
                 })
         );
-
-    private isEmpty = (obj: any) => {
-        for (const key in obj) {
-            if (Object.prototype.hasOwnProperty.call(obj, key)) {
-                return false;
-            }
-        }
-
-        return true;
-    };
 }

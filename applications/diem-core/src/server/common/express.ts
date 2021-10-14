@@ -55,6 +55,42 @@ export interface IExpressConfig {
 
 const hasSome: any = (req: IRequest, urls: string[]): boolean => urls.some((url: string) => req.path.includes(url));
 
+const requestid = (req: IRequest, res: IResponse, next: () => any): any => {
+    const x: string = 'X-Request-Id';
+
+    req.transid = req.header(x) ? req.header(x) : utils.guid();
+
+    res.setHeader(x, req.transid ? req.transid : utils.guid());
+
+    next();
+};
+
+const sessionid = (req: IRequest, res: IResponse, next: () => any): any => {
+    const x: string = 'X-Correlation-ID';
+
+    req.sessionid = req.header(x) ? req.header(x) : utils.guid();
+
+    res.setHeader(x, req.sessionid ? req.sessionid : utils.guid());
+
+    next();
+};
+
+const xorg = (req: IRequest, res: IResponse, next: () => any): any => {
+    const x: string = 'X-Org-Protection';
+    const t: string | undefined = req.header(x);
+    if (t) {
+        try {
+            req.xorg = JSON.parse(Buffer.from(t, 'base64').toString());
+        } catch (e) {
+            req.xorg = undefined;
+        }
+
+        res.setHeader(x, t);
+    }
+
+    next();
+};
+
 export class Express {
     public app: express.Application = express();
 
@@ -179,9 +215,9 @@ export class Express {
                     })
                 )
                 .use(nocache())
-                .use(this.requestid)
-                .use(this.sessionid)
-                .use(this.xorg)
+                .use(requestid)
+                .use(sessionid)
+                .use(xorg)
                 .set('case sensitive routing', false)
                 .set('host', process.env.HOST || 'localhost')
                 .set('port', process.env.PORT || 8192)
@@ -199,42 +235,6 @@ export class Express {
         passport.deserializeUser((obj: any, done: any) => {
             done(undefined, obj);
         });
-    };
-
-    private requestid = (req: IRequest, res: IResponse, next: () => any): any => {
-        const x: string = 'X-Request-Id';
-
-        req.transid = req.header(x) ? req.header(x) : utils.guid();
-
-        res.setHeader(x, req.transid ? req.transid : utils.guid());
-
-        next();
-    };
-
-    private sessionid = (req: IRequest, res: IResponse, next: () => any): any => {
-        const x: string = 'X-Correlation-ID';
-
-        req.sessionid = req.header(x) ? req.header(x) : utils.guid();
-
-        res.setHeader(x, req.sessionid ? req.sessionid : utils.guid());
-
-        next();
-    };
-
-    private xorg = (req: IRequest, res: IResponse, next: () => any): any => {
-        const x: string = 'X-Org-Protection';
-        const t: string | undefined = req.header(x);
-        if (t) {
-            try {
-                req.xorg = JSON.parse(Buffer.from(t, 'base64').toString());
-            } catch (e) {
-                req.xorg = undefined;
-            }
-
-            res.setHeader(x, t);
-        }
-
-        next();
     };
 
     private featurePolicy = (_req: IRequest, res: IResponse, next: () => any): any => {

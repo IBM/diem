@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import { utils } from '@common/utils';
 import { IntEnv } from '@interfaces';
 import { IJobResponse, IUserPayload, ISocketPayload } from '@models';
