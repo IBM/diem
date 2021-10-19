@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { Injectable } from '@angular/core';
 

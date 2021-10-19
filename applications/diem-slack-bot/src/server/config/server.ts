@@ -11,6 +11,26 @@ import { eventHandler, interactionsHander, api } from '../routes/routes';
 import { addTrace } from '../routes/functions';
 import { loadServiceDoc } from '../routes/service.doc';
 
+const logErrors = async (err: IError, req: IRequest, res: IResponse, next: (err: IError) => any): Promise<void> => {
+    err.trace = addTrace(err.trace, '@at $server (logErrors)');
+    err.email = 'anonymous';
+    err.endpoint = req.params ? req.params.function : 'n/a';
+    err.time = utils.time();
+    err.transid = req.transid;
+    err.url = req.originalUrl;
+
+    if (res.headersSent) {
+        return next(err);
+    }
+
+    const errMsg: string = '$server (logErrors)';
+
+    await slackMsgInt(err);
+    await utils.logMQError(errMsg, req, err);
+
+    res.status(500).end(`An internal error happened. It has been logged - transid: ${req.transid || 'none'}`);
+};
+
 export class Server {
     public pack: IntEnv;
 
@@ -80,7 +100,7 @@ export class Server {
 
         /*** here we start actually handling the requests */
 
-        app.use(this.logErrors)
+        app.use(logErrors)
             .get(`${this.pack.apppath}`, limiter, (req: IRequest, res: IResponse) => {
                 utils.logInfo(`$server.ts (start): homepage request ${req.url}`);
 
@@ -131,31 +151,6 @@ export class Server {
         });
 
         void loadServiceDoc();
-    };
-
-    private logErrors = async (
-        err: IError,
-        req: IRequest,
-        res: IResponse,
-        next: (err: IError) => any
-    ): Promise<void> => {
-        err.trace = addTrace(err.trace, '@at $server (logErrors)');
-        err.email = 'anonymous';
-        err.endpoint = req.params ? req.params.function : 'n/a';
-        err.time = utils.time();
-        err.transid = req.transid;
-        err.url = req.originalUrl;
-
-        if (res.headersSent) {
-            return next(err);
-        }
-
-        const errMsg: string = '$server (logErrors)';
-
-        await slackMsgInt(err);
-        await utils.logMQError(errMsg, req, err);
-
-        res.status(500).end(`An internal error happened. It has been logged - transid: ${req.transid || 'none'}`);
     };
 }
 

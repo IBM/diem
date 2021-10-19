@@ -28,6 +28,15 @@ import { MainCommonFunctions } from '../main.common.functions';
 import { DialogService } from '../main.api';
 import { tmpl } from './templates/settings.pug.tmpl';
 
+const getRequiredFields = (values: { [index: string]: any }, required: []) => {
+    const obj: { [index: string]: any } = {};
+    required.forEach((f: any) => {
+        obj[f.in] = values[f.out];
+    });
+
+    return obj;
+};
+
 interface IModule {
     component: string;
     title: string;
@@ -222,6 +231,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this.ws.msg(msg);
     };
 
+    // eslint-disable-next-line class-methods-use-this
     public trackByFn = (index: number) => index; // or
 
     private loadConfig = async (template: string) => {
@@ -437,7 +447,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
     private ActionDownload = (options: any) => {
         if (options.required) {
-            options.values = this.getRequiredFields(options.values, options.required);
+            options.values = getRequiredFields(options.values, options.required);
         }
 
         if (options.id && options.values) {
@@ -464,15 +474,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
                 .navigate([action.params.route])
                 .catch((err: Error) => console.error('$settings.component (ORoute): error', err));
         }
-    };
-
-    private getRequiredFields = (values: { [index: string]: any }, required: []) => {
-        const obj: { [index: string]: any } = {};
-        required.forEach((f: any) => {
-            obj[f.in] = values[f.out];
-        });
-
-        return obj;
     };
 
     private merge = (current: any, update: any) => {

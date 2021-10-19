@@ -30,6 +30,15 @@ import { DialogService } from '../main.api';
 import { SocketService } from '../socket.api';
 import { tmpl } from './templates/jobdetail.pug.tmpl';
 
+const getRequiredFields = (values: { [index: string]: any }, required: []) => {
+    const obj: { [index: string]: any } = {};
+    required.forEach((f: any) => {
+        obj[f.in] = values[f.out];
+    });
+
+    return obj;
+};
+
 interface IConfig2 extends IConfig {
     menu: any;
     help: any;
@@ -465,7 +474,7 @@ export class JobDetailComponent implements OnInit, OnDestroy {
         }
 
         if (options.required) {
-            options.values = this.getRequiredFields(options.values, options.required);
+            options.values = getRequiredFields(options.values, options.required);
         }
 
         if (options.locals && options.locals.fromStore) {
@@ -502,15 +511,6 @@ export class JobDetailComponent implements OnInit, OnDestroy {
                 .navigate([action.params.route])
                 .catch((err: Error) => console.error('$jobdetail.component (ActionRoute): error', err));
         }
-    };
-
-    private getRequiredFields = (values: { [index: string]: any }, required: []) => {
-        const obj: { [index: string]: any } = {};
-        required.forEach((f: any) => {
-            obj[f.in] = values[f.out];
-        });
-
-        return obj;
     };
 
     private merge = (current: any, update: any) => {

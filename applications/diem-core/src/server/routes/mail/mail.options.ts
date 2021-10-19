@@ -87,6 +87,7 @@ class MailTemplates implements IRawParams {
      *
      * @field html: mailContent.html
      */
+    // eslint-disable-next-line class-methods-use-this
     public JobParamsTmpl: (mailContent: IMailContent) => IMailElements = (mailContent: IMailContent): IMailElements => {
         const mail: { html: string; subject: string } = { html: '', subject: '' };
 

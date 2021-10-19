@@ -49,7 +49,7 @@ export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean 
     }
 
     const result: AxiosResponse<IArgsBody> = await axios
-        .post(services_url, body, {
+        .post<any>(services_url, body, {
             headers: { 'x-api-key': token },
         })
         .catch(async (err: IError) => {
