@@ -181,7 +181,7 @@ module.exports = {
         }),
 
         new webpack.ProvidePlugin({
-            process: require.resolve('process/browser',
+            process: require.resolve('process/browser'),
         }),
 
         new InjectManifest({
