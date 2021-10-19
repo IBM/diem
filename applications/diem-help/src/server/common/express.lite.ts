@@ -14,6 +14,37 @@ export const limiter = rateLimit({
     headers: true,
 });
 
+const CSP: any = (assets: IAsserts) => {
+    const t: any[] = [];
+    const unsafe: string = "'unsafe-eval'";
+
+    Object.keys(assets).forEach((v: string) => {
+        t.push(assets[v].integrity);
+    });
+
+    return {
+        directives: {
+            connectSrc: ["'self'", 'wss:', 'data: https', 'blob: https', '*.com'],
+            defaultSrc: ["'self'"],
+            frameSrc: ["'self'", 'https://*'],
+            fontSrc: ["'self'", '*.com'],
+            imgSrc: ["'self'", 'data: https', 'blob: https', '*.com'],
+            scriptSrc: ["'self'", unsafe, `'${t.join("' '")}'`],
+            styleSrc: ["'self'", '*.com', "'unsafe-inline'", unsafe],
+        },
+    };
+};
+
+const requestid = (req: IRequest, res: IResponse, next: () => any): any => {
+    const x: string = 'X-Request-Id';
+
+    req.transid = req.header(x) ? req.header(x) : utils.guid();
+
+    res.setHeader(x, req.transid ? req.transid : utils.guid());
+
+    next();
+};
+
 interface IRequest extends express.Request {
     transid?: string;
 }
@@ -80,7 +111,7 @@ export class Express {
     }
 
     private start = (): void => {
-        const csp: any = helmet.contentSecurityPolicy(this.CSP(this.assets));
+        const csp: any = helmet.contentSecurityPolicy(CSP(this.assets));
 
         let cspApi: express.RequestHandler<any>;
 
@@ -119,23 +150,13 @@ export class Express {
             .use(helmet.referrerPolicy({ policy: 'same-origin' }))
             .use(cookieParser())
             .use(nocache())
-            .use(this.requestid)
+            .use(requestid)
             .set('case sensitive routing', false)
             .set('host', process.env.HOST || 'localhost')
             .set('port', process.env.PORT || 8192)
             .set('view cache', true)
             .set('view engine', 'pug')
             .set('trust proxy', 1);
-    };
-
-    private requestid = (req: IRequest, res: IResponse, next: () => any): any => {
-        const x: string = 'X-Request-Id';
-
-        req.transid = req.header(x) ? req.header(x) : utils.guid();
-
-        res.setHeader(x, req.transid ? req.transid : utils.guid());
-
-        next();
     };
 
     private featurePolicy = (_req: IRequest, res: IResponse, next: () => any): any => {
@@ -146,26 +167,5 @@ export class Express {
     private featurePolicyApi = (_req: IRequest, res: IResponse, next: () => any): any => {
         res.setHeader('Feature-Policy', this.policyApi);
         next();
-    };
-
-    private CSP: any = (assets: IAsserts) => {
-        const t: any[] = [];
-        const unsafe: string = "'unsafe-eval'";
-
-        Object.keys(assets).forEach((v: string) => {
-            t.push(assets[v].integrity);
-        });
-
-        return {
-            directives: {
-                connectSrc: ["'self'", 'wss:', 'data: https', 'blob: https', '*.com'],
-                defaultSrc: ["'self'"],
-                frameSrc: ["'self'", 'https://*'],
-                fontSrc: ["'self'", '*.com'],
-                imgSrc: ["'self'", 'data: https', 'blob: https', '*.com'],
-                scriptSrc: ["'self'", unsafe, `'${t.join("' '")}'`],
-                styleSrc: ["'self'", '*.com', "'unsafe-inline'", unsafe],
-            },
-        };
     };
 }

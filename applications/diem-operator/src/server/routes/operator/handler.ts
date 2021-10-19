@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 /*jshint esversion: 8 */
 import Operator from './operator';
 

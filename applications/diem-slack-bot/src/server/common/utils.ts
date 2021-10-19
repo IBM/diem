@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import { EventEmitter } from 'events';
 import { printHRTime } from 'print-hrtime';
 import moment from 'moment';
@@ -36,6 +37,11 @@ class Utils {
     private slackHook: string;
 
     private sKey: string = 'as5HjIILYjdjet';
+
+    public constructor() {
+        this.ev = new EventEmitter();
+        this.slackHook = Credentials('slackhook') || false;
+    }
 
     public get sessionKey(): string {
         const t: string | undefined = process.env.sessionKey;
@@ -78,11 +84,6 @@ class Utils {
 
     public get slackWebHook(): string {
         return this.slackHook;
-    }
-
-    public constructor() {
-        this.ev = new EventEmitter();
-        this.slackHook = Credentials('slackhook') || false;
     }
 
     public browser = (req: any): { agent: string; ip: string } => {

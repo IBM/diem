@@ -29,6 +29,16 @@ const rawBodyBuffer = (req: IRequest, _res: IResponse, buf: Buffer, encoding: Bu
     }
 };
 
+const requestid = (req: IRequest, res: IResponse, next: () => any): any => {
+    const x: string = 'X-Request-Id';
+
+    req.transid = req.header(x) ? req.header(x) : utils.guid();
+
+    res.setHeader(x, req.transid ? req.transid : utils.guid());
+
+    next();
+};
+
 export class Express {
     public app: express.Application = express();
 
@@ -95,7 +105,7 @@ export class Express {
             .use(helmet.referrerPolicy({ policy: 'same-origin' }))
             .use(cookieParser())
             .use(nocache())
-            .use(this.requestid)
+            .use(requestid)
             .use(express.urlencoded({ verify: rawBodyBuffer, extended: true }))
             .use(express.json({ verify: rawBodyBuffer }))
             .set('case sensitive routing', false)
@@ -104,16 +114,6 @@ export class Express {
             .set('view cache', true)
             .set('view engine', 'html')
             .set('trust proxy', 1);
-    };
-
-    private requestid = (req: IRequest, res: IResponse, next: () => any): any => {
-        const x: string = 'X-Request-Id';
-
-        req.transid = req.header(x) ? req.header(x) : utils.guid();
-
-        res.setHeader(x, req.transid ? req.transid : utils.guid());
-
-        next();
     };
 
     private featurePolicy = (_req: IRequest, res: IResponse, next: () => any): any => {

@@ -24,7 +24,7 @@ const whoAmI: () => Promise<any> = async () => {
  * helper function to call POST methods of Slack API
  */
 export const callAPIMethodPost = async (method: any, payload: any) => {
-    const result = await axios.post(`${apiUrl}/${method}`, payload, {
+    const result = await axios.post<any>(`${apiUrl}/${method}`, payload, {
         headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -32,7 +32,7 @@ export const callAPIMethodPost = async (method: any, payload: any) => {
 };
 
 export const callAPIMethodPostFile = async (method: string, payload: any) => {
-    const result = await axios.post(`${apiUrl}/${method}`, payload, {
+    const result = await axios.post<any>(`${apiUrl}/${method}`, payload, {
         headers: { Authorization: `Bearer ${token}`, 'content-type': 'application/x-www-form-urlencoded' },
     });
 
@@ -40,7 +40,7 @@ export const callAPIMethodPostFile = async (method: string, payload: any) => {
 };
 
 const callAPIFileGet = async (url: string) => {
-    const result = await axios.get(url, {
+    const result = await axios.get<any>(url, {
         headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -54,7 +54,7 @@ const callAPIMethodGet = async (method: any, payload: any) => {
     const params = Object.keys(payload)
         .map((key) => `${key}=${payload[key]}`)
         .join('&');
-    const result = await axios.get(`${apiUrl}/${method}?${params}`, {
+    const result = await axios.get<any>(`${apiUrl}/${method}?${params}`, {
         headers: { Authorization: `Bearer ${token}` },
     });
 

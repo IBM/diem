@@ -13,6 +13,87 @@ import * as routes from '../routes/routes';
 import { addTrace } from '../routes/functions';
 import assets from './assets.json';
 
+const api = async (req: IRequest, res: IResponse): Promise<any> => {
+    if (!req.headers['content-type'] && req.method !== 'GET') {
+        return res.status(404).send('Incorrect Content-Type');
+    }
+
+    const t: { [index: string]: any } = routes;
+
+    if (t[req.params.function] !== undefined) {
+        const f: any = t[req.params.function];
+
+        try {
+            const data: any = await f(req, res);
+
+            if (!data) {
+                res.status(400).send({});
+            } else if (data && data.binary) {
+                res.setHeader('Access-Control-Expose-Headers', 'Content-disposition');
+                res.setHeader('Content-Type', data.binary);
+                if (data.filename) {
+                    res.setHeader('Content-disposition', `attachment;filename=${data.filename}`);
+                }
+                res.end(data.data, 'binary');
+            } else {
+                res.status(200).send(data);
+            }
+        } catch (err) {
+            if (err && err.return) {
+                res.status(200).send(err.return);
+            } else if (err && err.displayerr) {
+                res.status(err.status || 401).send({ displayerr: err.displayerr });
+            } else {
+                /**
+                 * we will only slack the error here as the 2 above are errors custom
+                 * returned to the user so not real functional errors
+                 */
+
+                const msg: IError = {
+                    ...err,
+                    email: 'anonymous',
+                    endpoint: req.params ? req.params.function : 'n/a',
+                    name: err.name || '$server (api) function error',
+                    time: utils.time(),
+                    transid: req.transid || 'n/a',
+                    url: req.originalUrl,
+                    message: err.message,
+                    stack: err.stack,
+                };
+
+                err.trace = addTrace(err.trace, '@at $server (api)');
+
+                await slackMsgInt(msg);
+                res.status(err && err.status ? err.status : 500).json({
+                    message: `An internal error happened. It has been logged with reference: ${req.transid}`,
+                });
+            }
+        }
+    } else {
+        return res.status(404).send({ message: 'resouce cannot be found' });
+    }
+};
+
+const logErrors = async (err: IError, req: IRequest, res: IResponse, next: (err: IError) => any): Promise<void> => {
+    err.trace = addTrace(err.trace, '@at $server (logErrors)');
+    err.email = 'anonymous';
+    err.endpoint = req.params ? req.params.function : 'n/a';
+    err.time = utils.time();
+    err.transid = req.transid;
+    err.url = req.originalUrl;
+
+    if (res.headersSent) {
+        return next(err);
+    }
+
+    const errMsg: string = '$server (logErrors)';
+
+    await slackMsgInt(err);
+    await utils.logMQError(errMsg, req, err);
+
+    res.status(500).end(`An internal error happened. It has been logged - transid: ${req.transid || 'none'}`);
+};
+
 export class Server {
     public pack: IntEnv;
 
@@ -127,10 +208,10 @@ export class Server {
 
         /*** here we start actually handling the requests */
 
-        app.use(this.logErrors)
-            .all(`${this.pack.apppath}/user/:function/*`, this.api)
-            .all(`${this.pack.apppath}/user/:function`, this.api)
-            .all('/internal/:function', this.api)
+        app.use(logErrors)
+            .all(`${this.pack.apppath}/user/:function/*`, api)
+            .all(`${this.pack.apppath}/user/:function`, api)
+            .all('/internal/:function', api)
             .get('*', limiter, (_req: IRequest, res: IResponse) => {
                 res.sendFile('/public/index.html', { root: path.resolve() });
             })
@@ -149,92 +230,6 @@ export class Server {
             utils.logInfo(msg);
             await slackMsg(msg);
         });
-    };
-
-    private api = async (req: IRequest, res: IResponse): Promise<any> => {
-        if (!req.headers['content-type'] && req.method !== 'GET') {
-            return res.status(404).send('Incorrect Content-Type');
-        }
-
-        const t: { [index: string]: any } = routes;
-
-        if (t[req.params.function] !== undefined) {
-            const f: any = t[req.params.function];
-
-            try {
-                const data: any = await f(req, res);
-
-                if (!data) {
-                    res.status(400).send({});
-                } else if (data && data.binary) {
-                    res.setHeader('Access-Control-Expose-Headers', 'Content-disposition');
-                    res.setHeader('Content-Type', data.binary);
-                    if (data.filename) {
-                        res.setHeader('Content-disposition', `attachment;filename=${data.filename}`);
-                    }
-                    res.end(data.data, 'binary');
-                } else {
-                    res.status(200).send(data);
-                }
-            } catch (err) {
-                if (err && err.return) {
-                    res.status(200).send(err.return);
-                } else if (err && err.displayerr) {
-                    res.status(err.status || 401).send({ displayerr: err.displayerr });
-                } else {
-                    /**
-                     * we will only slack the error here as the 2 above are errors custom
-                     * returned to the user so not real functional errors
-                     */
-
-                    const msg: IError = {
-                        ...err,
-                        email: 'anonymous',
-                        endpoint: req.params ? req.params.function : 'n/a',
-                        name: err.name || '$server (api) function error',
-                        time: utils.time(),
-                        transid: req.transid || 'n/a',
-                        url: req.originalUrl,
-                        message: err.message,
-                        stack: err.stack,
-                    };
-
-                    err.trace = addTrace(err.trace, '@at $server (api)');
-
-                    await slackMsgInt(msg);
-                    res.status(err && err.status ? err.status : 500).json({
-                        message: `An internal error happened. It has been logged with reference: ${req.transid}`,
-                    });
-                }
-            }
-        } else {
-            return res.status(404).send({ message: 'resouce cannot be found' });
-        }
-    };
-
-    private logErrors = async (
-        err: IError,
-        req: IRequest,
-        res: IResponse,
-        next: (err: IError) => any
-    ): Promise<void> => {
-        err.trace = addTrace(err.trace, '@at $server (logErrors)');
-        err.email = 'anonymous';
-        err.endpoint = req.params ? req.params.function : 'n/a';
-        err.time = utils.time();
-        err.transid = req.transid;
-        err.url = req.originalUrl;
-
-        if (res.headersSent) {
-            return next(err);
-        }
-
-        const errMsg: string = '$server (logErrors)';
-
-        await slackMsgInt(err);
-        await utils.logMQError(errMsg, req, err);
-
-        res.status(500).end(`An internal error happened. It has been logged - transid: ${req.transid || 'none'}`);
     };
 }
 
