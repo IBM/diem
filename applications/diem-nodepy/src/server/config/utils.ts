@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import { EventEmitter } from 'events';
 import { printHRTime } from 'print-hrtime';
 import moment from 'moment';
