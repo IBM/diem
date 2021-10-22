@@ -175,7 +175,7 @@ spark-operator:
 
   image:
     repository: quay.io/diem/spark-operator
-    tag: 3.1.2-1.1.6-rhel
+    tag: 3.2.0-1.1.7-rhel
 
 help:
   createservice: true
@@ -274,7 +274,7 @@ nats:
 
   ## nats config settings
   nats:
-    image: nats:2.3.4-alpine
+    image: nats:2.6.1-alpine
     pullPolicy: IfNotPresent
 
   ## Nats cluster settings

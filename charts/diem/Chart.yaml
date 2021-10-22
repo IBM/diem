@@ -6,8 +6,8 @@ apiVersion: v2
 name: diem
 description: A Helm chart for Diem
 type: application
-version: 1.4.1
-appVersion: 1.4.1
+version: 1.5.0
+appVersion: 1.5.0
 home: https://github.com/IBM/DIEM
 icon: https://raw.githubusercontent.com/IBM/diem/main/applications/diem-help/docs/images/diem/diem_s.png
 
@@ -24,7 +24,7 @@ annotations:
 dependencies:
   - name: spark-operator
     repository: https://googlecloudplatform.github.io/spark-on-k8s-operator
-    version: 1.1.6
+    version: 1.1.7
   - name: mongodb
     repository: https://charts.bitnami.com/bitnami
     version: 10.0.5
@@ -35,5 +35,5 @@ dependencies:
     condition: minio.createservice
   - name: nats
     repository: https://nats-io.github.io/k8s/helm/charts/
-    version: 0.8.8
+    version: 0.9.0
     condition: nats.createservice

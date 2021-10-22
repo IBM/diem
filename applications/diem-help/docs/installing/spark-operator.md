@@ -38,8 +38,8 @@ Step 2. extract the spark-operator-1.1.3.tgz and go to the root of the project
 
 Step3. Modify the file Dockerfile.rh (rh stands for Red Hat)
 
-- line 56: important make sure this line uses root -> USER root  : manage your security in openshift
 - line 47: Do Comment out the following three lines if you do not have a RedHat subscription.
+- line 56: important make sure this line uses root -> USER root  : manage your security in openshift
 
 Step 4. Run the following docker command
 

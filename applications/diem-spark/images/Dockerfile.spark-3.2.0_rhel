@@ -1,0 +1,48 @@
+# v3.2.0_rhel_2021-07-27
+FROM quay.io/diem/base-spark:3.2.0_rhel as base_spark
+
+# quay.io/diem/base-spark:3.2.0_rhel
+FROM registry.access.redhat.com/ubi8/ubi as base
+
+WORKDIR /
+
+USER root
+
+ARG img=spark-3.2.0-bin-custom-spark
+ARG install_dir=/tmp/artifacts
+ARG V_ENV=/opt/venv
+
+COPY --from=base_spark /tmp ${install_dir}/
+
+RUN mkdir -p ${install_dir}/tar
+RUN tar -xzf /tmp/artifacts/${img}.tgz -C ${install_dir}/tar
+RUN mv ${install_dir}/tar/${img}/ /opt/spark
+RUN mv /opt/spark/kubernetes/dockerfiles/spark/entrypoint.sh /opt/
+RUN mv /opt/spark/kubernetes/dockerfiles/spark/decom.sh /opt/
+RUN dnf clean all && [ ! -d /var/cache/dnf ] || rm -rf /var/cache/dnf
+RUN [ ! -d ${install_dir} ] || rm -rf ${install_dir}
+
+COPY jars/* /opt/spark/jars/
+
+WORKDIR /opt/spark/work-dir
+RUN chmod g+w /opt/spark/work-dir && chmod a+x /opt/decom.sh
+
+FROM registry.access.redhat.com/ubi8/ubi
+
+USER root
+
+COPY --from=base /opt /opt
+
+RUN dnf -y upgrade && dnf install -y java-11-openjdk-headless.x86_64 && \
+    rm -rf /var/lib/apt/lists/* && \
+    dnf clean all && [ ! -d /var/cache/dnf ] || rm -rf /var/cache/dnf
+
+ADD https://github.com/krallin/tini/releases/download/v0.18.0/tini /bin/tini
+RUN chmod +x /bin/tini
+
+ENV \
+    PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/spark/bin" \
+    SPARK_HOME="/opt/spark" \
+    LANG=en_US.UTF-8
+
+ENTRYPOINT [ "/opt/entrypoint.sh" ]
