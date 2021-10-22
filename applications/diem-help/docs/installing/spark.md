@@ -117,6 +117,10 @@ docker push txo-sets-docker-local.artifactory.swg-devops.com/bizops/spark-java:2
 #### Build the distribution
 
 ```cmd
+export MAVEN_OPTS="-Xss64m -Xmx2g -XX:ReservedCodeCacheSize=1g"
+```
+
+```cmd
 ./dev/make-distribution.sh --name custom-spark --pip --tgz -Pkubernetes
 ```
 
@@ -142,15 +146,21 @@ A. Create an empty Dockerfile in the root of your spark directory where the rag.
   COPY ${img}.tgz /tmp/${img}.tgz
   ```
 
-  A copy of this code is located in diem-public/applications/diem-spark/images/Dockerfile.base
+  Note: copy of this code is located in diem-public/applications/diem-spark/images/Dockerfile.base
 
-B. Push this image to you repo
+B. Build the image
+
+  ```cmd
+  docker build -t quay.io/diem/base-spark:3.1.2_rhel
+  ```
+
+C. Push this image to you repo
 
   ```cmd
   docker push quay.io/diem/base-spark:3.1.2_rhel
   ```
 
-C. use it in your multilayer build
+D. use it in your multilayer build
 
 ```docker
 FROM quay.io/diem/base-spark:3.1.2_rhel as base_spark

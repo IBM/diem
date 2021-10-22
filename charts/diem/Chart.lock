@@ -1,7 +1,7 @@
 dependencies:
 - name: spark-operator
   repository: https://googlecloudplatform.github.io/spark-on-k8s-operator
-  version: 1.1.6
+  version: 1.1.7
 - name: mongodb
   repository: https://charts.bitnami.com/bitnami
   version: 10.0.5
@@ -10,6 +10,6 @@ dependencies:
   version: 8.0.10
 - name: nats
   repository: https://nats-io.github.io/k8s/helm/charts/
-  version: 0.8.8
-digest: sha256:8efac0ddfccca50ed12d2b5cd9b131a21fe707f3fd2dbbb25c7fb46e655d7de5
-generated: "2021-08-20T14:18:09.634735+02:00"
+  version: 0.9.0
+digest: sha256:3c47b88a92e9d50d756520fec5fbd84cd911cc1d4ec2ccee7e2514b6bc123cbe
+generated: "2021-10-22T11:32:05.108534+02:00"

@@ -123,7 +123,7 @@ export const createSparkScalaJob: (doc: IJobSchema) => Promise<ICapacity> = asyn
         'fs.cos.mycos.v2.signer.type': 'false',
     };
 
-    const image: string = doc.job.params?.spark?.image ? doc.job.params.spark.image : 'quay.io/diem/spark:3.1.2_rhel';
+    const image: string = doc.job.params?.spark?.image ? doc.job.params.spark.image : 'quay.io/diem/spark:3.2.0_rhel';
 
     crdjob.spec.image = image;
 
