@@ -8,7 +8,6 @@ import { spark, sparkCredentials } from '../../spark-operator/spark.base';
 import { caclCap } from '../../spark-operator/spark.capacity';
 import { sparkWatcher } from '../../spark-operator/spark.watcher';
 import { addVolume, getCosCredentials, ICos } from './spark.common';
-import { Credentials } from '@common/cfenv';
 
 const stocator: string = '/opt/cos/stocator-1.1.3.jar';
 const encoder: string = '-Ddb2.jcc.charsetDecoderEncoder=3';
@@ -76,8 +75,8 @@ export const createSparkPythonJob: (doc: IJobSchema) => Promise<ICapacity> = asy
 
     const image: string = doc.job.params?.spark?.image
         ? doc.job.params.spark.image
-        : Credentials.image
-        ? Credentials.image
+        : sparkCredentials.image
+        ? sparkCredentials.image
         : 'quay.io/diem/pyspark:3.2.0_rhel';
 
     crdjob.spec.image = image;
