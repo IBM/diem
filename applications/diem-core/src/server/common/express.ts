@@ -267,7 +267,7 @@ export class Express {
         }),
     });
 
-    private checkSession =
+    private readonly checkSession =
         () =>
         (_req: IRequest, res: IResponse, next: () => any): any => {
             const lookupSession: any = (error: Error) => {

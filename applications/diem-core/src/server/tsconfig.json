@@ -2,8 +2,8 @@
     "extends": "../webpack/tsconfig.base.json",
     "compilerOptions": {
         "outDir": "../../server",
+        "rootDir": "../../src/server/",
         "resolveJsonModule": true,
-        "typeRoots": ["../../node_modules/@types"],
         "baseUrl": "./",
         "paths": {
             "@common/*": ["./common/*"],
@@ -12,6 +12,5 @@
             "@models": ["./routes/models/"],
             "@functions": ["./routes/shared/"]
         }
-    },
-    "filesGlob": ["../../node_modules/@types/***/**.d.ts", "**/**.ts"]
+    }
 }

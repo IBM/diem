@@ -2,7 +2,7 @@ import * as http from 'http';
 import { Socket } from 'net';
 import * as WebSocket from 'ws';
 import { utils } from '@common/utils';
-import { IntEnv } from '@interfaces';
+import { IError, IntEnv } from '@interfaces';
 import { slackMsg } from '@common/slack/slack';
 import jwt from 'jsonwebtoken';
 import { IUserPayload } from '@models';
@@ -48,8 +48,8 @@ export class Server {
          */
         this.wss = new WebSocket.Server({ noServer: true });
 
-        this.wss.on('error', (err) => {
-            utils.logInfo(err);
+        this.wss.on('error', (err: IError) => {
+            void utils.logError(err);
         });
 
         this.wss.on('connection', (ws: IWebSocket) => {
