@@ -34,9 +34,9 @@ class Utils {
         version: process.env.VERSION || '0',
     };
 
-    private SLACK: ISlack = Credentials('slack');
-    private jwtToken: string;
-    private slackHook: string;
+    private readonly SLACK: ISlack = Credentials('slack');
+    private readonly jwtToken: string;
+    private readonly slackHook: string;
 
     private sKey: string = 'as5HjIILYjdjet';
 
@@ -102,23 +102,23 @@ class Utils {
         };
     };
 
-    public log = (msg: any) => {
+    public log = (msg: string) => {
         console.info(`${msg} - ${this.time()}`);
     };
 
-    public logGreen = (msg: any) => {
+    public logGreen = (msg: string) => {
         console.info('\x1b[92m%s\x1b[0m', msg);
     };
 
-    public logCyan = (msg: any) => {
+    public logCyan = (msg: string) => {
         console.info('\x1b[96m%s\x1b[0m', msg);
     };
 
-    public logRed = (msg: any) => {
+    public logRed = (msg: string) => {
         console.info('\x1b[91m%s\x1b[0m', msg);
     };
 
-    public logInfo = (msg: any, func?: string, hrend?: any) => {
+    public logInfo = (msg: string, func?: string, hrend?: any) => {
         let hr: string = '';
         const fu: string = func ? ` - ${func}` : '';
 
@@ -140,11 +140,11 @@ class Utils {
         console.info('\x1b[93m%s\x1b[0m', `${msg}${fu}${hr} - ${this.time()} - pid (${process.pid})`);
     };
 
-    public logWarn = (msg: any) => {
+    public logWarn = (msg: string) => {
         console.warn('\x1b[36m%s\x1b[0m', `${msg} - ${this.time()} - pid (${process.pid})`);
     };
 
-    public logErr = (msg: any, err?: IError) => {
+    public logErr = (msg: string, err?: IError) => {
         console.error('\x1b[35m%s\x1b[0m', `${msg} - ${this.time()} - pid (${process.pid})`, '\n', err || '');
     };
 
