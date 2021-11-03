@@ -35,7 +35,7 @@ module.exports = {
 
     cache: false,
 
-    devtool: false,
+    devtool: 'source-map',
 
     entry: './config/server.ts',
 
