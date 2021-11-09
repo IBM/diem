@@ -23,6 +23,35 @@ enum EPostType {
 }
 
 /**
+ *
+ * @param {HttpErrorResponse} err
+ * @returns {Observable<IHttpError>}
+ */
+const handleError = (err: HttpErrorResponse): Observable<IHttpError> => {
+    if (err.error instanceof ErrorEvent) {
+        /**
+         * removing the console error
+         * just returning empty
+         * console.error(`$http.service (client side error)`, err.statusText);
+         */
+
+        return EMPTY;
+    } else {
+        if (err.status === 0) {
+            /**
+             * removing the console error
+             * just returning empty
+             * console.error(`$http.service (cancelled request)`, err.statusText);
+             */
+
+            return EMPTY;
+        }
+
+        return throwError(() => err);
+    }
+};
+
+/**
  * @description Http returns an error with an angular message
  *
  * **Warning: server should reply with either a string or object !**
@@ -73,7 +102,7 @@ export class HttpService {
     public httpGet = (url: string): Observable<HttpResponse<any> | HttpErrorResponse> =>
         this.http.get(url, this.makeHeaders()).pipe(
             map((data: any) => data),
-            catchError(this.handleError)
+            catchError(handleError)
         );
 
     public httpPost = (
@@ -107,14 +136,14 @@ export class HttpService {
                 .pipe(
                     map((event: HttpEvent<any>) => this.getEventMessage(event, EPostType.upload)),
                     last(),
-                    catchError(this.handleError)
+                    catchError(handleError)
                 );
         } else {
             formData = JSON.stringify(input);
 
             return this.http.post(url, formData, this.makeHeaders(multiPart)).pipe(
                 map((data: any) => data),
-                catchError(this.handleError)
+                catchError(handleError)
             );
         }
     };
@@ -122,37 +151,8 @@ export class HttpService {
     public jsonpGet = (url: string, callback: any): Observable<HttpResponse<any> | HttpErrorResponse> =>
         this.http.jsonp(url, callback).pipe(
             map((data: any) => data),
-            catchError(this.handleError)
+            catchError(handleError)
         );
-
-    /**
-     *
-     * @param {HttpErrorResponse} err
-     * @returns {Observable<IHttpError>}
-     */
-    public handleError = (err: HttpErrorResponse): Observable<IHttpError> => {
-        if (err.error instanceof ErrorEvent) {
-            /**
-             * removing the console error
-             * just returning empty
-             * console.error(`$http.service (client side error)`, err.statusText);
-             */
-
-            return EMPTY;
-        } else {
-            if (err.status === 0) {
-                /**
-                 * removing the console error
-                 * just returning empty
-                 * console.error(`$http.service (cancelled request)`, err.statusText);
-                 */
-
-                return EMPTY;
-            }
-
-            return throwError(() => err);
-        }
-    };
 
     public download = (values: any, params: any): Observable<HttpResponse<any> | HttpErrorResponse> => {
         this.filename = undefined;
@@ -202,7 +202,7 @@ export class HttpService {
             .pipe(
                 map((event: HttpEvent<any>) => this.getEventMessage(event, EPostType.download)),
                 last(),
-                catchError(this.handleError)
+                catchError(handleError)
             );
     };
 

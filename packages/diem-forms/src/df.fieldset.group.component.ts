@@ -32,6 +32,6 @@ export class DFFieldsetGroupComponent {
         return true;
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, class-methods-use-this
     public trackByFn = (index: number, _item: any) => index; // or item.id
 }

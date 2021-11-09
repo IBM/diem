@@ -21,11 +21,18 @@ import { tmpl } from './templates/df.group.pug.tmpl';
     template: tmpl,
 })
 export class DFGroupComponent implements OnInit {
+    @ViewChild('basic', { static: true }) public basic!: TemplateRef<any>; /** ! Will come later */
+    @ViewChild('fieldset', { static: true }) public fieldset!: TemplateRef<any>; /** ! Will come later */
+    @ViewChild('panelset', { static: true }) public pannelset!: TemplateRef<any>; /** ! Will come later */
+
     @Output() public action: EventEmitter<any> = new EventEmitter();
     @Input() public form!: FormGroup; /** ! Added Later */
     @Input() public TimeCheck: number = new Date().getTime();
     @Input() public formSpecs!: IFormSpecs; /** ! Added Later */
     @Input() public questionGroups: QuestionGroup<any>[] = [];
+
+    public groupTmpl?: TemplateRef<any>;
+    public sidebar: boolean = false;
 
     // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
     @HostBinding('class') get name(): string {
@@ -33,13 +40,6 @@ export class DFGroupComponent implements OnInit {
             ? this.formSpecs.style.groupClass
             : '';
     }
-
-    @ViewChild('basic', { static: true }) public basic!: TemplateRef<any>; /** ! Will come later */
-    @ViewChild('fieldset', { static: true }) public fieldset!: TemplateRef<any>; /** ! Will come later */
-    @ViewChild('panelset', { static: true }) public pannelset!: TemplateRef<any>; /** ! Will come later */
-
-    public groupTmpl?: TemplateRef<any>;
-    public sidebar: boolean = false;
 
     // private cd: ChangeDetectorRef;
 
@@ -72,7 +72,7 @@ export class DFGroupComponent implements OnInit {
         return true;
     };
 
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-unused-vars, class-methods-use-this
     public trackByFn = (index: number, _item: any) => index; // or item.id
 
     /*

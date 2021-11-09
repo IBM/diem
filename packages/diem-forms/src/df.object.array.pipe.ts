@@ -6,6 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
     name: 'dfObj2Array',
 })
 export class Object2Array implements PipeTransform {
+    // eslint-disable-next-line class-methods-use-this
     public transform: any = (value: any): any => {
         const keys: any[] = [];
         for (const file in value) {

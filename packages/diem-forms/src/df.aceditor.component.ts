@@ -65,7 +65,9 @@ export class AceCodeEditorComponent implements OnInit, ControlValueAccessor, OnC
         this.subscription = this.stream.pipe(debounceTime(500)).subscribe((value: any) => this.onModelChange(value));
     }
 
+    // eslint-disable-next-line class-methods-use-this
     public onTouch: () => {} = () => false;
+    // eslint-disable-next-line class-methods-use-this
     public onModelChange: (fn: any) => {} = () => false;
 
     public registerOnTouched: any = (fn: any) => {
