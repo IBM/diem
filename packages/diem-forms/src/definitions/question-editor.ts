@@ -1,5 +1,16 @@
 import { QuestionBase } from './question-base';
 
+export interface IEditorQuestion {
+    maxFileSize?: number;
+    multiple?: boolean;
+    deletedFilesQuestion?: string;
+    filesQuestion?: string;
+    oldFilesQuestion?: string;
+    baseurl?: string;
+    theme?: string;
+    height?: number;
+}
+
 export class EditorQuestion extends QuestionBase<string> {
     public controlType = 'editor';
     public maxFileSize?: number;
