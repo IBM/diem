@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
