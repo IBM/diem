@@ -1,6 +1,6 @@
 import { writeFileSync } from 'fs';
 import mongoose from 'mongoose';
-import { IntInternal } from '../interfaces/shared';
+import { IError, IntInternal } from '../interfaces/shared';
 import { utils } from './utils';
 import { Credentials } from './cfenv';
 
@@ -18,7 +18,7 @@ interface ICredentials {
     ca?: string;
 }
 
-const setFatal: any = async (err: any): Promise<void> => {
+const setFatal: (err: Partial<IError>) => Promise<void> = async (err: Partial<IError>): Promise<void> => {
     const internal: IntInternal = {
         ...err,
         fatal: true,
@@ -34,11 +34,11 @@ const setFatal: any = async (err: any): Promise<void> => {
 };
 
 class Mongo {
-    private tm: any;
+    private tm?: NodeJS.Timeout;
 
-    private uri: string;
+    private readonly uri: string;
     private retries: number = 0;
-    private credentials: ICredentials;
+    private readonly credentials: ICredentials;
 
     public constructor() {
         this.credentials = Credentials('mongo');
@@ -47,7 +47,7 @@ class Mongo {
         void this.go();
     }
 
-    private go: any = async () => {
+    private go: () => void = async () => {
         await this.start().catch(async (err) => {
             err.trace = utils.addTrace(err.trace, '@at $mongo (go)');
             err.source = '$mongo (go)';
@@ -57,7 +57,7 @@ class Mongo {
         return Promise.resolve();
     };
 
-    private connect: () => Promise<any> = async (): Promise<any> => {
+    private connect: () => Promise<void> = async (): Promise<void> => {
         /** The connection, this is seperate because all others in start are listeners and they don't
          * hace to be called again, only the connection itself
          */
@@ -100,7 +100,7 @@ class Mongo {
         return Promise.resolve();
     };
 
-    private start: () => Promise<any> = async (): Promise<any> => {
+    private start: () => Promise<void> = async (): Promise<void> => {
         if (!this.uri) {
             utils.logInfo(`$mongo (start): No Uri found - We cannot proceed - pid: ${process.pid}`);
 
