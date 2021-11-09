@@ -10,10 +10,18 @@ make a post request to your diem instance diem-instance.com
 
 ```yaml
 endpoint: [https://diem-instance.com/etl-mgr/api/apijob](https://diem-instance.com/etl-mgr/api/apijob)
-apik_value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.  eyJhcHAiOiJwb3N0bWFuIiwidWlkIjoiZGllbV9hcGkiLCJvcmciOiJ0ZXN0IiwiaWQiOiIzNmQyMzAwNy0wZGE0LWViZmUtZmQzZS0wZDhjMjdmYWFmYWUiLCJpYXQiOjE2MjIwMTk3Nzl9.oZXeMb3je2mDT7vOT9d-8g76lKABdA3qdxzoVUDDHKY # pragma: allowlist secret
-api_token: x-api-key
+header_key: x-api-key
+header_value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHAiOiJwb3N0bWFuIiwidWlkIjoiZGllbV9hcGkiLCJvcmciOiJ0ZXN0IiwiaWQiOiIzNmQyMzAwNy0wZGE0LWViZmUtZmQzZS0wZDhjMjdmYWFmYWUiLCJpYXQiOjE2MjIwMTk3Nzl9.oZXeMb3je2mDT7vOT9d-8g76lKABdA3qdxzoVUDDHKY # pragma: allowlist secret
 method: json
-body: {"id":"5fd3a340b15cc4d3b71b7cc7"}
+body: {"id":"5fd3a340b15cc4d3b71b7cc7","action": "status"}
+```
+
+## Possible actions
+
+```txt
+"action": "status" : displays the status of your job
+"action": "start": starts a job with id
+"action": "stop": stops a job with id
 ```
 
 Id is the name of your job
@@ -22,7 +30,7 @@ Id is the name of your job
 curl --location --request POST 'https://diem-instance.com/etl-mgr/api/apijob' \
 --header 'x-api-key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHAiOiJwb3N0bWFuIiwidWlkIjoiZGllbV9hcGkiLCJvcmciOiJ0ZXN0IiwiaWQiOiIzNmQyMzAwNy0wZGE0LWViZmUtZmQzZS0wZDhjMjdmYWFmYWUiLCJpYXQiOjE2MjIwMTk3Nzl9.oZXeMb3je2mDT7vOT9d-8g76lKABdA3qdxzoVUDDHKY' \ # pragma: allowlist secret
 --header 'Content-Type: application/json' \
---data-raw '{"id":"5fd3a340b15cc4d3b71b7cc7"}'
+--data-raw '{"id":"5fd3a340b15cc4d3b71b7cc7","action": "status"}'
 ```
 
 ### Python
@@ -32,7 +40,7 @@ import requests
 
 url = "https://diem-instance.com/etl-mgr/api/apijob"
 
-payload="{\"id\":\"5fd3a340b15cc4d3b71b7cc7\"}"
+payload="{\"id\":\"5fd3a340b15cc4d3b71b7cc7\",\"action\": \"status\"}"
 headers = {
   'x-api-key': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHAiOiJwb3N0bWFuIiwidWlkIjoiZGllbV9hcGkiLCJvcmciOiJ0ZXN0IiwiaWQiOiIzNmQyMzAwNy0wZGE0LWViZmUtZmQzZS0wZDhjMjdmYWFmYWUiLCJpYXQiOjE2MjIwMTk3Nzl9.oZXeMb3je2mDT7vOT9d-8g76lKABdA3qdxzoVUDDHKY', # pragma: allowlist secret
   'Content-Type': 'application/json',
