@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import { Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 
