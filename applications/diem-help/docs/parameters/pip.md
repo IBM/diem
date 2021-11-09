@@ -1,7 +1,7 @@
 <!-- markdownlint-disable MD033 -->
 # Parameters for Python Packages -pip
 
-> This describes the usuage of the parameters section in your job. For more details see the respective section.
+> This describes the usage of the parameters section in your job. For more details see the respective section.
 
 ## Python Modules (pip)
 

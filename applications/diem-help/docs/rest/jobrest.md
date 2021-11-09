@@ -4,7 +4,7 @@
 
 In order to use these restfull services you must first create an API Key as described here [Creating API Keys](../int_apikeys)
 
-## Usuage
+## Usage
 
 make a post request to your diem instance diem-instance.com
 

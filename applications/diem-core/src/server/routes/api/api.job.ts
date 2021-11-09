@@ -68,7 +68,7 @@ export const apijob: (req: IRequest) => Promise<IApiJobReturn> = async (req: IRe
     doc.job.email = body.email;
     doc.job.runby = 'apicall';
 
-    const action: string = body.action || undefined;
+    const action: string = body.action || req.query.action || undefined;
 
     if (!action || (action && action.toLowerCase() === 'start')) {
         if (([EJobStatus.running, EJobStatus.submitted] as EJobStatusCodes[]).includes(doc.job.status)) {
@@ -92,7 +92,7 @@ export const apijob: (req: IRequest) => Promise<IApiJobReturn> = async (req: IRe
             });
         });
 
-        utils.logInfo(`$api.job (apijob) - job ${req.body.id}`, req.transid, process.hrtime(hrstart));
+        utils.logInfo(`$api.job (apijob) - start request - job ${req.body.id}`, req.transid, process.hrtime(hrstart));
 
         return Promise.resolve({
             message: 'job started',
@@ -120,10 +120,18 @@ export const apijob: (req: IRequest) => Promise<IApiJobReturn> = async (req: IRe
             });
         });
 
-        utils.logInfo(`$api.job (apijob) - job ${req.body.id}`, req.transid, process.hrtime(hrstart));
+        utils.logInfo(`$api.job (apijob) - stop request - job ${req.body.id}`, req.transid, process.hrtime(hrstart));
 
         return Promise.resolve({
             message: 'job stopped',
+        });
+    }
+
+    if (!action || (action && action.toLowerCase() === 'status')) {
+        utils.logInfo(`$api.job (apijob) - status request - job ${req.body.id}`, req.transid, process.hrtime(hrstart));
+
+        return Promise.resolve({
+            message: doc.job.status,
         });
     }
 
