@@ -17,7 +17,7 @@ import { SiteService } from './site/site.service';
 
 @NgModule({
     declarations: [TermsComponent, MessagesComponent],
-    exports: [AppPages, Directives, CommonModule, LoadingModule, MessagesComponent, ModalModule, AppIconsModule],
+    exports: [AppPages, CommonModule, LoadingModule, MessagesComponent, ModalModule, AppIconsModule],
     imports: [
         AppIconsModule,
         AppPages,
