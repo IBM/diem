@@ -100,6 +100,17 @@ module.exports = {
                 test: /\.ts$/,
             },
             {
+                test: /\.m?js$/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        cacheDirectory: true,
+                        compact: false,
+                        plugins: ['@angular/compiler-cli/linker/babel'],
+                    },
+                },
+            },
+            {
                 test: /\.css/,
                 use: [{ loader: MiniCssExtractPlugin.loader }, { loader: 'css-loader' }],
             },

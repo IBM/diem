@@ -1,7 +1,7 @@
 <!-- markdownlint-disable MD033 -->
 # Parametes for Spark -spark
 
-> This describes the usuage of the parameters section in your job. For more details see the respective section.
+> This describes the usage of the parameters section in your job. For more details see the respective section.
 
 In certain circumstances you can overwrite the default spark capacity allocartion. this is mostly the case for...
 

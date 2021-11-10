@@ -59,7 +59,7 @@ values = {
 ### custom ###
 ```
 
-example usuage in your code
+example usage in your code
 
 ```py
 txt = ""
