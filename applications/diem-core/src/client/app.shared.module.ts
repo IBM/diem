@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { AppPages, Directives, DTS, HttpService } from '@mydiem/diem-angular-util';
+import { AppPages, DTS, HttpService, Directives } from '@mydiem/diem-angular-util';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import {
@@ -17,7 +17,7 @@ import { SiteService } from './site/site.service';
 
 @NgModule({
     declarations: [TermsComponent, MessagesComponent],
-    exports: [AppPages, CommonModule, LoadingModule, MessagesComponent, ModalModule, AppIconsModule],
+    exports: [AppIconsModule, AppPages, CommonModule, Directives, LoadingModule, MessagesComponent, ModalModule],
     imports: [
         AppIconsModule,
         AppPages,
@@ -28,8 +28,8 @@ import { SiteService } from './site/site.service';
         HttpClientModule,
         LoadingModule,
         ModalModule,
-        TabsModule,
         NotificationModule,
+        TabsModule,
     ],
     providers: [DTS, HttpClientModule, HttpService, SiteService],
 })
