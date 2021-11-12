@@ -1,7 +1,7 @@
 {
     "name": "diem-slack-bot",
     "description": "Diem Data Integration Engine Multipurpose",
-    "version": "1.7.0",
+    "version": "1.8.0",
     "author": "guy_huinen@be.ibm.com",
     "config": {
         "appname": "Diem Help",
@@ -47,7 +47,7 @@
         "terser-webpack-plugin": "^5.2.5",
         "ts-loader": "^9.2.6",
         "typescript": "^4.4.4",
-        "webpack": "^5.63.0",
+        "webpack": "^5.64.0",
         "webpack-cli": "^4.9.1"
     },
     "keywords": [
