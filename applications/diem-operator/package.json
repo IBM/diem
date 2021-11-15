@@ -12,7 +12,7 @@
     "author": "guy_huinen#be.ibm.com",
     "license": "ISC",
     "dependencies": {
-        "@kubernetes/client-node": "^0.15.1",
+        "@kubernetes/client-node": "^0.16.0",
         "axios": "^0.24.0",
         "js-yaml": "^4.1.0",
         "moment": "^2.29.1",
@@ -30,7 +30,7 @@
         "@types/webpack-env": "^1.16.3",
         "@typescript-eslint/eslint-plugin": "^5.3.1",
         "@typescript-eslint/parser": "^5.3.1",
-        "browserslist": "^4.17.6",
+        "browserslist": "^4.18.0",
         "core-js": "^3.19.1",
         "eslint": "^8.2.0",
         "eslint-config-prettier": "^8.3.0",
