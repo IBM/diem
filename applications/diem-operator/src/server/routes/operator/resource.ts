@@ -7,14 +7,11 @@ import Axios, { AxiosRequestConfig, Method as HttpMethod } from 'axios';
 import { serializeError } from 'serialize-error';
 import {
     KubernetesObject,
-    V1beta1CustomResourceDefinitionVersion,
     V1CustomResourceDefinitionVersion,
     KubeConfig,
     CoreV1Api,
-    V1beta1CustomResourceDefinition,
     V1CustomResourceDefinition,
     ApiextensionsV1Api,
-    ApiextensionsV1beta1Api,
     makeInformer,
     V1Pod,
     V1ContainerStatus,
@@ -190,12 +187,10 @@ export default class Operator {
      */
     public async registerCustomResourceDefinition(crdFile: string): Promise<{
         group: string;
-        versions: V1CustomResourceDefinitionVersion[] | V1beta1CustomResourceDefinitionVersion[] | undefined;
+        versions: V1CustomResourceDefinitionVersion[] | undefined;
         kind: string;
     }> {
-        const crd: V1CustomResourceDefinition | V1beta1CustomResourceDefinition = YAML.load(
-            FS.readFileSync(crdFile, 'utf8')
-        ) as any;
+        const crd: V1CustomResourceDefinition = YAML.load(FS.readFileSync(crdFile, 'utf8')) as any;
 
         if (typeof crd !== 'object') {
             return Promise.reject();
@@ -205,27 +200,16 @@ export default class Operator {
             if (!apiVersion?.startsWith('apiextensions.k8s.io/')) {
                 throw new Error("Invalid CRD yaml (expected 'apiextensions.k8s.io')");
             }
-            if (apiVersion === 'apiextensions.k8s.io/v1beta1') {
-                await this.kc
-                    .makeApiClient(ApiextensionsV1beta1Api)
-                    .createCustomResourceDefinition(crd as V1beta1CustomResourceDefinition);
 
-                return {
-                    group: crd.spec.group,
-                    versions: crd.spec.versions,
-                    kind: crd.spec.names.kind,
-                };
-            } else {
-                await this.kc
-                    .makeApiClient(ApiextensionsV1Api)
-                    .createCustomResourceDefinition(crd as V1CustomResourceDefinition);
+            await this.kc
+                .makeApiClient(ApiextensionsV1Api)
+                .createCustomResourceDefinition(crd as V1CustomResourceDefinition);
 
-                return {
-                    group: crd.spec.group,
-                    versions: crd.spec.versions,
-                    kind: crd.spec.names.kind,
-                };
-            }
+            return {
+                group: crd.spec.group,
+                versions: crd.spec.versions,
+                kind: crd.spec.names.kind,
+            };
         } catch (err) {
             // API returns a 409 Conflict if CRD already exists.
             if (err.response.statusCode !== 409) {
