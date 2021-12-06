@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { DTS, Env } from '@mydiem/diem-angular-util';
@@ -98,7 +99,7 @@ export class AppLoginService {
             }
         });
 
-        const sessionid: string = this.dts.guid();
+        const sessionid: string = randomUUID();
         this.env.setField('sessionid', sessionid);
 
         console.debug(`$login (valid token): token expires ${expDate} - session opened with id ${sessionid}`);
