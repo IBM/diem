@@ -1,6 +1,5 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 import { Buffer } from 'buffer';
-import { randomUUID } from 'crypto';
 import { saveAs } from 'file-saver';
 import { DFCommonService, DFFormService, DFStoreFunctions, IStoreMessageState } from '@mydiem/diem-forms';
 import { IntPayload, IntServerPayload, IntSharedAction, IntStoreState } from '@interfaces';
@@ -340,7 +339,14 @@ export class MainCommonFunctions implements OnDestroy {
 
     // eslint-disable-next-line class-methods-use-this
     public guid = () => {
-        return randomUUID();
+        const _p8: any = (s: boolean) => {
+            const p: string = `${Math.random().toString(16)}000000000`.substr(2, 8);
+
+            return s ? `-${p.substr(0, 4)}-${p.substr(4, 4)}` : p;
+        };
+        const t: string = _p8(false) + _p8(true) + _p8(true) + _p8(false);
+
+        return t.toLowerCase();
     };
 
     public ngOnDestroy(): void {
