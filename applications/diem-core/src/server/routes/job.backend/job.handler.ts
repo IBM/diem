@@ -96,52 +96,56 @@ export const jobOutHandler: (doc: IJobModel, job: IJobResponse) => Promise<ISock
     return Promise.resolve(load);
 };
 
-const jobDocOutHandler: (payload: IntPayload[], doc: IJobModel, job: IJobResponse) => Promise<[IntPayload[], any]> =
-    async (payload: IntPayload[], doc: IJobModel, job: IJobResponse): Promise<[IntPayload[], any]> => {
-        const obj: IOut = {
+const jobDocOutHandler: (
+    payload: IntPayload[],
+    doc: IJobModel,
+    job: IJobResponse
+) => Promise<[IntPayload[], any]> = async (
+    payload: IntPayload[],
+    doc: IJobModel,
+    job: IJobResponse
+): Promise<[IntPayload[], any]> => {
+    const obj: IOut = {
+        out: job.out,
+        special: job.special,
+    };
+
+    let insert;
+
+    if (job.outl) {
+        insert = {
+            $push: { out: { $each: job.out } },
+        };
+        doc.out = doc.out.concat(job.out);
+    } else {
+        if (Array.isArray(doc.out)) {
+            doc.out.push(obj);
+        } else {
+            doc.out = [obj];
+        }
+        insert = {
+            $push: { out: obj },
+        };
+    }
+
+    utils.logInfo(`$job.handler (jobDocOutHandler): adding out - job: ${job.id} - status: ${job.status}`, job.transid);
+
+    payload.push({
+        loaded: true,
+        store: jobdetail,
+        targetid: job.id,
+        options: {
+            field: 'out',
+        },
+        type: job.outl ? EStoreActions.APPEND_STORE_TABLE_RCD : EStoreActions.ADD_STORE_TABLE_RCD,
+        values: {
             out: job.out,
             special: job.special,
-        };
+        },
+    });
 
-        let insert;
-
-        if (job.outl) {
-            insert = {
-                $push: { out: { $each: job.out } },
-            };
-            doc.out = doc.out.concat(job.out);
-        } else {
-            if (Array.isArray(doc.out)) {
-                doc.out.push(obj);
-            } else {
-                doc.out = [obj];
-            }
-            insert = {
-                $push: { out: obj },
-            };
-        }
-
-        utils.logInfo(
-            `$job.handler (jobDocOutHandler): adding out - job: ${job.id} - status: ${job.status}`,
-            job.transid
-        );
-
-        payload.push({
-            loaded: true,
-            store: jobdetail,
-            targetid: job.id,
-            options: {
-                field: 'out',
-            },
-            type: job.outl ? EStoreActions.APPEND_STORE_TABLE_RCD : EStoreActions.ADD_STORE_TABLE_RCD,
-            values: {
-                out: job.out,
-                special: job.special,
-            },
-        });
-
-        return Promise.resolve([payload, insert]);
-    };
+    return Promise.resolve([payload, insert]);
+};
 
 /**
  *
