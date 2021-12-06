@@ -28,18 +28,21 @@ const replace: (code: string, configmap: string, org: string) => Promise<string>
     return Promise.resolve(code);
 };
 
-export const handleConfigmapsParams: (code: string, configmaps: string | string[], org: string) => Promise<string> =
-    async (code: string, configmaps: string | string[], org: string): Promise<string> => {
-        if (typeof configmaps === 'string') {
-            code = await replace(code, configmaps, org);
-        }
+export const handleConfigmapsParams: (
+    code: string,
+    configmaps: string | string[],
+    org: string
+) => Promise<string> = async (code: string, configmaps: string | string[], org: string): Promise<string> => {
+    if (typeof configmaps === 'string') {
+        code = await replace(code, configmaps, org);
+    }
 
-        // if there's only multiple confimaps
-        if (configmaps instanceof Array) {
-            for await (const configmap of configmaps) {
-                code = await replace(code, configmap, org);
-            }
+    // if there's only multiple confimaps
+    if (configmaps instanceof Array) {
+        for await (const configmap of configmaps) {
+            code = await replace(code, configmap, org);
         }
+    }
 
-        return Promise.resolve(code);
-    };
+    return Promise.resolve(code);
+};
