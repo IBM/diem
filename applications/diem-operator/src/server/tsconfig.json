@@ -8,7 +8,7 @@
         "paths": {
             "@common/*": ["./common/*"],
             "@interfaces": ["./interfaces/"],
-            "@config/*": ["./config/*"],
+            "@config/*": ["./config/*"]
         }
     },
     "filesGlob": ["../../node_modules/@types/***/**.d.ts", "**/**.ts"]
