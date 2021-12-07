@@ -4,12 +4,14 @@
 
 export {};
 
-const fs: any = require('fs');
-const path: any = require('path');
-const webpack: any = require('webpack');
-const NodeMonPlugin: any = require('nodemon-webpack-plugin');
+import fs from 'fs';
+import path from 'path';
+import * as webpack from 'webpack';
+
+const NodeMonPlugin = require('nodemon-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+
 const nodeModules: { [index: string]: any } = {};
-const ForkTsCheckerWebpackPlugin: any = require('fork-ts-checker-webpack-plugin');
 
 const Json2Dot: any = () => {
     const json: any = require(`${(global as any).__basedir}/local/env.json`);
@@ -100,11 +102,13 @@ module.exports = {
     },
 
     plugins: [
-        new ForkTsCheckerWebpackPlugin(),
+        new ForkTsCheckerWebpackPlugin({
+            eslint: { files: `${(global as any).__basedir}/src/server/**/*.ts`, enabled: true },
+        }),
 
         new NodeMonPlugin({
             nodeArgs: [`--inspect=0.0.0.0:${debugport}`],
-            watch: path.resolve('./server'),
+            watch: [path.resolve('./server')],
         }),
 
         new webpack.EnvironmentPlugin(env),
