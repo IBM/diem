@@ -4,9 +4,10 @@
 
 export {};
 
-const fs: any = require('fs');
-const path: any = require('path');
-const webpack: any = require('webpack');
+import fs from 'fs';
+import path from 'path';
+import * as webpack from 'webpack';
+
 const TerserPlugin: any = require('terser-webpack-plugin');
 const ForkTsCheckerWebpackPlugin: any = require('fork-ts-checker-webpack-plugin');
 
@@ -79,7 +80,9 @@ module.exports = {
     },
 
     plugins: [
-        new ForkTsCheckerWebpackPlugin(),
+        new ForkTsCheckerWebpackPlugin({
+            eslint: { files: `${(global as any).__basedir}/src/server/**/*.ts`, enabled: true },
+        }),
 
         new webpack.EnvironmentPlugin(env),
 
@@ -93,7 +96,6 @@ module.exports = {
             '@common': `${(global as any).__basedir}/src/server/common`,
             '@interfaces': `${(global as any).__basedir}/src/server/interfaces`,
             '@config': `${(global as any).__basedir}/src/server/config`,
-
         },
         extensions: ['.ts', '.js'],
         modules: [path.join(__dirname, 'src/server'), 'node_modules'],
