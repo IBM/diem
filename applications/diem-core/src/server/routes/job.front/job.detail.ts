@@ -51,6 +51,7 @@ export const getNodes: (jobs: IJobDetails) => string[] = (jobs: IJobDetails): st
     const nodes: string[] = Object.keys(jobs); // all keys are nodes
 
     /* loop over the jobs and find from elements that don't have a key*/
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     Object.entries(jobs).forEach(([_key, value]: [string, IJobDetail]) => {
         if (value && value.from) {
             const t: string[] = value.from;
@@ -95,7 +96,7 @@ export const makePayload: (doc: IJobSchema) => Promise<IModelPayload> = async (
     /** here we need to check if there is a shared template or not, if not then find the statement */
 
     let templ: ITemplatesModel | null | undefined;
-    let templatename: string = '';
+    let templatename = '';
 
     if (doc.templateid) {
         templ = await lookupTemplate(doc.templateid);

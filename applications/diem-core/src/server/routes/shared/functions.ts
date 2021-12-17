@@ -6,7 +6,7 @@ interface IMakeUrl {
     text: string;
 }
 
-export const noOrgMsg: string = 'Sorry, we could not determine any org';
+export const noOrgMsg = 'Sorry, we could not determine any org';
 
 export const getOrg: (req: IRequest) => string | undefined = (req: IRequest): string | undefined =>
     req.user && req.user.xorg && req.user.xorg.current && req.user.xorg.current.org
@@ -31,7 +31,7 @@ export const fmtTime: (seconds: number) => string = (seconds: number) => {
 };
 
 export const makeUrl: (params: IMakeUrl) => string = (params: IMakeUrl) => {
-    const href: string = `${utils.Env.K8_APPURL}${utils.Env.apppath}/${params.url}`;
+    const href = `${utils.Env.K8_APPURL}${utils.Env.apppath}/${params.url}`;
 
     return `<${href}|${params.text}>`;
 };
@@ -78,7 +78,7 @@ export const expand: any = (obj: any, sep = '__') => {
     return obj;
 };
 
-export const flatten__: any = (object: any, separator: string = '__') => {
+export const flatten__: any = (object: any, separator = '__') => {
     const isValidObject: any = (value: any) => {
         if (!value) {
             return false;

@@ -7,12 +7,12 @@ import { pubSub } from './pubsub';
 import { WSS } from './socket';
 import { getQueue } from './cron.jobs';
 
-const queue: string = 'core';
-const core_channel: string = 'core.*';
-const global_core_channel: string = 'global.core.*';
+const queue = 'core';
+const core_channel = 'core.*';
+const global_core_channel = 'global.core.*';
 
 const json_handler = async (json_array: any) => {
-    let i: number = -10;
+    let i = -10;
 
     let out: any[] = [];
     let base: any;
@@ -186,7 +186,7 @@ class Subscriber {
 
             case 'publish':
                 utils.logCyan(`$nats_subscriber (${msg_type}): client: ${payload.client}`);
-                const publish_msg: string = `📨 $publish (${payload.client}): ${payload.data}`;
+                const publish_msg = `📨 $publish (${payload.client}): ${payload.data}`;
 
                 void slackMsg(publish_msg);
                 break;

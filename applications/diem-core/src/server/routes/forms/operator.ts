@@ -5,7 +5,7 @@ import { FormsModel } from '@models';
 
 const cache: any = {};
 
-const operator: string = '$operator (getFormQuestions)';
+const operator = '$operator (getFormQuestions)';
 
 export const getFormQuestions: (req: IRequest) => Promise<any> = async (req: IRequest): Promise<any> => {
     const hrstart: [number, number] = process.hrtime();

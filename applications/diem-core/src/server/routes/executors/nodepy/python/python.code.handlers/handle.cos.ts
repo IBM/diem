@@ -19,7 +19,7 @@ export const handleCos: (code: string, org: string, files: boolean | IParamsFile
     let credentials: Partial<ICos> = {};
 
     const cosid: string | undefined = typeof files !== 'boolean' && files.cos ? files.cos : undefined;
-    let filename: string = '';
+    let filename = '';
 
     if (cosid) {
         const doc = await getConfigmap(cosid, org);

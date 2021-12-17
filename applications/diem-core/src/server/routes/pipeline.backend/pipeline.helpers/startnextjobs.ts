@@ -42,7 +42,7 @@ const getNextInQueue: (pldid: string, id: string) => Promise<string[]> = async (
                      * only jobs
                      */
 
-                    let allowed: boolean = true;
+                    let allowed = true;
 
                     for await (const parentId of pldoc.jobs[nodeId].queue) {
                         if (pldoc.jobs[parentId].status !== EJobStatus.completed) {

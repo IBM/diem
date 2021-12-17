@@ -89,7 +89,7 @@ class SparkLib {
     public deletePod: (id: string) => Promise<boolean> = async (id: string): Promise<boolean> => {
         const jobs: any = await this.getJobs();
 
-        const name: string = `j${id}z`;
+        const name = `j${id}z`;
 
         const t: any | undefined = jobs.find((e: any) => e.name === name);
 

@@ -8,7 +8,7 @@ export const configmapupdate: (req: IRequest) => Promise<IRequest | any> = async
     req: IRequest
 ): Promise<IRequest | any> => {
     const hrstart: [number, number] = process.hrtime();
-    const managerSecurity: number = 80;
+    const managerSecurity = 80;
 
     const body: IConfigmapsBody = { ...req.body };
 
@@ -18,7 +18,7 @@ export const configmapupdate: (req: IRequest) => Promise<IRequest | any> = async
     body.sessionid = req.sessionid;
 
     let id: string;
-    let isnew: boolean = false;
+    let isnew = false;
     let doc: IConfigmapsModel | null;
 
     if (!body.id) {

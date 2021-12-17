@@ -17,7 +17,7 @@ export const makePlPayload: (
 ): Promise<boolean> => {
     if (typeof doc !== 'boolean') {
         // we log as the pipeline has failed
-        const jobdetail: string = 'jobdetail.store';
+        const jobdetail = 'jobdetail.store';
 
         const pldoc: IJobSchema = doc.toObject();
 

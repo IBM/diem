@@ -15,7 +15,7 @@ interface IOut {
     outl?: boolean;
 }
 
-const jobdetail: string = 'jobdetail.store';
+const jobdetail = 'jobdetail.store';
 
 const runTime: (doc: IJobModel) => number = (doc: IJobModel): number => {
     if (!doc.job.jobend) {
@@ -234,6 +234,7 @@ export const jobHandler: (job: IJobResponse) => Promise<ISocketPayload | false> 
         });
 
         // remove log from values for jobs
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { log, audit, ...rest } = values;
 
         // update the all jobs

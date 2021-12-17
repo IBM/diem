@@ -6,7 +6,7 @@ import { Credentials } from '../common/cfenv';
 import { publisher } from './nats_publisher';
 import { subscriber } from './nats_subscriber';
 
-let retry: number = 0;
+let retry = 0;
 
 export interface INatsError extends NatsError {
     trace: string[];

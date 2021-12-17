@@ -5,7 +5,7 @@ import { base64encode, addTrace } from '@functions';
 import { INodePyJob } from '../np.interfaces';
 
 // ideal is to make this an env variable as it's the same path as spark in spark operator uses
-const filepath: string = '/tmp/spark-local-dir';
+const filepath = '/tmp/spark-local-dir';
 
 export const javascript_start: (doc: IJobSchema) => string = (doc: IJobSchema): string => String.raw`
 /* javascript_start */

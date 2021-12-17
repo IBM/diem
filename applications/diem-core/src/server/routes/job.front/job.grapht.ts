@@ -42,7 +42,7 @@ export const getGraphLinks: (pldoc: IJobSchema) => Promise<[string, string, IntP
     // const gl: string = l > 4 ? 'TD' : 'LR';
     const gl: string = rounds_nbr > 7 ? 'TD' : 'LR';
 
-    let graph: string = `%%{init: {'themeVariables': { 'fontSize': '12px'}}}%%\ngraph ${gl};linkStyle default interpolate basis;classDef mm_green fill:PaleGreen;classDef mm_red fill:lightcoral;;classDef mm_tan fill:Tan;`;
+    let graph = `%%{init: {'themeVariables': { 'fontSize': '12px'}}}%%\ngraph ${gl};linkStyle default interpolate basis;classDef mm_green fill:PaleGreen;classDef mm_red fill:lightcoral;;classDef mm_tan fill:Tan;`;
 
     const nodes: string[] = [];
 
@@ -51,14 +51,14 @@ export const getGraphLinks: (pldoc: IJobSchema) => Promise<[string, string, IntP
         if (value && value.from) {
             const t: string[] = value.from;
 
-            let arrow: string = '-->';
+            let arrow = '-->';
 
             if (jobs[key].required === EJobContinue.continue) {
                 arrow = '-.->';
             }
 
             t.forEach((ref: string) => {
-                const link: string = `${ref} ${arrow} ${key};`;
+                const link = `${ref} ${arrow} ${key};`;
 
                 graph += link;
             });
@@ -79,7 +79,7 @@ export const getGraphLinks: (pldoc: IJobSchema) => Promise<[string, string, IntP
 
     const payload: IntPayloadValues[] = handlePayloadValues(dbjobs); // the payload return array
 
-    let gantt: string = `gantt
+    let gantt = `gantt
     title ${pldoc.name.replace(':', '')}
     todayMarker off
     dateFormat  YYYY-MM-DD HH:mm:ss

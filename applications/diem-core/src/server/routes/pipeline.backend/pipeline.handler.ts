@@ -184,7 +184,7 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
     if (['Completed', 'Failed'].includes(job.status)) {
         pldoc = await updatePlJobStatus(pldoc, job);
 
-        let nextJobs: number = 0;
+        let nextJobs = 0;
 
         nextJobs = await startNextJobs(job, pldoc).catch(async (err) => {
             err.trace = addTrace(err.trace, '@at $pipeline.handler (pipelineHandler) - startNextJobs');

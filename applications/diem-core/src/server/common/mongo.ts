@@ -37,7 +37,7 @@ class Mongo {
     private tm?: NodeJS.Timeout;
 
     private readonly uri: string;
-    private retries: number = 0;
+    private retries = 0;
     private readonly credentials: ICredentials;
 
     public constructor() {
@@ -74,7 +74,7 @@ class Mongo {
 
         if (this.credentials.ca) {
             const sslCA: string = Buffer.from(this.credentials.ca, 'base64').toString();
-            const fn: string = 'ssl.pem';
+            const fn = 'ssl.pem';
             writeFileSync(fn, sslCA);
             options = {
                 connectTimeoutMS: 10000,
@@ -93,8 +93,8 @@ class Mongo {
             utils.logInfo(`$mongo (connect): connecting to the Mongo Service - pid: ${process.pid}`);
         }
 
-        await mongoose.connect(this.uri, options).catch(async (_err) => {
-            //
+        await mongoose.connect(this.uri, options).catch(async (err) => {
+            void utils.logError(`$mongo (connect): Connection Error - We cannot proceed - pid: ${process.pid}`, err);
         });
 
         return Promise.resolve();

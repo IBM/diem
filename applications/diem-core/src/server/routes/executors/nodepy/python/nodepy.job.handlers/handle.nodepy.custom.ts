@@ -36,7 +36,7 @@ export const handleNodePyCustomJob: (code: string, doc: IJobSchema) => Promise<s
     }
 
     try {
-        const custom: string = `### handle.nodepy.custom (handleNodePyCustomJob) ###\n\n${custom_code}\n\n###__CODE__###`;
+        const custom = `### handle.nodepy.custom (handleNodePyCustomJob) ###\n\n${custom_code}\n\n###__CODE__###`;
 
         code = code.replace('###__CODE__###', custom);
 

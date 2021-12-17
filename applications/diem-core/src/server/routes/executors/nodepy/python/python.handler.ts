@@ -21,7 +21,7 @@ import { handleValues, setValues } from './python.code.handlers/handle.values';
 import { handlePip } from './python.code.handlers/handle.pip';
 
 // ideal is to make this an env variable as it's the same path as spark in spark operator uses
-const filepath: string = '/tmp/spark-local-dir';
+const filepath = '/tmp/spark-local-dir';
 
 const py_start: (doc: IJobSchema) => string = (doc: IJobSchema): string => String.raw`### python.handler (py_start) ###
 

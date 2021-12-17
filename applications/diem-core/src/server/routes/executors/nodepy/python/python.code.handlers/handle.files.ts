@@ -5,9 +5,9 @@ export const handleFiles: (
 ) => Promise<string> = async (
     code: string,
     files: { name: string; value: string }[],
-    type: string = 'pandas'
+    type = 'pandas'
 ): Promise<string> => {
-    let insert: string = '';
+    let insert = '';
 
     for await (const [key, value] of Object.entries(files)) {
         if (type === 'string') {

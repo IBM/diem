@@ -3,8 +3,8 @@ import { IRequest } from '@interfaces';
 import { IQuery, TemplatesModel, FaIcons, ITemplateSchema } from '@models';
 import { parseFilter } from '../jobs/jobs';
 
-const viewSecurity: number = 5;
-const editSecurity: number = 60;
+const viewSecurity = 5;
+const editSecurity = 60;
 
 interface ITemplatePayload {
     createdby: string;

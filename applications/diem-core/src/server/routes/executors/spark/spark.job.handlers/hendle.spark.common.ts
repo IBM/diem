@@ -2,7 +2,7 @@ import { ConnModel, IConnSchema } from '@models';
 
 // not used : traceDirectory=/opt/spark/;traceLevel=TRACE_DIAGNOSTICS;traceFile=jcctrace.log;
 
-const truncate: string = 'TRUNCATE TABLE $TARGET';
+const truncate = 'TRUNCATE TABLE $TARGET';
 
 const jdbc_config_base: any = {
     db2: {

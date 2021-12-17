@@ -39,7 +39,7 @@ class Utils {
     private readonly jwtToken: string;
     private readonly slackHook: string;
 
-    private sKey: string = 'as5HjIILYjdjet';
+    private sKey = 'as5HjIILYjdjet';
 
     public constructor() {
         this.ev = new EventEmitter();
@@ -120,7 +120,7 @@ class Utils {
     };
 
     public logInfo = (msg: string, func?: string, hrend?: any) => {
-        let hr: string = '';
+        let hr = '';
         const fu: string = func ? ` - ${func}` : '';
 
         if (hrend) {
@@ -131,7 +131,7 @@ class Utils {
     };
 
     public logInfoT = (msg: any, func?: string, hrend?: any) => {
-        let hr: string = '';
+        let hr = '';
         const fu: string = func ? ` - ${func}` : '';
 
         if (hrend) {
@@ -176,9 +176,7 @@ class Utils {
         }
     };
 
-    public guid = () => {
-        return randomUUID();
-    };
+    public guid = () => randomUUID();
 
     public now = (): any => moment(new Date().getTime()).format('YYYY-MM-DD-HH.mm.ss.000000');
 
