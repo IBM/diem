@@ -94,7 +94,7 @@ class Mongo {
         }
 
         await mongoose.connect(this.uri, options).catch(async (err) => {
-            void utils.logError(`$mongo (connect): Connection Error - We cannot proceed - pid: ${process.pid}`, err);
+            await utils.logError(`$mongo (connect): Connection Error - We cannot proceed - pid: ${process.pid}`, err);
         });
 
         return Promise.resolve();

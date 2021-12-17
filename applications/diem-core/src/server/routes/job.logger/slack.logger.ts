@@ -106,7 +106,7 @@ export const toSlack: (doc: IJobModel) => Promise<void> = async (doc: IJobModel)
     }
 
     let emoji: string = isPl ? ':ok:' : ':information_source:';
-    let color = '#ececec';
+    let color: string;
 
     if (['Failed'].includes(status)) {
         emoji = isPl ? ':x:' : ':heavy_exclamation_mark:';
