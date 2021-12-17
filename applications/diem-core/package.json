@@ -1,7 +1,7 @@
 {
     "name": "diem-core",
     "description": "Diem Data Integration Engine Multipurpose",
-    "version": "1.19.0",
+    "version": "1.20.0",
     "author": "guy_huinen@be.ibm.com",
     "homepage": "https://github.com/IBM/DIEM",
     "repository": "https://github.com/IBM/DIEM",
