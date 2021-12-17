@@ -5,9 +5,9 @@ import { IPayload, IntJob } from '@interfaces';
 import { handler } from './etl.handler';
 import { stopWorker } from './etl.workers';
 
-const queue: string = 'nodepy';
-const nodepy_channel: string = 'nodepy.job.*';
-const global_nodepy_channel: string = 'global.nodepy.*';
+const queue = 'nodepy';
+const nodepy_channel = 'nodepy.job.*';
+const global_nodepy_channel = 'global.nodepy.*';
 
 class Subscriber {
     private nc!: NatsConnection;

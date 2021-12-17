@@ -6,6 +6,7 @@ export const addToBuffer: (sid: string, id: string, buffer: Buffer) => Promise<v
     sid: string,
     id: string,
     buffer: Buffer
+    // eslint-disable-next-line sonarjs/cognitive-complexity
 ) => {
     if (!workers[sid]) {
         console.warn(green, `$np ${process.pid} ${sid}: no running worker found for adding buffer`);
@@ -42,7 +43,7 @@ export const addToBuffer: (sid: string, id: string, buffer: Buffer) => Promise<v
                 const p_s_ts: number = meta.s_ts;
                 let s_ts: number;
 
-                let delay: number = 0;
+                let delay = 0;
 
                 if (p_s_ts > acc_ts) {
                     delay = p_s_ts - acc_ts;

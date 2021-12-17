@@ -5,8 +5,8 @@ import { utils } from '@config/utils';
 import { addTrace } from '../shared/functions';
 import { handler } from './services.handler';
 
-const queue: string = 'nodepy';
-const nodepy_channel: string = 'nodepy.services.*';
+const queue = 'nodepy';
+const nodepy_channel = 'nodepy.services.*';
 
 class Subscriber {
     private nc!: NatsConnection;
