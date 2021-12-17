@@ -13,7 +13,7 @@ interface IWebSocket extends WebSocket {
     id?: string;
 }
 
-const noauth: string = 'HTTP/1.1 401 Unauthorized\r\n\r\n';
+const noauth = 'HTTP/1.1 401 Unauthorized\r\n\r\n';
 
 const arr: (rc: string) => any[] = (rc: string) => {
     const list: any = {};

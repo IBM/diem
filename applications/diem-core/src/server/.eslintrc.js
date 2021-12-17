@@ -26,10 +26,10 @@ module.exports = {
     },
     plugins: ['@typescript-eslint', 'sonarjs', 'prettier', 'import', 'jsdoc'],
     extends: [
-        'prettier',
-        'plugin:sonarjs/recommended',
+        'plugin:@typescript-eslint/recommended',
         '../../src/webpack/eslintrc-base.js',
-        'plugin:prettier/recommended',
+        'plugin:sonarjs/recommended',
+        'prettier',
     ],
     rules: {
         'sonarjs/cognitive-complexity': ['error', 30],

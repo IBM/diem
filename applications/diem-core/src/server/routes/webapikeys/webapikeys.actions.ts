@@ -10,7 +10,7 @@ export const webapikeyupdate: (req: IRequest) => Promise<IRequest | any> = async
     req: IRequest
 ): Promise<IRequest | any> => {
     const hrstart: [number, number] = process.hrtime();
-    const managerSecurity: number = 80;
+    const managerSecurity = 80;
 
     const body: IWebApikeysBody = { ...req.body };
 
@@ -21,7 +21,7 @@ export const webapikeyupdate: (req: IRequest) => Promise<IRequest | any> = async
     body.org = req.user.org;
 
     let id: string;
-    let isnew: boolean = false;
+    let isnew = false;
     let doc: IWebApikeysModel | null;
 
     if (!body.id) {

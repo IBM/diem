@@ -78,7 +78,7 @@ export const orgdelete: (req: IRequest, res: IResponse) => Promise<IRequest | an
         process.hrtime(hrstart)
     );
 
-    let relogin: boolean = false;
+    let relogin = false;
 
     // for each of the users lookup how many user profiles we still have
     profiles.forEach(async (profile: IProfileSchema) => {

@@ -32,6 +32,8 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
 
       - name: get-npm-version
         id: package-version
@@ -48,13 +50,19 @@ jobs:
       - run: npm run eslint --if-present
       - run: npm run build --if-present
 
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
       - name: Build the Docker image
         run: docker build . --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') --file docker/Dockerfile --tag quay.io/diem/core:${{ steps.package-version.outputs.current-version}}
 
       - name: Login to quay.io
         run: echo "${{secrets.DOCKER_QUAY}}" | docker login -u="diem+ibm_deploy_robot" --password-stdin quay.io
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' 
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
       - name: Push the Docker image
         run: docker push quay.io/diem/core:${{ steps.package-version.outputs.current-version}}
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' 
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'

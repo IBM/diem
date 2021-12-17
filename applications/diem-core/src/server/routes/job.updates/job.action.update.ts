@@ -7,8 +7,8 @@ import { extract__, expand, addTrace } from '@functions';
 import { nextSchedule } from '../job.backend/job.functions';
 import { makePayload } from '../job.front/job.detail';
 
-const detail_store: string = 'jobdetail.store';
-const update_request: string = 'Update Request';
+const detail_store = 'jobdetail.store';
+const update_request = 'Update Request';
 
 const isObject: any = (item: any) => item && typeof item === 'object' && !Array.isArray(item) && item !== null;
 
@@ -36,6 +36,7 @@ export const mergeDeep: any = (target: any, source: any) => {
 };
 
 const changedFields: (body: IJobBody) => string = (body: IJobBody) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { action, annotations, jobid, id, email, username, transid, sessionid, org, jobs, log, graph, ...rest } =
         body;
 
@@ -45,7 +46,7 @@ const changedFields: (body: IJobBody) => string = (body: IJobBody) => {
 export const actionUpdate: (body: IJobBody) => Promise<any> = async (body: IJobBody) => {
     /* get the id here */
 
-    let isNew: boolean = false;
+    let isNew = false;
 
     let doc: IJobModel | null;
 

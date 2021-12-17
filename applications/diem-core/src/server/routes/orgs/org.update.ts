@@ -25,7 +25,7 @@ export const orgupdate: (req: IRequest, res: IResponse) => Promise<IRequest | an
     body.sessionid = req.sessionid;
 
     let id: string;
-    let isnew: boolean = false;
+    let isnew = false;
     let doc: IOrgsModel | null = null;
 
     let org: string | undefined = body.org;

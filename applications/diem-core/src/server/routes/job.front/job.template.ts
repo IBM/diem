@@ -9,8 +9,8 @@ export const lookupTemplate: (id: string) => Promise<ITemplatesModel | null> = a
     id: string
 ): Promise<ITemplatesModel | null> => TemplatesModel.findOne({ _id: id }).exec();
 
-const detail_store: string = 'jobdetail.store';
-const update_request: string = 'Template Request';
+const detail_store = 'jobdetail.store';
+const update_request = 'Template Request';
 
 const getTemplate: (body: IJobBody) => Promise<any> = async (body: IJobBody): Promise<any> => {
     /* get the id here */

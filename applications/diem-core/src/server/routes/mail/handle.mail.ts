@@ -38,7 +38,7 @@ const prepareMail: (mail: IMailInput) => Promise<any> = async (mail: IMailInput)
         recipients: mail.recipients,
     };
 
-    let hasMail: boolean = true;
+    let hasMail = true;
 
     const params: IMailParams | undefined = mail.params;
     // console.info(mail.params, Object.keys(p));

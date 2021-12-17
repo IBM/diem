@@ -19,7 +19,7 @@ import { handleValues, setValues } from './python.code.handlers/handle.values';
 import { handlePipServices } from './python.code.handlers/handle.pip.services';
 
 // ideal is to make this an env variable as it's the same path as spark in spark operator uses
-const filepath: string = '/tmp/spark-local-dir';
+const filepath = '/tmp/spark-local-dir';
 
 const py_start_services: (doc: IJobSchema) => string = (
     doc: IJobSchema

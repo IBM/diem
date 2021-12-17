@@ -7,7 +7,7 @@ export const snippetupdate: (req: IRequest) => Promise<IRequest | any> = async (
     req: IRequest
 ): Promise<IRequest | any> => {
     const hrstart: [number, number] = process.hrtime();
-    const managerSecurity: number = 80;
+    const managerSecurity = 80;
 
     const body: ISnippetsBody = { ...req.body };
 
@@ -17,7 +17,7 @@ export const snippetupdate: (req: IRequest) => Promise<IRequest | any> = async (
     body.sessionid = req.sessionid;
 
     let id: string;
-    let isnew: boolean = false;
+    let isnew = false;
     let doc: ISnippetsModel | null;
 
     if (!body.id) {

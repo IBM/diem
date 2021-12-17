@@ -20,8 +20,8 @@ const unique: (myArr: any[], prop: string) => any[] = (myArr: any[], prop: strin
  * @function sendMail : the sendmail function
  */
 class SendMail {
-    public api_key: string = '';
-    public userid: string = '';
+    public api_key = '';
+    public userid = '';
 
     public constructor() {
         void this.loadKey();

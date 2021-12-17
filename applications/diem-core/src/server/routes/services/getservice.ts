@@ -9,7 +9,7 @@ import { addTrace } from '@functions';
 import { prepareNodePyServicesJob, IServices } from '../executors/nodepy/np.create.services';
 import { INodePyJob } from '../executors/nodepy/np.interfaces';
 
-const jobdetail: string = 'jobdetail.store';
+const jobdetail = 'jobdetail.store';
 
 export const servicesOutHandler: (job: Partial<IJobResponse>) => Promise<any> = async (
     job: Partial<IJobResponse>
@@ -60,7 +60,7 @@ export const getservice: (req: IRequest) => Promise<any> = async (req: IRequest)
     The code must continue
     */
 
-    const channel: string = 'nodepy.job.start';
+    const channel = 'nodepy.job.start';
 
     try {
         void publisher.publish(channel, {

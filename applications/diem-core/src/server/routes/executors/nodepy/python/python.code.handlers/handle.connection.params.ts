@@ -12,6 +12,7 @@ const replaceParams: (code: string, connections: any, org: string) => Promise<st
         return code;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { _id, odbc, __v, annotations, project, ...conn }: any = doc;
 
     for (const [key, value] of Object.entries(doc)) {

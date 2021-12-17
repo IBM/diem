@@ -4,8 +4,8 @@ import { cos } from '@common/cos';
 import { S3 } from 'ibm-cos-sdk';
 import { FaIcons } from '@models';
 
-const viewSecurity: number = 60;
-const editSecurity: number = 60;
+const viewSecurity = 60;
+const editSecurity = 60;
 
 interface IFilePayload {
     createdby: string;

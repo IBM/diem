@@ -71,7 +71,7 @@ export const handleWithCustom: (doc: IJobSchema, code: string) => Promise<string
 
     code = code.replace('###__CODE__###', py_session(local));
 
-    const custom_code: string = `
+    const custom_code = `
 ### handle.spark.custom (handleWithCustom) ###
 
 ${doc.custom.code}

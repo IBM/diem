@@ -60,8 +60,8 @@ export const addVolume: (crdjob: ICrdConfig, volume: string, id: string) => ICrd
     volume: string,
     id: string
 ): ICrdConfig => {
-    const volumename: string = 'spark-local-dir-1';
-    const mountPath: string = '/tmp/spark-local-dir';
+    const volumename = 'spark-local-dir-1';
+    const mountPath = '/tmp/spark-local-dir';
 
     utils.logInfo(`$spark.common (addVolume): mounting volume - volume: ${volume} - name: ${volumename} - id: ${id}`);
 

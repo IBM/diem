@@ -10,7 +10,7 @@ import { handleSnippets } from '../python/python.code.handlers/handle.snippets';
 import { handleValues } from '../python/python.code.handlers/handle.values';
 
 // ideal is to make this an env variable as it's the same path as spark in spark operator uses
-const filepath: string = '/tmp/spark-local-dir';
+const filepath = '/tmp/spark-local-dir';
 
 const javascript_start: (doc: IJobSchema) => string = (doc: IJobSchema): string => String.raw`
 /* javascript_start */
