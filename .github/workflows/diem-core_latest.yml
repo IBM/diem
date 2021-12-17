@@ -33,7 +33,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          path: applications/diem-core
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
 
       - name: Use Node.js
         uses: actions/setup-node@v1
