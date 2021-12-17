@@ -71,7 +71,7 @@ class Publisher {
     };
 
     public publish_global = (channel: string, event: any) => {
-        const channel_name: string = `global.core.${channel}`;
+        const channel_name = `global.core.${channel}`;
         utils.logInfo(`$nats_publisher (publish_global): publishing : channel: ${channel_name}`);
         this.nc.publish(channel_name, toBuff({ client: this.client, data: event }));
     };

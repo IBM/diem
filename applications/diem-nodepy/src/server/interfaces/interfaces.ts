@@ -89,9 +89,9 @@ export interface IJobResponse {
 
 export type IJob = IntStmtOut | IJobResponse;
 
-export const green: string = '\x1b[92m%s\x1b[0m';
-export const red: string = '\x1b[31m%s\x1b[0m';
-export const blue: string = '\x1b[34m%s\x1b[0m';
+export const green = '\x1b[92m%s\x1b[0m';
+export const red = '\x1b[31m%s\x1b[0m';
+export const blue = '\x1b[34m%s\x1b[0m';
 
 export interface IHandler {
     ok: true;
