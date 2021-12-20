@@ -6,9 +6,9 @@ export const handleMail: (code: string, mail_params: any, org: string, configmap
     org: string,
     configmap?: string
 ): Promise<string> => {
-    let api_key: string = '';
+    let api_key = '';
 
-    let mail_options: string = '';
+    let mail_options = '';
 
     let doc;
 

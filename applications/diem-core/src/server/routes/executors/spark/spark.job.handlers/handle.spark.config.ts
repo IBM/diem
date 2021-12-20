@@ -6,7 +6,7 @@ import { py_partition, py_opt_dropcolumns, py_tgt_jdbc, py_session, py_conn_src,
 import { lookupTemplate } from '../../../job.front/job.template';
 import { getConnection } from './hendle.spark.common';
 
-const codestring: string = '###__CODE__###';
+const codestring = '###__CODE__###';
 
 export const handleWithConfig: (doc: IJobSchema, code: string) => Promise<string> = async (
     doc: IJobSchema,

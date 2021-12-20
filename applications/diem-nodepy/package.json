@@ -1,6 +1,6 @@
 {
     "name": "diem-nodepy",
-    "version": "1.7.0",
+    "version": "1.8.0",
     "description": "ETL- Manager NodePy",
     "config": {
         "appname": "diem-nodepy",
@@ -18,18 +18,18 @@
     ],
     "devDependencies": {
         "@types/core-js": "^2.5.5",
-        "@types/node": "^16.11.11",
+        "@types/node": "^17.0.0",
         "@types/rimraf": "^3.0.2",
         "@types/webpack": "^5.28.0",
         "@types/webpack-env": "^1.16.3",
-        "@typescript-eslint/eslint-plugin": "^5.5.0",
-        "@typescript-eslint/parser": "^5.5.0",
-        "browserslist": "^4.18.1",
-        "core-js": "^3.19.3",
-        "eslint": "^8.4.0",
+        "@typescript-eslint/eslint-plugin": "^5.7.0",
+        "@typescript-eslint/parser": "^5.7.0",
+        "browserslist": "^4.19.1",
+        "core-js": "^3.20.0",
+        "eslint": "^8.4.1",
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-import": "^2.25.3",
-        "eslint-plugin-jsdoc": "^37.1.0",
+        "eslint-plugin-jsdoc": "^37.2.3",
         "eslint-plugin-node": "^11.1.0",
         "eslint-plugin-prettier": "^4.0.0",
         "eslint-plugin-sonarjs": "^0.11.0",
@@ -38,15 +38,16 @@
         "npm-run-all": "^4.1.5",
         "prettier": "^2.5.1",
         "ts-loader": "^9.2.6",
-        "typescript": "^4.5.2",
+        "typescript": "^4.5.4",
         "typescript-eslint": "0.0.1-alpha.0",
-        "webpack": "^5.64.4",
+        "webpack": "^5.65.0",
         "webpack-cli": "^4.9.1"
     },
     "scripts": {
         "build": "./node_modules/.bin/npm-run-all lock webpack:build webpack:node",
         "start": "node --max-old-space-size=8192 ./server/server.js",
         "eslint": "eslint -c ./src/server/.eslintrc.js ./src/server/ --ext .ts",
+        "eslint-fix": "eslint -c ./src/server/.eslintrc.js ./src/server/ --fix --ext .ts",
         "docker:push": "docker push $npm_package_config_containername",
         "docker:build": "docker build --no-cache -t $npm_package_config_containername -f docker/Dockerfile .",
         "kube:local": "./node_modules/.bin/npm-run-all build docker:build docker:push",
@@ -55,6 +56,6 @@
         "webpack:node": "webpackenv=node webpack --mode production",
         "webpack:node-test": "webpackenv=node-test webpack -w --mode development",
         "lock": "npm install --package-lock",
-        "requirement": "pip-upgrade --dry-run --skip-package-installation requirements.txt"
+        "requirements": "pip-upgrade --dry-run --skip-package-installation requirements.txt"
     }
 }

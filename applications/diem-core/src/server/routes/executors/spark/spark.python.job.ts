@@ -9,8 +9,8 @@ import { caclCap } from '../../spark-operator/spark.capacity';
 import { sparkWatcher } from '../../spark-operator/spark.watcher';
 import { addVolume, getCosCredentials, ICos } from './spark.common';
 
-const stocator: string = '/opt/cos/stocator-1.1.3.jar';
-const encoder: string = '-Ddb2.jcc.charsetDecoderEncoder=3';
+const stocator = '/opt/cos/stocator-1.1.3.jar';
+const encoder = '-Ddb2.jcc.charsetDecoderEncoder=3';
 
 export const createSparkPythonJob: (doc: IJobSchema) => Promise<ICapacity> = async (
     doc: IJobSchema

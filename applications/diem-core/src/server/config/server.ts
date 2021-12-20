@@ -30,7 +30,7 @@ const removeToken = (req: IRequest): void => {
 export class Server {
     public pack: IntEnv;
 
-    private fatal: boolean = false;
+    private fatal = false;
 
     public constructor() {
         this.pack = utils.Env;
@@ -134,7 +134,7 @@ export class Server {
             });
         }
 
-        const va: string = 'vendors-app.js';
+        const va = 'vendors-app.js';
 
         if (ass[va]) {
             env.script.push({
@@ -352,7 +352,7 @@ export class Server {
             return res.redirect('/login');
         }
 
-        let method: string = '';
+        let method = '';
 
         if (req.headers.authorization) {
             token = req.headers.authorization.split(' ')[1];
@@ -486,7 +486,7 @@ export class Server {
             return next(err);
         }
 
-        const errMsg: string = '$server (logErrors)';
+        const errMsg = '$server (logErrors)';
 
         void utils.logError(errMsg, err);
         void toMQ(req, 401, errMsg, 'error', err, undefined, this.pack);

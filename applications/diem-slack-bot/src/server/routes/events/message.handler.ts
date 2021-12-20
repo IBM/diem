@@ -7,6 +7,9 @@ import { reloadServiceDoc, services } from '../service.doc';
 import { serviceHandler } from './service.handler';
 import { payloads } from './home.handler';
 
+const chat = 'chat.postMessage';
+
+// eslint-disable-next-line sonarjs/cognitive-complexity
 const argsParser: (event: any) => IArgsBody = (event: any): IArgsBody => {
     //const message = event.text.replace(thisbot.key, '').replaceAll('\n', ' ');
     const message = event.text.replace(thisbot.key, '').split('\n')[0];
@@ -159,9 +162,10 @@ export const messageHandler: (event: any) => Promise<boolean | any> = async (eve
     }
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const helpMethod = async (event: any, _args: string[]): Promise<any> => {
     await api.callAPIMethodPost(
-        'chat.postMessage',
+        chat,
         payloads.help_message({
             thread_ts: event.thread_ts ? event.thread_ts : event.event_ts,
             channel: event.channel,
@@ -171,7 +175,7 @@ const helpMethod = async (event: any, _args: string[]): Promise<any> => {
 
 const otherMethod = async (event: any, body: IArgsBody): Promise<any> => {
     await api.callAPIMethodPost(
-        'chat.postMessage',
+        chat,
 
         {
             thread_ts: event.thread_ts ? event.thread_ts : event.event_ts,
@@ -186,7 +190,7 @@ const otherMethod = async (event: any, body: IArgsBody): Promise<any> => {
 // reply method can be used to reply to an incoming message
 export const replyMethod = async (event: any, body: IArgsBody, text: string, data: string = text): Promise<any> => {
     await api.callAPIMethodPost(
-        'chat.postMessage',
+        chat,
 
         {
             thread_ts: event.thread_ts ? event.thread_ts : event.event_ts,

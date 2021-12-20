@@ -19,7 +19,7 @@ export const updatePlJobStatus: (pldoc: IJobModel, job: { id: string; status: st
     const plid: string = pldoc._id.toString();
 
     if (pldoc.jobs[job.id] && pldoc.jobs[job.id].status !== job.status) {
-        const f: string = `jobs.${job.id}.status`;
+        const f = `jobs.${job.id}.status`;
 
         const oldStatus: string = pldoc.jobs[job.id].status;
 

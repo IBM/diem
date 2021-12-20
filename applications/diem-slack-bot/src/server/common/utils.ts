@@ -36,7 +36,7 @@ class Utils {
     private SLACK: ISlack = Credentials('slack');
     private slackHook: string;
 
-    private sKey: string = 'as5HjIILYjdjet';
+    private sKey = 'as5HjIILYjdjet';
 
     public constructor() {
         this.ev = new EventEmitter();
@@ -108,7 +108,7 @@ class Utils {
     };
 
     public logInfo = (msg: any, func?: string, hrend?: any) => {
-        let hr: string = '';
+        let hr = '';
         const fu: string = func ? ` - ${func}` : '';
 
         if (hrend) {
@@ -119,7 +119,7 @@ class Utils {
     };
 
     public logInfoT = (msg: any, func?: string, hrend?: any) => {
-        let hr: string = '';
+        let hr = '';
         const fu: string = func ? ` - ${func}` : '';
 
         if (hrend) {

@@ -3,9 +3,9 @@ import { IRequest } from '@interfaces';
 import { IQuery, ISnippetSchema, SnippetsModel, FaIcons, ISnippetPayload, EIdType } from '@models';
 import { parseFilter } from '../jobs/jobs';
 
-const viewSecurity: number = 5;
-const editSecurity: number = 60;
-const managerSecurity: number = 80;
+const viewSecurity = 5;
+const editSecurity = 60;
+const managerSecurity = 80;
 
 /**
  * Nothing will be rejected here, in case of an error we log the error but return an empty [] to the user

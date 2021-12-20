@@ -3,8 +3,8 @@ import { IRequest } from '@interfaces';
 import { ConnModel, IConnSchema, IConnModel, IQuery, FaIcons, EIdType } from '@models';
 import { addTrace } from '@functions';
 
-const viewSecurity: number = 60;
-const editSecurity: number = 60;
+const viewSecurity = 60;
+const editSecurity = 60;
 
 export interface IConnectionPayloadValues extends Partial<IConnModel> {
     deleteicon?: string;

@@ -3,9 +3,9 @@ import { IRequest } from '@interfaces';
 import { IQuery, IWebhookPayload, IWebhooksSchema, WebhooksModel, FaIcons, EIdType } from '@models';
 import { parseFilter } from '../jobs/jobs';
 
-const viewSecurity: number = 60;
-const editSecurity: number = 60;
-const managerSecurity: number = 80;
+const viewSecurity = 60;
+const editSecurity = 60;
+const managerSecurity = 80;
 
 export const getwebhook: (selector: string) => Promise<IWebhooksSchema> = async (
     selector: string

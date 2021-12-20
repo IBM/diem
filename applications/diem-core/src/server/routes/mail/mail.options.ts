@@ -18,7 +18,7 @@ interface IRawParams {
 class MailTemplates implements IRawParams {
     [k: string]: any;
 
-    private header: string = `
+    private header = `
                             <!DOCTYPE html>
                             <html lang="en">
                             <head>
@@ -31,7 +31,7 @@ class MailTemplates implements IRawParams {
                             <body>
                             `;
 
-    private closing: string = `
+    private closing = `
                             <hr/>
                             <br/>
                             <div>This email was sent by an automated mail agent on behalf of the user.</div>
@@ -41,7 +41,7 @@ class MailTemplates implements IRawParams {
                             </html>
                             `;
 
-    private url: string = `https://${utils.Env.K8_APPURLSHORT}${utils.Env.apppath}/jobdetail`;
+    private url = `https://${utils.Env.K8_APPURLSHORT}${utils.Env.apppath}/jobdetail`;
 
     public getTemplate: (template: string, mailContent: IMailContent) => IMailElements | false = (
         template: string,
@@ -115,7 +115,7 @@ class MailTemplates implements IRawParams {
     };
 
     private mailBody: (values: IMailContentValues) => string = (values: IMailContentValues) => {
-        const href: string = `${this.url}/${values.id}`;
+        const href = `${this.url}/${values.id}`;
 
         return `
             <div style='padding: 15px;margin:15px;border: 1px solid #c8d2d2;background:#dfe9e9;border-radius: 10px;'>

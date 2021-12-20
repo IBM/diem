@@ -3,8 +3,8 @@ import { DataModel, IJobBody, IJobModel } from '@models';
 import { addTrace } from '@functions';
 import { makePayload } from '../job.front/job.detail';
 
-const detail_store: string = 'jobdetail.store';
-const update_request: string = 'Update Request';
+const detail_store = 'jobdetail.store';
+const update_request = 'Update Request';
 
 export const actionAssign: (body: IJobBody) => Promise<any> = async (body: IJobBody) => {
     /* get the id here */

@@ -56,7 +56,7 @@ export interface IExpressConfig {
 const hasSome: any = (req: IRequest, urls: string[]): boolean => urls.some((url: string) => req.path.includes(url));
 
 const requestid = (req: IRequest, res: IResponse, next: () => any): any => {
-    const x: string = 'X-Request-Id';
+    const x = 'X-Request-Id';
 
     req.transid = req.header(x) ? req.header(x) : utils.guid();
 
@@ -66,7 +66,7 @@ const requestid = (req: IRequest, res: IResponse, next: () => any): any => {
 };
 
 const sessionid = (req: IRequest, res: IResponse, next: () => any): any => {
-    const x: string = 'X-Correlation-ID';
+    const x = 'X-Correlation-ID';
 
     req.sessionid = req.header(x) ? req.header(x) : utils.guid();
 
@@ -76,7 +76,7 @@ const sessionid = (req: IRequest, res: IResponse, next: () => any): any => {
 };
 
 const xorg = (req: IRequest, res: IResponse, next: () => any): any => {
-    const x: string = 'X-Org-Protection';
+    const x = 'X-Org-Protection';
     const t: string | undefined = req.header(x);
     if (t) {
         try {
@@ -95,12 +95,12 @@ export class Express {
     public app: express.Application = express();
 
     private session: any;
-    private fatal: boolean = false;
+    private fatal = false;
     private assets!: any;
 
-    private policy: string = `geolocation 'self';midi 'none';sync-xhr 'none';microphone 'self';camera 'self';magnetometer 'none';gyroscope 'none';fullscreen 'self';payment 'none';`;
+    private policy = `geolocation 'self';midi 'none';sync-xhr 'none';microphone 'self';camera 'self';magnetometer 'none';gyroscope 'none';fullscreen 'self';payment 'none';`;
 
-    private policyApi: string = `geolocation 'none';midi 'none';sync-xhr 'none';microphone 'none';camera 'none';magnetometer 'none';gyroscope 'none';fullscreen 'none';payment 'none';`;
+    private policyApi = `geolocation 'none';midi 'none';sync-xhr 'none';microphone 'none';camera 'none';magnetometer 'none';gyroscope 'none';fullscreen 'none';payment 'none';`;
 
     private contentSecurityPolicy: any = {
         directives: {
@@ -171,6 +171,7 @@ export class Express {
                             return res.redirect(req.session.originalUrl || '/');
                         }
                     },
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     (err: Error, _req: IRequest, res: IResponse, _next: any) => {
                         if (err) {
                             // maybe an old sso callback, let's return to the login
@@ -287,7 +288,7 @@ export class Express {
 
     private CSP: any = () => {
         const t: any[] = [];
-        const unsafe: string = "'unsafe-eval'";
+        const unsafe = "'unsafe-eval'";
 
         Object.keys(this.assets).forEach((v: string) => {
             t.push(this.assets[v].integrity);

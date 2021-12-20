@@ -73,7 +73,7 @@ export const toSlack: (doc: IJobModel) => Promise<void> = async (doc: IJobModel)
             // let us first check if there's a condition for the status
 
             if (slack.status) {
-                let allowed: boolean = false; //let's take worse case
+                let allowed = false; //let's take worse case
 
                 // there is a status
                 if (Array.isArray(slack.status) && slack.status.includes(doc.job.status)) {
@@ -106,7 +106,7 @@ export const toSlack: (doc: IJobModel) => Promise<void> = async (doc: IJobModel)
     }
 
     let emoji: string = isPl ? ':ok:' : ':information_source:';
-    let color: string = '#ececec';
+    let color: string;
 
     if (['Failed'].includes(status)) {
         emoji = isPl ? ':x:' : ':heavy_exclamation_mark:';
@@ -168,7 +168,7 @@ export const toSlack: (doc: IJobModel) => Promise<void> = async (doc: IJobModel)
         });
     }
 
-    const footer: string = `${utils.Env.K8_SYSTEM_NAME} - ${utils.Env.packname}@${utils.Env.version} - ${process.version}`;
+    const footer = `${utils.Env.K8_SYSTEM_NAME} - ${utils.Env.packname}@${utils.Env.version} - ${process.version}`;
     const msg: {
         attachments: any;
         caller?: string;

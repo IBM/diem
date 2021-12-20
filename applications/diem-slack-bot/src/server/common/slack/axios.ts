@@ -77,6 +77,7 @@ export const postMsgForm: (options: IAxiosForm) => Promise<any> = async (options
         .post<URLSearchParams, AxiosResponse<IAxiosResponse>>(options.url, options.formData, {
             headers: options.headers,
         })
+        // eslint-disable-next-line sonarjs/no-identical-functions
         .catch(async (axiosError: AxiosError) => {
             const err: any = {
                 code: axiosError.code || 'n/a',
