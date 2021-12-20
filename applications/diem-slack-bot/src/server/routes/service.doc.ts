@@ -52,8 +52,6 @@ export const loadServiceDoc = async () => {
             };
 
             void utils.logError('$service.doc (loadServiceDoc)', error);
-
-            return;
         });
 
     if (response?.data?.out) {

@@ -8,7 +8,7 @@ import { utils } from './utils';
 const jc = JSONCodec();
 const sc = StringCodec();
 
-let retry: number = 0;
+let retry = 0;
 
 export interface IPayload {
     inbox?: string;

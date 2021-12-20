@@ -27,7 +27,7 @@ const makeBlocks: (err: any) => any = (err: any) => {
         }
     });
 
-    const footer: string = `${utils.Env.K8_SYSTEM_NAME} - ${utils.Env.packname}@${utils.Env.version} - ${process.version}`;
+    const footer = `${utils.Env.K8_SYSTEM_NAME} - ${utils.Env.packname}@${utils.Env.version} - ${process.version}`;
 
     return {
         attachments: [

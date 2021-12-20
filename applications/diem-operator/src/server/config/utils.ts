@@ -44,7 +44,7 @@ class Utils {
     };
 
     public logInfo = (msg: any, func?: string, hrend?: any) => {
-        let hr: string = '';
+        let hr = '';
         const fu: string = func ? ` - ${func}` : '';
 
         if (hrend) {

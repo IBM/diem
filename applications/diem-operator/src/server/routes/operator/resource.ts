@@ -60,11 +60,7 @@ const getState = (container_status: V1ContainerStatus | undefined) => {
         return 'unknown';
     }
 
-    if (state.running) {
-        return 'running';
-    } else if (state.terminated) {
-        return 'running';
-    } else if (state.waiting) {
+    if (state.running || state.terminated || state.waiting) {
         return 'running';
     }
 
@@ -308,8 +304,6 @@ export default class Operator {
         await Axios.request(request).catch((error) => {
             if (error) {
                 console.error(errorToJson(error));
-
-                return;
             }
         });
     }

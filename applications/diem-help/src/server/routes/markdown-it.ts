@@ -88,7 +88,7 @@ export const convert: (req: IRequest) => Promise<string> = async (req: IRequest)
         itempath = '404.md';
     }
 
-    const location: string = `${path.resolve()}/docs/${itempath}`;
+    const location = `${path.resolve()}/docs/${itempath}`;
 
     const content_buffer: string | Buffer = await fs.readFile(location).catch(async (err: Error) => {
         console.error('this is and error', err);

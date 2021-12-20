@@ -16,6 +16,7 @@ const bot_token: string | undefined = process.env.bot_token;
 export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean | any> = async (
     payload: any,
     body: IArgsBody
+    // eslint-disable-next-line sonarjs/cognitive-complexity
 ): Promise<boolean | any> => {
     if (!services_url) {
         utils.logInfo('$service.handler (serviceHandler): no service_url');
@@ -94,7 +95,7 @@ export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean 
     /*  the part where we are not using slack methods in the code themselved */
 
     let out: any = 'No Result';
-    const text: string = `Your data for ${body.params.action || 'your request'}`;
+    const text = `Your data for ${body.params.action || 'your request'}`;
     const channel: string = payload.channel;
     const thread_ts = payload.thread_ts || payload.ts;
 

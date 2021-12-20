@@ -23,7 +23,7 @@ const logErrors = async (err: IError, req: IRequest, res: IResponse, next: (err:
         return next(err);
     }
 
-    const errMsg: string = '$server (logErrors)';
+    const errMsg = '$server (logErrors)';
 
     await slackMsgInt(err);
     await utils.logMQError(errMsg, req, err);
@@ -34,7 +34,7 @@ const logErrors = async (err: IError, req: IRequest, res: IResponse, next: (err:
 export class Server {
     public pack: IntEnv;
 
-    private fatal: boolean = false;
+    private fatal = false;
 
     public constructor() {
         this.pack = utils.Env;

@@ -10,7 +10,7 @@ import { NC } from './nats_connect';
 export class Server {
     public pack: IntEnv;
 
-    private fatal: boolean = false;
+    private fatal = false;
 
     public constructor() {
         this.pack = utils.Env;
