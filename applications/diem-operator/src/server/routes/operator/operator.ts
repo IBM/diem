@@ -63,11 +63,7 @@ const getState = (container_status: V1ContainerStatus | undefined) => {
         return 'unknown';
     }
 
-    if (state.running) {
-        return 'running';
-    } else if (state.terminated) {
-        return 'running';
-    } else if (state.waiting) {
+    if (state.running || state.terminated || state.waiting) {
         return 'running';
     }
 

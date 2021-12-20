@@ -14,7 +14,7 @@ matplotlib==3.5.1
 jinja2==3.0.3
 seaborn==0.11.2
 sqlparse==0.4.2
-pymongo[tls]==4.0.1
+pymongo==4.0.1
 pyarrow==6.0.1
 sendgrid==6.9.3
 diemlib==1.1.4

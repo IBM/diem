@@ -16,7 +16,7 @@ export const limiter = rateLimit({
 
 const CSP: any = (assets: IAsserts) => {
     const t: any[] = [];
-    const unsafe: string = "'unsafe-eval'";
+    const unsafe = "'unsafe-eval'";
 
     Object.keys(assets).forEach((v: string) => {
         t.push(assets[v].integrity);
@@ -36,7 +36,7 @@ const CSP: any = (assets: IAsserts) => {
 };
 
 const requestid = (req: IRequest, res: IResponse, next: () => any): any => {
-    const x: string = 'X-Request-Id';
+    const x = 'X-Request-Id';
 
     req.transid = req.header(x) ? req.header(x) : utils.guid();
 
@@ -66,13 +66,13 @@ const hasSome: any = (req: IRequest, urls: string[]): boolean => urls.some((url:
 export class Express {
     public app: express.Application = express();
 
-    private fatal: boolean = false;
+    private fatal = false;
 
     // eslint-disable-next-line @typescript-eslint/quotes, max-len
-    private policy: string = `geolocation 'self';midi 'none';sync-xhr 'none';microphone 'self';camera 'self';magnetometer 'none';gyroscope 'none';fullscreen 'self';payment 'none';`;
+    private policy = `geolocation 'self';midi 'none';sync-xhr 'none';microphone 'self';camera 'self';magnetometer 'none';gyroscope 'none';fullscreen 'self';payment 'none';`;
 
     // eslint-disable-next-line @typescript-eslint/quotes, max-len
-    private policyApi: string = `geolocation 'none';midi 'none';sync-xhr 'none';microphone 'none';camera 'none';magnetometer 'none';gyroscope 'none';fullscreen 'none';payment 'none';`;
+    private policyApi = `geolocation 'none';midi 'none';sync-xhr 'none';microphone 'none';camera 'none';magnetometer 'none';gyroscope 'none';fullscreen 'none';payment 'none';`;
 
     private helmetSecurityPolicyApi: any = {
         directives: {

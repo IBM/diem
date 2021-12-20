@@ -4,6 +4,8 @@ import { EComponents, IRequest, IResponse, IArgsBody, IError } from '@interfaces
 import { isVerified } from '../../config/verifysignature';
 import { serviceHandler } from './service.handler';
 
+const trace = '@at $interactions.handler (interactionsHander) - view_submission';
+
 export const interactionsHander: (req: IRequest, res: IResponse) => Promise<any> = async (req, res) => {
     if (!isVerified(req)) {
         utils.logInfo('$interaction (interactions): unverfied request');
@@ -39,23 +41,21 @@ export const interactionsHander: (req: IRequest, res: IResponse) => Promise<any>
             const err: any = {
                 message: 'Invalid id',
                 id,
-                trace: '@at $interactions.handler (interactionsHander) - view_submission',
+                trace,
             };
 
-            void utils.logError('$interactions.handler (interactionsHander) - view_submission', err);
+            void utils.logError(trace, err);
 
             return;
         }
 
         await serviceHandler(payload, args).catch(async (err: IError) => {
-            err.trace = utils.addTrace(err.trace, '@at $interactions.handler (interactionsHander) - view_submission');
+            err.trace = utils.addTrace(err.trace, trace);
 
             void utils.logError('$interactions.handler (interactionsHander) - view_submission', err);
 
             return Promise.reject(err);
         });
-
-        return;
     } else if (payload.type === 'block_actions') {
         // acknowledge the event before doing heavy-lifting on our servers
         res.status(200).send();
@@ -80,15 +80,14 @@ export const interactionsHander: (req: IRequest, res: IResponse) => Promise<any>
         void slackDebug('$interactions.handler (parameters): block_actions', args);
 
         void serviceHandler(payload, args).catch(async (err: IError) => {
-            err.trace = utils.addTrace(err.trace, '@at $interactions.handler (interactionsHander) - view_submission');
+            err.trace = utils.addTrace(err.trace, trace);
 
             void utils.logError('$interactions.handler (interactionsHander) - view_submission', err);
-
-            return;
         });
 
         return;
     }
 
+    // eslint-disable-next-line sonarjs/no-redundant-jump
     return;
 };
