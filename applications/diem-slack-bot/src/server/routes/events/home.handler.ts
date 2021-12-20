@@ -1,6 +1,8 @@
 import { utils } from '@common/utils';
 import { api } from '../routes';
 
+const text = 'Hi, this is your Diem Bot. There are several options you can ask me';
+
 /* eslint-disable max-len */
 
 const blocks = [
@@ -8,7 +10,7 @@ const blocks = [
         type: 'section',
         text: {
             type: 'mrkdwn',
-            text: 'Hi, this is your Diem Bot. There are several options you can ask me',
+            text,
         },
     },
     {
@@ -30,18 +32,20 @@ If you are in the Bot App, just type "service help"
 ];
 
 export const payloads = {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     welcome_home: (_context: any) => ({
         type: 'home',
         blocks,
     }),
     welcome_message: (context: any) => ({
         channel: context.channel,
-        text: 'Hi, this is your Diem Bot. There are several options you can ask me',
+        text,
         blocks,
     }),
+    // eslint-disable-next-line sonarjs/no-identical-functions
     help_message: (context: any) => ({
         channel: context.channel,
-        text: 'Hi, this is your Diem Bot. There are several options you can ask me',
+        text,
         blocks,
     }),
 };

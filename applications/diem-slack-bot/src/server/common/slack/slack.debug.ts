@@ -14,6 +14,7 @@ const bot_token: string | undefined = process.env.bot_token;
 export const slackDebug: (title: string, data: any) => Promise<void> = async (
     title: string,
     data: any
+    // eslint-disable-next-line sonarjs/cognitive-complexity
 ): Promise<void> => {
     const slack: ISlack = utils.slack;
 
