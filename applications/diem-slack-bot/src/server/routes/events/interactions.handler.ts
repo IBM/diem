@@ -35,7 +35,7 @@ export const interactionsHander: (req: IRequest, res: IResponse) => Promise<any>
             },
         };
 
-        void slackDebug('$interactions.handler (parameters): view_submission', args);
+        await slackDebug('$interactions.handler (parameters): view_submission', args);
 
         if (!id.match(/^[0-9a-fA-F]{24}$/)) {
             const err: any = {
