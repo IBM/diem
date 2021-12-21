@@ -16,8 +16,6 @@ export class Server {
 
     public publish: (job: IJobResponse) => Promise<void> = async (job: IJobResponse): Promise<void> => {
         try {
-            // setTimeout(async () => {
-
             utils.logInfo(`$pubsub (publish): passing to jobHandler - job: ${job.id}`);
 
             const payload: ISocketPayload | false = await jobHandler(job);
@@ -31,14 +29,10 @@ export class Server {
             utils.logInfo(`$pubsub (publish): publishing payload - job: ${job.id}`);
 
             publisher.publish('global.core.users', payload);
-
-            // }, 1);
         } catch (err) {
             err.trace = addTrace(err.trace, '@at $pubsub (publish)');
 
             await utils.logError(`$pubsub (publish): error - job: ${job.id}`, err);
-
-            // return Promise.reject(err);
         }
     };
 
@@ -48,7 +42,7 @@ export class Server {
 
             utils.logInfo(`$pubsub (publishservice): publishing payload - job: ${job.id}`);
 
-            void pubSub.publishUserPayload({
+            pubSub.publishUserPayload({
                 email: job.email,
                 payload: {
                     org: job.org,
@@ -57,13 +51,12 @@ export class Server {
             });
 
             return Promise.resolve();
-            // }, 1);
         } catch (err) {
             err.trace = addTrace(err.trace, '@at $pubsub (publishService)');
 
             await utils.logError(`$pubsub (publish): error - job: ${job.id}`, err);
 
-            void Promise.reject();
+            return Promise.reject();
         }
     };
 

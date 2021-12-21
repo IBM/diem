@@ -322,7 +322,6 @@ export class MainCommonFunctions implements OnDestroy {
                         blob = new Blob([Buffer.from(file.data, 'binary')], {
                             type: file.contenttype || values.type,
                         });
-                        //blob = new Blob(file.data, { type: file.contenttype || values.type });
                         name = file.filename;
                     } else {
                         blob = new Blob([file.data], { type: values.type });

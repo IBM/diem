@@ -6,8 +6,6 @@ import { getConfigmap } from '../executors/nodepy/python/python.code.handlers/ha
 
 export { ClientResponse };
 
-// const credentials: string = Credentials('sendgrid').api;
-
 const unique: (myArr: any[], prop: string) => any[] = (myArr: any[], prop: string) =>
     myArr.filter(
         (obj: any, pos: number, arr: any) => arr.map((mapObj: any) => mapObj[prop]).indexOf(obj[prop]) === pos

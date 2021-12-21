@@ -24,7 +24,7 @@ class Cluster {
         void this.baseparam();
     }
 
-    private baseparam = async () => {
+    private baseparam = async (): Promise<void> => {
         try {
             const nodelist: {
                 response: any;

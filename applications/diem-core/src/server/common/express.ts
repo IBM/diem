@@ -176,7 +176,6 @@ export class Express {
                         if (err) {
                             // maybe an old sso callback, let's return to the login
                             return res.redirect('/login');
-                            // return res.sendFile('/public/501.html', { root: path.resolve() });
                         }
                     }
                 )

@@ -19,8 +19,6 @@ export const handleSnippets: (code: string, org: string) => Promise<string> = as
     code: string,
     org: string
 ): Promise<string> => {
-    // const snippets: any = code.match(/(\b#INCLUDE__\S+\b)/gi);
-
     const snippets: string[] | null = code.match(/(\b__INCLUDE__.*\b)/gi);
 
     if (snippets && snippets.length > 0) {

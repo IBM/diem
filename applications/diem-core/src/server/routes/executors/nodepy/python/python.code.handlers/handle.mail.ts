@@ -15,7 +15,6 @@ export const handleMail: (code: string, mail_params: any, org: string, configmap
     if (configmap) {
         doc = await getConfigmap(configmap, org);
     } else {
-        // api_key = Credentials('sendgrid').api;
         doc = await getConfigmap('sendgrid', 'sysadmin');
     }
 

@@ -65,12 +65,9 @@ export const jobFinish: (doc: IJobModel) => Promise<[IJobModel, any]> = async (
     if (Array.isArray(doc.log)) {
         if (doc.log.length > 9) {
             doc.log.pop();
-            // insert.$pop = { log: 1 };
         }
         doc.log.unshift(log);
-        //insert.$push = { log: { $each: [log], $position: 0 } };
     } else {
-        // insert.$push = { out: log };
         doc.log = [log];
     }
 

@@ -60,7 +60,7 @@ export const sendMail: (body: IMailContent) => Promise<any> = async (body: IMail
     };
 
     await mailhandler.newMail(mail).catch(async (err: any) => {
-        //bubbling up
+        // bubbling up
         err.trace = addTrace(err.trace, '@at $mail.notifications (sendMail)');
 
         return Promise.reject(err);

@@ -163,7 +163,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
                     this.contentTmpl = undefined;
                     this.check('template');
                 }
-                // this.check('ngOnInit');
+
                 this.id = this.data.params.id;
                 this.component = this.data.params.component;
                 if (this.data && this.data.modules && this.data.params && this.data.params.component) {

@@ -142,7 +142,6 @@ module.exports = {
     plugins: [
         new CopyWebpackPlugin({
             patterns: [
-                // {output}/file.txt
                 {
                     from: 'src/server/index.pug',
                     to: 'server/index.pug',

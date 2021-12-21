@@ -90,7 +90,6 @@ class NCConnection {
         } catch (err) {
             retry += 1;
 
-            // return Promise.reject({ message: 'could not connect' });
             setTimeout(() => {
                 void this.connect();
             }, 10000);

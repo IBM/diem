@@ -41,7 +41,6 @@ const prepareMail: (mail: IMailInput) => Promise<any> = async (mail: IMailInput)
     let hasMail = true;
 
     const params: IMailParams | undefined = mail.params;
-    // console.info(mail.params, Object.keys(p));
 
     // it's a custom template if it includes at least a subject_xxxx where xxxx is success or failure
     const mail_options: string[] = ['subject_success', 'subject_failure', 'content_success', 'content_failure'];
