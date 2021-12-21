@@ -74,7 +74,6 @@ export const etlNodepy: (job: IntJob) => any = (job: IntJob) => {
 
     workers[sid].stderr.on('error', async (buffer: Buffer) => {
         const response: string = buffer.toString();
-        // console.error(red, `$np ${process.pid} ${sid}: incoming error)`, '\n', response);
         console.error(red, `$np ${process.pid} ${sid}: incoming error`);
 
         publisher.publish('job', job.id, {

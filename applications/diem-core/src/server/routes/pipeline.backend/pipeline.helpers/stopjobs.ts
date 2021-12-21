@@ -34,8 +34,6 @@ export const stopJobs: (pldoc: IJobModel) => Promise<void> = async (pldoc: IJobM
                 utils.logInfo(`$stopJobs (stopJobs): passing to stopJobs - pl: ${doc.job.jobid} - job: ${key}`);
                 void stopJobs(doc);
             }
-
-            // pldoc.jobs[key].status = pldoc.job.status;
         }
     }
 

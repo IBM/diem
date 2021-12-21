@@ -29,7 +29,6 @@ export const services: (req: IRequest) => Promise<IServicesReturn> = async (
         };
 
         // no error logging will be done here, it will be caused by the external application
-        // void utils.logError('$services (services) (interactionsHander) - id match', err);
 
         return Promise.reject(err);
     }

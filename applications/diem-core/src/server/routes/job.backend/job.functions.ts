@@ -167,8 +167,6 @@ export const nextSchedule: (doc: IJobModel) => IScheduleSchema = (doc: IJobModel
 
     const next: any = interval.next();
 
-    // const t: Date = new Date();
-
     return {
         cronNbr: doc.schedule.cronNbr ? doc.schedule.cronNbr + 1 : 1,
         cronTime,

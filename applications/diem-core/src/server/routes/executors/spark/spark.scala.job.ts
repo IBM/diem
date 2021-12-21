@@ -52,8 +52,6 @@ export const createSparkScalaJob: (doc: IJobSchema) => Promise<ICapacity> = asyn
     const id: string = doc._id.toString();
     const org: string = doc.project.org;
 
-    //const getBucket: (org: string) => string = (org: string): string => `${utils.Env.packname}-${utils.Env.K8_SYSTEM}-${org}`;
-
     /* Assign the py file url to the job */
     crdjob.metadata.name = `j${id}z`;
 
@@ -70,8 +68,6 @@ export const createSparkScalaJob: (doc: IJobSchema) => Promise<ICapacity> = asyn
         try {
             const t: any = JSON.parse(doc.job.params.spark.sparkConf);
             crdjob.spec.sparkConf = { ...crdjob.spec.sparkConf, ...t };
-
-            // console.dir(crdjob.spec.sparkConf, { depth: null });
         } catch (err) {
             //*
         }

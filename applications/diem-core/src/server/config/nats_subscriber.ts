@@ -204,7 +204,6 @@ class Subscriber {
                     utils.logCyan(
                         `$nats_subscriber (${msg_type}): client: ${payload.client} - incoming buffered data: ${json_array.length}`
                     );
-                    // await new Promise((resolve) => setTimeout(resolve, 50));
                     await json_handler(json_array);
                 } else {
                     utils.logCyan(`$nats_subscriber (${msg_type}): client: ${payload.client} - incoming data`);

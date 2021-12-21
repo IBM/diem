@@ -94,8 +94,6 @@ export const orgupdate: (req: IRequest, res: IResponse) => Promise<IRequest | an
     doc.annotations.modifieddate = new Date();
     doc.annotations.transid = body.transid;
 
-    // console.info(doc.config);
-
     try {
         await doc.save();
     } catch (err) {

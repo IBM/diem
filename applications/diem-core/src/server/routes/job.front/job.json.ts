@@ -40,7 +40,6 @@ const getDBJobs: (jobs: IJobDetails, id: string) => Promise<[{ id: string }[], I
     });
 
     let idarr: string[] = nodes.map((a: { id: string }) => a.id);
-    //' idarr.unshift(id); // add the current node
 
     idarr = idarr.filter((key: string) => key !== id);
 

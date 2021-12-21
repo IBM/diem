@@ -44,7 +44,7 @@ class Mongo {
         this.credentials = Credentials('mongo');
         this.uri = this.credentials.url;
 
-        void this.go();
+        this.go();
     }
 
     private go: () => void = async () => {
@@ -193,7 +193,6 @@ class Mongo {
                 );
                 this.tm = setTimeout(async () => {
                     utils.logInfo(`$mongo (disconnected): trying to reconnect - pid: ${process.pid}`);
-                    // mongoose.disconnect().catch(() => utils.logInfo('$mongo (disconnected): could not disconnect'));
                     await this.connect();
                 }, 11000);
             } else {

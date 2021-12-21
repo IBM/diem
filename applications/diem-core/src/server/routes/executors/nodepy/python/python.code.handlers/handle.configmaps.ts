@@ -20,8 +20,6 @@ export const handleConfigmaps: (code: string, org: string, configmaps: string | 
     org: string,
     configmaps: string | string[]
 ): Promise<string> => {
-    // const configmaps: any = code.match(/(\b#INCLUDE__\S+\b)/gi);
-
     if (Array.isArray(configmaps)) {
         for await (const configmap of configmaps) {
             const doc = await getConfigmap(configmap, org);

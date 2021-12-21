@@ -218,7 +218,6 @@ export class JobDetailComponent implements OnInit, OnDestroy {
 
         if (caseMap[action.type]) {
             caseMap[action.type](action);
-            // this.check(`handleActions: ${action.type}`);
         }
     };
 

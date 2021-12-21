@@ -67,8 +67,6 @@ const uploadFiles: (req: IRequest) => Promise<void> = async (req: IRequest): Pro
             });
         }
 
-        // return Promise.resolve(metaReturn);
-
         const payload: IntServerPayload = {
             email: req.user.email,
             message: `file ${file.name} Uploaded`,

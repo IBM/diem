@@ -234,14 +234,12 @@ class SparkLib {
             }
 
             // in case you want to debug the data
-            //console.dir(data, { depth: null });
 
             const name: string = data.object.metadata.name;
             obj.id = name.substring(1, name.length - 1);
 
             // it's not for us
             if (obj.id !== id) {
-                // await this.abort(id, `watcher - wrong id: ${id} - name: ${name}`);
                 utils.logInfo(`$spark.watcher (watcher): skipping - id: ${id} - spark application name: ${name}`);
 
                 return;
@@ -326,9 +324,7 @@ class SparkLib {
                     `$spark.watcher (watcher): collecting log and publishing failed - id: ${obj.id} - type: ${data.type} - status: ${applicationState.state}`
                 );
 
-                let log: any = 'Unspecified error';
-
-                log = await this.getJobLog(obj.id).catch(async () => {
+                const log = await this.getJobLog(obj.id).catch(async () => {
                     utils.logInfo(`$spark.watcher (unmanaged watcher): no log found - passing to abort - id: ${id}`);
 
                     await this.abort(id, 'watcher - getJobLog');

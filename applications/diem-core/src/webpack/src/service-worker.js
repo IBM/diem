@@ -1,8 +1,5 @@
-/*jshint esversion: 6 */
+/*jshint esversion: 8 */
 import { precacheAndRoute } from 'workbox-precaching';
-import * as navigationPreload from 'workbox-navigation-preload';
-import { registerRoute, NavigationRoute } from 'workbox-routing';
-import { NetworkOnly } from 'workbox-strategies';
 
 precacheAndRoute(self.__WB_MANIFEST);
 
@@ -47,8 +44,7 @@ self.addEventListener('fetch', (event) => {
                     return preloadResponse;
                 }
 
-                const networkResponse = await fetch(event.request);
-                return networkResponse;
+                return await fetch(event.request);
             } catch (error) {
                 // catch is only triggered if an exception is thrown, which is likely
                 // due to a network error.
@@ -57,8 +53,8 @@ self.addEventListener('fetch', (event) => {
                 console.log('Fetch failed; returning offline page instead.', error);
 
                 const cache = await caches.open(CACHE_NAME);
-                const cachedResponse = await cache.match(OFFLINE_URL);
-                return cachedResponse;
+
+                return await cache.match(OFFLINE_URL);
             }
         })());
     }
