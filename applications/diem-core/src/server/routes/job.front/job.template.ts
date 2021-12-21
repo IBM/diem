@@ -116,7 +116,7 @@ const getTemplate: (body: IJobBody) => Promise<any> = async (body: IJobBody): Pr
             success: true /** just display a success message */,
         };
 
-        void publisher.publish('global.core.users', serverPayload);
+        publisher.publish('global.core.users', serverPayload);
 
         return Promise.resolve(true);
     } catch (err) {
@@ -223,7 +223,7 @@ export const removetemplate: (req: IRequest) => Promise<any> = async (req: IRequ
             success: true /** just display a success message */,
         };
 
-        void publisher.publish('global.core.users', serverPayload);
+        publisher.publish('global.core.users', serverPayload);
 
         return Promise.resolve(true);
     } catch (err) {

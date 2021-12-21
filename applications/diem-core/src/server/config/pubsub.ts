@@ -30,7 +30,7 @@ export class Server {
 
             utils.logInfo(`$pubsub (publish): publishing payload - job: ${job.id}`);
 
-            await publisher.publish('global.core.users', payload);
+            publisher.publish('global.core.users', payload);
 
             // }, 1);
         } catch (err) {
@@ -68,7 +68,7 @@ export class Server {
     };
 
     public publishUserPayload: (userPayload: IUserPayload) => void = (userPayload: IUserPayload) => {
-        void publisher.publish('global.core.user', userPayload);
+        publisher.publish('global.core.user', userPayload);
     };
 
     public toString: (json: any) => string = (json: any) => JSON.stringify(json);
