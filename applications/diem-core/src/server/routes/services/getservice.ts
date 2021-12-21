@@ -38,8 +38,6 @@ export const getservice: (req: IRequest) => Promise<any> = async (req: IRequest)
 
     const id: string = body.id;
 
-    body.serviceid = body.serviceid;
-
     body.jobid = id;
     body.email = req.user.email;
     body.transid = req.transid;
@@ -63,7 +61,7 @@ export const getservice: (req: IRequest) => Promise<any> = async (req: IRequest)
     const channel = 'nodepy.job.start';
 
     try {
-        void publisher.publish(channel, {
+        publisher.publish(channel, {
             code: nodepyJob.code,
             transid: req.transid,
             id,
