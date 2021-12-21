@@ -84,13 +84,13 @@ class NCConnection {
                 return Promise.reject({ message: 'No Authentication' });
             }
 
-            this.events();
+            void this.events();
 
             await publisher.connect(this.nc);
 
             return Promise.resolve(this.nc);
         } catch (err) {
-            void utils.logError('nats_connect (connect): error', {
+            await utils.logError('nats_connect (connect): error', {
                 retry,
                 message: err.message,
                 caller: '$nats_connect',
@@ -99,14 +99,14 @@ class NCConnection {
             });
 
             await setTimeout(10000);
-            void this.connect();
+            await this.connect();
 
             retry += 1;
         }
     };
 
-    private events = () => {
-        void (async () => {
+    private events = async () => {
+        await (async () => {
             if (this.nc.info) {
                 const info = this.nc.info;
                 utils.logInfo(

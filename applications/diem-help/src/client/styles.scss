@@ -693,6 +693,7 @@ df-panel,
 
 .bgw {
     background: $ui-02;
+    background-color: $ui-02;
 }
 
 /* disable the run start stop icons */
@@ -766,10 +767,6 @@ ibm-toggle {
 
 .c-yellow {
     color: $support-03;
-}
-
-.bgw {
-    background-color: $ui-02;
 }
 
 /*  this is for the background for the radio buttons in the modal */

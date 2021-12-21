@@ -105,8 +105,8 @@ class Subscriber {
                     const job: IntJob = payload.data;
                     utils.logInfo(`$nats_subscriber (${subject}): client: ${payload.client} - id: ${job.id}`);
 
-                    await stopWorker(payload.data).catch((err: any) => {
-                        void utils.logError('pubsub (message)', err);
+                    await stopWorker(payload.data).catch(async (err: any) => {
+                        await utils.logError('pubsub (message)', err);
                     });
                 }
             }

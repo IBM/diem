@@ -111,7 +111,7 @@ export class Server {
                     void eventHandler(req, res).catch(async (err) => {
                         err.trace = addTrace(err.trace, '@at $server (start)');
 
-                        void utils.logError('$server.ts (start)', err);
+                        await utils.logError('$server.ts (start)', err);
                     });
 
                     utils.logInfo('$server.ts (start): aknowledgement');
