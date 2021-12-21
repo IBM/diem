@@ -137,7 +137,6 @@ class Mongo {
         });
 
         mongoose.connection.on('error', async (err) => {
-            err.message = err.message;
             err.trace = utils.addTrace(err.trace, '@at $mongo (connection) - on error');
             err.reason = JSON.stringify(err.reason);
             await setFatal(err);

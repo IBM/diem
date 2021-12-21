@@ -49,7 +49,7 @@ export const stopNodePyJob: (job: IETLJob) => Promise<void> = async (job: IETLJo
     };
 
     // instruct nodepy to stop all running processes
-    void publisher.publish('global.nodepy.stop', response_job);
+    publisher.publish('global.nodepy.stop', response_job);
 
     // we must assume nodepy cleans it up
     void pubSub.publish(response_job);

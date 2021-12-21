@@ -41,7 +41,7 @@ class Publisher {
         return Promise.resolve(true);
     };
 
-    public publish = async (channel: string, event: any) => {
+    public publish = (channel: string, event: any): void => {
         try {
             this.nc.publish(channel, toBuff({ client: this.client, data: event }));
         } catch (err) {
