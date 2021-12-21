@@ -1,5 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import { EventEmitter } from 'events';
+import { randomUUID } from 'crypto';
 import { printHRTime } from 'print-hrtime';
 import moment from 'moment';
 import { IError } from '@interfaces';
@@ -66,16 +67,7 @@ class Utils {
         }
     };
 
-    public guid = () => {
-        const p8: any = (s: boolean) => {
-            const p: string = `${Math.random().toString(16)}000000000`.substr(2, 8);
-
-            return s ? `-${p.substr(0, 4)}-${p.substr(4, 4)}` : p;
-        };
-        const t: string = p8(false) + p8(true) + p8(true) + p8(false);
-
-        return t.toLowerCase();
-    };
+    public guid = () => randomUUID();
 
     public now = (): any => moment(new Date().getTime()).format('YYYY-MM-DD-HH.mm.ss.000000');
 

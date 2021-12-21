@@ -54,7 +54,7 @@ class Subscriber {
 
                     data.error = err;
 
-                    void utils.logError('$services_subscriber (subs): error', err);
+                    await utils.logError('$services_subscriber (subs): error', err);
                 });
 
                 const confirmed: boolean = msg.respond(

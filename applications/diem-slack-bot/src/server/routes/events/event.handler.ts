@@ -43,7 +43,6 @@ export const eventHandler: (req: IRequest, res: IResponse) => Promise<IResponse>
 
         // handle the events event
 
-        // console.info('main event', event);
         const response: null | Record<string, unknown> = await handleEvent(event.event).catch(async (err) => {
             err.trace = utils.addTrace(err.trace, '@at $event.handler (eventHandler) - response');
 

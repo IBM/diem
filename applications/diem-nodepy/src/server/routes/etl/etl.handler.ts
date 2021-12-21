@@ -27,7 +27,7 @@ export const handler: (job: IntJob) => any = async (job: IntJob): Promise<void> 
         err.caller = 'rest.handler (handler): mkdir';
         err.message = `Executor: Could not create the folder for job ${sid}`;
 
-        void utils.logError(`$etl.handler (handler): mkdir - job: ${sid}`, err);
+        await utils.logError(`$etl.handler (handler): mkdir - job: ${sid}`, err);
 
         publisher.publish('job', job.id, {
             ...job,
@@ -48,7 +48,7 @@ export const handler: (job: IntJob) => any = async (job: IntJob): Promise<void> 
             message: `Executor: Could not save the file for job ${sid}`,
         };
 
-        void utils.logError(`$etl.handler (handler): savefile - job: ${sid}`, err);
+        await utils.logError(`$etl.handler (handler): savefile - job: ${sid}`, err);
 
         void publisher.publish('job', job.id, {
             ...job,

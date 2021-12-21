@@ -18,7 +18,7 @@
         "moment": "^2.29.1",
         "nats": "^2.4.0",
         "print-hrtime": "^2.0.0",
-        "serialize-error": "^9.0.0"
+        "serialize-error": "^8.1.0"
     },
     "devDependencies": {
         "@types/byline": "^4.2.33",

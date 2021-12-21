@@ -21,11 +21,11 @@ module.exports = {
         'jsdoc',
     ],
     extends: [
-        //'plugin:@angular-eslint/recommended',
         'prettier',
         'plugin:sonarjs/recommended',
         '../../src/webpack/eslintrc-base.js',
         'plugin:prettier/recommended',
+        'plugin:@angular-eslint/recommended',
     ],
     rules: {
         'no-restricted-syntax': [

@@ -30,7 +30,7 @@ export const handler: (job: ServicesJob) => any = async (job: ServicesJob): Prom
             message: `Executor: Could not create the folder for job ${sid}`,
         };
 
-        void utils.logError(`$services.handler (handler): mkdir - job: ${sid}`, err);
+        await utils.logError(`$services.handler (handler): mkdir - job: ${sid}`, err);
 
         return Promise.reject(err);
     });
@@ -50,7 +50,7 @@ export const handler: (job: ServicesJob) => any = async (job: ServicesJob): Prom
         err.trace = addTrace(err.trace, '@at $services.handler (handler): response');
 
         // services will not return any error when executing the code. We just return to DIEM
-        // void utils.logError(`$services.handler (handler): savefile - job: ${id}`, err);
+        // await utils.logError(`$services.handler (handler): savefile - job: ${id}`, err);
 
         return Promise.reject(err);
     });

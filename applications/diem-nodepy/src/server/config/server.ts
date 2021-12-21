@@ -14,19 +14,19 @@ export class Server {
         this.pack = utils.Env;
 
         process
-            .on('uncaughtException', (err: any) => {
+            .on('uncaughtException', async (err: any) => {
                 err.name = 'uncaught excemption';
                 err.trace = err.stack;
-                void utils.logError('$server.ts (uncaught): uncaughtException', err);
+                await utils.logError('$server.ts (uncaught): uncaughtException', err);
             })
-            .on('unhandledRejection', (reason: any, p: any) => {
+            .on('unhandledRejection', async (reason: any, p: any) => {
                 const msg: any = {
                     location: 'server',
                     message: p,
                     name: 'unhandledrejection',
                     reason,
                 };
-                void utils.logError('$server.ts (unhandledRejection):', msg);
+                await utils.logError('$server.ts (unhandledRejection):', msg);
             })
             .on('exit', async (code: any) => {
                 utils.logInfo(`$server.ts (exit): fatal error, system shutting down : ${code}`);
@@ -36,7 +36,7 @@ export class Server {
                 }, 1000);
             });
 
-        utils.ev.on('internal', (internal: IntInternal) => {
+        utils.ev.on('internal', async (internal: IntInternal) => {
             if (internal.err) {
                 this.fatal = internal.fatal;
 
@@ -51,7 +51,7 @@ export class Server {
                     trace: internal.trace,
                 };
 
-                void utils.logError('$server.ts (internal): Notification of Error', err);
+                await utils.logError('$server.ts (internal): Notification of Error', err);
             } else if (this.fatal) {
                 this.fatal = internal.fatal;
                 utils.logInfo(`$server.ts (internal): fatal removed by ${internal.source}`);

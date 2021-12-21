@@ -44,7 +44,7 @@ export const interactionsHander: (req: IRequest, res: IResponse) => Promise<any>
                 trace,
             };
 
-            void utils.logError(trace, err);
+            await utils.logError(trace, err);
 
             return;
         }
@@ -52,7 +52,7 @@ export const interactionsHander: (req: IRequest, res: IResponse) => Promise<any>
         await serviceHandler(payload, args).catch(async (err: IError) => {
             err.trace = utils.addTrace(err.trace, trace);
 
-            void utils.logError('$interactions.handler (interactionsHander) - view_submission', err);
+            await utils.logError('$interactions.handler (interactionsHander) - view_submission', err);
 
             return Promise.reject(err);
         });
@@ -82,7 +82,7 @@ export const interactionsHander: (req: IRequest, res: IResponse) => Promise<any>
         void serviceHandler(payload, args).catch(async (err: IError) => {
             err.trace = utils.addTrace(err.trace, trace);
 
-            void utils.logError('$interactions.handler (interactionsHander) - view_submission', err);
+            await utils.logError('$interactions.handler (interactionsHander) - view_submission', err);
         });
 
         return;
