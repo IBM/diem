@@ -9,7 +9,7 @@ import { tmpl } from './templates/site.body.pug.tmpl';
 })
 export class SiteBodyComponent {
     // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
-    @HostBinding('class') className: string = '';
+    @HostBinding('class') className = '';
 
     private env: Env;
 

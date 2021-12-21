@@ -15,9 +15,9 @@ import { tmpl } from './templates/messages.pug.tmpl';
 })
 export class MessagesComponent {
     public msg!: IStoreMessageState;
-    public lowContrast: boolean = false;
+    public lowContrast = false;
 
-    public isOpen: boolean = false;
+    public isOpen = false;
     public locals: any;
 
     public progressMsg: Observable<any>;
@@ -25,7 +25,7 @@ export class MessagesComponent {
     private cd: ChangeDetectorRef;
     private env: Env;
     private store: Store<any>;
-    private msgkey: string = '';
+    private msgkey = '';
 
     /*
     type of messages are

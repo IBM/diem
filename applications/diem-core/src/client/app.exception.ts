@@ -49,13 +49,16 @@ export class AppErrorHandler implements ErrorHandler {
                     transids: this.env.getField('transids') || [],
                 },
             })
-            .subscribe(
-                () => {
+            .subscribe({
+                next: () => {
                     console.info('$exception (handle eror)=> Slack sent');
                 },
-                (error: Error) => {
-                    console.warn('$exception (handle error)=> Slack error', error);
-                }
-            );
+                error: (error: unknown) => {
+                    if (typeof error === 'object') {
+                        const err2 = error as Error;
+                        console.warn('$exception (handle error)=> Slack error', err2);
+                    }
+                },
+            });
     }
 }
