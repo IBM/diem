@@ -17,7 +17,11 @@ export const addToBuffer: (sid: string, id: string, buffer: Buffer) => Promise<v
     const data: string = buffer.toString();
 
     if (data.endsWith('\n')) {
-        workers[sid].buffer = workers[sid]?.buffer ? (workers[sid].buffer += data) : data;
+        if (workers[sid]?.buffer) {
+            workers[sid].buffer = workers[sid].buffer += data;
+        } else {
+            workers[sid].buffer = data;
+        }
 
         const resp: string | undefined = workers[sid].buffer;
 
@@ -75,8 +79,6 @@ export const addToBuffer: (sid: string, id: string, buffer: Buffer) => Promise<v
             } else {
                 void publisher.publish('job', id, resp);
             }
-
-            //await new Promise((resolve) => setTimeout(resolve, wait));
         } else {
             console.info(green, `$np ${process.pid} ${sid}: nothing to process}`, '');
         }
@@ -84,7 +86,11 @@ export const addToBuffer: (sid: string, id: string, buffer: Buffer) => Promise<v
         workers[sid].buffer = undefined;
     } else {
         console.info(blue, `$np ${process.pid} ${sid}: buffering incoming stream`);
-        workers[sid].buffer = workers[sid]?.buffer ? (workers[sid].buffer += data) : data;
+        if (workers[sid]?.buffer) {
+            workers[sid].buffer = workers[sid].buffer += data;
+        } else {
+            workers[sid].buffer = data;
+        }
     }
 };
 
@@ -99,7 +105,11 @@ export const addToErrorBuffer: (sid: string, buffer: Buffer) => void = (sid: str
     const data: string = buffer.toString();
 
     if (data.endsWith('\n')) {
-        workers[sid].errbuffer = workers[sid]?.errbuffer ? (workers[sid].errbuffer += data) : data;
+        if (workers[sid]?.errbuffer) {
+            workers[sid].errbuffer = workers[sid].errbuffer += data;
+        } else {
+            workers[sid].errbuffer = data;
+        }
 
         console.info(red, `$np ${process.pid} ${sid}: returning error`);
     } else {

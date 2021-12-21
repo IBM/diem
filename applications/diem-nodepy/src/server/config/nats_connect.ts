@@ -76,7 +76,7 @@ class NCConnection {
 
             return Promise.resolve(this.nc);
         } catch (err) {
-            void utils.logError('nats_connect (connect): error', {
+            await utils.logError('nats_connect (connect): error', {
                 retry,
                 message: err.message,
                 caller: '$nats_connect',

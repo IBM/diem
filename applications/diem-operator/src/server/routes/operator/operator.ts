@@ -195,7 +195,7 @@ export default class Operator {
         informer.on('error', async (err: V1Pod) => {
             console.info(`$operator (Informer): restarting informer ${id} - reason: ${errorToJson(err)}`);
             await setTimeout(5000);
-            void informer.start();
+            await informer.start();
         });
 
         console.info(`$operator (Informer): starting informer ${id}...`);

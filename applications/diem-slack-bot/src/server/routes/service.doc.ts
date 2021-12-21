@@ -17,7 +17,7 @@ export const loadServiceDoc = async () => {
             url: services_url,
         };
 
-        void utils.logError('$service.doc (loadServiceDoc) - services_url', error);
+        await utils.logError('$service.doc (loadServiceDoc) - services_url', error);
 
         return;
     }
@@ -29,7 +29,7 @@ export const loadServiceDoc = async () => {
             url: services_url,
         };
 
-        void utils.logError('$service.doc (loadServiceDoc) - token', error);
+        await utils.logError('$service.doc (loadServiceDoc) - token', error);
 
         return;
     }
@@ -51,7 +51,7 @@ export const loadServiceDoc = async () => {
                 err: err.response?.data ? err.response.data : 'no data',
             };
 
-            void utils.logError('$service.doc (loadServiceDoc)', error);
+            await utils.logError('$service.doc (loadServiceDoc)', error);
         });
 
     if (response?.data?.out) {

@@ -87,9 +87,9 @@ export class HomeMainComponent implements OnInit, OnDestroy, AfterViewChecked {
         };
     }
 
-    public ngAfterViewChecked(): void {
+    public async ngAfterViewChecked(): Promise<void> {
         if (this.mermaid_pending) {
-            void this.renderMermaid();
+            await this.renderMermaid();
             this.mermaid_pending = false;
         }
     }

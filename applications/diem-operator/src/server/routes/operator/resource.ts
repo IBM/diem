@@ -168,7 +168,7 @@ export default class Operator {
         informer.on('error', async (err: V1Pod) => {
             console.info(`$operator (Informer): restarting informer ${id} - reason: ${errorToJson(err)}`);
             await setTimeout(5000);
-            void informer.start();
+            await informer.start();
         });
 
         console.info(`$operator (Informer): starting informer ${id}...`);
@@ -197,9 +197,7 @@ export default class Operator {
                 throw new Error("Invalid CRD yaml (expected 'apiextensions.k8s.io')");
             }
 
-            await this.kc
-                .makeApiClient(ApiextensionsV1Api)
-                .createCustomResourceDefinition(crd as V1CustomResourceDefinition);
+            await this.kc.makeApiClient(ApiextensionsV1Api).createCustomResourceDefinition(crd);
 
             return {
                 group: crd.spec.group,
