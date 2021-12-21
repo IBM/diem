@@ -80,8 +80,6 @@ class SparkLib {
         } catch (err) {
             err.trace = addTrace(err.trace, '@at $spark.base (jobStart)');
 
-            // console.info(err);
-
             return Promise.reject(err);
         }
     };

@@ -96,8 +96,6 @@ class Publisher {
 
             return Promise.resolve(undefined);
         } catch (err) {
-            //     utils.logInfo(`$nats_publisher (request): error: ${err.message}`);
-
             return Promise.reject(err);
         }
     };

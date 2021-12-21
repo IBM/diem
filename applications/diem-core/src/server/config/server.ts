@@ -216,7 +216,6 @@ export class Server {
         } catch (err) {
             return console.error(err);
         }
-        // spark.startWatcher().catch((err: Error) => console.error(err));
     };
 
     private api = async (req: IRequest, res: IResponse): Promise<any> => {
@@ -425,7 +424,6 @@ export class Server {
             const org: string | undefined = getOrg(req);
 
             if (!org) {
-                // return res.status(403).json({ error: 'Forbidden, no org has been identified' });
                 utils.logInfo(`$server (secAuth): rederecting user without org - email: ${email} - ti: ${req.transid}`);
 
                 return next();
@@ -437,7 +435,6 @@ export class Server {
             const role: string | undefined = getRole(req);
 
             if (!role) {
-                // return res.status(403).json({ error: 'Forbidden, no role has been identified' });
                 utils.logInfo(
                     `$server (secAuth): rederecting user without role - email: ${email} - ti: ${req.transid}`
                 );

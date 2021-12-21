@@ -79,7 +79,6 @@ const updateJobs: (doc: IJobModel) => Promise<void> = async (doc: IJobModel): Pr
 
         const params: any = flatten__({ 'job.params': passdownValues }, '.');
 
-        // const params: any = flatten__({ ...doc.job.params }, '.');
         set = { ...set, ...params };
 
         utils.logInfo(`$pipeline.start.handler (updateJobs): applying params - pl: ${id}`, doc.job.transid);
@@ -138,14 +137,12 @@ export const plStartHandler: (pldoc: IJobModel) => Promise<void> = async (pldoc:
          * Here we reset the queue we've added a field called queue
          * and we delete it here
          */
-        // pldoc.set({ jobs: await resetQueue2(pldoc.jobs) });
         pldoc.jobs = await resetQueue(pldoc.jobs);
 
         // needed for mongo if you update nested fields
         pldoc.markModified('jobs');
 
         // set the status to submitted
-        // pldoc.job.status = EJobStatus.running;  why ?
 
         await saveDoc(pldoc).catch(async (err) => {
             err.trace = addTrace(err.trace, '@at $pipeline.start.handler (plStartHandler) - save');

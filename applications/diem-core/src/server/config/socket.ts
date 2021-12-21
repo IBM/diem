@@ -117,9 +117,6 @@ export class Server {
                     return socket.destroy();
                 }
             } else {
-                // not needed
-                // utils.logInfo('$socket (upgrade): not authorized, no valid cookie');
-
                 socket.write(noauth);
 
                 return socket.destroy();

@@ -27,7 +27,7 @@ export const getFormQuestions: (req: IRequest) => Promise<any> = async (req: IRe
     }
 
     try {
-        const doc: any = await FormsModel.findOne({ _id: form_name });
+        const doc: any = FormsModel.findOne({ _id: form_name });
         utils.logInfo(operator, `form: ${req.query.form} - ti: ${req.transid}`, process.hrtime(hrstart));
         cache[req.query.form] = doc;
 
@@ -51,7 +51,7 @@ export const getFormQuestionsUpdate: (req: IRequest) => Promise<any> = async (re
 
     try {
         const form: string = typeof req.query.form === 'string' ? req.query.form : '';
-        const doc: any = await FormsModel.findOne({ _id: form_name });
+        const doc: any = FormsModel.findOne({ _id: form_name });
         utils.logInfo('$operator (getFormQuestionsUpdate)', form, process.hrtime(hrstart));
         cache[req.query.form] = doc;
 
@@ -69,15 +69,13 @@ export const getFormQuestionsUpdate: (req: IRequest) => Promise<any> = async (re
 export const refreshallforms: () => Promise<any> = async (): Promise<any> => {
     const hrstart: [number, number] = process.hrtime();
 
-    const forms: any = await FormsModel.find({});
+    const forms: any = FormsModel.find({});
 
     const resp: { id: string; rev: string }[] = [];
 
-    //return Promise.resolve(resp);
-
     try {
         for (const form of forms) {
-            const doc: any = await FormsModel.findOne({ _id: form._id });
+            const doc: any = FormsModel.findOne({ _id: form._id });
             utils.logInfo('$operator (getFormQuestionsUpdate)', form.id, process.hrtime(hrstart));
             cache[form.id] = doc;
             resp.push({
