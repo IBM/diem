@@ -30,9 +30,9 @@ export class JobAllComponent implements OnInit, OnDestroy {
     @ViewChild('header', { static: false })
     public header!: TemplateRef<any>; /** ! Will com later */
 
-    public tableLoaded: boolean = false; /** a flag to indicate the table is not loaded */
+    public tableLoaded = false; /** a flag to indicate the table is not loaded */
     public loaded: boolean;
-    public error: boolean = false;
+    public error = false;
     public env: Env;
     public config!: IConfig; /** ! Will com later */
     public MCF: MainCommonFunctions;
@@ -84,19 +84,21 @@ export class JobAllComponent implements OnInit, OnDestroy {
          * this.config = {};
          * listin to the route resolver in main routing till the component get's in
          */
-        this.routeData = this.route.data.subscribe(async (data: any) => {
-            this.module = data.component;
-            console.info(`$joball.component (ngOnInit): loading ${this.module}`);
-            if (this.module) {
-                await this.MCF.loadConfig(this.module)
-                    .then((res: any) => {
-                        this.parseConfig(res);
-                    })
-                    .catch(() => {
-                        this.loaded = false;
-                        this.error = true;
-                    });
-            }
+        this.routeData = this.route.data.subscribe({
+            next: async (data: any) => {
+                this.module = data.component;
+                console.info(`$joball.component (ngOnInit): loading ${this.module}`);
+                if (this.module) {
+                    await this.MCF.loadConfig(this.module)
+                        .then((res: any) => {
+                            this.parseConfig(res);
+                        })
+                        .catch(() => {
+                            this.loaded = false;
+                            this.error = true;
+                        });
+                }
+            },
         });
 
         this.formSub = this.DFCS.form$.subscribe((options: IOptions) => this.handleActions(options));

@@ -5,7 +5,7 @@ import { IModalOptions } from '@mydiem/diem-forms';
 @Injectable()
 export class DialogService {
     public dialog$: Observable<IModalOptions>;
-    public isOpen: boolean = false;
+    public isOpen = false;
 
     private dialogSource = new Subject<IModalOptions>();
 

@@ -63,7 +63,7 @@ interface IRouteData {
 })
 export class SettingsComponent implements OnInit, OnDestroy {
     // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
-    @HostBinding('class') navClass: string = '';
+    @HostBinding('class') navClass = '';
 
     @ViewChild('modalViewChild', { static: false })
     public modalViewChild!: TemplateRef<any>; /** ! Will com later */
@@ -79,22 +79,22 @@ export class SettingsComponent implements OnInit, OnDestroy {
     public records: { [index: string]: any } = {}; /** the values of the form, filled in if this is an active item */
     public config!: IConfig; /** ! Will com later */
     public modalConfig: any = {};
-    public message: string = '';
-    public sidebar: boolean = true;
-    public param: string = 'main';
+    public message = '';
+    public sidebar = true;
+    public param = 'main';
 
     public MCF: MainCommonFunctions;
     public env: Env;
-    public error: boolean = false;
-    public errormsg: string = '';
-    public loaded: boolean = false;
-    public fatal: boolean = false;
+    public error = false;
+    public errormsg = '';
+    public loaded = false;
+    public fatal = false;
 
-    public draggingEnabled: boolean = false;
-    public panningEnabled: boolean = false;
-    public zoomEnabled: boolean = false;
-    public autoZoom: boolean = false;
-    public autoCenter: boolean = true;
+    public draggingEnabled = false;
+    public panningEnabled = false;
+    public zoomEnabled = false;
+    public autoZoom = false;
+    public autoCenter = true;
     public component?: string;
     public data?: IRouteData;
 
@@ -109,7 +109,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute;
     private routeData!: Subscription; /** ! Will com later */
     private router: Router;
-    private storeName: string = '';
+    private storeName = '';
     private ws: SocketService;
     private sanitizer: DomSanitizer;
 
@@ -152,31 +152,33 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this.formSub = this.DFCS.form$.subscribe((options: IOptions) => this.handleActions(options));
 
         /** subscribe to the data provided by the route resolver */
-        this.routeData = this.route.data.subscribe(async (data: any) => {
-            this.fatal = false;
-            this.data = data;
-            if (!this.data) {
-                return;
-            }
-            if (this.contentTmpl) {
-                this.contentTmpl = undefined;
-                this.check('template');
-            }
-            // this.check('ngOnInit');
-            this.id = this.data.params.id;
-            this.component = this.data.params.component;
-            if (this.data && this.data.modules && this.data.params && this.data.params.component) {
-                this.module = this.data.modules.find((component: any) => component.component === this.component);
-            } else {
-                return;
-            }
+        this.routeData = this.route.data.subscribe({
+            next: async (data: any) => {
+                this.fatal = false;
+                this.data = data;
+                if (!this.data) {
+                    return;
+                }
+                if (this.contentTmpl) {
+                    this.contentTmpl = undefined;
+                    this.check('template');
+                }
+                // this.check('ngOnInit');
+                this.id = this.data.params.id;
+                this.component = this.data.params.component;
+                if (this.data && this.data.modules && this.data.params && this.data.params.component) {
+                    this.module = this.data.modules.find((component: any) => component.component === this.component);
+                } else {
+                    return;
+                }
 
-            if (this.module) {
-                console.info(
-                    `$settings.component (ngOnInit): using : ${this.data.params.component} with id ${this.id}`
-                );
-                await this.loadConfig(this.module.template);
-            }
+                if (this.module) {
+                    console.info(
+                        `$settings.component (ngOnInit): using : ${this.data.params.component} with id ${this.id}`
+                    );
+                    await this.loadConfig(this.module.template);
+                }
+            },
         });
 
         this.ws.message$.subscribe((message: any) => {
@@ -318,7 +320,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         }
     };
 
-    private ActionReset = (_action: any) => {
+    private ActionReset = () => {
         this.DSF.updateForm(this.getForm(this.config ? this.config.resetvalues : {}));
     };
 

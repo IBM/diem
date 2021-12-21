@@ -39,7 +39,7 @@ export class AppLoginService {
     }
 
     public setUser(): void {
-        let valid: boolean = false;
+        let valid = false;
 
         const cookie: string | undefined = this.dts.getCookie(appConfig.appcookie);
 
@@ -63,8 +63,8 @@ export class AppLoginService {
         }
 
         const expDate: Date | null = this.jwtHelper.getTokenExpirationDate(cookie);
-        let expTime: number = 0;
-        let nowTime: number = 0;
+        let expTime = 0;
+        let nowTime = 0;
 
         if (expDate) {
             expTime = new Date(expDate).getTime() || 0;

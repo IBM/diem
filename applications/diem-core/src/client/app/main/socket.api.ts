@@ -32,9 +32,9 @@ export class SocketService {
     public message$: Observable<any>;
 
     private subject!: WebSocketSubject<any>;
-    private isInRetry: boolean = false;
+    private isInRetry = false;
     private timeout: any;
-    private count: number = 0;
+    private count = 0;
     private store: Store<any>;
     private messageSource = new Subject<any>();
     private DSF: DFStoreFunctions;
@@ -73,7 +73,7 @@ export class SocketService {
         if (message.payload) {
             /* we have back a payload so first if not an arry turn it into an arry, then handle */
 
-            let forme: boolean = false; // if there's a messagew make sure it's only for me
+            let forme = false; // if there's a messagew make sure it's only for me
 
             message.payload.forEach((load: IntPayload) => {
                 const store: string = this.DSF.r_getStore(load.store);
@@ -169,7 +169,13 @@ export class SocketService {
         });
         this.subject.subscribe({
             complete: () => console.info('Socket Closed'),
-            error: (err: IntError) => this.errorHandler(err),
+            error: (error: unknown) => {
+                if (typeof error === 'object') {
+                    const err = error as IntError;
+
+                    this.errorHandler(err);
+                }
+            },
             next: (message: any) => this.messageHandler(message),
         });
     };

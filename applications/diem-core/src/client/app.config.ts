@@ -1,7 +1,7 @@
 import { UrlSegment } from '@angular/router';
 
-const fahome: string = 'fa fa-home';
-const fausers: string = 'fa fa-users';
+const fahome = 'fa fa-home';
+const fausers = 'fa fa-users';
 
 interface IAppConfig {
     [index: string]: string;
