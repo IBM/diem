@@ -29,7 +29,7 @@ export class MainCommonFunctions implements OnDestroy {
     private formService: DFFormService;
     private httpService: HttpService;
     private store: Store<any>;
-    private processing: string = 'ibm-processing';
+    private processing = 'ibm-processing';
 
     public constructor(
         env: Env,
@@ -60,7 +60,7 @@ export class MainCommonFunctions implements OnDestroy {
         this._historyDocs = [doc, ...this._historyDocs];
     }
 
-    public loadConfig = async (form: string, noParse: boolean = false): Promise<any> =>
+    public loadConfig = async (form: string, noParse = false): Promise<any> =>
         new Promise((resolve, reject) => {
             this.loaded = false;
             const thisForm: any = this.formService.getStoredForm(form);
@@ -129,24 +129,25 @@ export class MainCommonFunctions implements OnDestroy {
                     console.info(`$main.common.functions (getData): loading error for => ${storeName}`);
                 })
             )
-            .subscribe((data: any) => {
-                /** f there's an error .. return */
-                if (data && data.error) {
-                    return this.dataSubj.next({ err: true });
-                }
-
-                if (data?.values) {
-                    /** in case of direct loading or only one element in store
-                     * check if we have records
-                     */
-                    if (data.values.length === 0) {
-                        /** here we say that we are not getting back any data so we pass back false and stop */
-                        return this.dataSubj.next(false);
+            .subscribe({
+                next: (data: any) => {
+                    if (data && data.error) {
+                        return this.dataSubj.next({ err: true });
                     }
 
-                    this.dataSubj.next(data);
-                    console.info(`$main.common.functions (getData): using existing store => ${storeName}`);
-                }
+                    if (data?.values) {
+                        /** in case of direct loading or only one element in store
+                         * check if we have records
+                         */
+                        if (data.values.length === 0) {
+                            /** here we say that we are not getting back any data so we pass back false and stop */
+                            return this.dataSubj.next(false);
+                        }
+
+                        this.dataSubj.next(data);
+                        console.info(`$main.common.functions (getData): using existing store => ${storeName}`);
+                    }
+                },
             });
     };
 
@@ -164,7 +165,13 @@ export class MainCommonFunctions implements OnDestroy {
             this.httpService
                 .httpPost(params.url, values)
                 .pipe(
-                    catchError(async (err: IHttpError) => {
+                    catchError(async (error: unknown) => {
+                        if (typeof error !== 'object') {
+                            return;
+                        }
+
+                        const err = error as IHttpError;
+
                         if (document.body && this.processing) {
                             DomHandler.removeClass(document.body, this.processing);
                         }
@@ -189,7 +196,7 @@ export class MainCommonFunctions implements OnDestroy {
                         }
 
                         this.DFCS.formChanged({ action: 'close' });
-                        const m: string = 'Error Happened';
+                        const m = 'Error Happened';
                         const detail: string =
                             err.error && typeof err.error === 'object'
                                 ? err.error.message && typeof err.error.message === 'string'
@@ -213,7 +220,7 @@ export class MainCommonFunctions implements OnDestroy {
                     take(1)
                 )
                 .subscribe((serverPayload: IntServerPayload) => {
-                    let proceed: boolean = true;
+                    let proceed = true;
                     console.info('$main.common.functions (postData): received data');
 
                     /* flatten the calues and merge them with the response from the server */
@@ -306,8 +313,8 @@ export class MainCommonFunctions implements OnDestroy {
         this.httpService
             .download(values, params)
             .pipe(debounceTime(200), take(1))
-            .subscribe(
-                (file: any) => {
+            .subscribe({
+                next: (file: any) => {
                     let blob: any;
                     let name: string;
 
@@ -326,15 +333,21 @@ export class MainCommonFunctions implements OnDestroy {
                         saveAs(blob, name);
                     }, 500);
                 },
-                async (err: IHttpError) => {
+                error: async (error: unknown) => {
+                    if (typeof error !== 'object') {
+                        return;
+                    }
+
+                    const err = error as IHttpError;
+
                     this.dispatchmsg({
                         detail: err.message ? err.message : 'Error Happened',
                         type: SiteStoreStatus.ERROR,
                         key: 'tr',
                     });
                     this.DFCS.formChanged({ action: 'close' });
-                }
-            );
+                },
+            });
     };
 
     // eslint-disable-next-line class-methods-use-this

@@ -18,7 +18,7 @@ export const addToBuffer: (sid: string, id: string, buffer: Buffer) => Promise<v
 
     if (data.endsWith('\n')) {
         if (workers[sid]?.buffer) {
-            workers[sid].buffer = workers[sid].buffer += data;
+            workers[sid].buffer += data;
         } else {
             workers[sid].buffer = data;
         }
@@ -87,7 +87,7 @@ export const addToBuffer: (sid: string, id: string, buffer: Buffer) => Promise<v
     } else {
         console.info(blue, `$np ${process.pid} ${sid}: buffering incoming stream`);
         if (workers[sid]?.buffer) {
-            workers[sid].buffer = workers[sid].buffer += data;
+            workers[sid].buffer += data;
         } else {
             workers[sid].buffer = data;
         }
@@ -106,7 +106,7 @@ export const addToErrorBuffer: (sid: string, buffer: Buffer) => void = (sid: str
 
     if (data.endsWith('\n')) {
         if (workers[sid]?.errbuffer) {
-            workers[sid].errbuffer = workers[sid].errbuffer += data;
+            workers[sid].errbuffer += data;
         } else {
             workers[sid].errbuffer = data;
         }
@@ -114,6 +114,10 @@ export const addToErrorBuffer: (sid: string, buffer: Buffer) => void = (sid: str
         console.info(red, `$np ${process.pid} ${sid}: returning error`);
     } else {
         console.info(blue, `$np ${process.pid} ${sid}: buffering incoming error stream`);
-        workers[sid].errbuffer = workers[sid]?.errbuffer ? (workers[sid].errbuffer += data) : data;
+        if (workers[sid]?.errbuffer) {
+            workers[sid].errbuffer += data;
+        } else {
+            workers[sid].errbuffer = data;
+        }
     }
 };

@@ -29,13 +29,13 @@ export class SiteHeaderComponent {
     public orgs: string[] = [];
     public userorg?: string;
 
-    public infoPanel: boolean = false;
-    public userPanel: boolean = false;
-    public appPanel: boolean = false;
+    public infoPanel = false;
+    public userPanel = false;
+    public appPanel = false;
 
     public component?: string;
 
-    public mexpanded: boolean = false;
+    public mexpanded = false;
 
     private httpService: HttpService;
 
@@ -93,17 +93,20 @@ export class SiteHeaderComponent {
             .httpPost(appConfig.profileurl, {
                 org,
             })
-            .subscribe(
-                () => {
+            .subscribe({
+                complete: () => {
                     console.info('$site.masthead.component (updateSite): reloading window....');
                     setTimeout(() => {
                         window.location.reload();
                     }, 100);
                 },
-                (error: Error) => {
-                    console.warn('$site.masthead.component (updateSite): error', error);
-                }
-            );
+                error: (error: unknown) => {
+                    if (typeof error === 'object') {
+                        const err = error as Error;
+                        console.warn('$site.masthead.component (updateSite): error', err);
+                    }
+                },
+            });
     }
 
     private closePanels(): void {

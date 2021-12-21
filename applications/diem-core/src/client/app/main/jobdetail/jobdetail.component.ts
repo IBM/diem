@@ -64,16 +64,16 @@ export class JobDetailComponent implements OnInit, OnDestroy {
 
     public MCF: MainCommonFunctions;
     public env: Env;
-    public error: boolean = false;
+    public error = false;
     public loaded: boolean;
 
-    public draggingEnabled: boolean = false;
-    public panningEnabled: boolean = true;
-    public zoomEnabled: boolean = false;
-    public autoZoom: boolean = false;
-    public autoCenter: boolean = false;
+    public draggingEnabled = false;
+    public panningEnabled = true;
+    public zoomEnabled = false;
+    public autoZoom = false;
+    public autoCenter = false;
 
-    public animate: boolean = true;
+    public animate = true;
 
     private DFCS: DFCommonService;
     private DS: DialogService;
@@ -85,7 +85,7 @@ export class JobDetailComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute;
     private routeData!: Subscription; /** ! Will com later */
     private router: Router;
-    private storeName: string = '';
+    private storeName = '';
     private store: Store<any>;
     private data: any = {};
     private ws: SocketService;
@@ -120,8 +120,12 @@ export class JobDetailComponent implements OnInit, OnDestroy {
 
         this.dataSub = this.MCF.dataSubj
             .pipe(
-                catchError(async (err: Error) => {
-                    console.info(`$jobdetail.component (onit): error : ${err.message}`);
+                catchError(async (error: unknown) => {
+                    if (typeof error === 'object') {
+                        const err = error as Error;
+
+                        console.info(`$jobdetail.component (onit): error : ${err.message}`);
+                    }
                 }),
                 filter((d: IData) => d !== undefined)
             )
@@ -142,26 +146,28 @@ export class JobDetailComponent implements OnInit, OnDestroy {
         this.formSub = this.DFCS.form$.subscribe((options: IOptions) => this.handleActions(options));
 
         /** subscribe to the data provided by the route resolver */
-        this.routeData = this.route.data.subscribe(async (data: any) => {
-            // first check if there's already a config
-            if (this.config) {
-                this.config = undefined;
-                this.check('New Config');
-            }
+        this.routeData = this.route.data.subscribe({
+            next: (data: any) => {
+                // first check if there's already a config
+                if (this.config) {
+                    this.config = undefined;
+                    this.check('New Config');
+                }
 
-            this.data = data;
-            this.loaded = false;
-            // optimization this.check('ngOnInit-routeData');
-            this.id = this.data.params.id || this.data.component;
-            if (this.data.component) {
-                console.info(`$jobdetail.component (ngOnInit): using : ${this.data.component} with id ${this.id}`);
-                await this.MCF.loadConfig(this.data.component)
-                    .then((res: any) => this.parseConfig(res))
-                    .catch(() => {
-                        this.loaded = false;
-                        this.error = true;
-                    });
-            }
+                this.data = data;
+                this.loaded = false;
+                // optimization this.check('ngOnInit-routeData');
+                this.id = this.data.params.id || this.data.component;
+                if (this.data.component) {
+                    console.info(`$jobdetail.component (ngOnInit): using : ${this.data.component} with id ${this.id}`);
+                    this.MCF.loadConfig(this.data.component)
+                        .then((res: any) => this.parseConfig(res))
+                        .catch(() => {
+                            this.loaded = false;
+                            this.error = true;
+                        });
+                }
+            },
         });
     }
 
@@ -290,7 +296,7 @@ export class JobDetailComponent implements OnInit, OnDestroy {
         this.check('ActionValues');
     };
 
-    private ActionReset = (_action: any) => {
+    private ActionReset = () => {
         this.DSF.updateForm(this.getForm(this.config ? this.config.resetvalues : {}));
     };
 

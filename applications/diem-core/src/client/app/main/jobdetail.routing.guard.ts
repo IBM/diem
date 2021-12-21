@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
+import { IError } from '@interfaces';
 import { Env, HttpService } from '@mydiem/diem-angular-util';
 import { IConfig, IStoreFormState } from '@mydiem/diem-forms';
 import { select, Store } from '@ngrx/store';
@@ -7,7 +8,7 @@ import { catchError, take } from 'rxjs/operators';
 import { modules } from '../../app.config';
 import { MainCommonFunctions } from './main.common.functions';
 
-const guard_str: string = '$jobdetail.routing.guard (loadData): error';
+const guard_str = '$jobdetail.routing.guard (loadData): error';
 
 const r_getStore = (params: any): string => params.map((o: any) => o.path).join('-');
 
@@ -69,7 +70,7 @@ export class JobDetailRoutingGuard implements CanActivate {
 
             await this.MCF.loadConfig(module, true)
                 .then(async (config: IConfig) => {
-                    const storeName: string = `${config.store}.${r_getStore(route._urlSegment.segments)}`;
+                    const storeName = `${config.store}.${r_getStore(route._urlSegment.segments)}`;
 
                     return this.getData(storeName)
                         .then(async (data: any) => {
@@ -113,8 +114,8 @@ export class JobDetailRoutingGuard implements CanActivate {
         });
 
     private loadData = async (form: any, module: string): Promise<any> => {
-        this.httpService.httpPost(form.url, { [form.key]: form.id, [form.key2]: form.id2 }).subscribe(
-            async (records: any) => {
+        this.httpService.httpPost(form.url, { [form.key]: form.id, [form.key2]: form.id2 }).subscribe({
+            next: async (records: any) => {
                 const values: any = Array.isArray(records) ? records[0] : records === undefined ? {} : records;
 
                 const payload: IStoreFormState = {
@@ -149,11 +150,16 @@ export class JobDetailRoutingGuard implements CanActivate {
                     return Promise.resolve(true);
                 }
             },
+            error: async (error: unknown) => {
+                if (typeof error !== 'object') {
+                    return;
+                }
 
-            async (err: any) => {
+                const err = error as IError;
+
                 console.info(guard_str, err);
 
-                if (err.status === 404) {
+                if (err?.status === 404) {
                     this.router
                         .navigate([`/${module}/404`])
                         .catch((routingerr: Error) => console.error(guard_str, routingerr));
@@ -172,8 +178,8 @@ export class JobDetailRoutingGuard implements CanActivate {
                     .catch((routingerr: Error) => console.error(guard_str, routingerr));
 
                 return Promise.resolve(false);
-            }
-        );
+            },
+        });
     };
 
     private getData = async (storeName: string): Promise<boolean> =>
@@ -181,14 +187,14 @@ export class JobDetailRoutingGuard implements CanActivate {
             this.store
                 .pipe(
                     select((s: any) => s.coverage.states[storeName]),
-                    catchError(async (err: any) => {
+                    catchError(async (err: unknown) => {
                         console.info(`$main.common.functions (getData): loading error for : ${storeName}`);
 
                         return reject(err);
                     }),
                     take(1)
                 )
-                .subscribe(async (data: any) => {
+                .subscribe((data: any) => {
                     if (data === undefined) {
                         return resolve(false);
                     }

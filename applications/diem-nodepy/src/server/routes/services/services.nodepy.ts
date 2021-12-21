@@ -5,8 +5,9 @@ import * as rimraf from 'rimraf';
 import { ServicesJob, red, ECodeLanguage } from '@interfaces';
 
 export const servicesNodepy: (job: ServicesJob) => Promise<any> = async (job: ServicesJob): Promise<any> => {
+    const sid = `${job.id}-${job.rand}`;
+
     const cleanup: () => void = (): void => {
-        const sid = `${job.id}-${job.rand}`;
         try {
             rimraf.sync(`${path.resolve()}/workdir/${sid}`);
 
@@ -18,8 +19,6 @@ export const servicesNodepy: (job: ServicesJob) => Promise<any> = async (job: Se
             );
         }
     };
-
-    const sid = `${job.id}-${job.rand}`;
 
     let response: SpawnSyncReturns<Buffer>;
 
