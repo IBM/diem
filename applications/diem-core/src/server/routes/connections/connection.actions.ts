@@ -108,6 +108,15 @@ export const connupdate: (body: Partial<IConnBody>) => Promise<any> = async (bod
         return Promise.reject(err);
     });
 
+    let lock;
+
+    if (doc.idtype === EIdType.personal) {
+        lock = 'fas fa-lock';
+        if (body.email && body.email === doc.owner) {
+            lock = 'fas fa-lock-open';
+        }
+    }
+
     const payload: IntPayload[] = [
         {
             key: 'id',
@@ -119,6 +128,7 @@ export const connupdate: (body: Partial<IConnBody>) => Promise<any> = async (bod
                 deleteicon: `${FaIcons.deleteicon}`,
                 editicon: `${FaIcons.editicon}`,
                 id,
+                lock,
             },
         },
     ];

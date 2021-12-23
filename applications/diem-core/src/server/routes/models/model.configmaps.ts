@@ -19,7 +19,7 @@ export interface IConfigmapPayload {
     owner?: string;
     selector: string;
     viewicon: string;
-    lock?: string;
+    lock: string | null;
 }
 
 export interface IConfigmapsBody {

@@ -188,6 +188,7 @@ module.exports = {
         'use-isnan': 'error',
         //'valid-typeof': 'off',
         'camelcase': 'off',
-        //"no-underscore-dangle": 'off'
+        //"no-underscore-dangle": 'off',
+        'no-nested-ternary': 'error'
     },
 };

@@ -72,14 +72,13 @@ export const handlePayloadValues: (jdocs: IJobSchema[]) => IntPayloadValues[] = 
     const payload: IntPayloadValues[] = []; // the payload return array
 
     docs.forEach((row: IJobSchema, i: number) => {
-        const target: string =
-            row.type === EJobTypes.pyspark
-                ? row.config && row.config.target && row.config.target.connection
-                    ? row.config.target.connection
-                    : ''
-                : row.stmt
-                ? row.stmt.connection
-                : '';
+        let target = '';
+
+        if (row.type === EJobTypes.pyspark && row.config?.target?.connection) {
+            target = row.config.target.connection;
+        } else if (row.stmt?.connection) {
+            target = row.stmt.connection;
+        }
 
         // no audit traces here
         row.job.audit = undefined;

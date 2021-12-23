@@ -1,6 +1,7 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
 import { IQuery, IWebhookPayload, IWebhooksSchema, WebhooksModel, FaIcons, EIdType } from '@models';
+import { getLock } from '@functions';
 import { parseFilter } from '../jobs/jobs';
 
 const viewSecurity = 60;
@@ -71,12 +72,7 @@ export const getwebhooks: (req: IRequest) => Promise<IWebhookPayload[]> = async 
          * - closed is personal but not the user
          * - no lock is functional
          */
-        const lock: string | undefined =
-            !row.idtype || (row.idtype && row.idtype !== EIdType.personal)
-                ? undefined
-                : body.email && body.email === row.owner
-                ? 'fas fa-lock-open'
-                : 'fas fa-lock';
+        const lock = getLock(body, row);
 
         payload[i] = {
             createdby: row.owner || EIdType.functional,

@@ -20,7 +20,7 @@ export interface IWebhookPayload {
     viewicon: string;
     webhook: string;
     webhookid: string;
-    lock?: string;
+    lock: string | null;
 }
 
 export interface IWebhooksBody {

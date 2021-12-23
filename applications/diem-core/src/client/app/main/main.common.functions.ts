@@ -197,16 +197,14 @@ export class MainCommonFunctions implements OnDestroy {
 
                         this.DFCS.formChanged({ action: 'close' });
                         const m = 'Error Happened';
-                        const detail: string =
-                            err.error && typeof err.error === 'object'
-                                ? err.error.message && typeof err.error.message === 'string'
-                                    ? err.error.message
-                                    : typeof err.error === 'string'
-                                    ? err.error
-                                    : m
-                                : err.message
-                                ? err.message
-                                : m;
+                        let detail: string = err.message || m;
+                        if (err.error && typeof err.error === 'object') {
+                            if (err.error.message && typeof err.error.message === 'string') {
+                                detail = err.error.message;
+                            } else if (typeof err.error === 'string') {
+                                detail = err.error;
+                            }
+                        }
 
                         this.dispatchmsg({
                             detail,

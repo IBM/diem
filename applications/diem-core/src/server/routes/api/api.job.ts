@@ -23,7 +23,12 @@ export const apijob: (req: IRequest) => Promise<IApiJobReturn> = async (req: IRe
 
     const body: IApiJob = { ...req.body };
     body.transid = req.transid || body.transid;
-    body.email = req.user?.email ? req.user.email : body.email ? body.email : 'system';
+
+    if (req.user?.email) {
+        body.email = req.user?.email;
+    } else if (!body.email) {
+        body.email = 'system';
+    }
 
     const id: string = body.id;
 
