@@ -61,7 +61,7 @@ export const createSparkScalaJob: (doc: IJobSchema) => Promise<ICapacity> = asyn
         'spark.driver.extraClassPath': stocator,
         'spark.task.maxFailures': '1',
         'spark.executor.extraClassPath': stocator,
-        //'spark.yarn.maxAppAttempts': 1,  //  put this in the job somewhere
+        //'spark.yarn.maxAppAttempts': 1,  // put this in the job somewhere
     };
 
     if (doc.job.params?.spark?.sparkConf) {

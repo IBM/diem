@@ -291,7 +291,6 @@ export const actionUpdate: (body: IJobBody) => Promise<any> = async (body: IJobB
         doc.project.orgscope = body.orgscope || doc.project.orgscope;
     }
 
-    // doc.markModified('schedule');
     doc.markModified('mail');
 
     doc.set({

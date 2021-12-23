@@ -121,7 +121,6 @@ export const jobpipeline_json: (req: IRequest) => Promise<IModelPayload | any> =
         const DBJobs: [{ id: string }[], IJobModel[]] = await getDBJobs(doc.jobs, doc._id);
 
         DBJobs[1].forEach((pldoc: IJobModel) => {
-            // job.jobid = id; // adding the jobid for tracking the pipeline
             const pljob: IJobSchema = pldoc.toObject();
             pljob.log = [];
             out.push(pljob);

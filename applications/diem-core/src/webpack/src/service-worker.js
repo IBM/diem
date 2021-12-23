@@ -54,7 +54,7 @@ self.addEventListener('fetch', (event) => {
 
                 const cache = await caches.open(CACHE_NAME);
 
-                return await cache.match(OFFLINE_URL);
+                return cache.match(OFFLINE_URL);
             }
         })());
     }
