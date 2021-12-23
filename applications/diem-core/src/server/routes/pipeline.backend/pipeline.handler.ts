@@ -54,8 +54,6 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
     // here we start
 
     if (job.status === EJobStatus.running || job.status === EJobStatus.submitted) {
-        // job.status = EJobStatus.running; // ! we convert any job in status submitted to running
-
         pldoc = await updatePlJobStatus(pldoc, job);
 
         job.status = EJobStatus.running;
@@ -269,8 +267,6 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
 
         return Promise.resolve(payload);
     }
-
-    //   return Promise.resolve(payload);
 
     return Promise.resolve(payload);
 };

@@ -36,7 +36,7 @@ export const createSparkPythonJob: (doc: IJobSchema) => Promise<ICapacity> = asy
         'spark.task.maxFailures': '1',
         'spark.executor.extraClassPath': stocator,
         'spark.kubernetes.local.dirs.tmpfs': doc.job.params?.spark?.tmpfs ? 'true' : 'false',
-        //'spark.yarn.maxAppAttempts': 1,  //  put this in the job somewhere
+        //'spark.yarn.maxAppAttempts': 1,  // put this in the job somewhere
     };
 
     // pyspark specyfic
