@@ -1,7 +1,7 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
 import { ConnModel, IConnSchema, IConnModel, IQuery, FaIcons, EIdType } from '@models';
-import { addTrace } from '@functions';
+import { addTrace, getLock } from '@functions';
 
 const viewSecurity = 60;
 const editSecurity = 60;
@@ -14,7 +14,7 @@ export interface IConnectionPayloadValues extends Partial<IConnModel> {
     jobid?: string;
     key?: string;
     nbr: number;
-    lock?: string;
+    lock: string | null;
 }
 
 const parseFilter: (body: IQuery) => any = (body: IQuery) => {
@@ -69,12 +69,7 @@ const findConnections: (filter: any, body: IQuery) => Promise<any> = async (filt
              * - closed is personal but not the user
              * - no lock is functional
              */
-            const lock: string | undefined =
-                !row.idtype || (row.idtype && row.idtype !== EIdType.personal)
-                    ? undefined
-                    : body.email && body.email === row.owner
-                    ? 'fas fa-lock-open'
-                    : 'fas fa-lock';
+            const lock = getLock(body, row);
 
             /* make sure the spread is at the top */
             payload[i] = {

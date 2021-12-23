@@ -202,15 +202,18 @@ export class JobAllComponent implements OnInit, OnDestroy {
             });
         }
 
+        let actionvalues = action.values;
+
+        if (action.locals && action.locals.reset) {
+            actionvalues = {};
+        } else if (!isNaN(action.index)) {
+            actionvalues = { ...action.values, index: action.index };
+        }
+
         const mopt: IModalOptions = {
             context: {
                 locals: action.locals,
-                values:
-                    action.locals && action.locals.reset
-                        ? {}
-                        : !isNaN(action.index)
-                        ? { ...action.values, index: action.index }
-                        : action.values,
+                values: actionvalues,
             },
             options: action.modalOptions,
             template: this.modalViewChild,
@@ -220,11 +223,13 @@ export class JobAllComponent implements OnInit, OnDestroy {
     };
 
     private ActionRoute = (options: any) => {
-        let route: string | undefined = options.route
-            ? options.route
-            : options.values && Array.isArray(options.values)
-            ? options.values[0]
-            : undefined;
+        let route: string | undefined;
+
+        if (options.route) {
+            route = options.route;
+        } else if (options.values && Array.isArray(options.values)) {
+            route = options.values[0];
+        }
 
         if (options.params?.route) {
             route =

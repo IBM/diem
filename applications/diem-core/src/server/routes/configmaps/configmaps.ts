@@ -2,6 +2,7 @@ import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
 import { stringify } from 'yaml';
 import { IQuery, IConfigmapSchema, ConfigmapsModel, FaIcons, IConfigmapPayload, EIdType } from '@models';
+import { getLock } from '@functions';
 import { parseFilter } from '../jobs/jobs';
 
 const viewSecurity = 60;
@@ -72,12 +73,7 @@ export const getconfigmaps: (req: IRequest) => Promise<IConfigmapPayload[]> = as
          * - closed is personal but not the user
          * - no lock is functional
          */
-        const lock: string | undefined =
-            !row.idtype || (row.idtype && row.idtype !== EIdType.personal)
-                ? undefined
-                : body.email && body.email === row.owner
-                ? 'fas fa-lock-open'
-                : 'fas fa-lock';
+        const lock = getLock(body, row);
 
         payload[i] = {
             configmap: stringify(row.configmap),

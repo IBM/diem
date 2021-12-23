@@ -22,7 +22,7 @@ export interface IWebApikeyPayload {
     editicon?: string;
     id: string;
     idtype: IIdtype;
-    lock?: string;
+    lock: string | null;
     name: string;
     org: string;
     owner?: string;

@@ -143,13 +143,12 @@ export const orgupdate: (req: IRequest, res: IResponse) => Promise<IRequest | an
               ]
             : undefined;
 
-    const type: string =
-        body.store === 'org.store'
-            ? EStoreActions.UPD_STORE_FORM_RCD
-            : isnew
-            ? EStoreActions.ADD_STORE_RCD
-            : EStoreActions.UPD_STORE_RCD;
-
+    let type: string = EStoreActions.UPD_STORE_RCD;
+    if (body.store === 'org.store') {
+        type = EStoreActions.UPD_STORE_FORM_RCD;
+    } else if (isnew) {
+        type = EStoreActions.ADD_STORE_RCD;
+    }
     const payload: IntPayload[] = [
         {
             key: 'id',

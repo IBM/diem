@@ -63,8 +63,13 @@ export const npcodefile: (req: IRequest) => Promise<string> = async (req: IReque
         return Promise.resolve('You need to be Admin to view this file');
     }
 
-    const id: string =
-        req.params && req.params.pyfile ? req.params.pyfile.split('.')[0] : req.body ? req.body.id : undefined;
+    let id: string | undefined;
+
+    if (req.params?.pyfile) {
+        id = req.params.pyfile.split('.')[0];
+    } else if (req.body?.id) {
+        id = req.body.id;
+    }
 
     if (!id) {
         return Promise.reject({
