@@ -134,7 +134,12 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
             }
             // means Complete
             // set the pipeline to complete and save the pipeline
-            pldoc.job.status = isfailed ? EJobStatus.failed : isstopped ? EJobStatus.stopped : job.status;
+            pldoc.job.status = job.status;
+            if (isfailed) {
+                pldoc.job.status = EJobStatus.failed;
+            } else if (isstopped) {
+                pldoc.job.status = EJobStatus.stopped;
+            }
 
             await finishPl(pldoc).catch(async (err: any) => {
                 if (err?.name && err.name.toLowerCase().includes('versionerror')) {
@@ -210,7 +215,13 @@ export const pipelineHandler: (job: IJobResponse, payload: IntPayload[]) => Prom
         }
         // means Complete
         // set the pipeline to complete and save the pipeline
-        pldoc.job.status = isfailed ? EJobStatus.failed : isstopped ? EJobStatus.stopped : job.status;
+        pldoc.job.status = job.status;
+
+        if (isfailed) {
+            pldoc.job.status = EJobStatus.failed;
+        } else if (isstopped) {
+            pldoc.job.status = EJobStatus.stopped;
+        }
 
         await finishPl(pldoc).catch(async (err: any) => {
             if (err?.name && err.name.toLowerCase().includes('versionerror')) {

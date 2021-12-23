@@ -2,7 +2,6 @@
     "extends": "../webpack/tsconfig.base.json",
     "compilerOptions": {
         "outDir": "../../server",
-        "rootDir": "../../src/server/",
         "resolveJsonModule": true,
         "baseUrl": "./",
         "paths": {

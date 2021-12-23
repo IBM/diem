@@ -21,12 +21,13 @@ export const toMQ = async (
     pack: any = {}
 ): Promise<void> => {
     const transid: string = req.transid || utils.guid();
+
     const log: IntMQLog = {
         logid: transid,
         created: new Date(),
         annotations: {
             execution: utils.hrTime(hrstart),
-            profile: req.token ? req.token : req.user ? req.user : undefined,
+            profile: req.token || req.user || undefined,
             org: req.user?.org || 'anonymous',
             transid: req.transid,
         },

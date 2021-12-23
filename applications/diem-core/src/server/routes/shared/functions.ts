@@ -1,5 +1,6 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
+import { EIdType } from '@models';
 
 interface IMakeUrl {
     url: string;
@@ -138,3 +139,15 @@ export const addTrace: (trace: string | string[], msg: string) => string[] = (
 };
 
 export const base64encode: (file: string) => string = (file: string) => Buffer.from(file, 'utf8').toString('base64');
+
+export const getLock = (body: { [index: string]: any }, row: { [index: string]: any }): string | null => {
+    if (!row.idtype || (row.idtype && row.idtype !== EIdType.personal)) {
+        return null;
+    }
+
+    if (body.email && body.email === row.owner) {
+        return 'fas fa-lock-open';
+    }
+
+    return 'fas fa-lock';
+};

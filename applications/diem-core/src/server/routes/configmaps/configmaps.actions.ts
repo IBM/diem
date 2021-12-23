@@ -101,12 +101,14 @@ export const configmapupdate: (req: IRequest) => Promise<IRequest | any> = async
         process.hrtime(hrstart)
     );
 
-    const lock: string | undefined =
-        doc.idtype !== EIdType.personal
-            ? undefined
-            : body.email && body.email === doc.owner
-            ? 'fas fa-lock-open'
-            : 'fas fa-lock';
+    let lock;
+
+    if (doc.idtype === EIdType.personal) {
+        lock = 'fas fa-lock';
+        if (body.email && body.email === doc.owner) {
+            lock = 'fas fa-lock-open';
+        }
+    }
 
     let deleteicon;
     let editicon;

@@ -73,11 +73,13 @@ export const createSparkPythonJob: (doc: IJobSchema) => Promise<ICapacity> = asy
         };
     }
 
-    const image: string = doc.job.params?.spark?.image
-        ? doc.job.params.spark.image
-        : sparkCredentials.image
-        ? sparkCredentials.image
-        : 'quay.io/diem/pyspark:3.2.0_rhel';
+    let image = 'quay.io/diem/pyspark:3.2.0_rhel';
+
+    if (doc.job.params?.spark?.image) {
+        image = doc.job.params.spark.image;
+    } else if (sparkCredentials.image) {
+        image = sparkCredentials.image;
+    }
 
     crdjob.spec.image = image;
 

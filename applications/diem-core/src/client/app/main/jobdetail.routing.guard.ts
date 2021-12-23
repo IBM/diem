@@ -116,7 +116,15 @@ export class JobDetailRoutingGuard implements CanActivate {
     private loadData = async (form: any, module: string): Promise<any> => {
         this.httpService.httpPost(form.url, { [form.key]: form.id, [form.key2]: form.id2 }).subscribe({
             next: async (records: any) => {
-                const values: any = Array.isArray(records) ? records[0] : records === undefined ? {} : records;
+                let values: any;
+
+                if (!records) {
+                    values = {};
+                } else if (Array.isArray(records)) {
+                    values = records[0];
+                } else {
+                    values = records;
+                }
 
                 const payload: IStoreFormState = {
                     error: false,
