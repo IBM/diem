@@ -398,24 +398,6 @@ const mailSchema: Schema = new Schema(
     } /*** don't add an _id to documents */
 );
 
-/*
-const jobDetailSchema: Schema<IJobDetail> = new Schema(
-    {
-        from: [String],
-        required: Boolean,
-        completed: Boolean,
-        queue: [String],
-        status: String,
-    },
-
-    {
-        _id: false,
-        versionKey: false,
-    } //don't add an _id to documents
-);
-
-*/
-
 const scheduleSchema: Schema = new Schema(
     {
         cronNbr: Number,

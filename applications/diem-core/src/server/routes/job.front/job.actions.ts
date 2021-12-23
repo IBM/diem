@@ -74,8 +74,6 @@ export const jobHandleStop: (
         });
     }
 
-    //doc.markModified('job');
-
     return Promise.resolve(true);
 };
 
