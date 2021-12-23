@@ -109,7 +109,7 @@
         "browserslist": "^4.19.1",
         "buffer": "^6.0.3",
         "carbon-components": "^10.50.0",
-        "carbon-components-angular": "^4.56.2",
+        "carbon-components-angular": "^4.56.3",
         "codelyzer": "^6.0.2",
         "copy-webpack-plugin": "^10.2.0",
         "core.js": "^0.4.2",
