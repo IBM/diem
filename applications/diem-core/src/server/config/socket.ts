@@ -93,7 +93,7 @@ export class Server {
             clearInterval(interval);
         });
 
-        server.on('upgrade', async (request: http.IncomingMessage, socket, head) => {
+        server.on('upgrade', async (request: http.IncomingMessage, socket, head): Promise<any> => {
             const headers: http.IncomingHttpHeaders = request.headers;
             let cookie: any;
 
