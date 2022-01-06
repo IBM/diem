@@ -90,7 +90,7 @@
         "file-loader": "^6.2.0",
         "fork-ts-checker-webpack-plugin": "^6.5.0",
         "lodash-es": "^4.17.21",
-        "mermaid": "^8.13.6",
+        "mermaid": "^8.13.8",
         "mini-css-extract-plugin": "^2.4.5",
         "nodemon": "^2.0.15",
         "nodemon-webpack-plugin": "^4.7.0",
