@@ -28,3 +28,4 @@ pynpm==0.1.2
 graphviz==0.19.1
 chardet==4.0.0
 ibmcloudant==0.0.41
+redis==4.1.0
