@@ -1,11 +1,11 @@
 /* eslint-disable class-methods-use-this */
-import busboy, { BusboyHeaders } from 'busboy';
+import busboy from 'busboy';
 import { IError, IFile, IRequest } from '../interfaces/shared';
 
 export class MultiPart {
     public parseMulti = async (req: IRequest): Promise<any> =>
         new Promise((resolve, reject) => {
-            const busb: busboy.Busboy = new busboy({ headers: req.headers as BusboyHeaders });
+            const busb: busboy.Busboy = busboy({ headers: req.headers });
 
             busb.on('file', (_fieldname: string, file: any, name: string, encoding: string, mimetype: string) => {
                 const chunk: Buffer[] = [];
