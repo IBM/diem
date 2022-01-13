@@ -1,5 +1,5 @@
 jsonPath-ng==1.5.3
-requests==2.27.0
+requests==2.27.1
 jaydebeapi==1.2.3
 numpy==1.22.0 --only-binary=numpy
 pandas==1.3.5
@@ -27,3 +27,5 @@ slack_sdk==3.13.0
 pynpm==0.1.2
 graphviz==0.19.1
 chardet==4.0.0
+ibmcloudant==0.0.41
+redis==4.1.0
