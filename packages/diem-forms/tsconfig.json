@@ -7,14 +7,15 @@
         "pretty": true,
         "rootDir": "./src/",
         "stripInternal": true,
+        "importHelpers": false,
         "lib": ["es2020", "dom"]
     },
     "include": ["./src/**/*"],
     "exclude": ["node_modules"],
     "angularCompilerOptions": {
         "skipTemplateCodegen": true,
-        "disableTypeScriptVersionCheck": true,
+        "disableTypeScriptVersionCheck": false,
         "fullTemplateTypeCheck": false,
-        "enableIvy": false
+        "enableIvy": true
     }
 }
