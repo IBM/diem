@@ -476,8 +476,8 @@ export class Server {
         err.email = 'unknown';
         if (req.token?.email) {
             err.email = req.token.email;
-        } else if (req.user.email) {
-            err.email = req.user?.email;
+        } else if (req.user?.email) {
+            err.email = req.user.email;
         }
         err.endpoint = req.params ? req.params.function : 'n/a';
         err.time = utils.time();
