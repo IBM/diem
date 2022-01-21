@@ -118,7 +118,7 @@ export class Express {
 
     public constructor(assets: IAsserts, config?: IExpressConfig) {
         this.assets = assets;
-        passport.use(Strategy);
+        passport.use('oidc', Strategy);
         this.config = { ...this.config, ...config };
 
         utils.ev.on('internal', async (internal: IntInternal) => {
@@ -161,11 +161,11 @@ export class Express {
                 .use(session(sess))
                 .use(passport.initialize())
                 .use(passport.session())
-                .get('/login', limiter, passport.authenticate('openidconnect', {}))
+                .get('/login', limiter, passport.authenticate('oidc', { scope: 'openid email' }))
                 .get(
                     '/sso/callback',
                     limiter,
-                    passport.authenticate('openidconnect'),
+                    passport.authenticate('oidc', { scope: 'openid email' }),
                     (req: IRequest, res: IResponse) => {
                         if (req.session) {
                             return res.redirect(req.session.originalUrl || '/');

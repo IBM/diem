@@ -1,26 +1,54 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+import { OICUser } from '@interfaces';
+import { Issuer, Strategy as OpenIdStrategy, BaseClient } from 'openid-client';
+import { Credentials } from './cfenv';
+
+interface ISSO {
+    issuer: string;
+    authorization_endpoint: string;
+    token_endpoint: string;
+    userinfo_endpoint: string;
+    jwks_uri: string;
+}
+
 const clientId = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_SECRET;
-const discoveryUrl = process.env.DISCOVERY_URL;
 const callbackUrl = process.env.CALLBACK_URL;
 
-const OpenIDConnectStrategy = require('passport-ci-oidc').IDaaSOIDCStrategy;
+const sso_credentials: ISSO = Credentials('sso');
 
-export const Strategy = new OpenIDConnectStrategy(
+let discovery_endpoint = process.env.DISCOVERY_URL;
+if (discovery_endpoint?.includes('/.well-known/')) {
+    discovery_endpoint = discovery_endpoint.split('/.well-known/')[0];
+}
+
+let baseClient: Issuer<BaseClient>;
+
+if (discovery_endpoint) {
+    baseClient = await Issuer.discover(discovery_endpoint);
+} else {
+    baseClient = new Issuer({
+        issuer: sso_credentials.issuer,
+        authorization_endpoint: sso_credentials.authorization_endpoint,
+        token_endpoint: sso_credentials.token_endpoint,
+        userinfo_endpoint: sso_credentials.userinfo_endpoint,
+        jwks_uri: sso_credentials.jwks_uri,
+    });
+}
+
+const client = new baseClient.Client({
+    client_id: clientId || 'na',
+    client_secret: clientSecret,
+    redirect_uris: [callbackUrl || 'na'],
+    response_types: ['code'],
+});
+
+export const Strategy = new OpenIdStrategy(
     {
-        callbackURL: callbackUrl,
-        clientID: clientId,
-        clientSecret,
-        discoveryURL: discoveryUrl,
-        response_type: 'code',
-        scope: 'openid email profile',
-        skipUserProfile: true,
+        client,
     },
-    (_iss: any, _sub: any, profile: any, accessToken: any, refreshToken: any, _params: any, done: any) => {
+    (_tokenSet: any, profile: unknown, done: any) => {
         process.nextTick(() => {
-            profile.accessToken = accessToken;
-            profile.refreshToken = refreshToken;
-            done(null, profile);
+            done(null, profile as OICUser);
         });
     }
 );
