@@ -91,6 +91,14 @@ const xorg = (req: IRequest, res: IResponse, next: () => any): any => {
     next();
 };
 
+const block = (req: IRequest, res: IResponse, next: () => any): any => {
+    if (['GET', 'POST'].includes(req.method.toUpperCase())) {
+        return next();
+    }
+
+    return res.status(403).end(`This method is not allowed`);
+};
+
 export class Express {
     public app: express.Application = express();
 
@@ -161,9 +169,10 @@ export class Express {
                 .use(session(sess))
                 .use(passport.initialize())
                 .use(passport.session())
-                .get('/login', limiter, passport.authenticate('oidc', { scope: 'openid email' }))
+                .get('/login', block, limiter, passport.authenticate('oidc', { scope: 'openid email' }))
                 .get(
                     '/sso/callback',
+                    block,
                     limiter,
                     passport.authenticate('oidc', { scope: 'openid email' }),
                     (req: IRequest, res: IResponse) => {
