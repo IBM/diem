@@ -1,6 +1,7 @@
 {
     "extends": "../webpack/tsconfig.base.json",
     "compilerOptions": {
+        "module": "esnext",
         "outDir": "../../server",
         "resolveJsonModule": true,
         "baseUrl": "./",

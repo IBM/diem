@@ -126,4 +126,8 @@ module.exports = {
     performance: {
         hints: false,
     },
+
+    experiments: {
+        topLevelAwait: true,
+    },
 };

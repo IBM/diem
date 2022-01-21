@@ -363,8 +363,8 @@ export class Server {
 
         /* Continue with verification */
 
-        req.user.email = (req.user?._json?.email || req.user.id).toLowerCase();
-        req.user.name = req.user.displayName || req.user?._json?.name;
+        req.user.email = (req.user.email || req.user.id || 'na').toLowerCase();
+        req.user.name = req.user.displayName || req.user.name;
 
         const email: string = req.user.email;
         const name: string = req.user.name;
@@ -477,7 +477,7 @@ export class Server {
         if (req.token?.email) {
             err.email = req.token.email;
         } else if (req.user.email) {
-            err.email = req.user.email;
+            err.email = req.user?.email;
         }
         err.endpoint = req.params ? req.params.function : 'n/a';
         err.time = utils.time();
