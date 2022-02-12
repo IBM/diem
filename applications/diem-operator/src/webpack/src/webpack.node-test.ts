@@ -4,14 +4,12 @@
 
 export {};
 
-import fs from 'fs';
 import path from 'path';
 import * as webpack from 'webpack';
-
-const NodeMonPlugin = require('nodemon-webpack-plugin');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-
-const nodeModules: { [index: string]: any } = {};
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+import nodeExternals from 'webpack-node-externals';
+import { resolve } from './webpack.node';
+import NodeMonPlugin from 'nodemon-webpack-plugin';
 
 const Json2Dot: any = () => {
     const json: any = require(`${(global as any).__basedir}/local/env.json`);
@@ -56,12 +54,6 @@ const debugport: number = Number(process.env.DEBUGPORT) || 9194;
 
 console.info(`$webpack.node-test: environment: ${process.env.webpackenv} - debug port: ${debugport}`);
 
-fs.readdirSync('node_modules')
-    .filter((x: any) => ['.bin'].indexOf(x) === -1)
-    .forEach((mod: any) => {
-        nodeModules[mod] = `commonjs ${mod}`;
-    });
-
 module.exports = {
     context: `${(global as any).__basedir}/src/server`,
 
@@ -78,7 +70,7 @@ module.exports = {
         path: `${(global as any).__basedir}/`,
     },
 
-    externals: nodeModules,
+    externals: [nodeExternals()],
 
     optimization: {
         moduleIds: 'deterministic',
@@ -102,9 +94,7 @@ module.exports = {
     },
 
     plugins: [
-        new ForkTsCheckerWebpackPlugin({
-            eslint: { files: `${(global as any).__basedir}/src/server/**/*.ts`, enabled: true },
-        }),
+        new ForkTsCheckerWebpackPlugin(),
 
         new NodeMonPlugin({
             nodeArgs: [`--inspect=0.0.0.0:${debugport}`],
@@ -114,15 +104,7 @@ module.exports = {
         new webpack.EnvironmentPlugin(env),
     ],
 
-    resolve: {
-        alias: {
-            '@common': `${(global as any).__basedir}/src/server/common`,
-            '@interfaces': `${(global as any).__basedir}/src/server/interfaces`,
-            '@config': `${(global as any).__basedir}/src/server/config`,
-        },
-        extensions: ['.ts', '.js'],
-        modules: [path.join(__dirname, 'src/server'), 'node_modules'],
-    },
+    resolve,
 
     performance: {
         hints: false,

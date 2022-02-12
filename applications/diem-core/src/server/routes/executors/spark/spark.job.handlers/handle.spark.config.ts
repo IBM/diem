@@ -37,7 +37,7 @@ export const handleWithConfig: (doc: IJobSchema, code: string) => Promise<string
         let connection: IConnSchema;
 
         try {
-            connection = await getConnection(config.source.connection);
+            connection = await getConnection(doc.project.org, config.source.connection);
         } catch (err) {
             err.trace = addTrace(err.trace, '@at $spark.config (source)');
 
@@ -87,7 +87,7 @@ export const handleWithConfig: (doc: IJobSchema, code: string) => Promise<string
         let connection: IConnSchema;
 
         try {
-            connection = await getConnection(config.target.connection);
+            connection = await getConnection(doc.project.org, config.target.connection);
         } catch (err) {
             err.trace = addTrace(err.trace, '@at $spark.config (target)');
 

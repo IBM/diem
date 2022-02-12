@@ -1,19 +1,12 @@
 {
     "extends": "./tsconfig.base.json",
     "compilerOptions": {
-        "target": "es5",
-        "module": "commonjs",
-        "moduleResolution": "node",
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "removeComments": true,
-        "noImplicitAny": true,
         "declaration": true,
         "outDir": "../webpack/lib",
         "pretty": true,
         "rootDir": "../webpack/src",
-        "stripInternal": true,
-        "lib": ["es2020", "webworker"]
+        "stripInternal": true
     },
-    "includes": ["../webpack/src/**/*.ts"]
+    "includes": ["../webpack/src/**/*.ts"],
+    "exclude": ["../../node_modules/"]
 }

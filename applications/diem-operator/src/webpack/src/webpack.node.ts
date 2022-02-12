@@ -4,14 +4,11 @@
 
 export {};
 
-import fs from 'fs';
 import path from 'path';
 import * as webpack from 'webpack';
-
-const TerserPlugin: any = require('terser-webpack-plugin');
-const ForkTsCheckerWebpackPlugin: any = require('fork-ts-checker-webpack-plugin');
-
-const nodeModules: { [index: string]: any } = {};
+import TerserPlugin from 'terser-webpack-plugin';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+import nodeExternals from 'webpack-node-externals';
 
 const pack: any = require(`${(global as any).__basedir}/package.json`);
 
@@ -22,13 +19,17 @@ const env: any = {
     VERSION: pack.version,
 };
 
-console.info(`$webpack.node: environment: ${process.env.webpackenv}`);
+export const resolve = {
+    alias: {
+        '@common': `${(global as any).__basedir}/src/server/common`,
+        '@interfaces': `${(global as any).__basedir}/src/server/interfaces`,
+        '@config': `${(global as any).__basedir}/src/server/config`,
+    },
+    extensions: ['.ts', '.js'],
+    modules: [path.join(__dirname, 'src/server'), 'node_modules'],
+};
 
-fs.readdirSync('node_modules')
-    .filter((x: any) => ['.bin'].indexOf(x) === -1)
-    .forEach((mod: any) => {
-        nodeModules[mod] = `commonjs ${mod}`;
-    });
+console.info(`$webpack.node: environment: ${process.env.webpackenv}`);
 
 module.exports = {
     context: `${(global as any).__basedir}/src/server`,
@@ -47,7 +48,7 @@ module.exports = {
         sourceMapFilename: 'server/server.map',
     },
 
-    externals: nodeModules,
+    externals: [nodeExternals()],
 
     optimization: {
         moduleIds: 'deterministic',
@@ -80,9 +81,7 @@ module.exports = {
     },
 
     plugins: [
-        new ForkTsCheckerWebpackPlugin({
-            eslint: { files: `${(global as any).__basedir}/src/server/**/*.ts`, enabled: true },
-        }),
+        new ForkTsCheckerWebpackPlugin(),
 
         new webpack.EnvironmentPlugin(env),
 
@@ -91,15 +90,7 @@ module.exports = {
         }),
     ],
 
-    resolve: {
-        alias: {
-            '@common': `${(global as any).__basedir}/src/server/common`,
-            '@interfaces': `${(global as any).__basedir}/src/server/interfaces`,
-            '@config': `${(global as any).__basedir}/src/server/config`,
-        },
-        extensions: ['.ts', '.js'],
-        modules: [path.join(__dirname, 'src/server'), 'node_modules'],
-    },
+    resolve,
 
     performance: {
         hints: false,

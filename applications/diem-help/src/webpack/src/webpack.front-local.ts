@@ -41,10 +41,7 @@ module.exports = {
     cache: false,
 
     entry: {
-        app: [
-            `${(global as any).__basedir}/src/config/vendor.prod.ts`,
-            `${(global as any).__basedir}/src/client/main.ts`,
-        ],
+        app: [`${(global as any).__basedir}/src/client/vendor.ts`, `${(global as any).__basedir}/src/client/main.ts`],
     },
 
     output: {
@@ -170,7 +167,7 @@ module.exports = {
 
         new AngularWebpackPlugin({
             /** alias for skipCodeGeneration: false */
-            tsconfig: `${(global as any).__basedir}/src/client/tsconfig-aot.json`,
+            tsconfig: `${(global as any).__basedir}/src/client/tsconfig.json`,
         }),
 
         new webpack.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)/, `${(global as any).__basedir}/src`),

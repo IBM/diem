@@ -51,8 +51,8 @@ export const jdbc_config: (type: string) => any = (type: string) => {
  * @returns {(Promise<IConnModel | Error>)}
  * @error {message, connection, trace[]}
  */
-export const getConnection: (id: string) => Promise<IConnSchema> = async (id: string): Promise<IConnSchema> => {
-    const doc: IConnSchema | null = await ConnModel.findOne({ alias: id }).lean().exec();
+export const getConnection: (org: string, id: string) => Promise<IConnSchema> = async (org: string, id: string): Promise<IConnSchema> => {
+    const doc: IConnSchema | null = await ConnModel.findOne({ 'project.org': org, alias: id }).lean().exec();
 
     if (doc) {
         return Promise.resolve(doc);
