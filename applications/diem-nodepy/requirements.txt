@@ -1,8 +1,8 @@
 jsonPath-ng==1.5.3
 requests==2.27.1
 jaydebeapi==1.2.3
-numpy==1.22.0 --only-binary=numpy
-pandas==1.4.0
+numpy==1.22.2 --only-binary=numpy
+pandas==1.4.1
 PyJwt==2.3.0
 ibm-cos-sdk==2.11.0
 sqlalchemy==1.4.31
