@@ -6,9 +6,9 @@ This assumes you are using docker for mac
 
 And that you have installed the kubectl cli
 
-## Brew and Helm
+## Prerequisites Things you (might) need
 
-### Brew
+### kubectl
 
 With brew you can install local packages. You can find more documentation on the [Brew Website](https://docs.brew.sh/Installation)
 
@@ -21,6 +21,8 @@ or
 
 brew upgrade kubernetes-cli
 ```
+
+More information and methods here [https://kubernetes.io/docs/tasks/tools/](https://kubernetes.io/docs/tasks/tools/)
 
 ### Helm
 
@@ -50,18 +52,68 @@ helm list
 
 Important: Helm charts are being deprepated and moved to owned repositories. If some chart is not found look it up here : [https://artifacthub.io/](https://artifacthub.io/)]
 
-## Docker
+## Runtimes (3 described)
 
-We are using docker for mac, install it from [https://docs.docker.com/docker-for-mac/install/](https://docs.docker.com/docker-for-mac/install/)
+> You need a runtime that will be running your kubernetes platform
 
-## Dashboard
+### Docker
+
+You can use docker for mac or windows, install it from [https://docs.docker.com/docker-for-mac/install/](https://docs.docker.com/docker-for-mac/install/)
+
+### Rancher Desktop
+
+You can install rancher desktop from [https://github.com/rancher-sandbox/rancher-desktop/releases](https://github.com/rancher-sandbox/rancher-desktop/releases)
+
+### CRC (Code ready containers) Openshift
+
+See section on Openshift
+
+## Supporting Utilities
+
+> This does not apply if your runtime is CRC (already build in), but you (might) need a k8 dashboard and you need an nginx to access your cluster from your browser
+
+### Dashboard
+
+#### Install the dashboard
 
 1. get link from [https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/)
 
-2. You can fidn the versions here [https://github.com/kubernetes/dashboard/releases](https://github.com/kubernetes/dashboard/releases)
+2. You can find the releases here [https://github.com/kubernetes/dashboard/releases](https://github.com/kubernetes/dashboard/releases)
 
 ```cmd
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.1.0/aio/deploy/recommended.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.4.0/aio/deploy/recommended.yaml
+```
+
+#### Create a user
+
+Save the following file to your local disk and apply it (eg admin-user.yaml)
+
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: admin-user
+  namespace: kubernetes-dashboard
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: admin-user
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: admin-user
+  namespace: kubernetes-dashboard
+```
+
+```cms
+$ kubectl apply -f admin-user.yaml
+clusterrolebinding.rbac.authorization.k8s.io/admin-user created
 ```
 
 Get the dashboard secret after you installed the dashboard
@@ -70,63 +122,18 @@ Get the dashboard secret after you installed the dashboard
 kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}')
 ```
 
-## Redis
+Start the dashboard
 
 ```cmd
-$ helm repo add bitnami https://charts.bitnami.com/bitnami
-"bitnami" has been added to your repositories
+$ kubectl proxy
+Starting to serve on 127.0.0.1:8001
 ```
 
-```cmd
-$ helm install diem-redis bitnami/redis --version 12.1.1
+You can access the Dashboard on [http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/](http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/)
 
-NAME: diem-redis
-LAST DEPLOYED: Wed Nov 25 12:42:27 2020
-NAMESPACE: default
-STATUS: deployed
-REVISION: 1
-TEST SUITE: None
-NOTES:
-** Please be patient while the chart is being deployed **
-Redis can be accessed via port 6379 on the following DNS names from within your cluster:
+Paste in the token
 
-diem-redis-master.default.svc.cluster.local for read/write operations
-diem-redis-slave.default.svc.cluster.local for read-only operations
-
-
-To get your password run:
-
-    export REDIS_PASSWORD=$(kubectl get secret --namespace default diem-redis -o jsonpath="{.data.redis-password}" | base64 --decode)
-
-To connect to your Redis server:
-
-1. Run a Redis pod that you can use as a client:
-   kubectl run --namespace default diem-redis-client --rm --tty -i --restart='Never' \
-    --env REDIS_PASSWORD=$REDIS_PASSWORD \
-   --image docker.io/bitnami/redis:6.0.9-debian-10-r13 -- bash
-
-2. Connect using the Redis CLI:
-   redis-cli -h diem-redis-master -a $REDIS_PASSWORD
-   redis-cli -h diem-redis-slave -a $REDIS_PASSWORD
-
-To connect to your database from outside the cluster execute the following commands:
-
-    kubectl port-forward --namespace default svc/diem-redis-master 6379:6379 &
-    redis-cli -h 127.0.0.1 -p 6379 -a $REDIS_PASSWORD
-```
-
-take note of your redis message , you can construct a connection url as follows
-
-- redis://default:XXXXX@diem-redis-master.default.svc.cluster.local:6379 where XXXXX is the password from above
-
-to get the password only, you need this to put in your secrets
-
-```cmd
-kubectl get secret --namespace default diem-redis -o jsonpath="{.data.redis-password}" | base64 --decode
-xxxxx
-```
-
-## Local docker registry
+### Local docker registry
 
 A local registry is used to store you containers in your local cluster, this is like docker hub for local
 
@@ -160,7 +167,7 @@ curl -X GET http://127.0.0.1:30500/v2/bizops/etl-spark-py/tags/list
 
 ps. It will be an empty array as you have not pushed an image to it
 
-## Mongo
+### Mongo
 
 Install it via the following chart, we include local values for adding a password ( only locally ) ( see git for values)
 
@@ -210,165 +217,19 @@ in case of an upgrade
 helm upgrade etl-mongodb -f mongo_values.yaml bitnami/mongodb
 ```
 
-## Inspector
+### Nginx Ingress
 
-### Building the image
+> This is the kubernetes nginx proxy server used to route to the K8 Ingress
+> Iportant: This is only needed for docker desktop, rancher and crc have this already included
 
-Inspector is located in common/deploys/inspector
-
-build the container and push it to your local registry. The commands are also in the package.json in inspector folder
-
-```cmd
-# change to the directory
-$ cd common/deploys/inspector
-
-$ npm run kube:local-prod
-```
-
-Warning, inspector uses an image located in the private registry Artificatory. You might need to login
-
-```cmd
-docker login -u IBM-USER -p IBM-PASS txo-sets-docker-local.artifactory.swg-devops.com
-```
-
-### Yaml
-
-Inspector provides SSO services and is used to login to the applications
-
-Inspector is an application developed by the Ops team, diem has made minor changes
-
-To install inspector, you need to apply some yamls
-
-```cmd
-# for creating and external ip document
-kc apply -f inspector.config.yaml
-kc apply -f inspector.service.yaml
-kc apply -f inspector.secret.yaml (please apply the one in your local that contains the secrets)
-kc apply -f inspector.deployment.yaml
-```
-
-The inspector.secret.yaml must contain your sso clientid and secret.
-
-## Applications
-
-### Common Configs
-
-These are common configs used by all applications
-
-```cmd
-$ kc apply -f common-config.yaml
-common-config created
-```
-
-from hidden local direcctory
-
-```cmd
-$ kc apply -f common-secret.yaml
-common-secret created
-```
-
-### Diem Nodepy (diem-nodepy)
-
-```cmd
-$ cd applications/diem-nodepy
-
-$ npm install
-
-$ npm run kube:local-prod
-> diem-nodepy@3.7.1 kube:local-prod
-
-$ kc apply -f diem-nodepy-config.yaml
-configmap/nodepy created
-$ kc apply -f diem-nodepy-deployment.yaml
-deployment.apps/nodepy created
-service/nodepy created
-```
-
-### ETL Manager (diem-core)
-
-```cmd
-$ cd applications/diem-core
-
-$ npm install
-
-# apply a file so you can work from outside kubernets (on localhost)
-$ kc apply -f external-8192.yaml
-
-# apply a shared volume
-$ kc apply -f operator-claim.yaml
-
-npm run kube:local-prod
-> diem-nodepy@3.7.1 kube:local-prod
-
-$ kc apply -f diem-core-config.yaml
-$ kc apply -f diem-core-deployment.yaml
-```
-
-### Diem Help (diem-help)
-
-```cmd
-$ cd applications/diem-help
-
-$ npm install
-
-% npm run kube:local-prod
-> diem-nodepy@3.7.1 kube:local-prod
-
-$ kc apply -f diem-help-config.yaml
-configmap/diem-help created
-
-$ kc apply -f diem-help-deployment.yaml
-```
-
-## Proxy Ingress
-
-This is an nginx that proxies requests to the pods.
-
-The reason why this is a seperate nginx is that it contains a security mechanismm
-
-Therefore all requests received by the k8 Ingress are proxied to this Proxy Ingress
-
-### Creating the Diem Ingress Image
-
-```cmd
-$ cd common/deploys/ingress
-
-$ docker build -t 127.0.0.1:30500/bizops/diem-ingress -f ./deploy/Dockerfile.local .
-Successfully tagged 127.0.0.1:30500/bizops/diem-ingress:latest
-
-$ docker push 127.0.0.1:30500/bizops/diem-ingress
-latest: digest: sha256:d12742839e818f78afeecedae03d9c891ae2c8ef31d006a3f191ef9e9d5d0282 size: 2407
-```
-
-### Deploy Diem Ingress
-
-After you have build and pushed the image, you can deploy it
-
-```cmd
-$ kubectl apply -f diem.ingress.service.yaml
-configed
-
-$ kubectl apply -f diem.ingress.secret.yaml
-configed
-
-$ kubectl apply -f diem.ingress.deployment.yaml
-configed
-```
-
-! Be aware diem-ingress might not start until you have deployed all applications. If so please deploy them and restart diem-ingress
-
-## Nginx Ingress
-
-This is the kubernetes nginx proxy server used to route to the K8 Ingress
-
-### Add the repo
+#### Add the repo
 
 ```cmd
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 ```
 
-### TLS secret
+#### TLS secret
 
 > This is to enable https on your local domain, create an empty folder you can delete afterwards
 
@@ -446,7 +307,7 @@ If TLS is enabled for the Ingress, a Secret containing the certificate and key m
   type: kubernetes.io/tls
 ```
 
-Move yourself to the yaml directory of this repo  diem-help -> docs -> installing -> yaml
+Move yourself to the yaml directory of this repo diem-help -> docs -> installing -> yaml
 
 ```cmd
 $ kubectl apply -f  diem-ingress.yaml
@@ -457,37 +318,7 @@ diem-ingress.yaml deployed
 add --version 0.6.1  to specify a specific verion
 ```
 
-## Diem Ingress
-
-Please update your routing values first like the following example
-
-```yml
-spec:
-  rules:
-    - host: bizops.ibm.com
-      http:
-        paths:
-          - backend:
-              service:
-                name: etl-ingress
-                port:
-                  number: 80
-            pathType: Prefix
-            path: /
-          - backend:
-              service:
-                name: etl-mgr
-                port:
-                  number: 80
-            pathType: Prefix
-            path: /socket-server
-```
-
-```cmd
-kc apply -f diem-ingress.yaml
-```
-
-## Other yamls to apply (optional)
+### Other yamls to apply (optional)
 
 from yaml directory
 
@@ -496,9 +327,9 @@ from yaml directory
 kc apply -f external-couche.yaml
 ```
 
-## Minio
+### Minio
 
-### Install via Helm 3
+#### Install via Helm 3
 
 Minio is used as local storage for files AWS s3 Compatible
 
@@ -540,7 +371,7 @@ You can now access Minio server on http://localhost:9000. Follow the below steps
 Alternately, you can use your browser or the Minio SDK to access the server - https://docs.minio.io/categories/17
 ```
 
-### Additional instructions for minio
+#### Additional instructions for minio
 
 Make sure either you config , secrets or common secrets contain these values
 
@@ -556,9 +387,9 @@ Make sure either you config , secrets or common secrets contain these values
 ```
 
 ```yaml
-COS__accessKeyId: "myaccesskey"
-COS__endpoint: "http://127.0.0.1:9000"
-COS__secretAccessKey: "mysecretkey"
+COS__accessKeyId: 'myaccesskey'
+COS__endpoint: 'http://127.0.0.1:9000'
+COS__secretAccessKey: 'mysecretkey'
 COS__s3ForcePathStyle: true,
 ```
 
@@ -578,7 +409,7 @@ COS__endpoint: "http://127.0.0.1:9000",
 COS__serviceInstanceId: true,
 ```
 
-## Couche
+### Couche
 
 local couch setup, these instructions are only for a local setup, a setup within k8 is not yet documented here
 
@@ -600,7 +431,9 @@ $ docker start couchdb
 couchdb
 ```
 
-## working locally
+## Other Items
+
+### working locally
 
 In case you want to work from local you can port-forwards like this
 
@@ -611,7 +444,7 @@ kubectl port-forward $POD_NAME 9000 --namespace default (kc get pods --namespace
 kubectl port-forward etlbizops-rabbitmq-0 5672:5672
 ```
 
-## Virtual host and SSO
+### Virtual host and SSO
 
 link to sso registration [https://ies-provisioner.prod.identity-services.intranet.ibm.com/tools/sso/application/list](https://ies-provisioner.prod.identity-services.intranet.ibm.com/tools/sso/application/list)
 
@@ -628,17 +461,7 @@ Ctrl+o enter Ctrl+X
 
 ```
 
-## Artificactory and .npmrc
-
-In order to build your application like diem-core or diem-help, certain packages are required from artifactory which is private to IBM only
-
-You would need to login, you can do this by creating an .npmrc file to be located in the application directory. The values of this file can be optained by following [these instructions](https://pages.github.ibm.com/CIO-SETS/operations/services/artifactory/npm/#disclosure_secured_authentication_techniques)
-
-```curl
-curl -u g@ibm.com:passwword https://na.artifactory.swg-devops.com/artifactory/api/npm/txo-sets-npm-virtual/auth/sets >> ~/.npmrc
-```
-
-## Issues
+## Potential Issues
 
 A collection of potential issues reported
 

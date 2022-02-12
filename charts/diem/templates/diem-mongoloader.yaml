@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: diem-mongohelper
-          image: quay.io/diem/mongoloader:1.0.0
+          image: {{ .Values.mongoloader.image }}
           envFrom:
             - secretRef:
                 name: {{ .Values.core.name }}-secret

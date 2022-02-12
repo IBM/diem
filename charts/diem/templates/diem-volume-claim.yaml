@@ -12,7 +12,7 @@ metadata:
     helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version}}"
 spec:
   accessModes:
-    - ReadWriteMany
+    - {{ .Values.core.config.volume.accessMode }}
   {{- if .Values.core.config.volume.storageClassName }}
   storageClassName: ibmc-file-gold
   {{- end }}

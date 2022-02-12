@@ -21,6 +21,6 @@
         "target": "esnext",
         "version": true,
         "types": ["node", "core-js", "webpack-env"],
-        "lib": ["es2020"]
+        "lib": ["es2020", "dom"]
     }
 }

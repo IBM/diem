@@ -1,9 +1,8 @@
 {
     "extends": "../webpack/tsconfig.base.json",
     "compilerOptions": {
+        "module": "esnext",
         "outDir": "../../server",
-        "resolveJsonModule": true,
-        "typeRoots": ["../../node_modules/@types"],
         "baseUrl": "./",
         "paths": {
             "@common/*": ["./common/*"],
@@ -11,6 +10,5 @@
             "@config/*": ["./config/*"],
             "@shared/*": ["./routes/shared/*"]
         }
-    },
-    "filesGlob": ["../../node_modules/@types/***/**.d.ts", "**/**.ts"]
+    }
 }

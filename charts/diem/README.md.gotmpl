@@ -1,12 +1,12 @@
 {{ define "extra.flower" -}}
 ```
-  _____  _                
- |  __ \(_)               
- | |  | |_  ___ _ __ ___  
- | |  | | |/ _ \ '_ ` _ \ 
+  _____  _
+ |  __ \(_)
+ | |  | |_  ___ _ __ ___
+ | |  | | |/ _ \ '_ ` _ \
  | |__| | |  __/ | | | | |
  |_____/|_|\___|_| |_| |_|
-                          
+
 ```
 {{- end }}
 {{ template "chart.header" . }}
@@ -25,7 +25,7 @@
 3. To install the chart with the release name `diem`:
 
 ```console
-$ helm repo add diem https://ibm.github.io/diemm
+$ helm repo add diem https://ibm.github.io/diem
 $ helm install diem diem/diem -f myvalues.yaml
 ```
 

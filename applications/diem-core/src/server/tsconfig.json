@@ -3,7 +3,6 @@
     "compilerOptions": {
         "module": "esnext",
         "outDir": "../../server",
-        "resolveJsonModule": true,
         "baseUrl": "./",
         "paths": {
             "@common/*": ["./common/*"],
