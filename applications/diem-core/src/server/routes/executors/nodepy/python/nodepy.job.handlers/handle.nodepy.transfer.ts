@@ -67,8 +67,8 @@ const py_transfer: (doc: IJobSchema) => Promise<string> = async (doc: IJobSchema
 
     try {
         [src_conn, tgt_conn] = await Promise.all([
-            await getConnection(doc.config.source.connection),
-            await getConnection(doc.config.target.connection),
+            await getConnection(doc.project.org, doc.config.source.connection),
+            await getConnection(doc.project.org, doc.config.target.connection),
         ]);
     } catch (err) {
         err.trace = addTrace(err.trace, '@at $py_transfer (pyTransfer) - get connection');

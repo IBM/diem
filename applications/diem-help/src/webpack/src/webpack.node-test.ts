@@ -4,12 +4,12 @@
 
 export {};
 
-const fs: any = require('fs');
-const path: any = require('path');
-const webpack: any = require('webpack');
-const NodeMonPlugin: any = require('nodemon-webpack-plugin');
-const nodeModules: { [index: string]: any } = {};
-const ForkTsCheckerWebpackPlugin: any = require('fork-ts-checker-webpack-plugin');
+import path from 'path';
+import * as webpack from 'webpack';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+import nodeExternals from 'webpack-node-externals';
+import { resolve } from './webpack.node';
+import NodeMonPlugin from 'nodemon-webpack-plugin';
 
 const Json2Dot: any = () => {
     const json: any = require(`${(global as any).__basedir}/local/env.json`);
@@ -55,12 +55,6 @@ const debugport: number = Number(process.env.DEBUGPORT) || 9194;
 
 console.info(`$webpack.node-test: environment: ${process.env.webpackenv} - debug port: ${debugport}`);
 
-fs.readdirSync('node_modules')
-    .filter((x: any) => ['.bin'].indexOf(x) === -1)
-    .forEach((mod: any) => {
-        nodeModules[mod] = `commonjs ${mod}`;
-    });
-
 module.exports = {
     context: `${(global as any).__basedir}/src/server`,
 
@@ -77,7 +71,7 @@ module.exports = {
         path: `${(global as any).__basedir}/`,
     },
 
-    externals: nodeModules,
+    externals: [nodeExternals()],
 
     optimization: {
         moduleIds: 'deterministic',
@@ -109,23 +103,13 @@ module.exports = {
 
         new NodeMonPlugin({
             nodeArgs: [`--inspect=0.0.0.0:${debugport}`],
-            watch: path.resolve('./server'),
+            watch: [path.resolve('./server')],
         }),
 
         new webpack.EnvironmentPlugin(env),
     ],
 
-    resolve: {
-        alias: {
-            '@common': `${(global as any).__basedir}/src/server/common`,
-            '@interfaces': `${(global as any).__basedir}/src/server/interfaces`,
-            '@config': `${(global as any).__basedir}/src/server/config`,
-            '@models': `${(global as any).__basedir}/src/server/routes/models`,
-            '@functions': `${(global as any).__basedir}/src/server/routes/shared`,
-        },
-        extensions: ['.ts', '.js'],
-        modules: [path.join(__dirname, 'src/server'), 'node_modules'],
-    },
+    resolve,
 
     performance: {
         hints: false,

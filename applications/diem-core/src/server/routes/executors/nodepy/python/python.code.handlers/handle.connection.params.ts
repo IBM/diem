@@ -1,12 +1,12 @@
 import { ConnModel, IConnSchema } from '@models';
 import { regEx, json } from './handle.params.util';
 
-const replaceParams: (code: string, connections: any, org: string) => Promise<string> = async (
+const replaceParams: (code: string, connection: string, org: string) => Promise<string> = async (
     code: string,
-    connections: any,
+    connection: string,
     org: string
 ) => {
-    const doc: IConnSchema | null = await ConnModel.findOne({ 'project.org': org, alias: connections }).lean().exec();
+    const doc: IConnSchema | null = await ConnModel.findOne({ 'project.org': org, alias: connection }).lean().exec();
 
     if (doc === null) {
         return code;
@@ -17,11 +17,11 @@ const replaceParams: (code: string, connections: any, org: string) => Promise<st
 
     for (const [key, value] of Object.entries(doc)) {
         if (typeof value !== 'object') {
-            code = regEx(code, `${connections}_${key}`, value);
+            code = regEx(code, `${connection}_${key}`, value);
         }
     }
 
-    return regEx(code, connections, json(conn));
+    return regEx(code, connection, json(conn));
 };
 
 export const handleConnectionParams: (

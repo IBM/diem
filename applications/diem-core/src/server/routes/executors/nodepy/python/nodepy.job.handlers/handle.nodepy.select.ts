@@ -14,7 +14,7 @@ const py_select: (doc: IJobSchema) => Promise<string> = async (doc: IJobSchema):
     let connection: IConnSchema;
 
     try {
-        connection = await getConnection(conn);
+        connection = await getConnection(doc.project.org, conn);
     } catch (err) {
         err.trace = addTrace(err.trace, '@at $stmt (handleSelect)');
 

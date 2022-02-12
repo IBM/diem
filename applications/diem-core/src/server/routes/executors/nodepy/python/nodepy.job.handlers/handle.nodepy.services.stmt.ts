@@ -21,7 +21,7 @@ export const py_stmt_services: (job: IntPythonStmtJob) => Promise<string> = asyn
     let connection: IConnSchema;
 
     try {
-        connection = await getConnection(conn);
+        connection = await getConnection(job.org, conn);
     } catch (err) {
         err.trace = addTrace(err.trace, '@at $stmt (handleStmt)');
 
