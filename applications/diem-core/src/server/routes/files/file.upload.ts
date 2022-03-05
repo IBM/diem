@@ -106,9 +106,7 @@ export const fileupload: (req: IRequest) => Promise<IRequest | any> = async (
 ): Promise<IRequest | any> => {
     const hrstart: [number, number] = process.hrtime();
 
-    const body: IFilesBody = { ...req.body };
-
-    body.email = req.user.email;
+    req.body.email = req.user.email;
 
     if (!req.files) {
         return Promise.reject({
@@ -120,7 +118,7 @@ export const fileupload: (req: IRequest) => Promise<IRequest | any> = async (
 
     void uploadFiles(req);
 
-    utils.logInfo(`$files (filedelete): file updated - email: ${body.email}`, req.transid, process.hrtime(hrstart));
+    utils.logInfo(`$files (filedelete): file updated - email: ${req.body.email}`, req.transid, process.hrtime(hrstart));
 
     return Promise.resolve({
         message: 'files Upload Started',
