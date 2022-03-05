@@ -7,7 +7,8 @@ export class MultiPart {
         new Promise((resolve, reject) => {
             const busb: busboy.Busboy = busboy({ headers: req.headers });
 
-            busb.on('file', (_fieldname: string, file: any, name: string, encoding: string, mimetype: string) => {
+            busb.on('file', (_name: string, file: any, info: any) => {
+                const { filename, encoding, mimeType } = info;
                 const chunk: Buffer[] = [];
                 file.on('data', (data: any) => {
                     chunk.push(data);
@@ -16,8 +17,8 @@ export class MultiPart {
                     const f: IFile = {
                         data: Buffer.concat(chunk),
                         encoding,
-                        name,
-                        type: mimetype,
+                        name: filename,
+                        type: mimeType,
                     };
 
                     if (req.files) {
