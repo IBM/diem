@@ -65,7 +65,7 @@ export class HomeMainComponent implements OnInit, OnDestroy, AfterViewChecked {
         this.sanitizer = sanitizer;
 
         mermaid.initialize({
-            theme: 'default',
+            theme: 'default' as any,
             startOnLoad: false,
         });
     }
