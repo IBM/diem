@@ -86,7 +86,7 @@ export class MermaidComponent implements AfterViewInit, ControlValueAccessor {
 
     public async ngAfterViewInit(): Promise<void> {
         mermaidAPI.initialize({
-            theme: mermaidAPI.mermaidAPI.Theme.Default,
+            theme: 'default' as any,
             startOnLoad: false,
         });
 
