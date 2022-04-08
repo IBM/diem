@@ -162,6 +162,7 @@ export class Express {
                 .use(`${utils.Env.apppath}/tinymce/icons`, express.static('./node_modules/tinymce/icons'))
                 .use(`${utils.Env.apppath}/tinymce/skins`, express.static('./node_modules/tinymce/skins'))
                 .use(`${utils.Env.apppath}/tinymce/themes`, express.static('./node_modules/tinymce/themes'))
+                .use(`${utils.Env.apppath}/tinymce/plugins`, express.static('./node_modules/tinymce/plugins'))
                 .get('/favicon.png', limiter, (_req: IRequest, res: IResponse) => {
                     res.sendFile('/public/images/favicon.png', { root: path.resolve() });
                 })

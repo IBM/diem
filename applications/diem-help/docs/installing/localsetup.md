@@ -74,17 +74,19 @@ See section on Openshift
 
 ### Dashboard
 
-#### Install the dashboard
+> You can install the kubernetes dashboard either via helm or via a direct url
+
+#### Install the dashboard via direct URL
 
 1. get link from [https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/)
 
 2. You can find the releases here [https://github.com/kubernetes/dashboard/releases](https://github.com/kubernetes/dashboard/releases)
 
 ```cmd
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.4.0/aio/deploy/recommended.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.1/aio/deploy/recommended.yaml
 ```
 
-#### Create a user
+##### Create an admin service account for accessing the dashboard
 
 Save the following file to your local disk and apply it (eg admin-user.yaml)
 
@@ -116,17 +118,56 @@ $ kubectl apply -f admin-user.yaml
 clusterrolebinding.rbac.authorization.k8s.io/admin-user created
 ```
 
-Get the dashboard secret after you installed the dashboard
+#### Install the dashboard via helm
 
-```cmd
-kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}')
+##### Create a dashboard account for accessing the dashboard
+
+Do this before you install the helm chart
+
+Create an dashboard-admin.yaml with following content
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kubernetes-dashboard
+  namespace: kubernetes-dashboard
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: kubernetes-dashboard
+    namespace: kubernetes-dashboard
 ```
 
-Start the dashboard
+apply this file
+
+```cmd
+kubectl apply -f dashboard-admin.yaml
+```
+
+##### Install the dashboard
+
+```cmd
+# Add kubernetes-dashboard repository
+helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
+# Deploy a Helm Release named "my-release" using the kubernetes-dashboard chart
+helm install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard
+```
+
+#### Start the dashboard
 
 ```cmd
 $ kubectl proxy
 Starting to serve on 127.0.0.1:8001
+```
+
+Get the dashboard secret after you installed the dashboard
+
+```cmd
+kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}')
 ```
 
 You can access the Dashboard on [http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/](http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/)
@@ -166,56 +207,6 @@ curl -X GET http://127.0.0.1:30500/v2/bizops/etl-spark-py/tags/list
 ```
 
 ps. It will be an empty array as you have not pushed an image to it
-
-### Mongo
-
-Install it via the following chart, we include local values for adding a password ( only locally ) ( see git for values)
-
-- installition is from 2020-11-25
-- mongodb-10.0.5
-- App Version 4.4.
-
-```cmd
-$ helm install diem-mongodb -f mongo_values.yaml bitnami/mongodb --version 10.0.5
-
-LAST DEPLOYED: Fri Jan 29 10:01:31 2021
-NAMESPACE: default
-STATUS: deployed
-REVISION: 1
-TEST SUITE: None
-NOTES:
-** Please be patient while the chart is being deployed **
-
-MongoDB can be accessed via port 27017 on the following DNS name(s) from within your cluster:
-
-    diem-mongodb.default.svc.cluster.local
-
-To get the root password run:
-
-    export MONGODB_ROOT_PASSWORD=$(kubectl get secret --namespace default diem-mongodb -o jsonpath="{.data.mongodb-root-password}" | base64 --decode)
-
-To get the password for "db2admin" run:
-
-    export MONGODB_PASSWORD=$(kubectl get secret --namespace default diem-mongodb -o jsonpath="{.data.mongodb-password}" | base64 --decode)
-
-To connect to your database, create a MongoDB client container:
-
-    kubectl run --namespace default diem-mongodb-client --rm --tty -i --restart='Never' --image docker.io/bitnami/mongodb:4.4.2-debian-10-r0 --command -- bash
-
-Then, run the following command:
-    mongo admin --host "diem-mongodb" --authenticationDatabase admin -u root -p $MONGODB_ROOT_PASSWORD
-
-To connect to your database from outside the cluster execute the following commands:
-
-    kubectl port-forward --namespace default svc/diem-mongodb 27017:27017 &
-    mongo --host 127.0.0.1 --authenticationDatabase admin -p $MONGODB_ROOT_PASSWORD
-```
-
-in case of an upgrade
-
-```cmd
-helm upgrade etl-mongodb -f mongo_values.yaml bitnami/mongodb
-```
 
 ### Nginx Ingress
 
