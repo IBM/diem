@@ -445,13 +445,7 @@ export class DFListComponent implements OnDestroy, OnInit {
     public onRowExpand = (_event: any): void => this.check('onRowExpand');
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public isType = (_type: string): boolean => {
-        if (this.detailsType && this.detailsType.length > 0) {
-            return true;
-        }
-
-        return false;
-    };
+    public isType = (_type: string): boolean => (this.detailsType && this.detailsType.length > 0 ? true : false);
 
     public onAction = (action: any, options?: any): void => {
         /** Options using the spread operator is return as an arry
@@ -477,14 +471,10 @@ export class DFListComponent implements OnDestroy, OnInit {
          */
 
         const colVal: any[] =
-            this.tableSpecs.columns.filter((col: any) => {
+            this.tableSpecs.columns.filter((col: any) =>
                 // find only radios or checkboxes, there can only be one of them
-                if (col.specs && (col.specs.radio || col.specs.checkbox) && col.action) {
-                    return true;
-                }
-
-                return false;
-            }) || [];
+                col.specs && (col.specs.radio || col.specs.checkbox) && col.action ? true : false
+            ) || [];
 
         if (colVal.length > 0) {
             const col: ITableColumn = colVal[0];
@@ -508,13 +498,9 @@ export class DFListComponent implements OnDestroy, OnInit {
          * Attention filter returns an array when filtering an array
          */
         const colVal: any =
-            this.tableSpecs.columns.filter((col: any) => {
-                if (col.specs && col.specs.checkbox && col.action) {
-                    return true;
-                }
-
-                return false;
-            }) || [];
+            this.tableSpecs.columns.filter((col: any) =>
+                col.specs && col.specs.checkbox && col.action ? true : false
+            ) || [];
 
         if (colVal.length > 0) {
             const col: ITableColumn = colVal[0];
@@ -726,13 +712,8 @@ export class DFListComponent implements OnDestroy, OnInit {
         }
     };
 
-    private checknode: any = (evalP: any): boolean => {
-        if (evalP instanceof HTMLCollection || evalP instanceof NodeList || evalP instanceof HTMLElement) {
-            return true;
-        }
-
-        return false;
-    };
+    private checknode: any = (evalP: any): boolean =>
+        evalP instanceof HTMLCollection || evalP instanceof NodeList || evalP instanceof HTMLElement ? true : false;
 
     private check = (from: string) => {
         console.info(`%c$df.list.component (check): called by => ${from}`, 'color:red');

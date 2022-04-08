@@ -623,11 +623,7 @@ export class DFQuestionComponent implements OnDestroy, OnInit {
                 (elem: string) => field.indexOf(elem) > -1 && row[elem] !== undefined
             );
 
-            if (l.length === 0) {
-                return true;
-            }
-
-            return false;
+            return l.length === 0 ? true : false;
         });
 
     public evalStr: any = (str: string): any => {
