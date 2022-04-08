@@ -1,4 +1,5 @@
 <!-- markdownlint-disable MD033 -->
+
 # DIEM
 
 [![GitHub issues](https://img.shields.io/github/issues/IBM/diem)](https://github.com/IBM/diem/issues)
@@ -16,6 +17,7 @@
 <img alt="Docker" src="https://img.shields.io/badge/docker%20-%230db7ed.svg?&style=for-the-badge&logo=docker&logoColor=white"/>
 <img alt="Kubernetes" src="https://img.shields.io/badge/kubernetes%20-%23326ce5.svg?&style=for-the-badge&logo=kubernetes&logoColor=white"/>
 <img alt="GitHub Actions" src="https://img.shields.io/badge/github%20actions%20-%232671E5.svg?&style=for-the-badge&logo=github%20actions&logoColor=white"/>
+<a href="https://bestpractices.coreinfrastructure.org/projects/5900"><img src="https://bestpractices.coreinfrastructure.org/projects/5900/badge"></a>
 
 > Python, Spark, REST, Scala, Pipelines, Scheduling, API, Custom Jobs, SQL Statements, Openshift, Cloud Native, Machine Learning, Sendgrid, Kubernetes, Slack, Cloud Object Storage, JDBC, Box
 
