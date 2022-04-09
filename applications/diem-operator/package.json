@@ -15,7 +15,7 @@
         "@kubernetes/client-node": "^0.16.3",
         "axios": "^0.25.0",
         "js-yaml": "^4.1.0",
-        "moment": "^2.29.1",
+        "moment": "^2.29.2",
         "nats": "^2.6.0",
         "print-hrtime": "^2.0.0",
         "serialize-error": "^8.1.0"
