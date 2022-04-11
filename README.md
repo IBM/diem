@@ -8,6 +8,7 @@
 [![GitHub license](https://img.shields.io/github/license/IBM/diem)](https://github.com/IBM/diem/blob/main/LICENSE)
 [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FIBM%2Fdiem%2Fbadge%3Fref%3Dmain&style=flat)](https://actions-badge.atrox.dev/IBM/diem/goto?ref=main)
 <img alt="Helm" src="https://img.shields.io/badge/dynamic/yaml?label=helm&query=version&prefix=v&url=https://raw.githubusercontent.com/IBM/diem/main/charts/diem/Chart.yaml"/>
+<a href="https://bestpractices.coreinfrastructure.org/projects/5900"><img src="https://bestpractices.coreinfrastructure.org/projects/5900/badge"></a>
 <br/><br/>
 <img alt="NodeJS" src="https://img.shields.io/badge/node.js%20-%2343853D.svg?&style=for-the-badge&logo=node.js&logoColor=white"/>
 <img alt="Angular" src="https://img.shields.io/badge/angular%20-%23DD0031.svg?&style=for-the-badge&logo=angular&logoColor=white"/>
@@ -17,7 +18,6 @@
 <img alt="Docker" src="https://img.shields.io/badge/docker%20-%230db7ed.svg?&style=for-the-badge&logo=docker&logoColor=white"/>
 <img alt="Kubernetes" src="https://img.shields.io/badge/kubernetes%20-%23326ce5.svg?&style=for-the-badge&logo=kubernetes&logoColor=white"/>
 <img alt="GitHub Actions" src="https://img.shields.io/badge/github%20actions%20-%232671E5.svg?&style=for-the-badge&logo=github%20actions&logoColor=white"/>
-<a href="https://bestpractices.coreinfrastructure.org/projects/5900"><img src="https://bestpractices.coreinfrastructure.org/projects/5900/badge"></a>
 
 > Python, Spark, REST, Scala, Pipelines, Scheduling, API, Custom Jobs, SQL Statements, Openshift, Cloud Native, Machine Learning, Sendgrid, Kubernetes, Slack, Cloud Object Storage, JDBC, Box
 
