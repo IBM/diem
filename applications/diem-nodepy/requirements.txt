@@ -14,7 +14,7 @@ matplotlib==3.5.1
 jinja2==3.1.1
 seaborn==0.11.2
 sqlparse==0.4.2
-pymongo==4.1.0
+pymongo==4.1.1
 pyarrow==7.0.0
 sendgrid==6.9.7
 diemlib==1.1.4
@@ -25,7 +25,7 @@ openpyxl==3.0.9
 tabulate==0.8.9
 slack_sdk==3.15.2
 pynpm==0.1.2
-graphviz==0.19.1
+graphviz==0.20
 chardet==4.0.0
 ibmcloudant==0.1.1
 redis==4.2.2
