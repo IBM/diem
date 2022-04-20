@@ -74,10 +74,6 @@ See section on Openshift
 
 ### Dashboard
 
-> You can install the kubernetes dashboard either via helm or via a direct url
-
-#### Install the dashboard via direct URL
-
 1. get link from [https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/)
 
 2. You can find the releases here [https://github.com/kubernetes/dashboard/releases](https://github.com/kubernetes/dashboard/releases)
@@ -86,75 +82,41 @@ See section on Openshift
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.1/aio/deploy/recommended.yaml
 ```
 
-##### Create an admin service account for accessing the dashboard
+##### Update the admin service account for accessing the dashboard
 
 Save the following file to your local disk and apply it (eg admin-user.yaml)
+
+If there is an error that the file already exists, delete it first
+
+```cmd
+kubectl delete ClusterRoleBinding kubernetes-dashboard
+```
 
 ```yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: admin-user
-  namespace: kubernetes-dashboard
+ name: admin-user
+ namespace: kubernetes-dashboard
 
 ---
-
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: admin-user
+ name: admin-user
 roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
+ apiGroup: rbac.authorization.k8s.io
+ kind: ClusterRole
+ name: cluster-admin
 subjects:
-- kind: ServiceAccount
-  name: admin-user
-  namespace: kubernetes-dashboard
+ - kind: ServiceAccount
+   name: admin-user
+   namespace: kubernetes-dashboard
 ```
 
 ```cms
 $ kubectl apply -f admin-user.yaml
 clusterrolebinding.rbac.authorization.k8s.io/admin-user created
-```
-
-#### Install the dashboard via helm
-
-##### Create a dashboard account for accessing the dashboard
-
-Do this before you install the helm chart
-
-Create an dashboard-admin.yaml with following content
-
-```yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: kubernetes-dashboard
-  namespace: kubernetes-dashboard
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-  - kind: ServiceAccount
-    name: kubernetes-dashboard
-    namespace: kubernetes-dashboard
-```
-
-apply this file
-
-```cmd
-kubectl apply -f dashboard-admin.yaml
-```
-
-##### Install the dashboard
-
-```cmd
-# Add kubernetes-dashboard repository
-helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
-# Deploy a Helm Release named "my-release" using the kubernetes-dashboard chart
-helm install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard
 ```
 
 #### Start the dashboard
@@ -296,13 +258,6 @@ If TLS is enabled for the Ingress, a Secret containing the certificate and key m
     tls.crt: <base64 encoded cert>
     tls.key: <base64 encoded key>
   type: kubernetes.io/tls
-```
-
-Move yourself to the yaml directory of this repo diem-help -> docs -> installing -> yaml
-
-```cmd
-$ kubectl apply -f  diem-ingress.yaml
-diem-ingress.yaml deployed
 ```
 
 ```txt
