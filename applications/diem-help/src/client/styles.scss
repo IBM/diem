@@ -16,13 +16,14 @@
 
 */
 
+@use '~@carbon/grid';
+@include grid.flex-grid();
+
 @import '~highlight.js/scss/vs2015.scss';
 
 //@import '~font-awesome/css/font-awesome.min.css';
 @import '~@fortawesome/fontawesome-free/css/all.min.css';
 @import '~carbon-components/scss/globals/scss/styles.scss';
-@import '~@carbon/grid/scss/grid';
-@import '~@carbon/type/scss/styles';
 
 @include carbon--type-reset();
 
@@ -209,7 +210,7 @@ body {
     position: relative;
     min-height: calc(100vh - 48px);
 
-    .bx--grid {
+    .cds--grid {
         padding-left: 400px;
         padding-right: 2rem;
         margin: 0;

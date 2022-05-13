@@ -1,10 +1,7 @@
 import { utils } from '@common/utils';
 import sgMail from '@sendgrid/mail';
-import { ClientResponse } from '@sendgrid/client/src/response';
 import { addTrace } from '@functions';
 import { getConfigmap } from '../executors/nodepy/python/python.code.handlers/handle.configmaps';
-
-export { ClientResponse };
 
 const unique: (myArr: any[], prop: string) => any[] = (myArr: any[], prop: string) =>
     myArr.filter(
@@ -43,7 +40,7 @@ class SendMail {
      * @return Promise after the mail has been send
      */
     // eslint-disable-next-line class-methods-use-this
-    public sendMail = async (body: any, transid: string): Promise<any> => {
+    public sendMail = async (body: any, transid: string): Promise<[sgMail.ClientResponse, object]> => {
         if (body.to) {
             body.to = unique(body.to, 'email');
         }
@@ -52,7 +49,7 @@ class SendMail {
             body.cc = unique(body.cc, 'email');
         }
 
-        const res: [ClientResponse, any] = await sgMail.send(body).catch(async (err: any) => {
+        const res = await sgMail.send(body).catch(async (err: any) => {
             err.trace = addTrace(err.trace, '@at $mail (sendMail)');
             /** bubling up no error to be logged */
 
