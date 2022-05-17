@@ -1,6 +1,6 @@
 import { utils } from '@common/utils';
 import { addTrace } from '@functions';
-import { ClientResponse, sendmail } from './sendmail';
+import { sendmail } from './sendmail';
 import { IMailBody, IMailAttachment, IPreparedMail } from './mail.interfaces';
 
 const makeAttachments = (attachements: IMailAttachment[]): any => {
@@ -69,26 +69,23 @@ export class MailHandler {
             to: makeRecipients(mail.recipients),
         };
 
-        await sendmail
-            .sendMail({ ...body }, mail.transid)
-            .then(async (resp: [ClientResponse, any]) => {
-                const updatedform: any = {
-                    event: 'mail confirmation',
-                    message: resp[0].body,
-                    status: resp[0].statusCode,
-                    time: utils.time(),
-                };
+        const resp = await sendmail.sendMail({ ...body }, mail.transid).catch(async (err) => {
+            // bubble up
+            err.trace = addTrace(err.trace, '@at $mailhanlder (newMail)');
+            err.body = body;
+            err.transid = mail.transid;
 
-                return Promise.resolve(updatedform);
-            })
-            .catch(async (err) => {
-                // bubble up
-                err.trace = addTrace(err.trace, '@at $mailhanlder (newMail)');
-                err.body = body;
-                err.transid = mail.transid;
+            return Promise.reject(err);
+        });
 
-                return Promise.reject(err);
-            });
+        const updatedform: any = {
+            event: 'mail confirmation',
+            message: resp[0].body,
+            status: resp[0].statusCode,
+            time: utils.time(),
+        };
+
+        return Promise.resolve(updatedform);
     };
 }
 
