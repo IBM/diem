@@ -30,7 +30,7 @@ export class IBMStickyHeaderDirective implements OnInit {
 
     public handler(): void {
         this.a = document.documentElement ? document.documentElement.scrollTop : 0;
-        const stickClass: string = 'ibm-sitenav-menu-sticky';
+        const stickClass = 'ibm-sitenav-menu-sticky';
         if (this.a >= this.b) {
             if (this.c) {
                 return;
