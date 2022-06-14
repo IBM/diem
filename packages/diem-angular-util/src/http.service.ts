@@ -15,7 +15,7 @@ import { catchError, last, map } from 'rxjs/operators';
 import { Env } from './env';
 import { DTS } from './dts';
 
-const contenttype: string = 'Content-Type';
+const contenttype = 'Content-Type';
 
 enum EPostType {
     upload = 'upload',
@@ -105,14 +105,10 @@ export class HttpService {
             catchError(handleError)
         );
 
-    public httpPost = (
-        url: string,
-        body: any,
-        flatten: boolean = false
-    ): Observable<HttpResponse<any> | HttpErrorResponse> => {
+    public httpPost = (url: string, body: any, flatten = false): Observable<HttpResponse<any> | HttpErrorResponse> => {
         let formData: any;
         const input: any = flatten ? this.flattenObject(body) : body;
-        let multiPart: boolean = false;
+        let multiPart = false;
         if (input.files && input.files.length > 0) {
             formData = new FormData();
             for (const file of input.files) {
@@ -206,7 +202,7 @@ export class HttpService {
             );
     };
 
-    public makeHeaders = (multiPart: boolean = false): any => {
+    public makeHeaders = (multiPart = false): any => {
         let h: any = {};
         if (!multiPart) {
             h = {
@@ -224,14 +220,14 @@ export class HttpService {
             h['X-Correlation-ID'] = si;
         }
 
-        const transid: string = this.dts.guid();
+        const transid = this.dts.guid();
 
         // set a field with value external_api when using cors requests that don't allow this header
         if (!this.env.getField('external_api')) {
             h['X-Request-Id'] = transid;
         }
 
-        const xorg: string = this.env.getField('xorg');
+        const xorg = this.env.getField('xorg');
 
         if (xorg) {
             h['X-Org-Protection'] = xorg;

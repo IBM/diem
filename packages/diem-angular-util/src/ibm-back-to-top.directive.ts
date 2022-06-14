@@ -17,7 +17,7 @@ export class IBMBackToTopDirective implements OnInit {
         const self: any = this;
 
         this.buttonAppendTo = document.getElementsByTagName('main')[0];
-        const scroller: string =
+        const scroller =
             // eslint-disable-next-line max-len
             '<button class="ibm-btt-auto" id="backtotop" href="#top" tabindex="0"><i class="fas fa-angle-up fa-2x" style="color: #525252;"></i></button>';
         this.buttonAppendTo.insertAdjacentHTML('beforeend', scroller);

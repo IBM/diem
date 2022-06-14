@@ -17,7 +17,7 @@ export class DTS {
     public getDate = (dt: string): any => new Date(parseInt(dt, 10));
 
     public newId = (): string => {
-        const N: number = 7;
+        const N = 7;
 
         return Array(N + 1)
             .join(`${Math.random().toString(36)}00000000000000000`.slice(2, 18))
@@ -36,7 +36,7 @@ export class DTS {
     };
 
     public getCookie = (name: string): string | undefined => {
-        const nameEQ: string = `${name}=`;
+        const nameEQ = `${name}=`;
         const ca: any[] = document.cookie.split(';');
         for (let c of ca) {
             while (c.charAt(0) === ' ') {
