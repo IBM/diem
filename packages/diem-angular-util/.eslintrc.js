@@ -32,11 +32,13 @@ module.exports = {
         'prettier',
         'import',
         'jsdoc',
+        'rxjs',
     ],
     extends: [
         'plugin:@typescript-eslint/recommended',
         'plugin:@angular-eslint/recommended',
         'plugin:sonarjs/recommended',
+        "plugin:rxjs/recommended",
         'prettier',
     ],
     rules: {
