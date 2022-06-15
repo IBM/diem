@@ -71,7 +71,7 @@
         "url": "https://github.ibm.com/CIO-SETSt/leap"
     },
     "scripts": {
-        "build": "rm -rf lib && npm run pug:aot-ts && node_modules/.bin/ngc -p ./tsconfig.json",
+        "build": "rm -rf lib && npm run pug:aot-ts && npm run ivy && node_modules/.bin/ngc -p ./tsconfig.json",
         "pug:aot-ts": "aot-fixer-pug --src-path src",
         "pug:watch": "nodemon --watch './src/**/*' -e pug --exec npm run pug:aot-ts",
         "lock": "npm install --package-lock",
