@@ -12,11 +12,17 @@
 
 */
 
-@import '~@fortawesome/fontawesome-free/css/all.min.css';
-@import '~carbon-components/scss/globals/scss/styles.scss';
-@import '~@carbon/grid/scss/grid';
-@import '~@carbon/type/scss/styles';
+@use '~@carbon/grid' with (
+    $prefix: 'bx'
+);
 
+@import '~carbon-components/scss/globals/scss/styles.scss';
+
+$fa-font-path: '~@fortawesome/fontawesome-free/webfonts/';
+@import '~@fortawesome/fontawesome-free/scss/fontawesome.scss';
+@import '~@fortawesome/fontawesome-free/scss/solid.scss';
+
+@include grid.flex-grid();
 @include carbon--type-reset();
 
 :root {
@@ -195,7 +201,8 @@ body.editmode {
 .ex--panel-close {
     text-align: right;
     cursor: pointer;
-    margin-top: 2rem;
+    margin-top: auto;
+    margin-bottom: 3rem;
     background-color: $interactive-02;
     padding: 0.8125rem;
     display: flex;
@@ -298,13 +305,19 @@ df-panel,
     ul {
         display: none;
     }
+
+    .ex--menu-panel-title > div {
+        display: none;
+    }
 }
 
 .ex--panel-icon-slide-right {
-    display: none;
     cursor: pointer;
-    margin-top: 1rem;
-    margin-left: 0.6rem;
+    display: none;
+    margin-top: auto;
+    margin-bottom: 3rem;
+    background: #393939;
+    padding: 0.8125rem;
     svg {
         fill: $ui-02;
         margin-right: 1rem;
@@ -1106,4 +1119,10 @@ button.bx--overflow-menu {
 .bx--list-box__menu-icon {
     border: none;
     background: none;
+}
+
+/* added to have the close panel floating at the bottom */
+.bx--side-nav__items {
+    display: flex;
+    flex-direction: column;
 }

@@ -15,7 +15,7 @@ ibm-header(
         ibm-header-navigation.disabled
             li(role="menuitem",aria-label="Socket")
                 a.bx--header__menu-item
-                    svg.socketfa(ibmIconDataConnected='', size='20')
+                    svg.socketfa(appIcon='data--connected', size='20')
 
             li.bx--header__submenu(role="menuitem", style="height: 100%", #orgmenu="")
                 a.bx--header__menu-item.bx--header__menu-title(
@@ -38,19 +38,19 @@ ibm-header(
             [active]='infoPanel',
             (selected)="openPanel('infoPanel',$event)"
             )
-            svg(ibmIconNotification='', size='20')
+            svg(appIcon='notification', size='20')
         ibm-header-action(
             title='open userPanel',
             [active]='userPanel',
             (selected)="openPanel('userPanel',$event)"
             )
-            svg(ibmIconUserAvatar='', size='20')
+            svg(appIcon='user--avatar', size='20')
         ibm-header-action(
             title='open appPanel',
             [active]='appPanel',
             (selected)="openPanel('appPanel',$event)"
             )
-            svg(ibmIconAppSwitcher='', size='20')
+            svg(appIcon='switcher', size='20')
 
 
 ibm-panel(id="infoPanel", [expanded]="infoPanel")
@@ -58,7 +58,7 @@ ibm-panel(id="infoPanel", [expanded]="infoPanel")
         li You don't have any notifications
     .ex--panel-close((click)="openPanel('infoPanel',false)",)
         span Close
-        svg(ibmIconClose='', size='20')
+        svg(appIcon='close', size='20')
 
 
 
@@ -73,7 +73,7 @@ ibm-panel(id="userPanel", role="menu", [expanded]="userPanel")
         span my Profile
     .ex--panel-close((click)="openPanel('userPanel',false)")
         span Close
-        svg(ibmIconClose='', size='20')
+        svg(appIcon='close', size='20')
 
 ibm-panel(id="appPanel",[expanded]="appPanel")
     ng-template([ngIf]="env.user.authorized")
@@ -94,4 +94,4 @@ ibm-panel(id="appPanel",[expanded]="appPanel")
                     ) {{menu.name}}
     .ex--panel-close((click)="openPanel('appPanel',false)",)
         span Close
-        svg(ibmIconClose='', size='20')
+        svg(appIcon='close', size='20')

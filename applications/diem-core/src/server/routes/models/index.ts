@@ -1,6 +1,8 @@
 export { Aggregate, Document, Model, Error as MongoServerError } from 'mongoose';
 export type { IJobSchemaAnnotations } from './model.common';
 
+export type { SortOrder } from 'mongoose';
+
 export * from './model.common';
 export * from './model.configmaps';
 export * from './model.conn';

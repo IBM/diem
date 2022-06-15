@@ -1,4 +1,3 @@
-import { ConfirmationService } from 'primeng/api';
 import { DynamicFormModule } from '@mydiem/diem-forms';
 import { NgModule } from '@angular/core';
 import { AppSharedModule } from '../../app.shared.module';
@@ -11,6 +10,6 @@ import { PushNotificationsService } from './notifications';
     declarations: [ModalComponent],
     exports: [AppSharedModule, DynamicFormModule, ModalComponent],
     imports: [AppSharedModule, DynamicFormModule],
-    providers: [ConfirmationService, DialogService, SocketService, PushNotificationsService],
+    providers: [DialogService, SocketService, PushNotificationsService],
 })
 export class MainSharedModule {}

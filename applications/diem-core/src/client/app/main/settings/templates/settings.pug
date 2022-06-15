@@ -34,9 +34,9 @@ ng-container(*ngIf="loaded && ! fatal")
                                     i([ngClass]="module.iconclass")
                                     span([innerHTML]='module.title')
                             .ex--panel-close((click)="navClass = 'ex--panel-min'")
-                                svg(ibmIconChevronLeft='', size='20')
+                                svg(appIcon="chevron--left", size='20')
                         .ex--panel-icon-slide-right((click)="navClass = ''")
-                                svg(ibmIconChevronRight='', size='20')
+                                svg(appIcon="chevron--right", size='20')
 
                 .bx--content.ex--panel-form
                     ng-container
