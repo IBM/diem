@@ -30,4 +30,24 @@ export class DFCommonService {
 
         return t.toLowerCase();
     };
+
+    public addClass = (element: any, className: string): void => {
+        if (element.classList) {
+            element.classList.add(className);
+        } else {
+            element.className += ` ${className}`;
+        }
+    };
+
+    public removeClass = (element: any, className: string): void => {
+        if (element.classList) {
+            element.classList.remove(className);
+        } else {
+            element.className = element.className.replace(
+                // eslint-disable-next-line prefer-template
+                new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'),
+                ' '
+            );
+        }
+    };
 }

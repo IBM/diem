@@ -137,19 +137,21 @@ ng-template(#radio="")
             [attr.for]='question.key'
             ) {{question.label}}
 
-        .ex--radiogroup.bx--form-item(
+        ibm-radio-group.ex--radiogroup.bx--form-item(
+            *ngIf="question.key",
+            aria-label="radiogroup",
+			[orientation]="question.orientation",
+			[labelPlacement]="question.labelPlacement",
             [ngClass]="question.typeClass",
-            [ngStyle]="question.style"
+            [ngStyle]="question.typeStyle",
+            [formControlName]='question.key',
             )
-            ng-template(ngFor="",[ngForOf]="question.items",let-radio="")
-                p-radioButton(
-                    [name]= 'question.key',
-                    [value]='radio.value',
-                    [label]='radio.label',
-                    [inputId]='question.key + "-" + radio.value',
-                    [ngStyle]='question.style',
-                    [styleClass] = 'question.typeClass',
-                    [formControlName]='question.key')
+            ibm-radio(*ngFor="let radio of question.items",
+					[value]="radio.value",
+                    [checked]="radio.value === form.controls[question.key].value",
+					[disabled]="radio.disabled",
+                    ) {{radio.content || radio.label || radio.value}}
+
 
 ng-template(#editcheckbox="")
     ng-container([formGroup]="form")

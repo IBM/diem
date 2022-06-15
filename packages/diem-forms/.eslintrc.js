@@ -26,19 +26,20 @@ module.exports = {
     },
     plugins: [
         '@typescript-eslint',
-        '@typescript-eslint/tslint',
+        '@angular-eslint',
+        //'@angular-eslint/template',
         'sonarjs',
-        'angular',
         'prettier',
         'import',
         'jsdoc',
+        'rxjs',
     ],
     extends: [
-        'eslint:recommended',
-        'plugin:@typescript-eslint/eslint-recommended',
         'plugin:@typescript-eslint/recommended',
+        'plugin:@angular-eslint/recommended',
         'plugin:sonarjs/recommended',
+        './src/webpack/eslintrc-base.js',
+        "plugin:rxjs/recommended",
         'prettier',
-        './src/webpack/eslintrc-base.js'
     ],
 };
