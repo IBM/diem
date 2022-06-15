@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable  class-methods-use-this  */
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { share } from 'rxjs/operators';
