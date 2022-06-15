@@ -7,7 +7,7 @@ ng-container(*ngIf="formSpecs && formSpecs.sidebar && formSpecs.buttons && formS
         )
         .ex--panel-close((click)="sidebar = false")
             span Close
-            svg(ibmIconClose='', size='20')
+            svg(appIcon="close", size='20')
 
     button(
         *ngIf="! sidebar",
@@ -17,7 +17,7 @@ ng-container(*ngIf="formSpecs && formSpecs.sidebar && formSpecs.buttons && formS
         value="",
         (click)="sidebar = true",
         )
-        svg(ibmIconOpenPanelFilledRight="", size='20')
+        svg(appIcon="open-panel--filled--right", size='20')
 
 div([ngClass]="formSpecs.style.panelClass")
     nav.bx--side-nav__navigation(role="navigation")
@@ -42,9 +42,9 @@ div([ngClass]="formSpecs.style.panelClass")
                     )
                     span([innerHTML]='questionGroup.header.label')
             .ex--panel-close((click)="navClass = 'ex--panel-min'")
-                svg(ibmIconChevronLeft='', size='20')
+                svg(appIcon="chevron--left", size='20')
         .ex--panel-icon-slide-right((click)="navClass = ''")
-                svg(ibmIconChevronRight='', size='20')
+                svg(appIcon="chevron--right", size='20')
 
 div(
     [ngClass]='formSpecs.style.sectionPanelClass',

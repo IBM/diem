@@ -6,7 +6,7 @@ ng-container(*ngIf="formSpecs && formSpecs.sidebar && formSpecs.buttons && formS
             [form]='form'
         )
         .etl-action-panel-close((click)="sidebar = false",)
-            svg(ibmIconClose='', size='20')
+            svg(appIcon="close", size='20')
 
     button(
         *ngIf="! sidebar",
@@ -16,7 +16,7 @@ ng-container(*ngIf="formSpecs && formSpecs.sidebar && formSpecs.buttons && formS
         value="",
         (click)="sidebar = true",
         )
-        svg(ibmIconOpenPanelFilledRight="", size='20')
+        svg(appIcon="open-panel--filled--right", size='20')
 
 df-buttons(
     *ngIf='formSpecs.buttons && formSpecs.buttons.length>0 && formSpecs.buttonsattop && ! formSpecs.sidebar',
