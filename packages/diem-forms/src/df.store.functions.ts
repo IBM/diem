@@ -1,15 +1,16 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable @typescript-eslint/ban-types */
-/* eslint-disable camelcase */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable sonarjs/cognitive-complexity */
 /* eslint-disable no-underscore-dangle */
+/* eslint-disable rxjs/no-nested-subscribe */
+/* eslint-disable rxjs/no-implicit-any-catch */
 import { Injectable } from '@angular/core';
 import { Env, HttpService } from '@mydiem/diem-angular-util';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { merge } from 'lodash-es';
-import { DomHandler } from 'primeng/dom';
+import { DFCommonService } from './df.common.api';
 import { IForm, ILocals, IParams, IStoreFormState, IStoreTableState } from './definitions/interfaces';
 
 /**
@@ -27,12 +28,14 @@ export class DFStoreFunctions {
     private httpService: HttpService;
     private processing: string = 'ibm-processing';
     private router: Router;
+    private CS: DFCommonService;
 
-    public constructor(store: Store<any>, httpService: HttpService, env: Env, router: Router) {
+    public constructor(store: Store<any>, httpService: HttpService, env: Env, router: Router, CS: DFCommonService) {
         this.store = store;
         this.httpService = httpService;
         this.env = env;
         this.router = router;
+        this.CS = CS;
     }
 
     public initStore(store: string, query: any, loaded: boolean = false): void {
@@ -132,7 +135,7 @@ export class DFStoreFunctions {
 
                 return true;
             },
-            (err) => {
+            (err: any) => {
                 const payload: IStoreFormState = {
                     error: true,
                     form: {
@@ -162,7 +165,7 @@ export class DFStoreFunctions {
         }
 
         if (document.body && this.processing) {
-            DomHandler.addClass(document.body, this.processing);
+            this.CS.addClass(document.body, this.processing);
         }
 
         const values: any = locals.flatten === undefined ? true : locals.flatten;
@@ -184,10 +187,10 @@ export class DFStoreFunctions {
                 });
 
                 if (document.body && this.processing) {
-                    DomHandler.removeClass(document.body, this.processing);
+                    this.CS.removeClass(document.body, this.processing);
                 }
             },
-            (err) => {
+            (err: any) => {
                 const payload: IStoreTableState = {
                     empty: true,
                     error: true,
@@ -205,7 +208,7 @@ export class DFStoreFunctions {
                 this.siteError(err.error && err.error.message ? err.error.message : err.message ? err.message : err);
                 this.toSlack(url, storeName, err);
                 if (document.body && this.processing) {
-                    DomHandler.removeClass(document.body, this.processing);
+                    this.CS.removeClass(document.body, this.processing);
                 }
             }
         );
@@ -247,7 +250,7 @@ export class DFStoreFunctions {
                 () => {
                     console.info('$store.function (http post to slack) => Slack sent');
                 },
-                (error) => {
+                (error: any) => {
                     console.info('$store.function (http post to slack error) => Slack error', error);
                 }
             );
@@ -263,7 +266,7 @@ export class DFStoreFunctions {
 
             this.httpService.httpPost(url, params).subscribe(
                 (records) => resolve(records),
-                (err) => {
+                (err: any) => {
                     reject();
 
                     this.httpService
@@ -274,7 +277,7 @@ export class DFStoreFunctions {
                             () => {
                                 console.info('$store.function (http post to slack) => Slack sent');
                             },
-                            (error) => {
+                            (error: any) => {
                                 console.info('$store.function (http post to slack error) => Slack error', error);
                             }
                         );

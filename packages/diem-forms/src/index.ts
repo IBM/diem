@@ -3,7 +3,6 @@ export { DFStoreFunctions } from './df.store.functions';
 export { DFFormService } from './df.form.service';
 export { DFCommonService } from './df.common.api';
 export * from './definitions/interfaces';
-
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppPages, HttpService } from '@mydiem/diem-angular-util';
@@ -25,17 +24,9 @@ import {
     PlaceholderModule,
     DialogModule,
 } from 'carbon-components-angular';
-import {
-    AddModule,
-    CloseModule,
-    SettingsModule,
-    ChevronLeftModule,
-    ChevronRightModule,
-    NotificationModule,
-    OpenPanelFilledRightModule,
-    WarningFilledModule,
-    InformationFilledModule,
-} from '@carbon/icons-angular';
+
+import { AppIconModule } from './icons/icon.module';
+
 import { AceCodeEditorComponent } from './df.aceditor.component';
 import { DFBpImgComponent } from './df.bpImg.component';
 import { DFButtonsComponent } from './df.buttons.component';
@@ -57,9 +48,11 @@ import { Object2Array } from './df.object.array.pipe';
 import { PrimeComponents } from './prime.components';
 import { TinyEditorComponent } from './df.tinymce.component';
 import { MermaidComponent } from './df.mermaid.component';
+import { AppIconDirective } from './icons/icon.directive';
 
 export {
     AceCodeEditorComponent,
+    AppIconDirective,
     DFBpImgComponent,
     DFButtonsComponent,
     DFComponent,
@@ -72,6 +65,7 @@ export {
     DFQuestionComponent,
     DFStandardFormComponent,
     DFTableListComponent,
+    AppIconModule,
     MermaidComponent,
     Object2Array,
     TinyEditorComponent,
@@ -98,12 +92,9 @@ export {
     ],
     exports: [
         ...PrimeComponents,
+        AppIconModule,
         AceCodeEditorComponent,
-        AddModule,
         AppPages,
-        ChevronLeftModule,
-        ChevronRightModule,
-        CloseModule,
         ComboBoxModule,
         CommonModule,
         DFBpImgComponent,
@@ -122,53 +113,40 @@ export {
         DialogModule,
         DropdownModule,
         FormsModule,
-        InformationFilledModule,
         MermaidComponent,
         NFormsModule,
-        NotificationModule,
         NumberModule,
-        OpenPanelFilledRightModule,
         PaginationModule,
         PanelModule,
         PlaceholderModule,
         ReactiveFormsModule,
         RouterModule,
-        SettingsModule,
         SideNavModule,
         TableModule,
         TabsModule,
         TagModule,
         TinyEditorComponent,
-        WarningFilledModule,
     ],
     imports: [
+        AppIconModule,
         CommonModule,
         AppPages,
         FormsModule,
         ReactiveFormsModule,
         ...PrimeComponents,
-        AddModule,
-        ChevronLeftModule,
-        ChevronRightModule,
-        CloseModule,
         ComboBoxModule,
         DatePickerModule,
         DialogModule,
         DropdownModule,
-        InformationFilledModule,
         NFormsModule,
-        NotificationModule,
         NumberModule,
-        OpenPanelFilledRightModule,
         PaginationModule,
         PanelModule,
         PlaceholderModule,
-        SettingsModule,
         SideNavModule,
         TableModule,
         TabsModule,
         TagModule,
-        WarningFilledModule,
         RouterModule,
     ],
     providers: [DFCommonService, HttpService, DFFilterService, DFStoreFunctions, DFFormService, Store],

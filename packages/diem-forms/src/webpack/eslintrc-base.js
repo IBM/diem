@@ -79,7 +79,6 @@ module.exports = {
         '@typescript-eslint/unified-signatures': 'error',
         'arrow-body-style': 'error',
         'brace-style': ['error', '1tbs'],
-        'camelcase': [2, { 'properties': 'always' }],
         'class-methods-use-this': 'error',
         complexity: 'error',
         'constructor-super': 'error',
@@ -172,7 +171,6 @@ module.exports = {
         'no-throw-literal': 'error',
         'no-trailing-spaces': 'error',
         'no-undef-init': 'error',
-        'no-underscore-dangle': 'error',
         'no-unsafe-finally': 'error',
         'no-unused-labels': 'error',
         'no-var': 'error',
@@ -194,6 +192,9 @@ module.exports = {
         'use-isnan': 'error',
         'valid-typeof': 'off',
         'camelcase': 'off',
-        "no-underscore-dangle": 'off'
+        'no-underscore-dangle': 'off',
+        'rxjs/no-implicit-any-catch': 'off',
+        '@angular-eslint/no-output-native': 'off',
+        'rxjs/no-nested-subscribe': 1,
     },
 };

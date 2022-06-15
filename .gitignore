@@ -25,7 +25,6 @@ keys.txt
 envs
 __pycache__/
 
-.npmrc
 .pypirc
 **/target/
 **/.project
