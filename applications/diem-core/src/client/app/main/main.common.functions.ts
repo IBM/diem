@@ -8,7 +8,6 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Subject, Subscription } from 'rxjs';
 import { catchError, debounceTime, skipWhile, take } from 'rxjs/operators';
-import { DomHandler } from 'primeng/dom';
 import { appConfig } from '../../app.config';
 import { SiteStoreStatus } from '../../site/site.store';
 
@@ -24,7 +23,7 @@ export class MainCommonFunctions implements OnDestroy {
     public transferdata: any;
     public env: Env;
 
-    private DFCS: DFCommonService;
+    private CS: DFCommonService;
     private DSF: DFStoreFunctions;
     private formService: DFFormService;
     private httpService: HttpService;
@@ -33,14 +32,14 @@ export class MainCommonFunctions implements OnDestroy {
 
     public constructor(
         env: Env,
-        DFCS: DFCommonService,
+        CS: DFCommonService,
         DSF: DFStoreFunctions,
         formService: DFFormService,
         httpService: HttpService,
         store: Store<any>
     ) {
         this.env = env;
-        this.DFCS = DFCS;
+        this.CS = CS;
         this.DSF = DSF;
         this._historyDocs = [];
         this.formService = formService;
@@ -159,7 +158,7 @@ export class MainCommonFunctions implements OnDestroy {
     public postData = async (values: any, params: any): Promise<any> =>
         new Promise((resolve) => {
             if (this.processing && document.body) {
-                DomHandler.addClass(document.body, this.processing);
+                this.CS.addClass(document.body, this.processing);
             }
 
             this.httpService
@@ -173,7 +172,7 @@ export class MainCommonFunctions implements OnDestroy {
                         const err = error as IHttpError;
 
                         if (document.body && this.processing) {
-                            DomHandler.removeClass(document.body, this.processing);
+                            this.CS.removeClass(document.body, this.processing);
                         }
 
                         /**
@@ -187,7 +186,7 @@ export class MainCommonFunctions implements OnDestroy {
                          */
 
                         if (err.error && typeof err.error === 'object' && err.error.displayerr) {
-                            this.DFCS.formChanged({
+                            this.CS.formChanged({
                                 message: err.error.displayerr,
                                 type: 'error',
                             });
@@ -195,7 +194,7 @@ export class MainCommonFunctions implements OnDestroy {
                             return resolve(false);
                         }
 
-                        this.DFCS.formChanged({ action: 'close' });
+                        this.CS.formChanged({ action: 'close' });
                         const m = 'Error Happened';
                         let detail: string = err.message || m;
                         if (err.error && typeof err.error === 'object') {
@@ -247,7 +246,7 @@ export class MainCommonFunctions implements OnDestroy {
 
                     if (serverPayload.actions) {
                         serverPayload.actions.forEach((action: IntSharedAction) => {
-                            this.DFCS.formChanged(action);
+                            this.CS.formChanged(action);
                         });
                     }
 
@@ -272,7 +271,7 @@ export class MainCommonFunctions implements OnDestroy {
                     }
 
                     if (document.body && this.processing) {
-                        DomHandler.removeClass(document.body, this.processing);
+                        this.CS.removeClass(document.body, this.processing);
                     }
 
                     resolve(proceed);
@@ -342,7 +341,7 @@ export class MainCommonFunctions implements OnDestroy {
                         type: SiteStoreStatus.ERROR,
                         key: 'tr',
                     });
-                    this.DFCS.formChanged({ action: 'close' });
+                    this.CS.formChanged({ action: 'close' });
                 },
             });
     };

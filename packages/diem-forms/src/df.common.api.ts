@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable  class-methods-use-this  */
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { share } from 'rxjs/operators';
@@ -29,5 +30,25 @@ export class DFCommonService {
         const t: string = _p8(false) + _p8(true) + _p8(true) + _p8(false);
 
         return t.toLowerCase();
+    };
+
+    public addClass = (element: any, className: string): void => {
+        if (element.classList) {
+            element.classList.add(className);
+        } else {
+            element.className += ` ${className}`;
+        }
+    };
+
+    public removeClass = (element: any, className: string): void => {
+        if (element.classList) {
+            element.classList.remove(className);
+        } else {
+            element.className = element.className.replace(
+                // eslint-disable-next-line prefer-template
+                new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'),
+                ' '
+            );
+        }
     };
 }

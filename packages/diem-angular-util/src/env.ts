@@ -30,7 +30,7 @@ export class Env {
     private config: any;
     private progressSource = new Subject<any>();
     private bodyClassSource = new Subject<any>();
-    private bodyClassField: string = '';
+    private bodyClassField = '';
 
     public constructor() {
         this.config = {
@@ -101,7 +101,7 @@ export class Env {
         this.progressSource.next(msg);
     };
 
-    public nextClass = (bodyClass: string, remove: boolean = false): any => {
+    public nextClass = (bodyClass: string, remove = false): any => {
         this.bodyClassSource.next({ bodyClass, remove });
     };
 }

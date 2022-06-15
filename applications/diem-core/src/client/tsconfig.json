@@ -6,14 +6,12 @@
         "paths": {
             "@interfaces": ["../server/interfaces/index"]
         },
-        "lib": ["es2020", "dom"]
+        "lib": ["esnext", "dom"]
     },
     "include": ["../client/vendor.ts", "../client/main.ts", "../client/app/main/main.module.ts"],
     "angularCompilerOptions": {
-        "entryModule": "app.module#AppModule",
         "skipTemplateCodegen": true,
         "disableTypeScriptVersionCheck": true,
-        "fullTemplateTypeCheck": true,
-        "enableIvy": true
+        "fullTemplateTypeCheck": true
     }
 }

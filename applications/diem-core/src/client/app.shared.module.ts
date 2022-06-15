@@ -10,16 +10,16 @@ import {
     NotificationModule,
     LoadingModule,
 } from 'carbon-components-angular';
+import { DFCommonService, AppIconModule } from '@mydiem/diem-forms';
 import { TermsComponent } from './app/terms/terms.component';
 import { MessagesComponent } from './app/messages/messages.component';
-import { AppIconsModule } from './app.icons.module';
 import { SiteService } from './site/site.service';
 
 @NgModule({
     declarations: [TermsComponent, MessagesComponent],
-    exports: [AppIconsModule, AppPages, CommonModule, Directives, LoadingModule, MessagesComponent, ModalModule],
+    exports: [AppIconModule, AppPages, CommonModule, Directives, LoadingModule, MessagesComponent, ModalModule],
     imports: [
-        AppIconsModule,
+        AppIconModule,
         AppPages,
         ButtonModule,
         CommonModule,
@@ -31,6 +31,6 @@ import { SiteService } from './site/site.service';
         NotificationModule,
         TabsModule,
     ],
-    providers: [DTS, HttpClientModule, HttpService, SiteService],
+    providers: [DFCommonService, DTS, HttpClientModule, HttpService, SiteService],
 })
 export class AppSharedModule {}

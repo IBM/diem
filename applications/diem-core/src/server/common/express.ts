@@ -150,7 +150,6 @@ export class Express {
             const sess: any = this.getSession();
 
             this.app
-                .use(helmet())
                 .use(helmet.referrerPolicy({ policy: 'strict-origin-when-cross-origin' }))
                 .use(`${utils.Env.apppath}/public`, express.static('./public'))
                 .use(
@@ -166,6 +165,7 @@ export class Express {
                 .get('/favicon.png', limiter, (_req: IRequest, res: IResponse) => {
                     res.sendFile('/public/images/favicon.png', { root: path.resolve() });
                 })
+                .use(helmet())
                 .use(this.checkSession())
                 .use(session(sess))
                 .use(passport.initialize())

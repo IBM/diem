@@ -1,0 +1,9 @@
+declare module '@carbon/icons/es/chevron--left/20';
+declare module '@carbon/icons/es/chevron--right/20';
+declare module '@carbon/icons/es/notification/20';
+declare module '@carbon/icons/es/launch/20';
+declare module '@carbon/icons/es/switcher/20';
+declare module '@carbon/icons/es/user--avatar/20';
+declare module '@carbon/icons/es/close/20';
+declare module '@carbon/icons/es/open-panel--filled--right/20';
+declare module '@carbon/icons/es/data--connected/20';

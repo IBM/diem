@@ -1,6 +1,6 @@
 import { ErrorHandler, Injectable } from '@angular/core';
 import { Env, HttpService } from '@mydiem/diem-angular-util';
-import { DomHandler } from 'primeng//dom';
+import { DFCommonService } from '@mydiem/diem-forms';
 import { appConfig } from './app.config';
 
 @Injectable()
@@ -8,10 +8,12 @@ export class AppErrorHandler implements ErrorHandler {
     private httpService: HttpService;
     private env: Env;
     private tmpMsg?: string;
+    private CS: DFCommonService;
 
-    public constructor(httpService: HttpService, env: Env) {
+    public constructor(httpService: HttpService, env: Env, CS: DFCommonService) {
         this.httpService = httpService;
         this.env = env;
+        this.CS = CS;
     }
 
     /**
@@ -22,7 +24,7 @@ export class AppErrorHandler implements ErrorHandler {
      */
     public handleError(err: Error): void {
         if (document.body) {
-            DomHandler.removeClass(document.body, 'ibm-processing');
+            this.CS.removeClass(document.body, 'ibm-processing');
         }
 
         const errMsg: string = err.message ? err.message : err.toString();

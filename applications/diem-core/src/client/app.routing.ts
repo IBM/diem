@@ -19,7 +19,7 @@ const appConfig: Routes = [
     { component: UnauthorizedComponent, path: '401', data: { title: 'Not Authorized' } },
     {
         canLoad: [AppRoutingGuard],
-        loadChildren: async () => import('./app/main/main.module').then((m) => m.MainModule),
+        loadChildren: async (): Promise<any> => import('./app/main/main.module').then((m) => m.MainModule),
         path: '',
     },
 ];

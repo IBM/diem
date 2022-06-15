@@ -9,6 +9,7 @@ import {
     EJobTypes,
     IScheduleSchema,
     FaIcons,
+    SortOrder,
 } from '@models';
 import { fmtTime, addTrace } from '@functions';
 
@@ -105,11 +106,13 @@ export const findByFilter: (filter: any, body: IQuery) => Promise<IntPayloadValu
     filter: any,
     body: IQuery
 ): Promise<IntPayloadValues[]> => {
+    const sortOrder: SortOrder = body.sortOrder === (1 || 'asc' || 'ascending') ? 1 : -1;
+
     const docs: IJobSchema[] = await DataModel.find(filter)
         .collation({ locale: 'en' }) // insensitive sorting
         .skip(body.first || 0)
         .limit(body.rows || 0)
-        .sort({ [body.sortField || 'name']: [body.sortOrder || 1] })
+        .sort({ [body.sortField || 'name']: sortOrder })
         .lean()
         .exec()
         .catch(async (err: any) => {
