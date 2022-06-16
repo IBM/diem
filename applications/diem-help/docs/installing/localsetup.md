@@ -387,7 +387,7 @@ In case you want to work from local you can port-forwards like this
 kubectl port-forward --namespace default svc/diem-redis-master 6379:6379
 kubectl port-forward --namespace default svc/diem-mongodb 27017:27017
 kubectl port-forward $POD_NAME 9000 --namespace default (kc get pods --namespace default -l "release=diem-minio" )
-kubectl port-forward etlbizops-rabbitmq-0 5672:5672
+kubectl port-forward -n default svc/diem-nats 4222:4222
 ```
 
 ### Virtual host and SSO
