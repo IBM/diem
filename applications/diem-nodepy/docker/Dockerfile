@@ -17,7 +17,7 @@ RUN dnf --disableplugin=subscription-manager --allowerasing -y update &&\
     dnf --disableplugin=subscription-manager --allowerasing -y upgrade &&\
     dnf --disableplugin=subscription-manager -y clean all
 
-RUN dnf -y java-11-openjdk-headless.x86_64 &&\
+RUN dnf --disableplugin=subscription-manager install -y java-11-openjdk-headless.x86_64 &&\
     rm -rf /var/lib/apt/lists/*;
 
 WORKDIR /
