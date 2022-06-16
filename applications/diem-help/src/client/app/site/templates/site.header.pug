@@ -13,7 +13,7 @@ ibm-header(
             [active]='appPanel',
             (selected)="openPanel('appPanel',$event)"
             )
-            svg(ibmIconAppSwitcher='', size='20')
+            svg(appIcon='switcher', size='20')
 
 
 ibm-panel(id="appPanel",[expanded]="appPanel")
@@ -35,4 +35,4 @@ ibm-panel(id="appPanel",[expanded]="appPanel")
                     ) {{menu.name}}
     .ex--panel-close((click)="openPanel('appPanel',false)",)
         span Close
-        svg(ibmIconClose='', size='20')
+        svg(appIcon='close', size='20')

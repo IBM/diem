@@ -11,8 +11,8 @@ import {
     LoadingModule,
     SideNavModule,
 } from 'carbon-components-angular';
+import { AppIconModule } from '@mydiem/diem-forms';
 import { MessagesComponent } from './app/messages/messages.component';
-import { AppIconsModule } from './app.icons.module';
 
 @NgModule({
     declarations: [MessagesComponent],
@@ -23,11 +23,11 @@ import { AppIconsModule } from './app.icons.module';
         LoadingModule,
         MessagesComponent,
         ModalModule,
-        AppIconsModule,
+        AppIconModule,
         SideNavModule,
     ],
     imports: [
-        AppIconsModule,
+        AppIconModule,
         AppPages,
         ButtonModule,
         CommonModule,

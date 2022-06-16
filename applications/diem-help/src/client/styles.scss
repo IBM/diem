@@ -9,22 +9,19 @@
 #161616 $ui-05
 #c6c6c6 $active-ui
 #8d8d8d #8d8d8d
-
-
-
-
-
 */
 
-@use '~@carbon/grid';
-@include grid.flex-grid();
+@use '~@carbon/grid' with (
+    $prefix: 'bx'
+);
 
-@import '~highlight.js/scss/vs2015.scss';
-
-//@import '~font-awesome/css/font-awesome.min.css';
-@import '~@fortawesome/fontawesome-free/css/all.min.css';
 @import '~carbon-components/scss/globals/scss/styles.scss';
 
+$fa-font-path: '~@fortawesome/fontawesome-free/webfonts/';
+@import '~@fortawesome/fontawesome-free/scss/fontawesome.scss';
+@import '~@fortawesome/fontawesome-free/scss/solid.scss';
+
+@include grid.flex-grid();
 @include carbon--type-reset();
 
 :root {
