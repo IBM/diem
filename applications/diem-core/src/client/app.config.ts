@@ -174,7 +174,7 @@ export const appRoutes: IRoutes = {
                     component: 'webapikeys',
                     title: 'Api Keys',
                     template: 'webapikeys',
-                    iconclass: 'fab fa-servicestack',
+                    iconclass: 'fas fa-plug',
                     access: [100, 80, 60, 40, 20],
                 },
                 {
