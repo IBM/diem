@@ -19,8 +19,8 @@ USER root
 
 RUN python3.7 -m pip install --upgrade pip
 
-COPY requirements.txt $HOME
-RUN python3.7 -m pip install --prefer-binary -r requirements.txt
+COPY requirements-3.1.1 $HOME
+RUN python3.7 -m pip install --prefer-binary -r requirements-3.1.1
 
 RUN chmod -R 775 .
 

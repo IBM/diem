@@ -212,7 +212,8 @@ secret/tls-secret created
 When you want to deploy diem on your local cluster in combination with an ingress-nginx then the ingress itself requires an annotation
 
 ```
-kubernetes.io/ingress.class: nginx
+podAnnotations:
+    kubernetes.io/ingress.class: nginx
 ```
 
 ### Adding the chart
