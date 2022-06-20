@@ -207,6 +207,14 @@ $ kubectl create secret tls tls-secret --key tls.key --cert tls.crt
 secret/tls-secret created
 ```
 
+### Add pod annotation for running on local
+
+When you want to deploy diem on your local cluster in combination with an ingress-nginx then the ingress itself requires an annotation
+
+```
+kubernetes.io/ingress.class: nginx
+```
+
 ### Adding the chart
 
 ```cmd

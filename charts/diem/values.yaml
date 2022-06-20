@@ -19,6 +19,8 @@ ingress:
   # -- proxy of your host
   proxy: ""
 
+  podAnnotations:
+
 common:
   # - name of the common config map
   name: diem-common
@@ -52,7 +54,7 @@ core:
     # -- image location
     image: quay.io/diem/core
     # -- image version
-    version: 1.25.0
+    version: 1.26.0
     # -- number of replicas
     replicas: 1
     # -- port to listen
@@ -137,7 +139,7 @@ nodepy:
   port: 80
   replicas: 1
   tier: backend
-  version: 1.13.0
+  version: 1.14.0
 
 operator:
   # -- name of the deployment
@@ -151,7 +153,7 @@ operator:
   port: 80
   replicas: 1
   tier: backend
-  version: 1.15.0
+  version: 1.17.0
 
   config:
     # -- important, the path the application will run under
@@ -176,7 +178,7 @@ spark-operator:
 
   image:
     repository: quay.io/diem/spark-operator
-    tag: 3.2.0-1.1.15-rhel
+    tag: 3.2.0-1.1.25-rhel
 
 help:
   createservice: true
@@ -184,7 +186,7 @@ help:
   deployment:
     replicas: 1
     image: quay.io/diem/help
-    version: 1.16.0
+    version: 1.17.0
     path: /diem-help
     port: 80
   config:
@@ -270,12 +272,15 @@ nats:
   # -- install nats before others
   priorityClassName: system-node-critical
 
+  # to upgrade from older releases
+  podManagementPolicy: OrderedReady
+
   # -- number of replicas
   replicaCount: 1
 
   ## nats config settings
   nats:
-    image: nats:2.6.6-alpine
+    image: nats:2.8.2-alpine
     pullPolicy: IfNotPresent
 
   ## Nats cluster settings
