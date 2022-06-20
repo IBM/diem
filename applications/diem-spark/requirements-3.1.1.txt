@@ -1,0 +1,22 @@
+JPype1==1.2.1
+PyJwt==2.4.0
+SciPy==1.6.0
+cython==0.29.21
+ibm-cos-sdk==2.10.0
+ibm_db==3.0.3
+jaydebeapi==1.2.3
+jinja2==2.11.3
+jsonPath-ng==1.5.2
+matplotlib==3.3.4
+numpy==1.22.0 --only-binary=numpy
+pandas==1.2.1
+pymongo[tls]==3.11.3
+requests==2.25.1
+scikit-learn==0.24.1
+seaborn==0.11.1
+sendgrid==6.4.8
+statsmodels==0.12.2
+diemlib==1.0.4
+pyarrow==4.0.0
+PyGithub == 1.55
+openpyxl == 3.0.7
