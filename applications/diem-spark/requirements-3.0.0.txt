@@ -1,5 +1,5 @@
 JPype1==1.2.1
-PyJwt==2.0.1
+PyJwt==2.4.0
 SciPy==1.6.0
 cython==0.29.21
 ibm-cos-sdk==2.10.0
