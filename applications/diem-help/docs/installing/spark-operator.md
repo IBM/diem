@@ -40,6 +40,13 @@ Step3. Modify the file Dockerfile.rh (rh stands for Red Hat)
 
 - line 47: Do Comment out the following three lines if you do not have a RedHat subscription.
 - line 56: important make sure this line uses root -> USER root  : manage your security in openshift
+- paste the following lines after root
+
+    ```cmd
+    RUN dnf --disableplugin=subscription-manager -y update &&\
+        dnf --disableplugin=subscription-manager -y upgrade &&\
+        dnf --disableplugin=subscription-manager -y clean all
+    ```
 
 Step 4. Run the following docker command
 

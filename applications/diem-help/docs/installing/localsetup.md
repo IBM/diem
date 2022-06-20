@@ -207,6 +207,14 @@ $ kubectl create secret tls tls-secret --key tls.key --cert tls.crt
 secret/tls-secret created
 ```
 
+### Add pod annotation for running on local
+
+When you want to deploy diem on your local cluster in combination with an ingress-nginx then the ingress itself requires an annotation
+
+```
+kubernetes.io/ingress.class: nginx
+```
+
 ### Adding the chart
 
 ```cmd
@@ -387,7 +395,7 @@ In case you want to work from local you can port-forwards like this
 kubectl port-forward --namespace default svc/diem-redis-master 6379:6379
 kubectl port-forward --namespace default svc/diem-mongodb 27017:27017
 kubectl port-forward $POD_NAME 9000 --namespace default (kc get pods --namespace default -l "release=diem-minio" )
-kubectl port-forward etlbizops-rabbitmq-0 5672:5672
+kubectl port-forward -n default svc/diem-nats 4222:4222
 ```
 
 ### Virtual host and SSO

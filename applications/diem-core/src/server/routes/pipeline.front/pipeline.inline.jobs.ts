@@ -2,7 +2,7 @@
 import { utils } from '@common/utils';
 import { IRequest } from '@interfaces';
 import { addTrace } from '@functions';
-import { DataModel, IJobSchema, IJobModel, IQuery } from '@models';
+import { DataModel, IJobSchema, IJobModel, IQuery, SortOrder } from '@models';
 import { countByFilter } from '../job.backend/job.functions';
 import { allPipelineIds } from '../pipeline.backend/pipeline.helpers/getallpipelinejobs';
 
@@ -15,11 +15,13 @@ interface IPipelineQuery extends IQuery {
 }
 
 const findByFilter: (filter: any, body: IQuery) => Promise<any> = async (filter: any, body: IQuery) => {
+    const sortOrder: SortOrder = body.sortOrder === (1 || 'asc' || 'ascending') ? 1 : -1;
+
     const docs: IJobSchema[] = await DataModel.find(filter)
         .collation({ locale: 'en' }) // insensitive sorting
         .skip(body.first || 0)
         .limit(body.rows || 0)
-        .sort({ [body.sortField || 'name']: [body.sortOrder || 1] })
+        .sort({ [body.sortField || 'name']: sortOrder })
         .lean()
         .exec()
         .catch(async (err: any) => {

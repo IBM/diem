@@ -19,6 +19,11 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end }}
     {{- end }}
+    {{- if .Values.ingress.podAnnotations }}
+    {{- with .Values.ingress.podAnnotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- end }}
   name: {{ .Values.ingress.name }}
   namespace: {{ .Release.Namespace }}
   labels:

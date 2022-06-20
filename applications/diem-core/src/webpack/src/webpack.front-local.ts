@@ -11,9 +11,9 @@ import WebpackAssetsManifest from 'webpack-assets-manifest';
 import { InjectManifest } from 'workbox-webpack-plugin';
 /** const Ba = require('webpack-bundle-analyzer'); */
 
-console.info(`$webpack.front: environment: ${process.env.webpackenv}`);
+import { splitChunks, patterns, assets } from './webpack.common';
 
-const assets: string = 'public/assets/[name].[hash].[ext]';
+console.info(`$webpack.front: environment: ${process.env.webpackenv}`);
 
 interface IntEnv {
     APPCOOKIE?: string;
@@ -46,7 +46,7 @@ module.exports = {
 
     output: {
         chunkFilename: 'public/js/[name][chunkhash].js',
-        filename: 'public/js/bundle[chunkhash].js',
+        filename: 'public/js/bundle.[chunkhash].js',
         path: `${(global as any).__basedir}/`,
         publicPath: `${env.APPPATH}/`,
         assetModuleFilename: assets,
@@ -55,8 +55,10 @@ module.exports = {
     devtool: 'eval-cheap-module-source-map',
 
     optimization: {
+        runtimeChunk: 'single',
         moduleIds: 'deterministic',
         minimize: false,
+        splitChunks,
     },
 
     module: {
@@ -141,27 +143,7 @@ module.exports = {
 
     plugins: [
         new CopyWebpackPlugin({
-            patterns: [
-                {
-                    from: 'src/server/index.pug',
-                    to: 'server/index.pug',
-                },
-                {
-                    from: `${(global as any).__basedir}/public/images/*.jpg`,
-                },
-                {
-                    from: `${(global as any).__basedir}/public/images/*.gif`,
-                },
-                {
-                    from: `${(global as any).__basedir}/public/images/favicon*.*`,
-                },
-                {
-                    from: `${(global as any).__basedir}/public/images/diem_logo.*`,
-                },
-                {
-                    from: `${(global as any).__basedir}/public/images/diem_s.*`,
-                },
-            ],
+            patterns,
         }),
 
         new AngularWebpackPlugin({
