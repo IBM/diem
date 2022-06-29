@@ -36,7 +36,7 @@ export interface IQuery {
     scheduled?: boolean;
     search?: string;
     sortField?: string;
-    sortOrder?: number;
+    sortOrder?: number | string;
     status?: string;
     user?: string;
     tags?: string[];

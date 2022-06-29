@@ -69,7 +69,8 @@ export const jobs: (req: IRequest) => Promise<any> = async (req: IRequest) => {
     try {
         const filter: any = parseFilter(body);
 
-        if (body.sortField) {
+        // some sort fields are part of the job , some not like name
+        if (body.sortField && body.sortField !== 'name') {
             body.sortField = `job.${body.sortField}`;
         }
 
