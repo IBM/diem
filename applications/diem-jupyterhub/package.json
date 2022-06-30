@@ -1,7 +1,7 @@
 {
   "name": "diem-jupyterhub",
   "description": "Home Module for Leap",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "guy_huinen@be.ibm.com",
   "config": {
     "jupyter_pyspark": "127.0.0.1:30500/jupyter/jupyter-pyspark",
