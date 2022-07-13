@@ -318,7 +318,7 @@ export class HttpService {
                 continue;
             }
 
-            if (typeof ob[i] === 'object') {
+            if (ob[i] && typeof ob[i] === 'object' && !Array.isArray(ob[i])) {
                 const flatObject: any = this.flattenObject(ob[i]);
                 for (const x in flatObject) {
                     if (!Object.prototype.hasOwnProperty.call(flatObject, x)) {
