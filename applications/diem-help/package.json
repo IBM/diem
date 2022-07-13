@@ -21,7 +21,7 @@
         "markdown-it": "^13.0.1",
         "markdown-it-attrs": "^4.1.4",
         "markdown-it-imsize": "^2.0.1",
-        "moment": "^2.29.3",
+        "moment": "^2.29.4",
         "nocache": "^3.0.4",
         "print-hrtime": "^2.2.0",
         "pug": "^3.0.2"
