@@ -7,7 +7,7 @@
         "containername": "127.0.0.1:30500/bizops/nodepy"
     },
     "dependencies": {
-        "moment": "^2.29.3",
+        "moment": "^2.29.4",
         "nats": "^2.7.1",
         "print-hrtime": "^2.2.0",
         "rimraf": "^3.0.2"
