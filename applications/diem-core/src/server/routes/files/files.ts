@@ -124,7 +124,7 @@ export const getfiles: (req: IRequest) => Promise<IFilePayload[]> = async (req: 
                     status: 200,
                     return: [
                         {
-                            name: 'A network error hoppened',
+                            name: 'A connection error hoppened',
                         },
                     ],
                 });

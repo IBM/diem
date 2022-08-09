@@ -54,7 +54,7 @@ core:
     # -- image location
     image: quay.io/diem/core
     # -- image version
-    version: 1.28.0
+    version: 1.29.0
     # -- number of replicas
     replicas: 1
     # -- port to listen
@@ -139,7 +139,7 @@ nodepy:
   port: 80
   replicas: 1
   tier: backend
-  version: 1.16.0
+  version: 1.17.0
 
 operator:
   # -- name of the deployment
@@ -153,7 +153,7 @@ operator:
   port: 80
   replicas: 1
   tier: backend
-  version: 1.19.0
+  version: 1.20.0
 
   config:
     # -- important, the path the application will run under
@@ -186,7 +186,7 @@ help:
   deployment:
     replicas: 1
     image: quay.io/diem/help
-    version: 1.19.0
+    version: 1.20.0
     path: /diem-help
     port: 80
   config:
@@ -325,7 +325,7 @@ minio:
       memory: 1Gi
 
 mongoloader:
-  image: quay.io/diem/mongoloader:1.2.1
+  image: quay.io/diem/mongoloader:1.3.0
 
 # -- encode all secrets base64
 base64: true
