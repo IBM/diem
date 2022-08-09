@@ -209,7 +209,7 @@ export const appRoutes: IRoutes = {
                     component: 'snippets',
                     title: 'Code Snippets',
                     template: 'snippets',
-                    iconclass: 'fas fa-file-code',
+                    iconclass: 'fa fa-file-code',
                     access: [100, 80, 60, 40, 20],
                 },
             ],

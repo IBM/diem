@@ -92,7 +92,7 @@ export const handlePayloadValues: (jdocs: IJobSchema[]) => IntPayloadValues[] = 
             id: row._id,
             jobs: row.jobs ? true : undefined,
             name: row.name,
-            schedule: row.schedule && row.schedule.enabled ? 'fa fa-clock fa-lg' : '',
+            schedule: row.schedule?.enabled ? 'fa fa-clock fa-lg' : '',
             source: row.config && row.config.source && row.config.source.connection ? row.config.source.connection : '',
             target,
             type: row.type,
