@@ -1,7 +1,7 @@
 import { IJobSchema } from '@models';
 import { addTrace } from '@functions';
 
-const py_pipinstall: (id: string, pip: string[]) => string = (_id: string, pip: string[]): string => String.raw`
+const py_pipinstall: (pip: string[]) => string = (pip: string[]): string => String.raw`
 ### handle.pip (py_pipinstall) ###
 
 for __pip in ['${pip.join("','")}']:
@@ -17,14 +17,8 @@ export const handlePip: (code: string, doc: IJobSchema) => Promise<string> = asy
     doc: IJobSchema
 ): Promise<string> => {
     try {
-        if (
-            doc.job &&
-            doc.job.params &&
-            doc.job.params.pip &&
-            Array.isArray(doc.job.params.pip) &&
-            doc.job.params.pip.length > 0
-        ) {
-            const pipcode: string = py_pipinstall(doc._id.toString(), doc.job.params.pip);
+        if (doc.job?.params?.pip && Array.isArray(doc.job.params.pip) && doc.job.params.pip.length > 0) {
+            const pipcode: string = py_pipinstall(doc.job.params.pip);
             code = code.replace('###__CODE__###', pipcode);
         }
 
