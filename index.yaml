@@ -4,6 +4,40 @@ entries:
   - annotations:
       category: Data Integration Engine Multipurpose
     apiVersion: v2
+    appVersion: 1.18.0
+    created: "2022-08-09T19:04:35.357954976Z"
+    dependencies:
+    - name: spark-operator
+      repository: https://googlecloudplatform.github.io/spark-on-k8s-operator
+      version: 1.1.25
+    - condition: mongodb.createservice
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.1.20
+    - condition: minio.createservice
+      name: minio
+      repository: https://helm.min.io/
+      version: 8.0.10
+    - condition: nats.createservice
+      name: nats
+      repository: https://nats-io.github.io/k8s/helm/charts/
+      version: 0.17.1
+    description: A Helm chart for Diem
+    digest: 2de3cfe59753a04c3d9379e7bbc56ea4ea52d81a0b4833a4231bb4b5933719ad
+    home: https://github.com/IBM/DIEM
+    icon: https://raw.githubusercontent.com/IBM/diem/main/applications/diem-help/docs/images/diem/diem_s.png
+    maintainers:
+    - email: guy_huinen@be.ibm.com
+      name: Guy Huinen
+      url: https://github.com/huineng
+    name: diem
+    type: application
+    urls:
+    - https://IBM.github.io/diem/diem-1.18.0.tgz
+    version: 1.18.0
+  - annotations:
+      category: Data Integration Engine Multipurpose
+    apiVersion: v2
     appVersion: 1.17.0
     created: "2022-07-13T10:40:38.259348606Z"
     dependencies:
@@ -861,4 +895,4 @@ entries:
     urls:
     - https://ibm.github.io/diem/charts/spark-operator-1.1.0.tgz
     version: 1.1.0
-generated: "2022-07-13T10:40:38.2451897Z"
+generated: "2022-08-09T19:04:35.342785024Z"
