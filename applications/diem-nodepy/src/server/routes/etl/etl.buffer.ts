@@ -2,14 +2,13 @@ import { green, red, blue, IMeta } from '@interfaces';
 import { publisher } from '@config/nats_publisher';
 import { workers } from './etl.workers';
 
-export const addToBuffer: (sid: string, id: string, buffer: Buffer) => Promise<void> = async (
-    sid: string,
+export const addToBuffer: (id: string, buffer: Buffer) => Promise<void> = async (
     id: string,
     buffer: Buffer
     // eslint-disable-next-line sonarjs/cognitive-complexity
 ) => {
-    if (!workers[sid]) {
-        console.warn(green, `$np ${process.pid} ${sid}: no running worker found for adding buffer`);
+    if (!workers[id]) {
+        console.warn(green, `$np ${process.pid} ${id}: no running worker found for adding buffer`);
 
         return;
     }
@@ -17,18 +16,18 @@ export const addToBuffer: (sid: string, id: string, buffer: Buffer) => Promise<v
     const data: string = buffer.toString();
 
     if (data.endsWith('\n')) {
-        if (workers[sid]?.buffer) {
-            workers[sid].buffer += data;
+        if (workers[id]?.buffer) {
+            workers[id].buffer += data;
         } else {
-            workers[sid].buffer = data;
+            workers[id].buffer = data;
         }
 
-        const resp: string | undefined = workers[sid].buffer;
+        const resp: string | undefined = workers[id].buffer;
 
         if (resp) {
             const json_array: string[] = resp.split('\n').filter((s: string) => s);
 
-            const meta: IMeta | undefined = workers[sid].meta;
+            const meta: IMeta | undefined = workers[id].meta;
 
             if (meta) {
                 const ts: number = new Date().getTime();
@@ -56,7 +55,7 @@ export const addToBuffer: (sid: string, id: string, buffer: Buffer) => Promise<v
                     s_ts = acc_ts + 75;
                 }
 
-                workers[sid].meta = {
+                workers[id].meta = {
                     cycle: cycle + 1,
                     size,
                     ts,
@@ -67,7 +66,7 @@ export const addToBuffer: (sid: string, id: string, buffer: Buffer) => Promise<v
 
                 console.info(
                     green,
-                    `$np ${process.pid} ${sid}: processing data: size: ${size} - cycle: ${
+                    `$np ${process.pid} ${id}: processing data: size: ${size} - cycle: ${
                         cycle + 1
                     } - runtime: ${diff} - acc_size: ${acc_size} - acc_ts: ${acc_ts} - s_ts: ${s_ts} - delay: ${delay} `,
                     ''
@@ -80,23 +79,23 @@ export const addToBuffer: (sid: string, id: string, buffer: Buffer) => Promise<v
                 void publisher.publish('job', id, resp);
             }
         } else {
-            console.info(green, `$np ${process.pid} ${sid}: nothing to process}`, '');
+            console.info(green, `$np ${process.pid} ${id}: nothing to process}`, '');
         }
 
-        workers[sid].buffer = undefined;
+        workers[id].buffer = undefined;
     } else {
-        console.info(blue, `$np ${process.pid} ${sid}: buffering incoming stream`);
-        if (workers[sid]?.buffer) {
-            workers[sid].buffer += data;
+        console.info(blue, `$np ${process.pid} ${id}: buffering incoming stream`);
+        if (workers[id]?.buffer) {
+            workers[id].buffer += data;
         } else {
-            workers[sid].buffer = data;
+            workers[id].buffer = data;
         }
     }
 };
 
-export const addToErrorBuffer: (sid: string, buffer: Buffer) => void = (sid: string, buffer: Buffer) => {
-    if (!workers[sid]) {
-        console.warn(green, `$np ${process.pid} ${sid}: no running worker found for adding error buffer`);
+export const addToErrorBuffer: (id: string, buffer: Buffer) => void = (id: string, buffer: Buffer) => {
+    if (!workers[id]) {
+        console.warn(green, `$np ${process.pid} ${id}: no running worker found for adding error buffer`);
 
         return;
     }
@@ -105,19 +104,19 @@ export const addToErrorBuffer: (sid: string, buffer: Buffer) => void = (sid: str
     const data: string = buffer.toString();
 
     if (data.endsWith('\n')) {
-        if (workers[sid]?.errbuffer) {
-            workers[sid].errbuffer += data;
+        if (workers[id]?.errbuffer) {
+            workers[id].errbuffer += data;
         } else {
-            workers[sid].errbuffer = data;
+            workers[id].errbuffer = data;
         }
 
-        console.info(red, `$np ${process.pid} ${sid}: returning error`);
+        console.info(red, `$np ${process.pid} ${id}: returning error`);
     } else {
-        console.info(blue, `$np ${process.pid} ${sid}: buffering incoming error stream`);
-        if (workers[sid]?.errbuffer) {
-            workers[sid].errbuffer += data;
+        console.info(blue, `$np ${process.pid} ${id}: buffering incoming error stream`);
+        if (workers[id]?.errbuffer) {
+            workers[id].errbuffer += data;
         } else {
-            workers[sid].errbuffer = data;
+            workers[id].errbuffer = data;
         }
     }
 };

@@ -1480,7 +1480,7 @@
           {
             "label": "Save Document",
             "class": "ex--action-panel-button",
-            "iconClass": "far fa-save",
+            "iconClass": "fa fa-save",
             "visible": "! this.formSpecs.readmode",
             "disabled": "this.form.invalid",
             "isText": true,

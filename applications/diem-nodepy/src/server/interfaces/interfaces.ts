@@ -54,7 +54,6 @@ export interface IntJob {
     jobend: Date;
     runtime: number | null;
     out?: any;
-    rand: string;
 }
 
 export interface ServicesJob {

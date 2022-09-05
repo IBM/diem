@@ -43,7 +43,7 @@ const jobLogSchema: Schema = new Schema(
         executor: String,
         jobend: Date,
         jobid: String,
-        jobstart: { type: Date, required: true, index: true },
+        jobstart: { type: Date, required: true },
         logid: { type: String, required: true },
         name: String,
         params: Object,
