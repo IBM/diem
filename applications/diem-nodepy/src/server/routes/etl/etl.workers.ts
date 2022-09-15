@@ -9,14 +9,14 @@ export const workers: IWorker = Object.create(null);
 const getCount: () => number = () => Object.keys(workers).length;
 
 export const stopWorker: (job: IntJob) => Promise<void> = async (job: IntJob): Promise<void> => {
-    const sid = `${job.id}-${job.rand}`;
+    const id = job.id;
 
-    if (!workers[sid]) {
-        console.warn(green, `$np (stopWorker): no running worker found - id: ${sid} - pid (${process.pid}`);
+    if (!workers[id]) {
+        console.warn(green, `$np (stopWorker): no running worker found - id: ${id} - pid (${process.pid}`);
 
         return;
     }
-    workers[sid].kill();
+    workers[id].kill();
 
     await deleteWorker(job, 0, 'stopped');
 };
@@ -26,46 +26,46 @@ export const deleteWorker: (job: IntJob, code: number | null, action: string) =>
     code: number | null,
     action: string
 ): Promise<void> => {
-    const sid = `${job.id}-${job.rand}`;
+    const id = job.id;
 
-    if (!workers[sid]) {
-        console.warn(green, `$np ${process.pid} ${sid}: no running worker found - action: ${action}`);
+    if (!workers[id]) {
+        console.warn(green, `$np ${process.pid} ${id}: no running worker found - action: ${action}`);
 
         return;
     }
 
-    if (code === 1 && workers[sid].errbuffer) {
+    if (code === 1 && workers[id].errbuffer) {
         // there is an error reported that has not yet been traced back to the etl manager
 
         try {
             void publisher.publish('job', job.id, {
                 ...job,
                 count: null,
-                error: workers[sid].errbuffer,
+                error: workers[id].errbuffer,
                 status: 'Failed',
                 jobend: new Date(),
                 runtime: null,
             });
         } catch (err) {
-            console.error(red, `$np ${process.pid} ${sid}: error posting file (deleteWorker)`, err);
+            console.error(red, `$np ${process.pid} ${id}: error posting file (deleteWorker)`, err);
         }
     }
 
-    delete workers[sid];
+    delete workers[id];
 
     try {
-        rimraf.sync(`${path.resolve()}/workdir/${sid}`);
+        rimraf.sync(`${path.resolve()}/workdir/${id}`);
 
-        console.info(green, `$np ${process.pid} ${sid}: removed folder ${sid}`);
+        console.info(green, `$np ${process.pid} ${id}: removed folder ${id}`);
     } catch (err) {
         console.error(
             red,
-            `$np ${process.pid} ${sid}: folder ${sid} not deelted - folder might already have been removed`
+            `$np ${process.pid} ${id}: folder ${id} not deelted - folder might already have been removed`
         );
     }
 
     console.info(
         green,
-        `$np ${process.pid} ${sid}: finished action: ${action} - status: ${code} - active: ${getCount()}`
+        `$np ${process.pid} ${id}: finished action: ${action} - status: ${code} - active: ${getCount()}`
     );
 };
