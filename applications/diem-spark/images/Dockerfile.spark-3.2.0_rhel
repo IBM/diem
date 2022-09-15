@@ -1,4 +1,4 @@
-# v3.2.0_rhel_2021-12-20
+# v3.2.0_rhel_2022-09-15
 FROM quay.io/diem/base-spark:3.2.0_rhel as base_spark
 
 # quay.io/diem/base-spark:3.2.0_rhel
