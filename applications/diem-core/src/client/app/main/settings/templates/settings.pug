@@ -17,8 +17,8 @@ ng-container(*ngIf="loaded && ! fatal")
                 .ex--panel-nav
                     nav.bx--side-nav__navigation(role="navigation")
                         .ex--menu-panel-title
-                            i([ngClass]="this.data.titleicon")
-                            div([innerHTML]="this.data.title")
+                            i([ngClass]="data.titleicon")
+                            div([innerHTML]="data.title")
                         ul.bx--side-nav__items
                             ng-template(
                                 ngFor='',
