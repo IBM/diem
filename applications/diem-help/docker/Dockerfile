@@ -8,7 +8,7 @@ ENV LANG=en_US.UTF-8 HOME=/home/app NODE_ENV=production
 
 COPY package.json package-lock.json $HOME/
 
-RUN cd $HOME && npm ci --production
+RUN cd $HOME && npm install npm@8.19.2 && npm ci --omit=dev
 
 WORKDIR $HOME
 
