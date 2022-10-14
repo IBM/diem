@@ -376,6 +376,11 @@ export const subMenus: any[] = [
     },
     {
         internal: true,
+        name: 'Privacy',
+        value: 'privacy',
+    },
+    {
+        internal: true,
         name: 'Support',
         value: 'help',
     },
