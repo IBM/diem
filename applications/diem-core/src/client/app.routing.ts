@@ -7,16 +7,17 @@ import {
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AppRoutingGuard } from './app.routing.guard';
-import { HelpComponent } from './app/help/help.component';
-import { TermsComponent } from './app/terms/terms.component';
+import { SideMenusComponent } from './app/side_menus/side_menus.component';
 
 const appConfig: Routes = [
-    { component: AppErrorComponent, path: '500', data: { title: 'Application Error' } },
-    { component: ForbiddenComponent, path: '403', data: { title: 'Forbidden' } },
-    { component: HelpComponent, path: 'help', data: { title: 'Help' } },
-    { component: NotFoundComponent, path: '404', data: { title: 'Not Found' } },
-    { component: TermsComponent, path: 'terms', data: { title: 'Terms' } },
     { component: UnauthorizedComponent, path: '401', data: { title: 'Not Authorized' } },
+    { component: ForbiddenComponent, path: '403', data: { title: 'Forbidden' } },
+    { component: NotFoundComponent, path: '404', data: { title: 'Not Found' } },
+    { component: AppErrorComponent, path: '500', data: { title: 'Application Error' } },
+    { component: SideMenusComponent, path: 'help', data: { title: 'Help', value: 'help' } },
+    { component: SideMenusComponent, path: 'privacy', data: { title: 'Privacy', value: 'privacy' } },
+    { component: SideMenusComponent, path: 'terms', data: { title: 'Terms', value: 'terms' } },
+
     {
         canLoad: [AppRoutingGuard],
         loadChildren: async (): Promise<any> => import('./app/main/main.module').then((m) => m.MainModule),
