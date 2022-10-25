@@ -105,7 +105,11 @@ export const pythonHandler: (doc: IJobSchema) => Promise<INodePyJob> = async (do
                     doc.job.params.files.loadfiles &&
                     Object.keys(doc.job.params.files.loadfiles).length > 0
                 ) {
-                    code = await handleFiles(code, doc.job.params.files.loadfiles, doc.job.params.files.loadfiles_type);
+                    code = await handleFiles(
+                        code,
+                        doc.job.params.files.loadfiles as { name: string; value: string }[],
+                        doc.job.params.files.loadfiles_type
+                    );
                 }
             }
 
@@ -158,7 +162,7 @@ export const pythonHandler: (doc: IJobSchema) => Promise<INodePyJob> = async (do
                 params.files.loadfiles &&
                 Object.keys(params.files.loadfiles).length > 0
             ) {
-                code = await handleFilesParams(code, params.files.loadfiles);
+                code = await handleFilesParams(code, params.files.loadfiles as { name: string; value: string }[]);
             }
         }
 
