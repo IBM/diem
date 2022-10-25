@@ -2,7 +2,9 @@ FROM registry.access.redhat.com/ubi9/nodejs-16 as base
 
 USER root
 
-RUN dnf update -y && dnf upgrade -y
+RUN dnf --disableplugin=subscription-manager -y update &&\
+    dnf --disableplugin=subscription-manager -y upgrade &&\
+    dnf --disableplugin=subscription-manager -y clean all
 
 ENV LANG=en_US.UTF-8 HOME=/home/app NODE_ENV=production
 

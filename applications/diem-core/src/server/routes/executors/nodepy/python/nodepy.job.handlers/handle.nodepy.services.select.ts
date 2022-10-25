@@ -1,6 +1,6 @@
 import { IConnSchema, IJobSchema } from '@models';
 import { addTrace } from '@functions';
-import { getConnection, jdbc_config } from '../../../spark/spark.job.handlers/hendle.spark.common';
+import { getConnection, jdbc_config } from '../../../spark/spark.job.handlers/handle.spark.common';
 
 export const py_select_services: (doc: IJobSchema) => Promise<string> = async (doc: IJobSchema): Promise<string> => {
     if (!doc.stmt) {

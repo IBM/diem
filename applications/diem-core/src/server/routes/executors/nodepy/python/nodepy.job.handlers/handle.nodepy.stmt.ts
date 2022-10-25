@@ -1,6 +1,6 @@
 import { IJobSchema, IConnSchema, ITemplatesModel } from '@models';
 import { addTrace } from '@functions';
-import { getConnection } from '../../../spark/spark.job.handlers/hendle.spark.common';
+import { getConnection } from '../../../spark/spark.job.handlers/handle.spark.common';
 import { lookupTemplate } from '../../../../job.front/job.template';
 import { py_jdbc } from './py_jdbc';
 
