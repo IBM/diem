@@ -1,7 +1,7 @@
 import { addTrace } from '@functions';
 import { IConnSchema, IJobSchema, ITemplatesModel } from '@models';
 import { lookupTemplate } from '../../../../job.front/job.template';
-import { getConnection, jdbc_config } from '../../../spark/spark.job.handlers/hendle.spark.common';
+import { getConnection, jdbc_config } from '../../../spark/spark.job.handlers/handle.spark.common';
 import { py_jdbc } from './py_jdbc';
 
 const py_truncate: (truncate: boolean, target: string, connection: IConnSchema) => string = (

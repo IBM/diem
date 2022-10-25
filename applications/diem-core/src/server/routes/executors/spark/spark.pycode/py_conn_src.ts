@@ -1,4 +1,4 @@
-import { jdbc_config } from '../spark.job.handlers/hendle.spark.common';
+import { jdbc_config } from '../spark.job.handlers/handle.spark.common';
 import { ISrc } from '../spark.interfaces';
 
 export const py_conn_src: (src: ISrc, partition: string) => string = (src: ISrc, partition: string) => String.raw`

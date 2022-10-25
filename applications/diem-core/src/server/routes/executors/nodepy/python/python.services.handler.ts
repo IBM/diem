@@ -92,7 +92,7 @@ export const pythonServicesHandler: (doc: IJobSchema) => Promise<INodePyJob> = a
                     Array.isArray(doc.job.params.files.loadfiles) &&
                     doc.job.params.files.loadfiles.length > 0
                 ) {
-                    code = await handleFiles(code, doc.job.params.files.loadfiles);
+                    code = await handleFiles(code, doc.job.params.files.loadfiles as { name: string; value: string }[]);
                 }
             }
 

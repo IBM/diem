@@ -1,5 +1,5 @@
 import { IConnSchema } from '@models';
-import { jdbc_config } from '../../../spark/spark.job.handlers/hendle.spark.common';
+import { jdbc_config } from '../../../spark/spark.job.handlers/handle.spark.common';
 
 export const py_jdbc: (connection: IConnSchema) => string = (connection: IConnSchema): string => {
     const extrastring: string = jdbc_config(connection.type).jdbc || '';

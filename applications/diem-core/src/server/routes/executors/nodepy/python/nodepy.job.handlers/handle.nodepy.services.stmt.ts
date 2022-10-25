@@ -1,7 +1,7 @@
 import { IConnSchema } from '@models';
 import { addTrace } from '@functions';
 import { IntPythonStmtJob } from '../../np.interfaces';
-import { getConnection } from '../../../spark/spark.job.handlers/hendle.spark.common';
+import { getConnection } from '../../../spark/spark.job.handlers/handle.spark.common';
 import { py_jdbc } from './py_jdbc';
 
 const makeConn: (target: string, connection: IConnSchema) => Promise<string> = async (

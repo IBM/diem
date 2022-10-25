@@ -44,7 +44,7 @@ export enum ECodeLanguage {
 
 export interface IParamsFiles {
     cos?: string;
-    loadfiles?: { name: string; value: string }[];
+    loadfiles?: { name: string; value: string }[] | string[];
     loadfiles_type?: 'string' | 'pandas';
     bucket?: string;
     filename?: string;

@@ -4,7 +4,7 @@ import { ISrc, ITgt } from '../spark.interfaces';
 
 import { py_partition, py_opt_dropcolumns, py_tgt_jdbc, py_session, py_conn_src, py_tgt_nz } from '../spark.pycode/py';
 import { lookupTemplate } from '../../../job.front/job.template';
-import { getConnection } from './hendle.spark.common';
+import { getConnection } from './handle.spark.common';
 
 const codestring = '###__CODE__###';
 
