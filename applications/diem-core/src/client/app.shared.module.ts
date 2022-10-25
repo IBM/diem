@@ -11,12 +11,12 @@ import {
     LoadingModule,
 } from 'carbon-components-angular';
 import { DFCommonService, AppIconModule } from '@mydiem/diem-forms';
-import { TermsComponent } from './app/terms/terms.component';
+import { SideMenusComponent } from './app/side_menus/side_menus.component';
 import { MessagesComponent } from './app/messages/messages.component';
 import { SiteService } from './site/site.service';
 
 @NgModule({
-    declarations: [TermsComponent, MessagesComponent],
+    declarations: [SideMenusComponent, MessagesComponent],
     exports: [AppIconModule, AppPages, CommonModule, Directives, LoadingModule, MessagesComponent, ModalModule],
     imports: [
         AppIconModule,

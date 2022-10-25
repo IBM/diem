@@ -8,7 +8,6 @@ import { AppErrorHandler } from './app.exception';
 import { AppInit } from './app.init';
 import { AppRouting } from './app.routing';
 import { AppSharedModule } from './app.shared.module';
-import { HelpComponent } from './app/help/help.component';
 import { SiteBodyComponent } from './site/site.body.component';
 import { SiteModule } from './site/site.module';
 import { SiteStore } from './site/site.store';
@@ -20,7 +19,7 @@ export const initApp: any = (appInit: AppInit) => (): void => appInit.initialize
 
 @NgModule({
     bootstrap: [SiteBodyComponent],
-    declarations: [HelpComponent, SiteBodyComponent],
+    declarations: [SiteBodyComponent],
     imports: [
         AppCoreModule.forRoot(),
         AppRouting,

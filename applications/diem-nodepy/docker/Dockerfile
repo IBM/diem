@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/python-39 as base
+FROM registry.access.redhat.com/ubi9/python-39 as base
 
 ENV LANG=en_US.UTF-8 HOME=/home/app NODE_ENV=production
 
@@ -63,7 +63,7 @@ ENV LANG=en_US.UTF-8 HOME=/home/app NODE_ENV=production
 
 WORKDIR $HOME
 
-RUN python3 -m pip install --upgrade pip && python3 -m pip install --no-cache-dir --prefer-binary -r requirements.txt
+RUN python3 -m pip install --upgrade pip && python3 -m pip install --ignore-installed --no-cache-dir --prefer-binary -r requirements.txt
 
 ARG BUILD_DATE
 

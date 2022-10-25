@@ -1,4 +1,4 @@
-import { jdbc_config } from '../spark.job.handlers/hendle.spark.common';
+import { jdbc_config } from '../spark.job.handlers/handle.spark.common';
 import { ITgt } from '../spark.interfaces';
 
 export const py_tgt_jdbc: (tgt: ITgt) => string = (tgt: ITgt) => String.raw`
