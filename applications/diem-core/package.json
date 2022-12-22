@@ -31,7 +31,7 @@
         "helmet": "^6.0.1",
         "ibm-cos-sdk": "^1.12.2",
         "json-stream": "^1.0.0",
-        "jsonwebtoken": "^8.5.1",
+        "jsonwebtoken": "^9.0.0",
         "kubernetes-client": "^9.0.0",
         "moment": "^2.29.4",
         "mongoose": "^6.8.0",
