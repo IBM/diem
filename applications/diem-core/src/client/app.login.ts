@@ -103,7 +103,7 @@ export class AppLoginService {
 
         console.debug(`$login (valid token): token expires ${expDate} - session opened with id ${sessionid}`);
 
-        const tokendec: ITokendec = this.jwtHelper.decodeToken(cookie);
+        const tokendec = this.jwtHelper.decodeToken(cookie) as ITokendec;
 
         const profile: IUserData = {
             authorized: tokendec.roles && Array.isArray(tokendec.roles) && tokendec.roles.includes('authorized'),

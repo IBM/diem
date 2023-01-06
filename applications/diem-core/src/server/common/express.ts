@@ -178,7 +178,12 @@ export class Express {
                     passport.authenticate('oidc', { scope: 'openid email' }),
                     (req: IRequest, res: IResponse) => {
                         if (req.session) {
-                            return res.redirect(req.session.originalUrl || '/');
+                            const url = req.session.originalUrl || '/';
+
+                            //no need to leave a trace
+                            delete req.session.originalUrl;
+
+                            return res.redirect(url);
                         }
                     },
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
