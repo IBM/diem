@@ -1,4 +1,5 @@
 <!-- markdownlint-disable MD033 -->
+
 # JupyterHub for your Local Cluster
 
 ## Installing on kubernetes
@@ -15,7 +16,7 @@ Modify the hostpath of the pv.yaml (pv_template) to point to your the local dire
 
 ```yml
 hostPath:
-    path: "/Users/yourusername/pathtoyourlocation/shared"
+  path: "/Users/yourusername/pathtoyourlocation/shared"
 ```
 
 specify the size of the claim
@@ -127,16 +128,16 @@ To build the charts yourself using your own repository
 
 1. build the images
 
-    ```cmd
-    # image based on diem-nodepy
-    >_ npm run jupyter_nodepy
+   ```cmd
+   # image based on diem-nodepy
+   >_ npm run jupyter_nodepy
 
-    # image based on diem-spark (pyspark)
-    >_ npm run jupyter_pyspark
+   # image based on diem-spark (pyspark)
+   >_ npm run jupyter_pyspark
 
-    # image based on diem-nodepy where you can add additional libraries
-    >_ npm run jupyter_experimental
-    ```
+   # image based on diem-nodepy where you can add additional libraries
+   >_ npm run jupyter_experimental
+   ```
 
 2. push the images to your local repository
 3. Modify you values.yaml to incorporate these images
