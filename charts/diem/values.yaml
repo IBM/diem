@@ -54,7 +54,7 @@ core:
     # -- image location
     image: quay.io/diem/core
     # -- image version
-    version: 1.32.0
+    version: 1.33.0
     # -- number of replicas
     replicas: 1
     # -- port to listen
