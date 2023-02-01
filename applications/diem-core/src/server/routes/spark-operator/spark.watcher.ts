@@ -277,14 +277,15 @@ class SparkLib {
             if (
                 [ETypes.modified, ETypes.added].includes(data.type) &&
                 ![EStates.deleted, EStates.failing, EStates.submission_failed].includes(applicationState.state) &&
-                this.streams[id]?.status !== applicationState.state
+                this.streams[id] &&
+                this.streams[id].status !== applicationState.state
             ) {
                 utils.logInfo(
                     `$spark.watcher (watcher): event - id: ${obj.id} - type: ${data.type} - status: ${applicationState.state}`
                 );
             }
 
-            if (managed && this.streams[id]?.status !== applicationState.state) {
+            if (managed && this.streams[id] && this.streams[id].status !== applicationState.state) {
                 this.streams[id].status = applicationState.state;
                 if (applicationState.state === EStates.running) {
                     utils.logInfo(`$spark.watcher (managed watcher): set running - id: ${id}`);
