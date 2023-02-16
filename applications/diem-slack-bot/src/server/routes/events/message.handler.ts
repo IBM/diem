@@ -23,6 +23,10 @@ const argsParser: (event: any) => IArgsBody = (event: any): IArgsBody => {
     let payload: { [index: string]: any } | string | undefined; // args_array[3]
     let args: [string] | [] = [];
 
+    if (args_array[0] === '') {
+        args_array[0] = 'service';
+    }
+
     component = args_array[0];
     id = args_array[1];
     action = args_array[2];
