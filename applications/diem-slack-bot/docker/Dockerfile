@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi9/nodejs-16 as base
+FROM registry.access.redhat.com/ubi9/nodejs-18 as base
 
 USER root
 
