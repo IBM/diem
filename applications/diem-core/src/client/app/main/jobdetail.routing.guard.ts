@@ -202,6 +202,7 @@ export class JobDetailRoutingGuard implements CanActivate {
                     }),
                     take(1)
                 )
+                // eslint-disable-next-line @typescript-eslint/promise-function-async
                 .subscribe((data: any) => {
                     if (data === undefined) {
                         return resolve(false);

@@ -123,7 +123,7 @@ export class Server {
 
                 return res.status(400).send();
             })
-            .post(`${this.pack.apppath}/interactions`, limiter, (req: IRequest, res: IResponse) => {
+            .post(`${this.pack.apppath}/interactions`, limiter, async (req: IRequest, res: IResponse) => {
                 if (req.body.payload) {
                     return interactionsHander(req, res);
                 }
