@@ -39,6 +39,15 @@ export const createSparkPythonJob: (doc: IJobSchema) => Promise<ICapacity> = asy
         //'spark.yarn.maxAppAttempts': 1,  // put this in the job somewhere
     };
 
+    if (doc.job.params?.spark?.sparkConf) {
+        try {
+            const t: any = JSON.parse(doc.job.params.spark.sparkConf);
+            crdjob.spec.sparkConf = { ...crdjob.spec.sparkConf, ...t };
+        } catch (err) {
+            //*
+        }
+    }
+
     // pyspark specyfic
     crdjob.spec.mainApplicationFile = `${sparkCredentials.file_url}/${id}.py`;
     crdjob.spec.pythonVersion = '3';
