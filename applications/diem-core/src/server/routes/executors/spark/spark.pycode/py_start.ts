@@ -38,8 +38,7 @@ data = {
     "status": "Running",
     "out": msg
 }
-# add some time before we start
-time.sleep(0.1)
+
 mq(data)
 
 # not used here
