@@ -54,11 +54,15 @@ def diem_except_hook(exctype, value, traceback):
     error(value)
 sys.excepthook = diem_except_hook
 
+# add some time before we start
+time.sleep(0.1)
+
 data = {
     "jobstart": config.__jobstart,
     "status": "Running",
     "out": f"Job {config.__id} started - email: {config.__email} - time: {UtcNow()}",
 }
+
 mq(data)
 
 startTimer()
