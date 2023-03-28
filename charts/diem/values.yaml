@@ -54,7 +54,7 @@ core:
     # -- image location
     image: quay.io/diem/core
     # -- image version
-    version: 1.35.0
+    version: 1.37.0
     # -- number of replicas
     replicas: 1
     # -- port to listen
@@ -139,7 +139,7 @@ nodepy:
   port: 80
   replicas: 1
   tier: backend
-  version: 1.20.0
+  version: 1.22.0
 
 operator:
   # -- name of the deployment
@@ -153,7 +153,7 @@ operator:
   port: 80
   replicas: 1
   tier: backend
-  version: 1.23.0
+  version: 1.24.0
 
   config:
     # -- important, the path the application will run under
@@ -186,7 +186,7 @@ help:
   deployment:
     replicas: 1
     image: quay.io/diem/help
-    version: 1.24.0
+    version: 1.25.0
     path: /diem-help
     port: 80
   config:
