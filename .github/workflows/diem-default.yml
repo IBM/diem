@@ -35,7 +35,7 @@ jobs:
         with:
           status: custom
           fields: all
-          custom_payload: |
+          payload: |
             {
               username: 'Diem GitHub Action',
               icon_emoji: ':diem:',
