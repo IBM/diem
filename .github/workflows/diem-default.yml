@@ -31,9 +31,11 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - uses: slackapi/slack-github-action@v1.23.0
+      - name: Send Payload to slack
+        id: slack
+        uses: slackapi/slack-github-action@v1.23.0
         with:
-          channel-id: "#diem-ci"
+          channel-id: "G01NVSH7QP9"
           payload: |
             {
               "username": "Diem GitHub Action",
