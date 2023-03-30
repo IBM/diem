@@ -31,19 +31,21 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - uses: 8398a7/action-slack@v3
+      - name: Send Payload to slack
+        id: slack
+        uses: slackapi/slack-github-action@v1.23.0
         with:
-          status: custom
-          fields: all
-          custom_payload: |
+          channel-id: "G01NVSH7QP9"
+          payload: |
             {
-              username: 'Diem GitHub Action',
-              icon_emoji: ':diem:',
-              channel: '#diem-ci',
-              attachments: [{
-                color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
-                text: `${process.env.AS_WORKFLOW} of ${process.env.AS_AUTHOR.split(/[<@]/)[1]}'s "${process.env.AS_MESSAGE}" in ${process.env.AS_REF.replace('refs/heads/', '')} ${'${{ job.status }}' === 'success' ? 'succeeded' : '${{ job.status }}' === 'failure' ? 'failed' : '${{ job.status }}'} in ${process.env.AS_TOOK}`,
-              }]
+              "username": "Diem GitHub Action",
+              "icon_emoji": ":diem:",
+              "attachments": [
+                {
+                  "color": "${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning'",
+                  "text": "${process.env.AS_WORKFLOW} of ${process.env.AS_AUTHOR.split(/[<@]/)[1]}'s '${process.env.AS_MESSAGE}' in ${process.env.AS_REF.replace('refs/heads/', '')} ${'${{ job.status }}' === 'success' ? 'succeeded' : '${{ job.status }}' === 'failure' ? 'failed' : '${{ job.status }}'} in ${process.env.AS_TOOK}"
+                }
+              ]
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
