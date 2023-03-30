@@ -37,9 +37,7 @@ jobs:
 
       - name: get-npm-version
         id: package-version
-        run: |
-          echo "PACKAGE_VERSION=$(cat ${1-.}/package.json | jq '.version' | tr -d '"')"
-          echo "::set-output name=current-version::$(PACKAGE_VERSION)"
+        run: echo "::set-output name=current-version::$(cat ${1-.}/package.json | jq '.version' | tr -d '"')"
 
       - name: Use Node.js
         uses: actions/setup-node@v1
