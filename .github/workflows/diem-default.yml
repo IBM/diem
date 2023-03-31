@@ -52,7 +52,7 @@ jobs:
                     {
                       "title": "Pull Request",
                       "short": false,
-                      "value": "<${{ github.event.pull_request.number }}|${{ github.event.pull_request.html_url }}>"
+                      "value": "<${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.number }}>"
                     }, {
                       "title": "Ref",
                       "short": false,
