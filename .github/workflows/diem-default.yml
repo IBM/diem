@@ -60,15 +60,15 @@ jobs:
                     }, {
                       "title": "Commit",
                       "short": false,
-                      "value": "<${{ github.event.head_commit.url }}|${{ github.sha }}>"
+                      "value": "<${{ github.event.commits[0].url }}|${{ github.sha }}>"
                     }, {
                       "title": "Author",
                       "short": false,
-                      "value": "${{ github.event.head_commit.author.name }}"
+                      "value": "${{ github.event.commits[0].author.name }}"
                     }, {
                       "title": "Message",
                       "short": false,
-                      "value": "${{ github.event.head_commit.message }}"
+                      "value": "${{ github.event.commits[0].message }}"
                     }, {
                       "title": "Workflow",
                       "short": false,
