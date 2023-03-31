@@ -31,7 +31,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - id: slack
+      - name: "Send Message to Slack"
+        id: slack
         uses: slackapi/slack-github-action@v1.23.0
         with:
           channel-id: "G01NVSH7QP9"
@@ -46,7 +47,32 @@ jobs:
                     {
                       "title": "Status",
                       "short": true,
-                      "value": "${process.env.AS_WORKFLOW} of ${process.env.AS_AUTHOR.split(/[<@]/)[1]}'s '${process.env.AS_MESSAGE}' in ${process.env.AS_REF.replace('refs/heads/', '')} ${'${{ job.status }}' === 'success' ? 'succeeded' : '${{ job.status }}' === 'failure' ? 'failed' : '${{ job.status }}'} in ${process.env.AS_TOOK}"
+                      "value": "Completed"
+                    },
+                    {
+                      "title": "Repository",
+                      "short": false,
+                      "value": "<${{ github.payload.repository.html_url }}|${{ github.payload.repository.full_name }}>"
+                    }, {
+                      "title": "Ref",
+                      "short": false,
+                      "value": "${{ github.ref }}"
+                    }, {
+                      "title": "Commit",
+                      "short": false,
+                      "value": "<${{ github.payload.head_commit.url }}|${{ github.sha }}>"
+                    }, {
+                      "title": "Author",
+                      "short": false,
+                      "value": "${{ github.payload.head_commit.author.name }}"
+                    }, {
+                      "title": "Message",
+                      "short": false,
+                      "value": "${{ github.payload.head_commit.message }}"
+                    }, {
+                      "title": "Workflow",
+                      "short": false,
+                      "value": "<${{ github.payload.repository.html_url }}/actions/runs/${{ github.runId }}|${{ github.workflow }}>"
                     }
                   ]
                 }
@@ -55,29 +81,3 @@ jobs:
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN}}
         if: always()
-
-      - uses: slackapi/slack-github-action@v1.23.0
-        with:
-          # Unlike the step posting a new message, this step does not accept a channel name.
-          # Please use a channel ID, not a name here.
-          channel-id: "G01NVSH7QP9"
-          update-ts: ${{ steps.slack.outputs.ts }}
-          payload: |
-            {
-              "text": "Deployment finished (Completed)",
-              "attachments": [
-                {
-                  "pretext": "You Build on Github finished",
-                  "color": "28a745",
-                  "fields": [
-                    {
-                      "title": "Status",
-                      "short": true,
-                      "value": "${process.env.AS_WORKFLOW} of ${process.env.AS_AUTHOR.split(/[<@]/)[1]}'s '${process.env.AS_MESSAGE}' in ${process.env.AS_REF.replace('refs/heads/', '')} ${'${{ job.status }}' === 'success' ? 'succeeded' : '${{ job.status }}' === 'failure' ? 'failed' : '${{ job.status }}'} in ${process.env.AS_TOOK}"
-                    }
-                  ]
-                }
-              ]
-            }
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN}}
