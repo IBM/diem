@@ -50,9 +50,9 @@ jobs:
                       "value": "Completed"
                     },
                     {
-                      "title": "Repository",
+                      "title": "Pull Request",
                       "short": false,
-                      "value": "<${{ github.payload.repository.html_url }}|${{ github.payload.repository.full_name }}>"
+                      "value": "<${{ github.event.pull_request.number }}|${{ github.event.pull_request.html_url }}>"
                     }, {
                       "title": "Ref",
                       "short": false,
@@ -60,19 +60,19 @@ jobs:
                     }, {
                       "title": "Commit",
                       "short": false,
-                      "value": "<${{ github.payload.head_commit.url }}|${{ github.sha }}>"
+                      "value": "<${{ github.event.pull_request.url }}|${{ github.sha }}>"
                     }, {
                       "title": "Author",
                       "short": false,
-                      "value": "${{ github.payload.head_commit.author.name }}"
+                      "value": "${{ github.event.pull_request.user.login }}"
                     }, {
                       "title": "Message",
                       "short": false,
-                      "value": "${{ github.payload.head_commit.message }}"
+                      "value": "${{ github.event.pull_request.title }}"
                     }, {
                       "title": "Workflow",
                       "short": false,
-                      "value": "<${{ github.payload.repository.html_url }}/actions/runs/${{ github.runId }}|${{ github.workflow }}>"
+                      "value": "<${{ github.event.repository.html_url }}/actions/runs/${{ github.runId }}|${{ github.workflow }}>"
                     }
                   ]
                 }
