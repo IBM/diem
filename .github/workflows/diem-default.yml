@@ -31,20 +31,53 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - uses: 8398a7/action-slack@v3
+      - name: "Send Message to Slack"
+        id: slack
+        uses: slackapi/slack-github-action@v1.23.0
         with:
-          status: custom
-          fields: all
-          custom_payload: |
+          channel-id: "G01NVSH7QP9"
+          payload: |
             {
-              username: 'Diem GitHub Action',
-              icon_emoji: ':diem:',
-              channel: '#diem-ci',
-              attachments: [{
-                color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
-                text: `${process.env.AS_WORKFLOW} of ${process.env.AS_AUTHOR.split(/[<@]/)[1]}'s "${process.env.AS_MESSAGE}" in ${process.env.AS_REF.replace('refs/heads/', '')} ${'${{ job.status }}' === 'success' ? 'succeeded' : '${{ job.status }}' === 'failure' ? 'failed' : '${{ job.status }}'} in ${process.env.AS_TOOK}`,
-              }]
+              "text": "Deployment started (In Progress)",
+              "attachments": [
+                {
+                  "pretext": "Deployment started",
+                  "color": "${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning'",
+                  "fields": [
+                    {
+                      "title": "Status",
+                      "short": true,
+                      "value": "Completed"
+                    },
+                    {
+                      "title": "Pull Request",
+                      "short": false,
+                      "value": "<${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.number }}>"
+                    }, {
+                      "title": "Ref",
+                      "short": false,
+                      "value": "${{ github.ref }}"
+                    }, {
+                      "title": "Commit",
+                      "short": false,
+                      "value": "<${{ github.event.pull_request.url }}|${{ github.sha }}>"
+                    }, {
+                      "title": "Author",
+                      "short": false,
+                      "value": "${{ github.event.pull_request.user.login }}"
+                    }, {
+                      "title": "Message",
+                      "short": false,
+                      "value": "${{ github.event.pull_request.title }}"
+                    }, {
+                      "title": "Workflow",
+                      "short": false,
+                      "value": "<${{ github.event.repository.html_url }}/actions/runs/${{ github.runId }}|${{ github.workflow }}>"
+                    }
+                  ]
+                }
+              ]
             }
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN}}
         if: always()
