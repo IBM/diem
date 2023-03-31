@@ -52,7 +52,7 @@ jobs:
                     {
                       "title": "Repository",
                       "short": false,
-                      "value": "<${{ github.payload.repository.html_url }}|${{ github.payload.repository.full_name }}>"
+                      "value": "<${{ github.repository }}|${{ github.repositoryUrl }}>"
                     }, {
                       "title": "Ref",
                       "short": false,
@@ -60,19 +60,19 @@ jobs:
                     }, {
                       "title": "Commit",
                       "short": false,
-                      "value": "<${{ github.payload.head_commit.url }}|${{ github.sha }}>"
+                      "value": "<${{ github.event.head_commit.url }}|${{ github.sha }}>"
                     }, {
                       "title": "Author",
                       "short": false,
-                      "value": "${{ github.payload.head_commit.author.name }}"
+                      "value": "${{ github.event.head_commit.author.name }}"
                     }, {
                       "title": "Message",
                       "short": false,
-                      "value": "${{ github.payload.head_commit.message }}"
+                      "value": "${{ github.event.head_commit.message }}"
                     }, {
                       "title": "Workflow",
                       "short": false,
-                      "value": "<${{ github.payload.repository.html_url }}/actions/runs/${{ github.runId }}|${{ github.workflow }}>"
+                      "value": "<${{ github.event.repository.html_url }}/actions/runs/${{ github.runId }}|${{ github.workflow }}>"
                     }
                   ]
                 }
