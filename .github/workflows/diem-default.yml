@@ -31,22 +31,53 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Send Payload to slack
-        id: slack
+      - id: slack
         uses: slackapi/slack-github-action@v1.23.0
         with:
           channel-id: "G01NVSH7QP9"
           payload: |
             {
-              "username": "Diem GitHub Action",
-              "icon_emoji": ":diem:",
+              "text": "Deployment started (In Progress)",
               "attachments": [
                 {
+                  "pretext": "Deployment started",
                   "color": "${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning'",
-                  "text": "${process.env.AS_WORKFLOW} of ${process.env.AS_AUTHOR.split(/[<@]/)[1]}'s '${process.env.AS_MESSAGE}' in ${process.env.AS_REF.replace('refs/heads/', '')} ${'${{ job.status }}' === 'success' ? 'succeeded' : '${{ job.status }}' === 'failure' ? 'failed' : '${{ job.status }}'} in ${process.env.AS_TOOK}"
+                  "fields": [
+                    {
+                      "title": "Status",
+                      "short": true,
+                      "value": "${process.env.AS_WORKFLOW} of ${process.env.AS_AUTHOR.split(/[<@]/)[1]}'s '${process.env.AS_MESSAGE}' in ${process.env.AS_REF.replace('refs/heads/', '')} ${'${{ job.status }}' === 'success' ? 'succeeded' : '${{ job.status }}' === 'failure' ? 'failed' : '${{ job.status }}'} in ${process.env.AS_TOOK}"
+                    }
+                  ]
                 }
               ]
             }
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }} # required
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN}}
         if: always()
+
+      - uses: slackapi/slack-github-action@v1.23.0
+        with:
+          # Unlike the step posting a new message, this step does not accept a channel name.
+          # Please use a channel ID, not a name here.
+          channel-id: "G01NVSH7QP9"
+          update-ts: ${{ steps.slack.outputs.ts }}
+          payload: |
+            {
+              "text": "Deployment finished (Completed)",
+              "attachments": [
+                {
+                  "pretext": "Deployment finished",
+                  "color": "28a745",
+                  "fields": [
+                    {
+                      "title": "Status",
+                      "short": true,
+                      "value": "Completed"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN}}
