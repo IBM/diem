@@ -1,6 +1,6 @@
 ##  DIEM
 ##
-##  See https://github.com/IBM/DIEM
+##  See https://github.com/IBM/diem
 ##
 apiVersion: v2
 name: diem
@@ -8,7 +8,7 @@ description: A Helm chart for Diem
 type: application
 version: 1.24.0
 appVersion: 1.24.0
-home: https://github.com/IBM/DIEM
+home: https://github.com/IBM/diem
 icon: https://raw.githubusercontent.com/IBM/diem/main/applications/diem-help/docs/images/diem/diem_s.png
 
 maintainers:
