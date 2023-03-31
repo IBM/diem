@@ -50,9 +50,9 @@ jobs:
                       "value": "Completed"
                     },
                     {
-                      "title": "Repository",
+                      "title": "Pull Request",
                       "short": false,
-                      "value": "<${{ github.repository }}|${{ github.repositoryUrl }}>"
+                      "value": "<${{ github.event.pull_request.number }}|${{ github.event.pull_request.html_url }}>"
                     }, {
                       "title": "Ref",
                       "short": false,
@@ -64,11 +64,11 @@ jobs:
                     }, {
                       "title": "Author",
                       "short": false,
-                      "value": "${{ github.event.pull_request.author.name }}"
+                      "value": "${{ github.event.pull_request.user.login }}"
                     }, {
                       "title": "Message",
                       "short": false,
-                      "value": "${{ github.event.pull_request.message }}"
+                      "value": "${{ github.event.pull_request.title }}"
                     }, {
                       "title": "Workflow",
                       "short": false,
