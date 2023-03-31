@@ -67,13 +67,13 @@ jobs:
               "text": "Deployment finished (Completed)",
               "attachments": [
                 {
-                  "pretext": "Deployment finished",
+                  "pretext": "You Build on Github finished",
                   "color": "28a745",
                   "fields": [
                     {
                       "title": "Status",
                       "short": true,
-                      "value": "Completed"
+                      "value": "${process.env.AS_WORKFLOW} of ${process.env.AS_AUTHOR.split(/[<@]/)[1]}'s '${process.env.AS_MESSAGE}' in ${process.env.AS_REF.replace('refs/heads/', '')} ${'${{ job.status }}' === 'success' ? 'succeeded' : '${{ job.status }}' === 'failure' ? 'failed' : '${{ job.status }}'} in ${process.env.AS_TOOK}"
                     }
                   ]
                 }
