@@ -18,6 +18,7 @@ maintainers:
 
 annotations:
   category: Data Integration Engine Multipurpose
+  updated: 2022.4.02
 
 ##  There are 3 optional and 1 mandatory dependency
 ##  mongo minio can be disabled or enabled via the values, they are by default enabled
