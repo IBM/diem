@@ -33,20 +33,4 @@ jobs:
       - uses: actions/checkout@v2
       - name: Publish Helm Chart
         shell: bash
-        run: ${GITHUB_WORKSPACE}/.github/scripts/publish.sh \
-          ${{ secrets.GITHUB_TOKEN }} \
-          ${{ inputs.charts_dir }} \
-          ${{ inputs.charts_url }} \
-          ${{ inputs.owner }} \
-          ${{ inputs.repository }} \
-          "helm" \
-          ${{ inputs.target_dir }} \
-          ${{ inputs.helm_version }} \
-          true \
-          ${{ inputs.commit_username }} \
-          ${{ inputs.commit_email }} \
-          ${{ inputs.app_version }} \
-          ${{ inputs.chart_version }} \
-          ${{ inputs.index_dir }} \
-          ${{ inputs.enterprise_url }} \
-          ${{ inputs.dependencies }}
+        run: ${GITHUB_WORKSPACE}/.github/scripts/publish.sh ${{ secrets.GITHUB_TOKEN }} "" "" "" "" "helm" "" "" true "" "" "" "" "" "" ""
