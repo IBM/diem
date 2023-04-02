@@ -33,4 +33,4 @@ jobs:
       - uses: actions/checkout@v2
       - name: Publish Helm Chart
         shell: bash
-        run: ${GITHUB_WORKSPACE}/.github/scripts/publish.sh ${{ secrets.GITHUB_TOKEN }} "" "" "" "" "helm" "" "" true "" "" "" "" "" "" ""
+        run: ${GITHUB_WORKSPACE}/.github/scripts/publish.sh ${{ secrets.GITHUB_TOKEN }} ${GITHUB_WORKSPACE}/charts "" "" "" "helm" "" "" true "" "" "" "" "" "" ""

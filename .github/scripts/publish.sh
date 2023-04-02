@@ -40,6 +40,7 @@ REPO_ROOT=$(git rev-parse --show-toplevel)
 REPO_URL=""
 
 main() {
+  echo "1 variables"
   if [[ -z "$HELM_VERSION" ]]; then
       HELM_VERSION="3.10.0"
       echo "HELM_VERSION: $HELM_VERSION"
@@ -83,10 +84,11 @@ main() {
   if [[ -z "$REPO_URL" ]]; then
       if [[ -z "$ENTERPRISE_URL" ]]; then
           REPO_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${OWNER}/${REPOSITORY}"
+          echo "REP_URL: $REP_URL"
       else
           REPO_URL="https://x-access-token:${GITHUB_TOKEN}@${ENTERPRISE_URL}/${REPOSITORY}"
+          echo "REP_URL: $REP_URL"
       fi
-      echo "REP_URL: $REP_URL"
   fi
 
   if [[ -z "$COMMIT_USERNAME" ]]; then
@@ -101,7 +103,7 @@ main() {
 
   if [[ -z "$INDEX_DIR" ]]; then
       INDEX_DIR=${TARGET_DIR}
-      echo INDEX_DIR
+      echo "INDEX_DIR: INDEX_DIR"
   fi
 
   locate
@@ -116,7 +118,7 @@ main() {
 }
 
 locate() {
-  echo "locate"
+  echo "2. locate"
   for dir in $(find "${CHARTS_DIR}" -type d -mindepth 1 -maxdepth 1); do
     if [[ -f "${dir}/Chart.yaml" ]]; then
       CHARTS+=("${dir}")
@@ -128,9 +130,8 @@ locate() {
 }
 
 download() {
-  echo "download"
+  echo "3. download"
   tmpDir=$(mktemp -d)
-  echo $tmpDir
 
   pushd $tmpDir >& /dev/null
 
@@ -142,7 +143,7 @@ download() {
 }
 
 get_dependencies() {
-  echo "get_dependencies"
+  echo "4. get_dependencies"
   IFS=';' read -ra dependency <<< "$DEPENDENCIES"
   for repos in ${dependency[@]}; do
     result=$( echo $repos|awk -F',' '{print NF}' )
@@ -161,25 +162,27 @@ get_dependencies() {
 }
 
 dependencies() {
-  echo "dependencies"
+  echo "5. dependencies"
   for chart in ${CHARTS[@]}; do
     helm dependency update "${chart}"
   done
 }
 
 lint() {
-  echo "lint"
+  echo "6. linting"
   helm lint ${CHARTS[*]}
 }
 
 package() {
-  echo "package"
+  echo "7. package"
   if [[ ! -z "$APP_VERSION" ]]; then
       APP_VERSION_CMD=" --app-version $APP_VERSION"
+      echo "APP_VERSION_CMD: $APP_VERSION_CMD"
   fi
 
   if [[ ! -z "$CHART_VERSION" ]]; then
       CHART_VERSION_CMD=" --version $CHART_VERSION"
+      echo "CHART_VERSION_CMD: $CHART_VERSION_CMD"
   fi
 
   helm package ${CHARTS[*]} --destination ${CHARTS_TMP_DIR} $APP_VERSION_CMD$CHART_VERSION_CMD
