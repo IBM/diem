@@ -6,7 +6,7 @@ entries:
       updated: 2022.4.02
     apiVersion: v2
     appVersion: 1.24.0
-    created: "2023-04-02T19:05:57.246846696Z"
+    created: "2023-04-02T19:08:13.753552442Z"
     dependencies:
     - name: spark-operator
       repository: https://googlecloudplatform.github.io/spark-on-k8s-operator
@@ -24,7 +24,7 @@ entries:
       repository: https://nats-io.github.io/k8s/helm/charts/
       version: 0.17.1
     description: A Helm chart for Diem
-    digest: 492be7a99c647b9fe55f50a2b04b1b268fab8dd39f8f8dbc621fd63afdd5390d
+    digest: 8557bd2dee2b4108b0d45609b91ba73a0a28a3f048c1d16bbab167fda59ca508
     home: https://github.com/IBM/diem
     icon: https://raw.githubusercontent.com/IBM/diem/main/applications/diem-help/docs/images/diem/diem_s.png
     maintainers:
@@ -1100,4 +1100,4 @@ entries:
     urls:
     - https://ibm.github.io/diem/charts/spark-operator-1.1.0.tgz
     version: 1.1.0
-generated: "2023-04-02T19:05:57.23208118Z"
+generated: "2023-04-02T19:08:13.736544181Z"
