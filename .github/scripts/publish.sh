@@ -42,42 +42,42 @@ REPO_URL=""
 main() {
   if [[ -z "$HELM_VERSION" ]]; then
       HELM_VERSION="3.10.0"
-      echo HELM_VERSION
+      echo $HELM_VERSION
   fi
 
   if [[ -z "$CHARTS_DIR" ]]; then
       CHARTS_DIR="charts"
-      echo CHARTS_DIR
+      echo $CHARTS_DIR
   fi
 
   if [[ -z "$OWNER" ]]; then
       OWNER=$(cut -d '/' -f 1 <<< "$GITHUB_REPOSITORY")
-      echo OWNER
+      echo $OWNER
   fi
 
   if [[ -z "$REPOSITORY" ]]; then
       REPOSITORY=$(cut -d '/' -f 2 <<< "$GITHUB_REPOSITORY")
-      echo REPOSITORY
+      echo $REPOSITORY
   fi
 
   if [[ -z "$BRANCH" ]]; then
       BRANCH="gh-pages"
-      echo BRANCH
+      echo $BRANCH
   fi
 
   if [[ -z "$TARGET_DIR" ]]; then
     TARGET_DIR="."
-    echo TARGET_DIR
+    echo $TARGET_DIR
   fi
 
   if [[ -z "$CHARTS_URL" ]]; then
       CHARTS_URL="https://${OWNER}.github.io/${REPOSITORY}"
-      echo CHARTS_URL
+      echo $CHARTS_URL
   fi
 
   if [[ "$TARGET_DIR" != "." && "$TARGET_DIR" != "docs" ]]; then
     CHARTS_URL="${CHARTS_URL}/${TARGET_DIR}"
-    echo CHARTS_URL
+    echo $CHARTS_URL
   fi
 
   if [[ -z "$REPO_URL" ]]; then
@@ -86,25 +86,23 @@ main() {
       else
           REPO_URL="https://x-access-token:${GITHUB_TOKEN}@${ENTERPRISE_URL}/${REPOSITORY}"
       fi
-      echo REP_URL
+      echo $REP_URL
   fi
 
   if [[ -z "$COMMIT_USERNAME" ]]; then
       COMMIT_USERNAME="${GITHUB_ACTOR}"
-      echo COMMIT_USERNAME
+      echo $COMMIT_USERNAME
   fi
 
   if [[ -z "$COMMIT_EMAIL" ]]; then
       COMMIT_EMAIL="${GITHUB_ACTOR}@users.noreply.github.com"
-      echo COMMIT_EMAIL
+      echo $COMMIT_EMAIL
   fi
 
   if [[ -z "$INDEX_DIR" ]]; then
       INDEX_DIR=${TARGET_DIR}
       echo INDEX_DIR
   fi
-
-  echo "start"
 
   locate
   download
@@ -130,7 +128,9 @@ locate() {
 }
 
 download() {
+  echo "download"
   tmpDir=$(mktemp -d)
+  echo $tmpDir
 
   pushd $tmpDir >& /dev/null
 
@@ -142,6 +142,7 @@ download() {
 }
 
 get_dependencies() {
+  echo "get_dependencies"
   IFS=';' read -ra dependency <<< "$DEPENDENCIES"
   for repos in ${dependency[@]}; do
     result=$( echo $repos|awk -F',' '{print NF}' )
@@ -160,16 +161,19 @@ get_dependencies() {
 }
 
 dependencies() {
+  echo "dependencies"
   for chart in ${CHARTS[@]}; do
     helm dependency update "${chart}"
   done
 }
 
 lint() {
+  echo "lint"
   helm lint ${CHARTS[*]}
 }
 
 package() {
+  echo "package"
   if [[ ! -z "$APP_VERSION" ]]; then
       APP_VERSION_CMD=" --app-version $APP_VERSION"
   fi
@@ -182,6 +186,7 @@ package() {
 }
 
 upload() {
+  echo "upload"
   tmpDir=$(mktemp -d)
   pushd $tmpDir >& /dev/null
 
