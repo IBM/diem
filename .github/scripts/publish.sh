@@ -42,34 +42,42 @@ REPO_URL=""
 main() {
   if [[ -z "$HELM_VERSION" ]]; then
       HELM_VERSION="3.10.0"
+      echo HELM_VERSION
   fi
 
   if [[ -z "$CHARTS_DIR" ]]; then
       CHARTS_DIR="charts"
+      echo CHARTS_DIR
   fi
 
   if [[ -z "$OWNER" ]]; then
       OWNER=$(cut -d '/' -f 1 <<< "$GITHUB_REPOSITORY")
+      echo OWNER
   fi
 
   if [[ -z "$REPOSITORY" ]]; then
       REPOSITORY=$(cut -d '/' -f 2 <<< "$GITHUB_REPOSITORY")
+      echo REPOSITORY
   fi
 
   if [[ -z "$BRANCH" ]]; then
       BRANCH="gh-pages"
+      echo BRANCH
   fi
 
   if [[ -z "$TARGET_DIR" ]]; then
     TARGET_DIR="."
+    echo TARGET_DIR
   fi
 
   if [[ -z "$CHARTS_URL" ]]; then
       CHARTS_URL="https://${OWNER}.github.io/${REPOSITORY}"
+      echo CHARTS_URL
   fi
 
   if [[ "$TARGET_DIR" != "." && "$TARGET_DIR" != "docs" ]]; then
     CHARTS_URL="${CHARTS_URL}/${TARGET_DIR}"
+    echo CHARTS_URL
   fi
 
   if [[ -z "$REPO_URL" ]]; then
@@ -78,18 +86,22 @@ main() {
       else
           REPO_URL="https://x-access-token:${GITHUB_TOKEN}@${ENTERPRISE_URL}/${REPOSITORY}"
       fi
+      echo REP_URL
   fi
 
   if [[ -z "$COMMIT_USERNAME" ]]; then
       COMMIT_USERNAME="${GITHUB_ACTOR}"
+      echo COMMIT_USERNAME
   fi
 
   if [[ -z "$COMMIT_EMAIL" ]]; then
       COMMIT_EMAIL="${GITHUB_ACTOR}@users.noreply.github.com"
+      echo COMMIT_EMAIL
   fi
 
   if [[ -z "$INDEX_DIR" ]]; then
       INDEX_DIR=${TARGET_DIR}
+      echo INDEX_DIR
   fi
 
   echo "start"
