@@ -31,8 +31,6 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v2
-      - name: "output"
-        run: pwd
       - name: Publish Helm Chart
         run: ${GITHUB_WORKSPACE}/.github/scripts/publish.sh
         shell: bash
