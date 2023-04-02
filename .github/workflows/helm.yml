@@ -30,11 +30,15 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/checkout@v2
-      - name: Publish Helm Chart
-        run: ${GITHUB_WORKSPACE}/.github/scripts/publish.sh
-        shell: bash
-        env:
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v3
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
           charts_dir: charts
-          branch: helm
+          charts_repo_url: https://ibm.github.io/diem
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.5.0
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
