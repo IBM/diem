@@ -32,9 +32,21 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Publish Helm Chart
-        run: ${GITHUB_WORKSPACE}/.github/scripts/publish.sh
         shell: bash
-        env:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          charts_dir: charts
-          branch: helm
+        run: ${GITHUB_WORKSPACE}/.github/scripts/publish.sh \
+          ${{ secrets.GITHUB_TOKEN }} \
+          "charts" \
+          ${{ inputs.charts_url }} \
+          ${{ inputs.owner }} \
+          ${{ inputs.repository }} \
+          "helm" \
+          ${{ inputs.target_dir }} \
+          ${{ inputs.helm_version }} \
+          true \
+          ${{ inputs.commit_username }} \
+          ${{ inputs.commit_email }} \
+          ${{ inputs.app_version }} \
+          ${{ inputs.chart_version }} \
+          ${{ inputs.index_dir }} \
+          ${{ inputs.enterprise_url }} \
+          ${{ inputs.dependencies }}
