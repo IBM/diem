@@ -34,7 +34,7 @@ jobs:
       - name: "output"
         run: pwd
       - name: Publish Helm Chart
-        run: ./.github/scripts/publish.sh
+        run: ${GITHUB_WORKSPACE}/.github/scripts/publish.sh
         shell: bash
         env:
           token: ${{ secrets.GITHUB_TOKEN }}
