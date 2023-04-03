@@ -31,10 +31,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v2
-      - name: Publish Helm chart
-        uses: stefanprodan/helm-gh-pages@master
+      - name: Publish Helm Chart
+        shell: bash
+        run: ${GITHUB_WORKSPACE}/.github/scripts/publish.sh ${{ secrets.GITHUB_TOKEN }} ${GITHUB_WORKSPACE}/charts "" "" "" "helm" "" "" true "" "" "" "" "" "" ""
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          charts_dir: charts
-          branch: helm
