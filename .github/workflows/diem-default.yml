@@ -30,6 +30,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      - name: Get branch name
+        id: branch-name
+        run: echo "::set-output name=branch::${GITHUB_REF/refs\/heads\//}"
       - name: "Send Message to Slack"
         id: slack
         uses: slackapi/slack-github-action@v1.23.0
@@ -37,7 +40,7 @@ jobs:
           channel-id: "G01NVSH7QP9"
           payload: |
             {
-              "text": "Deployment started",
+              "text": "Pull Request Workflow started",
               "attachments": [
                 {
                   "color": "${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning'",
@@ -53,13 +56,12 @@ jobs:
                     {
                       "short": true,
                       "value": "*Pull Request:* <${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.number }}>"
-                    }, {
+                    },
+                    {
                       "short": true,
                       "value": "*Ref:* ${{ github.ref }}"
-                    }, {
-                      "short": true,
-                      "value": "*Commit:* <${{ github.event.pull_request.url }}|${{ github.sha }}>"
-                    }, {
+                    },
+                    {
                       "short": true,
                       "value": "*Author:* ${{ github.event.pull_request.user.login }}"
                     }, {
@@ -68,6 +70,10 @@ jobs:
                     }, {
                       "short": true,
                       "value": "*Workflow:* <${{ github.event.repository.html_url }}/actions/runs/${{ github.runId }}|${{ github.workflow }}>"
+                    },
+                    {
+                      "short": false,
+                      "value": "*Commit:* <${{ github.event.pull_request.url }}|${{ github.sha }}>"
                     }
                   ]
                 }
@@ -84,6 +90,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      - name: Get branch name
+        id: branch-name
+        run: echo "::set-output name=branch::${GITHUB_REF/refs\/heads\//}"
       - name: "Send Message to Slack"
         id: slack
         uses: slackapi/slack-github-action@v1.23.0
@@ -91,7 +100,7 @@ jobs:
           channel-id: "G01NVSH7QP9"
           payload: |
             {
-              "text": "Deployment started",
+              "text": "Merge Workflow started",
               "attachments": [
                 {
                   "color": "${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning'",
@@ -106,22 +115,19 @@ jobs:
                     },
                     {
                       "short": true,
-                      "value": "*Pull Request:* <${{ github.event.push.html_url }}|${{ github.event.push.number }}>"
-                    }, {
-                      "short": true,
                       "value": "*Ref:* ${{ github.ref }}"
-                    }, {
-                      "short": true,
-                      "value": "*Commit:* <${{ github.event.push.url }}|${{ github.sha }}>"
-                    }, {
+                    },
+                    {
                       "short": true,
                       "value": "*Author:* ${{ github.event.push.user.login }}"
-                    }, {
-                      "short": true,
-                      "value": "*Message*: ${{ github.event.push.title }}"
-                    }, {
+                    },
+                    {
                       "short": true,
                       "value": "*Workflow:* <${{ github.event.repository.html_url }}/actions/runs/${{ github.runId }}|${{ github.workflow }}>"
+                    },
+                    {
+                      "short": false,
+                      "value": "*Commit:* <${{ github.event.push.url }}|${{ github.sha }}>"
                     }
                   ]
                 }
