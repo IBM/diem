@@ -1,36 +1,38 @@
 # This is a basic workflow to help you get started with Actions
-
 name: CI diem-default
-
 # Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [main]
+    branches:
+      - main
+      - latest
     paths:
       - "*"
       - ".github/**"
   pull_request:
-    branches: [main]
+    branches:
+      - main
+      - latest
     paths:
       - "*"
       - ".github/**"
-
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  pull-request:
+    if: github.event_name == 'pull_request'
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
+      - name: Get branch name
+        id: branch-name
+        run: echo "::set-output name=branch::${GITHUB_REF/refs\/heads\//}"
       - name: "Send Message to Slack"
         id: slack
         uses: slackapi/slack-github-action@v1.23.0
@@ -38,41 +40,94 @@ jobs:
           channel-id: "G01NVSH7QP9"
           payload: |
             {
-              "text": "Deployment started (In Progress)",
+              "text": "Pull Request Workflow started",
               "attachments": [
                 {
-                  "pretext": "Deployment started",
                   "color": "${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning'",
                   "fields": [
                     {
-                      "title": "Status",
                       "short": true,
-                      "value": "Completed"
+                      "value": "*Status:* Completed"
                     },
                     {
-                      "title": "Pull Request",
-                      "short": false,
-                      "value": "<${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.number }}>"
+                      "short": true,
+                      "value": "*Branch:* ${{ steps.branch-name.outputs.branch }}"
+                    },
+                    {
+                      "short": true,
+                      "value": "*Pull Request:* <${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.number }}>"
+                    },
+                    {
+                      "short": true,
+                      "value": "*Ref:* ${{ github.ref }}"
+                    },
+                    {
+                      "short": true,
+                      "value": "*Author:* ${{ github.event.pull_request.user.login }}"
                     }, {
-                      "title": "Ref",
-                      "short": false,
-                      "value": "${{ github.ref }}"
+                      "short": true,
+                      "value": "*Message*: ${{ github.event.pull_request.title }}"
                     }, {
-                      "title": "Commit",
+                      "short": true,
+                      "value": "*Workflow:* <${{ github.event.repository.html_url }}/actions/runs/${{ github.runId }}|${{ github.workflow }}>"
+                    },
+                    {
                       "short": false,
-                      "value": "<${{ github.event.pull_request.url }}|${{ github.sha }}>"
-                    }, {
-                      "title": "Author",
+                      "value": "*Commit:* <${{ github.event.pull_request.url }}|${{ github.sha }}>"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN}}
+        if: always()
+  push:
+    if: github.event_name == 'push'
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      - name: Get branch name
+        id: branch-name
+        run: echo "::set-output name=branch::${GITHUB_REF/refs\/heads\//}"
+      - name: "Send Message to Slack"
+        id: slack
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          channel-id: "G01NVSH7QP9"
+          payload: |
+            {
+              "text": "Merge Workflow started",
+              "attachments": [
+                {
+                  "color": "${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning'",
+                  "fields": [
+                    {
+                      "short": true,
+                      "value": "*Status:* Completed"
+                    },
+                    {
+                      "short": true,
+                      "value": "*Branch:* ${{ steps.branch-name.outputs.branch }}"
+                    },
+                    {
+                      "short": true,
+                      "value": "*Ref:* ${{ github.ref }}"
+                    },
+                    {
+                      "short": true,
+                      "value": "*Author:* ${{ github.event.push.user.login }}"
+                    },
+                    {
+                      "short": true,
+                      "value": "*Workflow:* <${{ github.event.repository.html_url }}/actions/runs/${{ github.runId }}|${{ github.workflow }}>"
+                    },
+                    {
                       "short": false,
-                      "value": "${{ github.event.pull_request.user.login }}"
-                    }, {
-                      "title": "Message",
-                      "short": false,
-                      "value": "${{ github.event.pull_request.title }}"
-                    }, {
-                      "title": "Workflow",
-                      "short": false,
-                      "value": "<${{ github.event.repository.html_url }}/actions/runs/${{ github.runId }}|${{ github.workflow }}>"
+                      "value": "*Commit:* <${{ github.event.push.url }}|${{ github.sha }}>"
                     }
                   ]
                 }
