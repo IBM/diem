@@ -34,3 +34,4 @@ jobs:
       - name: Publish Helm Chart
         shell: bash
         run: ${GITHUB_WORKSPACE}/.github/scripts/publish.sh ${{ secrets.GITHUB_TOKEN }} ${GITHUB_WORKSPACE}/charts "" "" "" "helm" "" "" true "" "" "" "" "" "" ""
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
