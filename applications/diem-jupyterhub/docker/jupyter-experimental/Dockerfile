@@ -1,4 +1,4 @@
-FROM jupyter/scipy-notebook:python-3.8.8
+FROM jupyter/scipy-notebook:python-3.9
 
 ## whoami you can use this to see who the user is
 
