@@ -22,10 +22,6 @@ export const handleWithConfig: (doc: IJobSchema, code: string) => Promise<string
         return Promise.reject(err);
     }
 
-    if (doc.job.params?.values) {
-        code = await handleValues(code, doc.job.params.values);
-    }
-
     const config: IJobConfig = doc.config;
 
     const local: string =
@@ -104,6 +100,10 @@ export const handleWithConfig: (doc: IJobSchema, code: string) => Promise<string
 
         const target_txt: string = tgt.type === 'nz' ? py_tgt_nz(tgt) : py_tgt_jdbc(tgt);
         code = code.replace(codestring, target_txt);
+    }
+
+    if (doc.job.params?.values) {
+        code = await handleValues(code, doc.job.params.values);
     }
 
     // here we create the final construct
