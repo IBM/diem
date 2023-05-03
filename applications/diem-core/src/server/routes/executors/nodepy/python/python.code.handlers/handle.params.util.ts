@@ -1,4 +1,4 @@
-const handtleType: (value: string | string[] | number | [number] | boolean | any) => string = (
+const handleType: (value: string | string[] | number | [number] | boolean | any) => string = (
     value: string | string[] | number | [number] | boolean | any
 ): string => {
     if (typeof value === 'string') {
@@ -21,7 +21,7 @@ export const regEx: (code: string, key: string, value: string | string[]) => str
 ): string => {
     const regExp: string | RegExp = new RegExp(`:${key}`, 'ig');
 
-    return code.replace(regExp, handtleType(value));
+    return code.replace(regExp, handleType(value));
 };
 
 export const json: (obj: any) => string = (obj: any) => JSON.stringify(obj, undefined, 2);
