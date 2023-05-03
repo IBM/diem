@@ -8,25 +8,25 @@ diemlib==1.1.4
 graphviz==0.20.1
 ibm-cos-sdk==2.13.0
 ibm_db==3.1.4
-ibmcloudant==0.4.0
+ibmcloudant==0.4.1
 jaydebeapi==1.2.3
 jinja2==3.1.2
 jsonPath-ng==1.5.3
 matplotlib==3.7.1
 numpy==1.24.2 --only-binary=numpy
 openpyxl==3.1.2
-pandas==2.0.0
-pyarrow==11.0.0
+pandas==2.0.1
+pyarrow==12.0.0
 pymongo==4.3.3
 pynpm==0.1.2
 redis==4.5.4
-requests==2.28.2
+requests==2.29.0
 sendgrid==6.10.0
-slack_sdk==3.21.2
+slack_sdk==3.21.3
 sqlalchemy<=2.0.9
 sqlparse==0.4.4
 statsmodels==0.13.5
 tabulate==0.9.0
 ibm-db-sa== 0.4.0
 jira== 3.5.0
-langchain== 0.0.144
+langchain== 0.0.157
