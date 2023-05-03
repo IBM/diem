@@ -1,9 +1,9 @@
 import { IConnSchema, IJobConfig, IJobSchema, ITemplatesModel } from '@models';
 import { addTrace } from '@functions';
 import { ISrc, ITgt } from '../spark.interfaces';
-
 import { py_partition, py_opt_dropcolumns, py_tgt_jdbc, py_session, py_conn_src, py_tgt_nz } from '../spark.pycode/py';
 import { lookupTemplate } from '../../../job.front/job.template';
+import { handleValues } from '../../nodepy/python/python.code.handlers/handle.values';
 import { getConnection } from './handle.spark.common';
 
 const codestring = '###__CODE__###';
@@ -100,6 +100,10 @@ export const handleWithConfig: (doc: IJobSchema, code: string) => Promise<string
 
         const target_txt: string = tgt.type === 'nz' ? py_tgt_nz(tgt) : py_tgt_jdbc(tgt);
         code = code.replace(codestring, target_txt);
+    }
+
+    if (doc.job.params?.values) {
+        code = await handleValues(code, doc.job.params.values);
     }
 
     // here we create the final construct
