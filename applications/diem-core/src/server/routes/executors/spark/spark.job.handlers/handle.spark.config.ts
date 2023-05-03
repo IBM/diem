@@ -3,7 +3,7 @@ import { addTrace } from '@functions';
 import { ISrc, ITgt } from '../spark.interfaces';
 import { py_partition, py_opt_dropcolumns, py_tgt_jdbc, py_session, py_conn_src, py_tgt_nz } from '../spark.pycode/py';
 import { lookupTemplate } from '../../../job.front/job.template';
-import { setValues } from '../../nodepy/python/python.code.handlers/handle.values';
+import { handleValues } from '../../nodepy/python/python.code.handlers/handle.values';
 import { getConnection } from './handle.spark.common';
 
 const codestring = '###__CODE__###';
@@ -23,7 +23,7 @@ export const handleWithConfig: (doc: IJobSchema, code: string) => Promise<string
     }
 
     if (doc.job.params?.values) {
-        code = await setValues(code, doc.job.params.values);
+        code = await handleValues(code, doc.job.params.values);
     }
 
     const config: IJobConfig = doc.config;
