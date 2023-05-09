@@ -4,7 +4,7 @@ import { lookupTemplate } from '../../../../job.front/job.template';
 
 const py_end: () => string = (): string => String.raw`### handle.nodepy.custom (py_end) ###
 
-time.sleep(0.1)
+time.sleep(1)
 endjob()
 
 ###__CODE__###`;
