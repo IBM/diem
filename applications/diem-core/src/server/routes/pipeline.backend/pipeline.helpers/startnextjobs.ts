@@ -31,11 +31,7 @@ const getNextInQueue: (pldid: string, id: string) => Promise<string[]> = async (
 
         if (pldoc.jobs[nodeId]) {
             // add some piece on checking the continuing conditions
-            if (
-                pldoc.jobs[nodeId].from &&
-                pldoc.jobs[nodeId].queue &&
-                pldoc.jobs[nodeId].queue.length === pldoc.jobs[nodeId].from.length
-            ) {
+            if (pldoc.jobs[nodeId].from && pldoc.jobs[nodeId].queue?.length === pldoc.jobs[nodeId].from.length) {
                 if (pldoc.jobs[nodeId].required === EJobContinue.all) {
                     /*
                      * now we need to do a special check
