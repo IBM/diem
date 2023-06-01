@@ -55,7 +55,7 @@ def diem_except_hook(exctype, value, traceback):
 sys.excepthook = diem_except_hook
 
 # add some time before we start
-time.sleep(0.1)
+time.sleep(1)
 
 data = {
     "jobstart": config.__jobstart,
