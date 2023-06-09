@@ -1,5 +1,5 @@
-# v3.1.2_rhel_2021-07-27
-FROM quay.io/diem/base-spark:3.1.2_rhel as base_spark
+# v3.2.0_rhel_2022-10-21
+FROM quay.io/diem/base-spark:3.4.0_rhel as base_spark
 
 FROM registry.access.redhat.com/ubi8/python-39 as base
 
@@ -7,7 +7,7 @@ WORKDIR /
 
 USER root
 
-ARG img=spark-3.1.2-bin-custom-spark
+ARG img=spark-3.4.1-SNAPSHOT-bin-custom-spark
 ARG install_dir=/tmp/artifacts
 ARG V_ENV=/opt/venv
 
@@ -61,11 +61,11 @@ ENV \
 ENV PATH="${V_ENV}/bin:$PATH"
 
 COPY jars/* /opt/spark/jars/
-COPY requirements-3.1.2.txt /opt/spark/
+COPY requirements-3.4.0.txt /opt/spark/
 
 RUN python3 -m pip install --upgrade pip
 RUN python3 -m venv ${V_ENV}
-RUN python3 -m pip install  --prefer-binary -r /opt/spark/requirements-3.1.2.txt
+RUN python3 -m pip install  --prefer-binary -r /opt/spark/requirements-3.4.0.txt
 
 ENTRYPOINT [ "/opt/entrypoint.sh" ]
 
