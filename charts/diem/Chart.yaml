@@ -6,8 +6,8 @@ apiVersion: v2
 name: diem
 description: A Helm chart for Diem
 type: application
-version: 1.28.0
-appVersion: 1.28.0
+version: 1.29.0
+appVersion: 1.29.0
 home: https://github.com/IBM/diem
 icon: https://raw.githubusercontent.com/IBM/diem/main/applications/diem-help/docs/images/diem/diem_s.png
 
@@ -18,7 +18,7 @@ maintainers:
 
 annotations:
   category: Data Integration Engine Multipurpose
-  updated: 2022.6.01
+  updated: 2022.6.09
 
 ##  There are 3 optional and 1 mandatory dependency
 ##  mongo minio can be disabled or enabled via the values, they are by default enabled
