@@ -54,7 +54,7 @@ core:
     # -- image location
     image: quay.io/diem/core
     # -- image version
-    version: 1.41.0
+    version: 1.42.0
     # -- number of replicas
     replicas: 1
     # -- port to listen
@@ -69,7 +69,7 @@ core:
 
     ## spark configuration Values
     spark:
-      SPARK_IMAGE: quay.io/diem/pyspark:3.2.0_rhel
+      SPARK_IMAGE: quay.io/diem/pyspark:3.4.0_rhel
       SPARK_IMAGEPULLSECRETS: ""
       CALLBACK_URL: /internal/spark_callback
 
