@@ -78,7 +78,6 @@ class Mongo {
             writeFileSync(fn, sslCA);
             options = {
                 connectTimeoutMS: 10000,
-                keepAlive: true,
                 ssl: true,
                 sslCA: fn,
                 sslValidate: false,
@@ -88,7 +87,6 @@ class Mongo {
             options = {
                 connectTimeoutMS: 10000,
                 serverSelectionTimeoutMS: 10000,
-                keepAlive: true,
             };
             utils.logInfo(`$mongo (connect): connecting to the Mongo Service - pid: ${process.pid}`);
         }

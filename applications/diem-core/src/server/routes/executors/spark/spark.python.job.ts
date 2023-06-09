@@ -82,7 +82,7 @@ export const createSparkPythonJob: (doc: IJobSchema) => Promise<ICapacity> = asy
         };
     }
 
-    let image = 'quay.io/diem/pyspark:3.2.0_rhel';
+    let image = 'quay.io/diem/pyspark:3.4.0_rhel';
 
     if (doc.job.params?.spark?.image) {
         image = doc.job.params.spark.image;
