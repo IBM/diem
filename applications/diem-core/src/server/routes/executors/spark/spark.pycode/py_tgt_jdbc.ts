@@ -21,9 +21,12 @@ try:
         .save()
 
     msg = f"--- job {config.__id} finished inserting at {UtcNow()} --- running time: {time.time() - config.__starttime} ---"
+    out(msg)
     print(msg)
 
     config.__count = df_tgt.count()
+
+    msg = f"--- job {config.__id} finished count at {UtcNow()}: {config.__count} --- running time: {time.time() - config.__starttime} ---"
 
     data = {
         "jobend": UtcNow(),
