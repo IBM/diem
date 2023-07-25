@@ -86,7 +86,7 @@ table(
                 td(
                     *ngIf="tableSpecs.expandable",
                     ibmTableExpandButton="",
-                    class="bx--table-expand-v2",
+                    class="cds--table-expand-v2",
                     [expanded]="false",
                     [expandable]="true",
                     style="width: 2.25em",
@@ -172,14 +172,14 @@ ng-template(let-col="data.col", let-row="data.row", #colcell="", let-i="index")
             span([innerText]="row[col.field] | number")
 
         ng-container(*ngIf="col.specs.link && row[col.field]")
-            a.bx--link(
+            a.cds--link(
                 [routerLink]="row.href",
                 [innerText] = "row[col.field]",
                 [target]='col.specs.target',
             )
 
         ng-container(*ngIf="col.specs.externallink && row[col.field]")
-            a.bx--link(
+            a.cds--link(
                 role='button',
                 target='_blank',
                 [href]="row.href",

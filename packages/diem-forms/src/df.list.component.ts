@@ -93,7 +93,7 @@ interface ITableSpecs {
     sortable: boolean;
     special: string[];
     striped: boolean;
-    tableClass: string; // bx--data-table--sticky-header
+    tableClass: string; // cds--data-table--sticky-header
     tableStyle: any; // typestyle
     type: TableRowSize;
     header: {
@@ -193,7 +193,7 @@ export class DFListComponent implements OnDestroy, OnInit {
         cd: ChangeDetectorRef,
         FS: DFFilterService,
         DFCS: DFCommonService,
-        sanitizer: DomSanitizer
+        sanitizer: DomSanitizer,
     ) {
         this.env = env;
         this.loaded = false;
@@ -301,7 +301,7 @@ export class DFListComponent implements OnDestroy, OnInit {
                     }
 
                     return s;
-                })
+                }),
             )
             .subscribe((data: any) => {
                 if (!data || (data && !data.records)) {
@@ -373,7 +373,7 @@ export class DFListComponent implements OnDestroy, OnInit {
             this.FFSSub = this.store
                 .pipe(
                     select((s: any) => s.coverage.states[storeId]),
-                    take(1)
+                    take(1),
                 )
                 .subscribe((data: any) => {
                     /** we need to have data
@@ -473,7 +473,7 @@ export class DFListComponent implements OnDestroy, OnInit {
         const colVal: any[] =
             this.tableSpecs.columns.filter((col: any) =>
                 // find only radios or checkboxes, there can only be one of them
-                col.specs && (col.specs.radio || col.specs.checkbox) && col.action ? true : false
+                col.specs && (col.specs.radio || col.specs.checkbox) && col.action ? true : false,
             ) || [];
 
         if (colVal.length > 0) {
@@ -499,7 +499,7 @@ export class DFListComponent implements OnDestroy, OnInit {
          */
         const colVal: any =
             this.tableSpecs.columns.filter((col: any) =>
-                col.specs && col.specs.checkbox && col.action ? true : false
+                col.specs && col.specs.checkbox && col.action ? true : false,
             ) || [];
 
         if (colVal.length > 0) {

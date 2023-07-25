@@ -3,11 +3,11 @@ form(
   [formGroup]='form',
   [class]='formSpecs.style.formClass',
   [ngSwitch]='true')
-    span.bx--loading--title(*ngIf='! loaded')
-        .bx--loading.bx--loading--small
-            svg.bx--loading__svg(viewBox="-75 -75 150 150")
+    span.cds--loading--title(*ngIf='! loaded')
+        .cds--loading.cds--loading--small
+            svg.cds--loading__svg(viewBox="-75 -75 150 150")
                 title Loading...
-                circle.bx--loading__stroke(cx="0", cy="0", r="37.5")
+                circle.cds--loading__stroke(cx="0", cy="0", r="37.5")
         span Loading...
 
     ng-template([ngIf]="loaded && formSpecs.style && formSpecs.style.type")
