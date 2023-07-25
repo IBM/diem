@@ -20,8 +20,8 @@ ng-container(*ngIf="formSpecs && formSpecs.sidebar && formSpecs.buttons && formS
         svg(appIcon="open-panel--filled--right", size='20')
 
 div([ngClass]="formSpecs.style.panelClass")
-    nav.bx--side-nav__navigation(role="navigation")
-        ul.bx--side-nav__items
+    nav.cds--side-nav__navigation(role="navigation")
+        ul.cds--side-nav__items
             ng-template(
                 ngFor='',
                 let-questionGroup='',
