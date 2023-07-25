@@ -50,7 +50,7 @@ export class AppErrorHandler implements ErrorHandler {
                 },
                 (error: Error) => {
                     console.warn('$exception (handle error)=> Slack error', error);
-                }
+                },
             );
     }
 }

@@ -1,4 +1,5 @@
 <!-- markdownlint-disable MD033 -->
+
 # Organizations
 
 > This section descrtibes the organizations in Diem
@@ -9,8 +10,8 @@
 
 ## Adding a new Organization
 
-<ibm-notification id="notification-0" class="bx--inline-notification bx--inline-notification--warning" role="alert">
-<div class="bx--inline-notification__text-wrapper">
+<ibm-notification id="notification-0" class="cds--inline-notification cds--inline-notification--warning" role="alert">
+<div class="cds--inline-notification__text-wrapper">
 <i class="fas fa-exclamation-circle c-red mgl-10 mgr-5 fa-2x"></i>
 <span>This option is only available for the site admin</span>
 </div></ibm-notification>
