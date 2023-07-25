@@ -1,25 +1,25 @@
 JPype1==1.4.1
-PyGithub==1.58.2
-PyJwt==2.7.0
-SciPy==1.10.1
-boxsdk[jwt]==3.7.2
+PyGithub==1.59.0
+PyJwt==2.8.0
+SciPy==1.11.1
+boxsdk[jwt]==3.7.3
 chardet==5.1.0
 diemlib==1.1.4
 graphviz==0.20.1
 ibm-cos-sdk==2.13.1
 ibm_db==3.1.4
-ibmcloudant==0.4.2
+ibmcloudant==0.4.4
 jaydebeapi==1.2.3
 jinja2==3.1.2
 jsonPath-ng==1.5.3
-matplotlib==3.7.1
-numpy==1.24.3 --only-binary=numpy
+matplotlib==3.7.2
+numpy==1.25.1 --only-binary=numpy
 openpyxl==3.1.2
-pandas==2.0.2
-pyarrow==12.0.0
-pymongo==4.3.3
+pandas==2.0.3
+pyarrow==12.0.1
+pymongo==4.4.1
 pynpm==0.1.2
-redis==4.5.5
+redis==4.6.0
 requests==2.31.0
 sendgrid==6.10.0
 slack_sdk==3.21.3
@@ -28,5 +28,5 @@ sqlparse==0.4.4
 statsmodels==0.14.0
 tabulate==0.9.0
 ibm-db-sa== 0.4.0
-jira== 3.5.0
-langchain== 0.0.187
+jira== 3.5.2
+langchain== 0.0.240
