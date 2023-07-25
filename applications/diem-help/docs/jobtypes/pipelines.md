@@ -1,4 +1,5 @@
 <!-- markdownlint-disable MD033 -->
+
 # Pipelines
 
 > This describes how to create a pipeline and add jobs to them.
@@ -26,7 +27,7 @@ In this example we will move the job sleep 7(30) after the job sleep # (6)
 ![pipeline5](../../../diem-help/docs/images/jobtypes/pipeline5.png)
 
 - All Jobs from the current pipeline will show up
-- Select the job that will be the *parent*.
+- Select the job that will be the _parent_.
 - You can select multiple jobs if needed
 - Select if this job should be executed if all Parents are completed or may continue
 - Press save
@@ -54,7 +55,7 @@ Click on the delete icon from the pipeline jobs. The chart will reorder itself
 | One Pipeline job is stopped | Pipeline continues to run until all jobs are finished and will be marked as either failed if there's a failed job or stopped | All non stoppede jobs will continue to run      |
 | One Pipeline job is started | Running                                                                                                                      | The pipeline will continue from the started Job |
 
-{.bx--data-table}
+{.cds--data-table}
 
 ## Pipeline Parameters
 

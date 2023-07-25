@@ -51,7 +51,6 @@ module.exports = {
         '@typescript-eslint/no-floating-promises': 'error',
         '@typescript-eslint/no-misused-new': 'error',
         '@typescript-eslint/no-namespace': 'error',
-        '@typescript-eslint/no-parameter-properties': 'error',
         '@typescript-eslint/no-this-alias': 'error',
         '@typescript-eslint/no-unused-expressions': 'error',
         //'@typescript-eslint/no-use-before-define': 'off',

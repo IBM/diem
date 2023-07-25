@@ -34,7 +34,7 @@ FROM
 ```
 
 - If this number is 0 , means the table not distributed
-- if it is 32767  then it has the maximum distribution
+- if it is 32767 then it has the maximum distribution
 
 In an ideal situation we should have 26.320.825 / 32767 = 803 equally devided partitions
 
@@ -82,7 +82,7 @@ part count
 | 75%   |   22878 |    1245 |
 | max   |   32762 |  156230 |
 
-{.bx--data-table}
+{.cds--data-table}
 
 This might be a problem:
 
@@ -157,7 +157,7 @@ data already look better distributed
 | 75%   | 24575.2 |     825 |    5.25 |      11 |
 | max   |   32767 |    6720 |       7 |      14 |
 
-{.bx--data-table}
+{.cds--data-table}
 
 his is a better partitiong
 
@@ -165,7 +165,7 @@ his is a better partitiong
 - The mean is on top of the best distribution
 - There is a hight standard variation is very high wich is good
 
- "RID" < 2183 or "RID" is null, "RID" >= 2183 AND "RID" < 4366, "RID" >= 4366 AND "RID" < 6549, "RID" >= 6549 AND "RID" < 8732, "RID" >= 8732 AND "RID" < 10915, "RID" >= 10915 AND "RID" < 13098, "RID" >= 13098 AND "RID" < 15281, "RID" >= 15281 AND "RID" < 17464, "RID" >= 17464 AND "RID" < 19647, "RID" >= 19647 AND "RID" < 21830, "RID" >= 21830 AND "RID" < 24013, "RID" >= 24013 AND "RID" < 26196, "RID" >= 26196 AND "RID" < 28379, "RID" >= 28379 AND "RID" < 30562, "RID" >= 30562
+"RID" < 2183 or "RID" is null, "RID" >= 2183 AND "RID" < 4366, "RID" >= 4366 AND "RID" < 6549, "RID" >= 6549 AND "RID" < 8732, "RID" >= 8732 AND "RID" < 10915, "RID" >= 10915 AND "RID" < 13098, "RID" >= 13098 AND "RID" < 15281, "RID" >= 15281 AND "RID" < 17464, "RID" >= 17464 AND "RID" < 19647, "RID" >= 19647 AND "RID" < 21830, "RID" >= 21830 AND "RID" < 24013, "RID" >= 24013 AND "RID" < 26196, "RID" >= 26196 AND "RID" < 28379, "RID" >= 28379 AND "RID" < 30562, "RID" >= 30562
 2
 
 20/12/10 18:15:09 INFO JDBCRelation: Number of partitions: 8, WHERE clauses of these partitions: "RID" < 4094 or "RID" is null, "RID" >= 4094 AND "RID" < 8188, "RID" >= 8188 AND "RID" < 12282, "RID" >= 12282 AND "RID" < 16376, "RID" >= 16376 AND "RID" < 20470, "RID" >= 20470 AND "RID" < 24564, "RID" >= 24564 AND "RID" < 28658, "RID" >= 28658

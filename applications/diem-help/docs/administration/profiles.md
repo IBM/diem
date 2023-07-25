@@ -1,4 +1,5 @@
 <!-- markdownlint-disable MD033 -->
+
 # Profiles
 
 > This section desctibes your profile within Diem
@@ -41,7 +42,7 @@
 | Org Manager | orgmanager | 1   |
 | No Access   | noaccess   | 0   |
 
-{.bx--data-table}
+{.cds--data-table}
 
 ### Access Details
 
@@ -61,7 +62,7 @@ Editor (60)
 - View and Edit Connections, Webhooks, or API Keys
   - Note: Personal passwords entered by a user show as redacted for all other users.
 
-DB Manager  (40)
+DB Manager (40)
 
 - View All Code (job code, snippets, templates, tags) but not be able to edit
 - View and Edit Parameters (jobs, configmaps)
@@ -131,7 +132,7 @@ E = Edit or Perform Actions
 | general          | E            | E           | E              | E             | R              | R          | R              |
 | code             | E            | E           | R              | R             | N              | N          | N              |
 | parameters       | E            | E           | E              | E             | E              | R          | N              |
-| actions          | E            | E           | E              | E             | E*             | N          | N              |
+| actions          | E            | E           | E              | E             | E\*            | N          | N              |
 | **Integrations** |              |             |                |               |                |            |                |
 | connections      | E            | E           | E              | N             | N              | N          | N              |
 | webhooks         | E            | E           | E              | N             | N              | N          | N              |
@@ -149,6 +150,6 @@ E = Edit or Perform Actions
 | Profiles         | E            | R           | R              | R             | R              | N          | E              |
 | Profile          | R            | R           | R              | R             | R              | R          | R              |
 
-{.bx--data-table}
+{.cds--data-table}
 
-E* limited to job start stop and edit document
+E\* limited to job start stop and edit document

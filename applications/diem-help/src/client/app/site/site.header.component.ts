@@ -79,7 +79,7 @@ export class SiteHeaderComponent {
                 },
                 (error: Error) => {
                     console.warn('$site.masthead.component (updateSite): error', error);
-                }
+                },
             );
     }
 

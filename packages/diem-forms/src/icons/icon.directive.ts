@@ -16,8 +16,10 @@ export class AppIconDirective implements AfterViewInit {
     @Input() public ariaHidden = '';
     @Input() public isFocusable = false;
 
-    // eslint-disable-next-line @typescript-eslint/no-parameter-properties
-    public constructor(protected elementRef: ElementRef, protected iconService: AppIconService) {}
+    public constructor(
+        protected elementRef: ElementRef,
+        protected iconService: AppIconService,
+    ) {}
 
     public ngAfterViewInit() {
         const root = this.elementRef.nativeElement as HTMLElement;

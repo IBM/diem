@@ -52,7 +52,6 @@ module.exports = {
         '@typescript-eslint/no-inferrable-types': 'off',
         '@typescript-eslint/no-misused-new': 'error',
         '@typescript-eslint/no-namespace': 'error',
-        '@typescript-eslint/no-parameter-properties': 'error',
         '@typescript-eslint/no-this-alias': 'error',
         '@typescript-eslint/no-unused-expressions': 'error',
         '@typescript-eslint/no-use-before-define': 'off',
@@ -109,7 +108,6 @@ module.exports = {
         'import/order': 'error',
         'jsdoc/check-alignment': 'error',
         'jsdoc/check-indentation': 'error',
-        'jsdoc/newline-after-description': 'error',
         'max-classes-per-file': ['error', 1],
         'max-len': [
             'error',
