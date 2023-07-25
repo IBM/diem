@@ -41,7 +41,7 @@ export class TitleService {
                     } else {
                         return `${appConfig.sitename} - ${this.router.url.substr(1)}`;
                     }
-                })
+                }),
             )
             .subscribe((pathString) => this.dts.setTitle(`${pathString}`));
     };

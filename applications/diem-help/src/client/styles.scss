@@ -1,33 +1,37 @@
 /*
 
-#f4f4f4 : $ui-01
-#fff: $ui-02
+#f4f4f4 : colors.$gray-10
+#fff: colors.$white
 #e0e0e0 $ui-03
-#393939 $interactive-02
-#24a148 $support-02
-#da1e28 $danger
-#161616 $ui-05
-#c6c6c6 $active-ui
+#393939 #393939
+#24a148 colors.$green-50
+#da1e28 colors.$gray-100
+#161616 colors.$gray-100
+#c6c6c6 colors.$gray-30
 #8d8d8d #8d8d8d
 */
 
-@use '~@carbon/grid' with (
-    $prefix: 'bx'
-);
-
-@import '~carbon-components/scss/globals/scss/styles.scss';
+@use '~@carbon/styles';
+@use '~@carbon/grid';
+@use '~@carbon/type';
+@use '~@carbon/layout';
+@use '~@carbon/colors';
 
 $fa-font-path: '~@fortawesome/fontawesome-free/webfonts/';
 @import '~@fortawesome/fontawesome-free/scss/fontawesome.scss';
 @import '~@fortawesome/fontawesome-free/scss/solid.scss';
 
 @include grid.flex-grid();
-@include carbon--type-reset();
+@include type.reset();
 
 :root {
-    --main-black: $ui-05;
+    --main-black: colors.$gray-100;
     --panel-overlay: #262626;
-    --panel-overlay-close: $interactive-02;
+    --panel-overlay-close: colors.$gray-80;
+    --cds-background: #262626;
+    --cds-text-secondary: #525252; //#c6c6c6;
+    --cds-background-hover: #f4f4f4;
+    --cds-field: #fff;
 }
 
 a:-webkit-any-link {
@@ -35,19 +39,19 @@ a:-webkit-any-link {
 }
 
 .productive-heading-04 {
-    @include carbon--type-style('productive-heading-04');
+    @include type.type-style('productive-heading-04');
 }
 
 .productive-heading-03 {
-    @include carbon--type-style('productive-heading-03');
+    @include type.type-style('productive-heading-03');
 }
 
 .productive-heading-01 {
-    @include carbon--type-style('productive-heading-01');
+    @include type.type-style('productive-heading-01');
 }
 
 .ibm-padding-top-1 {
-    padding-top: $spacing-06;
+    padding-top: layout.$spacing-06;
 }
 
 html,
@@ -57,16 +61,16 @@ main {
 }
 
 body {
-    background-color: $ui-01;
+    background-color: colors.$gray-10;
 }
 
 /* remove this blue border from focus except button */
-*:focus:not(.bx--btn--primary),
-*:active:not(.bx--btn--primary) {
+*:focus:not(.cds--btn--primary),
+*:active:not(.cds--btn--primary) {
     outline: 0;
 }
 
-.bx--header > a.bx--header__name:first-child {
+.cds--header > a.cds--header__name:first-child {
     display: none;
 }
 
@@ -82,12 +86,12 @@ body {
     height: 100%;
 }
 
-.bx--side-nav__icon:not(.bx--side-nav__submenu-chevron) {
+.cds--side-nav__icon:not(.cds--side-nav__submenu-chevron) {
     margin-right: 0;
 }
 
-.bx--content {
-    background-color: $ui-01;
+.cds--content {
+    background-color: colors.$gray-10;
     margin-top: 3.125rem;
     transform: none;
     width: 100%;
@@ -97,28 +101,28 @@ body {
 /* diem help css */
 
 .diem--content {
-    .bx--side-nav__item.bx--side-nav__item--icon a.bx--side-nav__link {
+    .cds--side-nav__item.cds--side-nav__item--icon a.cds--side-nav__link {
         padding-left: 2rem;
     }
-    .bx--side-nav {
+    .cds--side-nav {
         color: #c6c6c6;
         background-color: #161616;
         height: 100%;
     }
 
-    a.bx--side-nav__link {
+    a.cds--side-nav__link {
         padding-left: 0px;
     }
 
-    a.bx--side-nav__link > .bx--side-nav__link-text,
-    .bx--side-nav__submenu-title:not(:hover) {
+    a.cds--side-nav__link > .cds--side-nav__link-text,
+    .cds--side-nav__submenu-title:not(:hover) {
         color: #c6c6c6;
     }
-    .bx--side-nav__icon > svg {
+    .cds--side-nav__icon > svg {
         fill: #c6c6c6;
     }
 
-    .bx--side-nav__submenu {
+    .cds--side-nav__submenu {
         padding-left: 0px;
     }
 
@@ -129,39 +133,42 @@ body {
         border-bottom: none;
     }
 
-    a.bx--side-nav__link.LeftNav-module--outboundLink--13-_V {
+    a.cds--side-nav__link.LeftNav-module--outboundLink--13-_V {
         flex-direction: row-reverse;
         justify-content: space-between;
         padding-left: 1rem;
     }
 
-    .bx--side-nav__item:not(.bx--side-nav__item--active) > .bx--side-nav__link:hover > span,
-    .bx--side-nav__item:not(.bx--side-nav__item--active) .bx--side-nav__menu-item > .bx--side-nav__link:hover > span {
+    .cds--side-nav__item:not(.cds--side-nav__item--active) > .cds--side-nav__link:hover > span,
+    .cds--side-nav__item:not(.cds--side-nav__item--active)
+        .cds--side-nav__menu-item
+        > .cds--side-nav__link:hover
+        > span {
         color: #f4f4f4 !important;
     }
 
-    a.bx--side-nav__link.LeftNav-module--outboundLink--13-_V,
-    .bx--side-nav__link,
-    .bx--side-nav__submenu {
+    a.cds--side-nav__link.LeftNav-module--outboundLink--13-_V,
+    .cds--side-nav__link,
+    .cds--side-nav__submenu {
         &:hover {
             background-color: #393939 !important;
             color: #f4f4f4 !important;
         }
     }
 
-    a.bx--side-nav__link[aria-current='page'] {
+    a.cds--side-nav__link[aria-current='page'] {
         background-color: #393939 !important;
     }
 
-    a.bx--side-nav__link[aria-current='page'] > span {
+    a.cds--side-nav__link[aria-current='page'] > span {
         color: #c6c6c6;
     }
 
-    .bx--side-nav__item--active .bx--side-nav__submenu[aria-expanded='false'] {
+    .cds--side-nav__item--active .cds--side-nav__submenu[aria-expanded='false'] {
         background-color: #393939 !important;
     }
 
-    .bx--side-nav__item--active .bx--side-nav__submenu-title {
+    .cds--side-nav__item--active .cds--side-nav__submenu-title {
         color: #f4f4f4 !important;
     }
 
@@ -180,7 +187,7 @@ body {
     }
 }
 
-.bx--data-table th {
+.cds--data-table th {
     padding-left: 1rem;
 }
 
@@ -240,7 +247,13 @@ section {
         code {
             position: relative;
             color: #fff;
-            font-family: IBM Plex Mono, Menlo, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier, monospace;
+            font-family:
+                IBM Plex Mono,
+                Menlo,
+                DejaVu Sans Mono,
+                Bitstream Vera Sans Mono,
+                Courier,
+                monospace;
             font-size: 0.875rem;
             font-weight: 400;
             line-height: 1.43;
@@ -266,11 +279,11 @@ section {
         margin-bottom: 1rem;
     }
 
-    table.bx--data-table tbody tr td {
+    table.cds--data-table tbody tr td {
         background: #fff;
     }
 
-    table.bx--data-table2 tbody tr td {
+    table.cds--data-table2 tbody tr td {
         font-size: 16px;
         background: transparent;
         padding: 5px;
@@ -291,10 +304,10 @@ section {
 
 /* addition to the loading icon when a page loads */
 
-.bx--loading--title {
+.cds--loading--title {
     display: flex;
     padding: 2rem;
-    .bx--loading--small {
+    .cds--loading--small {
         display: inline-block;
         margin-left: 0.625rem;
     }
@@ -305,7 +318,7 @@ section {
 }
 
 /* overlay is the first child of the ibm-panel */
-.bx--panel--overlay {
+.cds--panel--overlay {
     //top: 2.5rem; /* this sets the right panel top correct */
     bottom: auto;
     height: auto;
@@ -313,7 +326,7 @@ section {
     background-color: #262626;
 }
 
-.ex--panel-form .bx--panel--overlay {
+.ex--panel-form .cds--panel--overlay {
     display: none;
 }
 
@@ -321,17 +334,17 @@ section {
     text-align: right;
     cursor: pointer;
     margin-top: 2rem;
-    background-color: $interactive-02;
+    background-color: #393939;
     padding: 0.8125rem;
     display: flex;
     align-items: center;
     flex-direction: row;
     svg {
-        fill: $ui-02;
+        fill: colors.$white;
         margin-right: 1rem;
     }
     span {
-        color: $ui-02;
+        color: colors.$white;
         margin-right: 0.8125rem;
         font-weight: 600;
     }
@@ -341,7 +354,7 @@ section {
     cursor: pointer;
     font-size: 0.875rem;
     padding: 0.625rem;
-    color: $active-ui;
+    color: colors.$gray-30;
     font-weight: 600;
     i {
         margin-right: 0.625rem;
@@ -349,24 +362,6 @@ section {
 }
 
 /* the magic button */
-
-.ex--run-icon {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
-    border-color: transparent;
-    background: $inverse-support-02;
-    transition: all 0.11s;
-    z-index: 10;
-    padding-top: 0.325rem;
-    cursor: not-allowed;
-    position: fixed;
-    right: 2rem;
-    top: 4rem;
-    fill: $ui-02;
-    filter: blur(10rem);
-    pointer-events: none;
-}
 
 .socketconn {
     .ex--run-icon {
@@ -392,23 +387,8 @@ df-panel,
     align-items: stretch;
 }
 
-.ex--panel-nav {
-    flex-shrink: 0;
-    width: 12rem;
-    // transition: width 0.1s ease;
-    &.ex--hasheader {
-        .bx--side-nav__navigation {
-            top: 9.375rem;
-        }
-    }
-    .bx--side-nav__navigation {
-        top: 3rem;
-        position: fixed;
-        left: 0;
-        background-color: #262626;
-        transition: width 0.1s ease;
-        width: 12rem;
-    }
+.cds--side-nav__navigation {
+    top: 3rem;
 }
 
 .ex--panel-min .ex--panel-nav {
@@ -417,7 +397,7 @@ df-panel,
     .ex--panel-icon-slide-right {
         display: block;
     }
-    .bx--side-nav__navigation {
+    .cds--side-nav__navigation {
         width: 3rem;
         transition: width 0.8s ease;
     }
@@ -432,7 +412,7 @@ df-panel,
     margin-top: 1rem;
     margin-left: 0.6rem;
     svg {
-        fill: $ui-02;
+        fill: colors.$white;
         margin-right: 1rem;
     }
 }
@@ -450,17 +430,17 @@ df-panel,
     padding: 0.625rem;
     padding-left: 1.5rem;
     margin-bottom: 0.3125rem;
-    color: $active-ui;
+    color: colors.$gray-30;
     position: relative;
     font-weight: 600;
     &:hover {
-        background-color: $interactive-02;
+        background-color: #393939;
     }
     i {
         margin-right: 1rem;
     }
     &.ex--menu-panel-button-active {
-        background-color: $interactive-02;
+        background-color: #393939;
         &::before {
             background-color: #0f62fe;
             bottom: 0;
@@ -495,7 +475,7 @@ df-panel,
     bottom: 1rem;
     top: unset;
     right: 1rem;
-    background: $interactive-02;
+    background: #393939;
     position: fixed;
     width: 2rem;
     height: 2rem;
@@ -503,34 +483,34 @@ df-panel,
     border-color: transparent;
     transition: all 0.11s;
     z-index: 10;
-    fill: $ui-02;
+    fill: colors.$white;
     cursor: pointer;
     i {
-        color: $ui-02;
+        color: colors.$white;
     }
 }
 
 /* to make the error modal window  */
-.bx--modal-container[aria-label='error'] {
-    background-color: $ui-05;
+.cds--modal-container[aria-label='error'] {
+    background-color: colors.$gray-100;
     min-height: 20rem;
     i {
-        color: $danger;
+        color: colors.$gray-100;
     }
     p {
-        color: $active-ui;
+        color: colors.$gray-30;
         display: flex;
         align-items: center;
         padding: 2rem;
         font-size: 1.5rem;
     }
-    .bx--modal-close svg {
-        fill: $ui-02;
+    .cds--modal-close svg {
+        fill: colors.$white;
     }
 }
 
 /* modal fixes to support dynamic forms */
-.bx--modal-content df-buttons {
+.cds--modal-content df-buttons {
     position: fixed;
     left: 0;
     margin: 0;
@@ -540,19 +520,19 @@ df-panel,
 }
 
 /* to make the modal window fullscreen add to the size="lg" a arialable=fulscreen */
-.bx--modal-container--lg[aria-label='fullscreen'] {
+.cds--modal-container--lg[aria-label='fullscreen'] {
     width: 100%;
     height: 100%;
     max-height: 100%;
     position: fixed;
     top: 0;
     bottom: 0;
-    .bx--modal-content {
+    .cds--modal-content {
         padding: 0;
     }
 }
 
-.bx--modal-container--lg[aria-label='maximum'] {
+.cds--modal-container--lg[aria-label='maximum'] {
     width: 85%;
     transform: scaleY(1);
 }
@@ -564,10 +544,10 @@ df-panel,
     position: fixed;
     z-index: 100;
     max-width: 25rem;
-    .bx--toast-notification__title {
+    .cds--toast-notification__title {
         margin-top: 0;
     }
-    .bx--inline-notification__text-wrapper {
+    .cds--inline-notification__text-wrapper {
         display: block;
     }
     &.toast-br {
@@ -590,14 +570,14 @@ df-panel,
 
 /* switcher top right */
 
-.bx--switcher__item-divider {
+.cds--switcher__item-divider {
     color: #525252;
     padding-bottom: 4px;
     border-bottom: 1px solid #525252;
     margin: 1rem 1rem 0.5rem;
     cursor: none;
     span {
-        color: $active-ui;
+        color: colors.$gray-30;
         font-size: 0.75rem;
     }
 }
@@ -662,7 +642,7 @@ df-panel,
 
 .fs-14 {
     font-size: 0.875rem;
-    .bx--tag {
+    .cds--tag {
         font-size: 0.875rem;
     }
 }
@@ -690,8 +670,8 @@ df-panel,
 }
 
 .bgw {
-    background: $ui-02;
-    background-color: $ui-02;
+    background: colors.$white;
+    background-color: colors.$white;
 }
 
 /* disable the run start stop icons */
@@ -711,10 +691,10 @@ i.pointer {
 /* toggle box */
 
 ibm-toggle {
-    .bx--toggle__switch::before {
+    .cds--toggle__switch::before {
         background-color: #4589ff;
     }
-    .bx--toggle-input__label .bx--toggle__switch {
+    .cds--toggle-input__label .cds--toggle__switch {
         margin-top: 0.4rem;
     }
 }
@@ -748,32 +728,32 @@ ibm-toggle {
 }
 
 .c-white {
-    color: $ui-02;
+    color: colors.$white;
 }
 
 .c-red {
-    color: $danger;
+    color: colors.$gray-100;
 }
 
 .c-green {
-    color: $support-02;
+    color: colors.$green-50;
 }
 
 .c-gray {
-    color: $interactive-02;
+    color: #393939;
 }
 
 .c-yellow {
-    color: $support-03;
+    color: colors.$yellow-30;
 }
 
 /*  this is for the background for the radio buttons in the modal */
-.bx--modal {
+.cds--modal {
     .ex--radiogroup {
-        background-color: $ui-02;
+        background-color: colors.$white;
     }
     input:read-only {
-        background-color: $ui-01;
+        background-color: colors.$gray-10;
     }
 }
 
@@ -782,7 +762,7 @@ ibm-toggle {
     width: 3rem;
     height: 3rem;
     border-radius: 50%;
-    background: $active-ui;
+    background: colors.$gray-30;
     border-color: transparent;
     position: fixed;
     bottom: 1rem;
@@ -791,7 +771,7 @@ ibm-toggle {
     cursor: pointer;
     z-index: 9000;
     padding-top: 0.325rem;
-    color: $ui-05;
+    color: colors.$gray-100;
     display: none;
     &.active {
         display: block;
@@ -808,7 +788,7 @@ ibm-toggle {
         margin-left: 1rem;
     }
 
-    & .bx--inline-notification__text-wrapper span {
+    & .cds--inline-notification__text-wrapper span {
         font-size: 1rem;
         margin-top: 0.3rem;
     }

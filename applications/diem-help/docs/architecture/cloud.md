@@ -22,7 +22,7 @@
 | PySpark        | 3.1.2_rhel               | Spark 3.1.2 - Node 14.16.0 - Python 3.9.2 on rhel 8.4 |
 | Nats           | 0.8.0                    | Nats 2.2.6 on Alpine 3.13.5                           |
 
-{.bx--data-table .bx--data-table2}
+{.cds--data-table .cds--data-table2}
 
 ### Images Location
 
@@ -42,7 +42,7 @@
 | quay.io/diem/spark-operator | the operator image to be used with operator helm chart | latest  |
 | quay.io/diem/mongoloader    | Image for loading mongo configs                        | latest  |
 
-{.bx--data-table .bx--data-table2}
+{.cds--data-table .cds--data-table2}
 
 ### Python Diemlib
 
@@ -56,10 +56,10 @@ pip install diemlib
 
 ### Run Times
 
- | Language   | Description             | Version |
- | ---------- | ----------------------- | ------- |
- | spark      | Run by spark containers | 3.1.2   |
- | python     | Run by nodepy executor  | 3.9.2   |
- | javascript | Run by nodepy executor  | 16.3    |
+| Language   | Description             | Version |
+| ---------- | ----------------------- | ------- |
+| spark      | Run by spark containers | 3.1.2   |
+| python     | Run by nodepy executor  | 3.9.2   |
+| javascript | Run by nodepy executor  | 16.3    |
 
- {.bx--data-table .bx--data-table2}
+{.cds--data-table .cds--data-table2}

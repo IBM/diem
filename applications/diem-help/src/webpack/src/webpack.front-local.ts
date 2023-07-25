@@ -75,6 +75,9 @@ module.exports = {
                         plugins: ['@angular/compiler-cli/linker/babel'],
                     },
                 },
+                resolve: {
+                    fullySpecified: false,
+                },
             },
             {
                 test: /\.css/,

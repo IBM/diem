@@ -31,7 +31,7 @@ You can test it out
 | Description | No       | A description for this description                          |
 | Certificate | No       | the certificate in clear text                               |
 
-{.bx--data-table}
+{.cds--data-table}
 
 ### More on JDBC
 
@@ -48,7 +48,7 @@ jdbc:db2://db2w-qctrqnl.us-east.db2w.cloud.ibm.com:50001/BLUDB:sslConnection=tru
 | database | the name of the database                                   |
 | options  | options that can be added<br?>sslConnection=true for ssl   |
 
-{.bx--data-table}
+{.cds--data-table}
 
 ! Make sure you use the right seperators for your db2 string eg ";" for db2
 

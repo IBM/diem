@@ -1,4 +1,5 @@
 <!-- markdownlint-disable MD033 -->
+
 # Parameters for File Option -files
 
 > This feature can be used in nodepy and spark custom job
@@ -17,13 +18,13 @@ files: true
 
 ```yml
 files:
-  cos: nameofcos
-  bucket: bucketname
-  loadfiles_type: 'string'
-  loadfiles:
-    file1: testfile1
-    file2: testfile2
-    file3: testfile3
+ cos: nameofcos
+ bucket: bucketname
+ loadfiles_type: 'string'
+ loadfiles:
+  file1: testfile1
+  file2: testfile2
+  file3: testfile3
 ```
 
 #### Custom Storage Options (cos)
@@ -32,10 +33,10 @@ For the moment we support IBM Cloud objecy storage (s3 compatible)
 
 ```yml
 files:
-  cos: configmapname
+ cos: configmapname
 ```
 
-Provide the name of the *configmap* that contains your custom Object storage location. See config map for more.
+Provide the name of the _configmap_ that contains your custom Object storage location. See config map for more.
 
 Your config map needs to have the exact params to allow successfull connection.
 Not providing the right values will have the connection to fail.
@@ -63,7 +64,7 @@ You can overwrite the default bucket and specify a custom one (if it exists)
 
 ```yml
 files:
-  bucket: diferentbucketname
+ bucket: diferentbucketname
 ```
 
 ## Custom Methods that can be used with the code
@@ -78,17 +79,17 @@ cos.readString(file)
 cos.saveFile(file_name, file_body, **kwargs)
 ```
 
-### cos.getFile(file, **kwargs)
+### cos.getFile(file, \*\*kwargs)
 
 Reads a file from Cloud Object Storage and returns a pandas dataframe
 
-| Function                    | Method    |
-| --------------------------- | --------- |
-| __getFile(file, **kwargs)__ |           |
-| file                        | file name |
-| **kwargs                    | optional  |
+| Function                      | Method    |
+| ----------------------------- | --------- |
+| **getFile(file, \*\*kwargs)** |           |
+| file                          | file name |
+| \*\*kwargs                    | optional  |
 
-{.bx--data-table}
+{.cds--data-table}
 
 ```py
 df = cos.getFile('testfile')
@@ -101,10 +102,10 @@ Reads a file from Cloud Object Storage and return as bytes Object
 
 | Function          | Method    |
 | ----------------- | --------- |
-| __loadile(file)__ |           |
+| **loadile(file)** |           |
 | file              | file name |
 
-{.bx--data-table}
+{.cds--data-table}
 
 ```py
 # saves a cos file to local disk
@@ -121,11 +122,11 @@ Reads a file from Cloud Object Storage and return as bytes Object
 
 | Function                      | Method                    |
 | ----------------------------- | ------------------------- |
-| __download(file, otherfile)__ |                           |
+| **download(file, otherfile)** |                           |
 | file                          | file name                 |
 | otherfile                     | Option, file name to save |
 
-{.bx--data-table}
+{.cds--data-table}
 
 ```py
 # saves a cos file to local disk
@@ -140,10 +141,10 @@ Reads a file from Cloud Object Storage and return the content as a string
 
 | Function             | Method    |
 | -------------------- | --------- |
-| __readString(file)__ |           |
+| **readString(file)** |           |
 | file                 | file name |
 
-{.bx--data-table}
+{.cds--data-table}
 
 ```py
 # saves a cos file to local disk
@@ -153,17 +154,17 @@ print(_string)
 # this should print a string
 ```
 
-### cos.saveFile(file_name, file_body, **kwargs)
+### cos.saveFile(file_name, file_body, \*\*kwargs)
 
 Reads a file from Cloud Object Storage
 
-| Function                                     | Method                               |
-| -------------------------------------------- | ------------------------------------ |
-| __saveFile(file_name, file_body, **kwargs)__ |                                      |
-| file_body                                    | Content<br/>None in case of filename |
-| **kwargs                                     | optional<br/>file: filename          |
+| Function                                       | Method                               |
+| ---------------------------------------------- | ------------------------------------ |
+| **saveFile(file_name, file_body, \*\*kwargs)** |                                      |
+| file_body                                      | Content<br/>None in case of filename |
+| \*\*kwargs                                     | optional<br/>file: filename          |
 
-{.bx--data-table}
+{.cds--data-table}
 
 ```info
 **kwargs: file if absent the name and location of the file is the file_name
@@ -175,27 +176,27 @@ You can preload files (only done when code executes) by specifying which files y
 
 ```yml
 files:
-  loadfiles_type: 'string'
-  loadfiles:
-    file1: testfile1
-    file2: testfile2
-    file3: testfile3
+ loadfiles_type: 'string'
+ loadfiles:
+  file1: testfile1
+  file2: testfile2
+  file3: testfile3
 ```
 
- | Function       | Method                                                                               |
- | -------------- | ------------------------------------------------------------------------------------ |
- | loadfiles      | Array of files that map to a key                                                     |
- | loadfiles_type | optional<br/>type of return from load event .. data is loaded as string or as pandas |
+| Function       | Method                                                                               |
+| -------------- | ------------------------------------------------------------------------------------ |
+| loadfiles      | Array of files that map to a key                                                     |
+| loadfiles_type | optional<br/>type of return from load event .. data is loaded as string or as pandas |
 
-{.bx--data-table}
+{.cds--data-table}
 
 #### Example
 
 ```yml
 files:
-  loadfiles_type: 'string'
-  loadfiles:
-    myfile1: revenue.txt
+ loadfiles_type: 'string'
+ loadfiles:
+  myfile1: revenue.txt
 ```
 
 this will put a varibale in your code that will download your file as string into that variable
@@ -232,11 +233,11 @@ Reads a file from Cloud Object Storage
 
 | Function                                  | Method             |
 | ----------------------------------------- | ------------------ |
-| __savePandas(file, filename, dataframe)__ |                    |
+| **savePandas(file, filename, dataframe)** |                    |
 | filename                                  | the file name      |
 | dataframe                                 | a pandas dataframe |
 
-{.bx--data-table}
+{.cds--data-table}
 
 Following methods ar supported
 
@@ -262,7 +263,7 @@ Following methods ar supported
 
 ```yml
 pip:
-  - openpyxl
+ - openpyxl
 ```
 
 ## Examples
@@ -328,9 +329,9 @@ out(html)
 
 ```yml
 connections:
-  - db2wh_etl
+ - db2wh_etl
 slack:
-  disabled: true
+ disabled: true
 files: true
 ```
 

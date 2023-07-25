@@ -52,4 +52,4 @@ Diem also allows quick and easy definition of connections, as well as a schedule
 | **Organizations**    | Organizations you belong to                 | See all organisations you belong to                                                                                                                                                                                             |
 | **Space Selector**   | Easy move between spaces                    | You can at any time easily swtich between organisations your belong to                                                                                                                                                          |
 
-{.bx--data-table .bx--data-table2}
+{.cds--data-table .cds--data-table2}
