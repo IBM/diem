@@ -61,7 +61,7 @@ export class MermaidComponent implements AfterViewInit, ControlValueAccessor {
         }
     };
 
-    public mermaidrefresh: () => void = (): void => {
+    public mermaidrefresh: () => void = async (): Promise<void> => {
         if (this.mermaidDiv) {
             const element: any = this.mermaidDiv.nativeElement;
 
@@ -75,9 +75,8 @@ export class MermaidComponent implements AfterViewInit, ControlValueAccessor {
                     }
                 }
 
-                mermaidAPI.render(`m_${this.elementId}`, this.value, (svgCode) => {
-                    element.innerHTML = svgCode;
-                });
+                const { svg } = await mermaidAPI.render(`m_${this.elementId}`, this.value);
+                element.innerHTML = svg;
             }
 
             this.check('mermaid - afterviewinit');
