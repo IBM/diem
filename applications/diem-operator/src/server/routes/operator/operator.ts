@@ -119,21 +119,34 @@ export const errorToJson = (err: unknown): string => {
 };
 
 export default class Operator {
-    public kc: KubeConfig;
-    public k8sApi: CoreV1Api;
-    public ns: string;
+    public kc!: KubeConfig;
+    public k8sApi!: CoreV1Api;
+    public ns!: string;
 
-    public resourcePathBuilders: Record<string, (meta: ResourceMeta) => string> = {};
+    public resourcePathBuilders: Record<string, (meta: ResourceMeta) => string | undefined> = {};
 
     /**
      * Constructs an this.
      */
     public constructor() {
-        this.kc = new KubeConfig();
-        this.kc.loadFromDefault();
-        this.k8sApi = this.kc.makeApiClient(CoreV1Api);
-        this.ns = process.env.NAMESPACE || 'default';
-        void this.baseparam();
+        try {
+            this.kc = new KubeConfig();
+            this.kc.loadFromDefault();
+            utils.logInfo('$operator (construtor) - kubeConfig loaded');
+
+            const contextName = this.kc.getCurrentContext();
+            const context = this.kc.getContextObject(contextName);
+            if (context) {
+                console.info(`$operator (construtor) - current context:`, context);
+            }
+
+            this.k8sApi = this.kc.makeApiClient(CoreV1Api);
+            utils.logInfo(`$operator (construtor) - k8sApi created`);
+            this.ns = process.env.NAMESPACE || 'default';
+            void this.baseparam();
+        } catch (err) {
+            utils.logErr('$operator (construtor) - error', err);
+        }
     }
 
     /**
@@ -144,7 +157,15 @@ export default class Operator {
      * @param kind The kind name of the custom resource
      * @param namespace Optional namespace to include in the uri
      */
-    public getCustomResourceApiUri(group: string, version: string, kind: string, namespace?: string): string {
+    public getCustomResourceApiUri(
+        group: string,
+        version: string,
+        kind: string,
+        namespace?: string,
+    ): string | undefined {
+        if (!this.k8sApi) {
+            return undefined;
+        }
         let path = group ? `/apis/${group}/${version}/` : `/api/${version}/`;
         if (namespace) {
             path += `namespaces/${namespace}/`;
@@ -157,58 +178,74 @@ export default class Operator {
     }
 
     public Informer = async (group: string, version: string, kind: string): Promise<void> => {
-        const apiVersion = group ? `${group}/${version}` : `${version}`;
-        const id = `${kind}.${apiVersion}`;
+        try {
+            const apiVersion = group ? `${group}/${version}` : `${version}`;
+            const id = `${kind}.${apiVersion}`;
 
-        this.resourcePathBuilders[id] = (meta: ResourceMeta): string =>
-            this.getCustomResourceApiUri(group, version, kind, meta.namespace);
+            this.resourcePathBuilders[id] = (meta: ResourceMeta): string | undefined =>
+                this.getCustomResourceApiUri(group, version, kind, meta.namespace);
 
-        let uri = group ? `/apis/${group}/${version}/` : `/api/${version}/`;
+            let uri = group ? `/apis/${group}/${version}/` : `/api/${version}/`;
 
-        uri = `${uri}namespaces/${this.ns}/${kind}`;
+            uri = `${uri}namespaces/${this.ns}/${kind}`;
 
-        utils.logInfo(`$operator (informer): uri: ${uri}`);
+            utils.logInfo(`$operator (informer): uri: ${uri}`);
 
-        const listFn = async () => this.k8sApi.listNamespacedPod(this.ns);
+            if (this.k8sApi === undefined || this.ns === undefined) {
+                utils.logInfo(`$operator (informer): no k8sApi`);
 
-        const informer = makeInformer(this.kc, uri, listFn);
+                return undefined;
+            }
 
-        informer.on('add', (obj: V1Pod) => {
-            const m = MetaMapper(kind, obj, version, 'add');
-            utils.logInfo(
-                `$operator (event): app: ${m.application} - pod: ${m.name} - state: ${m.state} - event: ${m.event} - status: ${m.status} - ready: ${m.ready}`
-            );
-        });
-        informer.on('update', (obj: V1Pod) => {
-            const m = MetaMapper(kind, obj, version, 'update');
-            utils.logInfo(
-                `$operator (event): app: ${m.application} - pod: ${m.name} - state: ${m.state} - event: ${m.event} - status: ${m.status} - ready: ${m.ready}`
-            );
-        });
-        informer.on('delete', (obj: V1Pod) => {
-            //console.dir(obj, { depth: null });
-            const m = MetaMapper(kind, obj, version, 'delete');
-            utils.logCyan(
-                `$operator (event): app: ${m.application} - pod: ${m.name} - state: ${m.state} - event: ${m.event} - status: ${m.status} - ready: ${m.ready}`
-            );
-        });
-        informer.on('error', async (err: V1Pod) => {
-            console.info(`$operator (Informer): restarting informer ${id} - reason: ${errorToJson(err)}`);
-            await setTimeout(5000);
+            const listFn = async () => this.k8sApi.listNamespacedPod(this.ns);
+
+            //console.info(this.kc, uri, listFn);
+
+            const informer = makeInformer(this.kc, uri, listFn);
+
+            informer.on('add', (obj: V1Pod) => {
+                const m = MetaMapper(kind, obj, version, 'add');
+                utils.logInfo(
+                    `$operator (event): app: ${m.application} - pod: ${m.name} - state: ${m.state} - event: ${m.event} - status: ${m.status} - ready: ${m.ready}`,
+                );
+            });
+            informer.on('update', (obj: V1Pod) => {
+                const m = MetaMapper(kind, obj, version, 'update');
+                utils.logInfo(
+                    `$operator (event): app: ${m.application} - pod: ${m.name} - state: ${m.state} - event: ${m.event} - status: ${m.status} - ready: ${m.ready}`,
+                );
+            });
+            informer.on('delete', (obj: V1Pod) => {
+                //console.dir(obj, { depth: null });
+                const m = MetaMapper(kind, obj, version, 'delete');
+                utils.logCyan(
+                    `$operator (event): app: ${m.application} - pod: ${m.name} - state: ${m.state} - event: ${m.event} - status: ${m.status} - ready: ${m.ready}`,
+                );
+            });
+            informer.on('error', async (err: V1Pod) => {
+                console.info(`$operator (Informer): restarting informer ${id} - reason: ${errorToJson(err)}`);
+                await setTimeout(5000);
+                await informer.start();
+            });
+
+            utils.logInfo(`$operator (Informer): starting informer ${id}...`);
+
             await informer.start();
-        });
-
-        console.info(`$operator (Informer): starting informer ${id}...`);
-
-        await informer.start();
+        } catch (err) {
+            utils.logErr('$operator (Informer) - Error', err);
+        }
     };
 
     private baseparam = async () => {
-        const nodelist: any = await this.k8sApi.listNode();
+        try {
+            const nodelist: any = await this.k8sApi.listNode();
 
-        const nodes: number = nodelist.body.items.length;
-        const capacity: number = nodelist.body.items[0].status.capacity;
-        console.info(`$operator: available nodes: ${nodes}`);
-        console.info('$operator: current capacity:', capacity);
+            const nodes: number = nodelist.body.items.length;
+            const capacity: number = nodelist.body.items[0].status.capacity;
+            console.info(`$operator: available nodes: ${nodes}`);
+            console.info('$operator: current capacity:', capacity);
+        } catch (err) {
+            utils.logErr(`$operator (baseparam) - k8sApi created`, err.body);
+        }
     };
 }

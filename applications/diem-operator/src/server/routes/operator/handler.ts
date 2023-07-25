@@ -4,10 +4,14 @@ import Operator from './operator';
 
 class Watcher {
     public start = async () => {
-        console.info('starting...');
-        const operator = new Operator();
+        try {
+            console.info('starting...');
+            const operator = new Operator();
 
-        await operator.Informer('', 'v1', 'pods');
+            void operator.Informer('', 'v1', 'pods');
+        } catch (err) {
+            console.error('$handler (Watcher', err);
+        }
     };
 }
 
