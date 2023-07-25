@@ -1,4 +1,5 @@
 <!-- markdownlint-disable MD033 -->
+
 # Markdown
 
 > When you want to contribuate to the documentation of DIEM, here are some code elements you can use
@@ -9,9 +10,9 @@
 
 How to embed an image and set it's size
 
-``` markdown
+```markdown
 ![url4](../../../diem-help/docs/images/jobtypes/url4.png =600x)
-=600x200  500 width 200 height
+=600x200 500 width 200 height
 =x300 only height
 =220x only width
 ```
@@ -21,8 +22,7 @@ How to embed an image and set it's size
 header used
 
 ```html
-%%{init: {'themeVariables': { 'fontSize': '12px'}}}%%
-graph LR;linkStyle default interpolate basis;
+%%{init: {'themeVariables': { 'fontSize': '12px'}}}%% graph LR;linkStyle default interpolate basis;
 ```
 
 ## Carbon html
@@ -31,34 +31,36 @@ You can include HTML
 
 Add the following to the header of your page in case you want to include html
 
-``` markdown
+```markdown
 <!-- markdownlint-disable MD033 -->
 ```
 
-``` html
-<ibm-notification id="notification-0" class="bx--inline-notification bx--inline-notification--error" role="alert">
-<div class="bx--inline-notification__text-wrapper">
-<i class="fas fa-exclamation-circle c-red mgl-10 mgr-5 fa-2x"></i>
-<span>Sample error message</span>
-</div></ibm-notification>
+```html
+<ibm-notification id="notification-0" class="cds--inline-notification cds--inline-notification--error" role="alert">
+ <div class="cds--inline-notification__text-wrapper">
+  <i class="fas fa-exclamation-circle c-red mgl-10 mgr-5 fa-2x"></i>
+  <span>Sample error message</span>
+ </div></ibm-notification
+>
 ```
 
-<ibm-notification id="notification-0" class="bx--inline-notification bx--inline-notification--error" role="alert">
-<div class="bx--inline-notification__text-wrapper">
+<ibm-notification id="notification-0" class="cds--inline-notification cds--inline-notification--error" role="alert">
+<div class="cds--inline-notification__text-wrapper">
 <i class="fas fa-exclamation-circle c-red mgl-10 mgr-5 fa-2x"></i>
 <span>Sample error message</span>
 </div></ibm-notification>
 
-``` html
-<ibm-notification id="notification-0" class="bx--inline-notification bx--inline-notification--error" role="alert">
-<div class="bx--inline-notification__text-wrapper">
-<i class="fas fa-exclamation-circle c-red mgl-10 mgr-5 fa-2x"></i>
-<span>Sample error message</span>
-</div></ibm-notification>
+```html
+<ibm-notification id="notification-0" class="cds--inline-notification cds--inline-notification--error" role="alert">
+ <div class="cds--inline-notification__text-wrapper">
+  <i class="fas fa-exclamation-circle c-red mgl-10 mgr-5 fa-2x"></i>
+  <span>Sample error message</span>
+ </div></ibm-notification
+>
 ```
 
-<ibm-notification id="notification-0" class="bx--inline-notification bx--inline-notification--warning" role="alert">
-<div class="bx--inline-notification__text-wrapper">
+<ibm-notification id="notification-0" class="cds--inline-notification cds--inline-notification--warning" role="alert">
+<div class="cds--inline-notification__text-wrapper">
 <i class="fas fa-exclamation-circle c-yellow mgl-10 mgr-5 fa-2x"></i>
 <span>This is a warning Message</span>
 </div></ibm-notification>

@@ -39,7 +39,7 @@ import './styles.scss';
                     strictStateImmutability: true,
                     strictStateSerializability: true,
                 },
-            }
+            },
         ),
     ],
     providers: [

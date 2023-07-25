@@ -8,7 +8,7 @@ export const toastAnimation: any =
             style({
                 transform: 'translateY(0)',
                 opacity: 1,
-            })
+            }),
         ),
         transition('void => *', [style({ transform: 'translateY(100%)', opacity: 0 }), animate('300ms ease-out')]),
         transition('* => void', [
@@ -18,7 +18,7 @@ export const toastAnimation: any =
                     height: 0,
                     opacity: 0,
                     transform: 'translateY(-100%)',
-                })
+                }),
             ),
         ]),
     ]);

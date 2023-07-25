@@ -1,26 +1,27 @@
 <!-- markdownlint-disable MD033 -->
+
 # Customcode
 
 > A description on how to work with custom code in your job
 
 ## Methods
 
-## endjob(**kwargs)
+## endjob(\*\*kwargs)
 
 Ends the job with an optional status and log event
 Every custom code has this at it's very end and will be called unless
 
-+ either an error has occured
-+ This method is called manualy
+- either an error has occured
+- This method is called manualy
 
-| Function             | Method                                                                                      |
-| -------------------- | ------------------------------------------------------------------------------------------- |
-| __endjob(**kwargs)__ | Optional to end a job                                                                       |
-| status               | optional<br/>Completed - optional - default<br/>Failed - optional<br/>Stopped - optional    |
-| out                  | optional - string or object - default null - will be posted to the outlog                   |
-| count                | optional - number - default 0 - number to be displayed in the Number field of the main page |
+| Function               | Method                                                                                      |
+| ---------------------- | ------------------------------------------------------------------------------------------- |
+| **endjob(\*\*kwargs)** | Optional to end a job                                                                       |
+| status                 | optional<br/>Completed - optional - default<br/>Failed - optional<br/>Stopped - optional    |
+| out                    | optional - string or object - default null - will be posted to the outlog                   |
+| count                  | optional - number - default 0 - number to be displayed in the Number field of the main page |
 
-{.bx--data-table}
+{.cds--data-table}
 
 ## UtcNow()
 

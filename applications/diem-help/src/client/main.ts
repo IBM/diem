@@ -23,7 +23,7 @@ export const bootloader: any = (Main: any): void => {
 
 console.debug(
     `%c\uD83D\uDD06 Welcome to ${appConfig.sitename} on ${process.env.NODE_ENV} v.${appConfig.version} \u00A9IBM`,
-    'font-family:cursive;font-size:18px;color: #4178be'
+    'font-family:cursive;font-size:18px;color: #4178be',
 );
 const nav: any = navigator;
 if (nav.serviceWorker !== undefined) {

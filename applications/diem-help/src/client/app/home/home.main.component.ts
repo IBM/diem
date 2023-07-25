@@ -55,7 +55,7 @@ export class HomeMainComponent implements OnInit, OnDestroy, AfterViewChecked {
         http: HttpClient,
         route: ActivatedRoute,
         cd: ChangeDetectorRef,
-        sanitizer: DomSanitizer
+        sanitizer: DomSanitizer,
     ) {
         this.env = env;
         this.title = env.getField('title');
@@ -101,9 +101,8 @@ export class HomeMainComponent implements OnInit, OnDestroy, AfterViewChecked {
             console.info(`$home.main.component (renderMermaid): mermaid rendering for ${elements.length} elements`);
             let i: number = 0;
             for await (const element of elements) {
-                mermaid.render(`graphDiv${i}`, element.innerText, (svgCode) => {
-                    element.innerHTML = svgCode;
-                });
+                const { svg } = await mermaid.render(`graphDiv${i}`, element.innerText);
+                element.innerHTML = svg;
                 i++;
             }
         }
@@ -128,7 +127,7 @@ export class HomeMainComponent implements OnInit, OnDestroy, AfterViewChecked {
                 catchError(async (err: any) => {
                     console.info(`$home.main.component (getPage): loading error for => ${err.message}`);
                 }),
-                take(1)
+                take(1),
             )
             .subscribe(async (res: any) => {
                 const title: string | undefined = this.findDeep(this.items, id);

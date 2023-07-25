@@ -26,7 +26,7 @@ ng-template(#edittextbox="")
             )
 
 ng-template(#readtextbox="")
-    label.bx--label(
+    label.cds--label(
         *ngIf='question.label',
         [ngStyle]='question.labelStyle',
         [attr.for]='question.key'
@@ -57,7 +57,7 @@ ng-template(#editdropdown="")
 
 ng-template(#editchips="")
     ng-container([formGroup]="form")
-        label.bx--label(
+        label.cds--label(
             *ngIf='question.label',
             [ngStyle]='question.labelStyle',
             [attr.for]='question.key'
@@ -70,7 +70,7 @@ ng-template(#editchips="")
            )
 
 ng-template(#readchips="")
-    label.bx--label(
+    label.cds--label(
         *ngIf='question.label',
         [ngStyle]='question.labelStyle',
         [attr.for]='question.key'
@@ -103,7 +103,7 @@ ng-template(#editnumber="")
         )
 
 ng-template(#readnumber="")
-    label.bx--label(
+    label.cds--label(
         *ngIf='question.label',
         [ngStyle]='question.labelStyle',
         [attr.for]='question.key'
@@ -131,13 +131,13 @@ ng-template(#edittextarea="")
 
 ng-template(#radio="")
     ng-container([formGroup]="form")
-        label.bx--label(
+        label.cds--label(
             *ngIf='question.label',
             [ngStyle]='question.labelStyle',
             [attr.for]='question.key'
             ) {{question.label}}
 
-        ibm-radio-group.ex--radiogroup.bx--form-item(
+        ibm-radio-group.ex--radiogroup.cds--form-item(
             *ngIf="question.key",
             aria-label="radiogroup",
 			[orientation]="question.orientation",
@@ -155,7 +155,7 @@ ng-template(#radio="")
 
 ng-template(#editcheckbox="")
     ng-container([formGroup]="form")
-        label.bx--label(
+        label.cds--label(
             *ngIf='question.label',
             [ngStyle]='question.labelStyle',
             [attr.for]='question.key'
@@ -175,7 +175,7 @@ ng-template(#editcheckbox="")
                 ) {{question.label}}
 
 ng-template(#readcheckbox="")
-    label.bx--label(
+    label.cds--label(
         *ngIf='question.label',
         [ngStyle]='question.labelStyle',
         [attr.for]='question.key'
@@ -257,7 +257,7 @@ ng-template(#editautocomplete="")
                     )
 
 ng-template(#readautocomplete="")
-    label.bx--label(
+    label.cds--label(
         *ngIf='question.label',
         [ngStyle]='question.labelStyle',
         [attr.for]='question.key'
@@ -293,7 +293,7 @@ ng-template(#editcalendar="")
         )
 
 ng-template(#readcalendar="")
-    label.bx--label(
+    label.cds--label(
         *ngIf='question.label',
         [ngStyle]='question.labelStyle',
         [attr.for]='question.key'
@@ -333,7 +333,7 @@ ng-template(#editeditor="")
         )
 
 ng-template(#readeditor="")
-    label.bx--label(
+    label.cds--label(
         *ngIf='question.label',
         [ngStyle]='question.labelStyle',
         [attr.for]='question.key'
@@ -365,14 +365,14 @@ ng-template(#editupload="")
                 span(style="margin-left: 10px") Drop Files here
         .fileList
             ng-container(*ngIf="oldFiles && oldFiles.length > 0")
-                .bx--tag.bx--tag--warm-gray(*ngFor="let file of oldFiles")
+                .cds--tag.cds--tag--warm-gray(*ngFor="let file of oldFiles")
                     i(aria-hidden="true", [ngClass]="question.iconClass")
                     span.mgr-10([innerHTML]="file.name")
                     i.fa.fa-times.pointer(
                         aria-hidden="true",
                         (click)="removeOldFile(file)")
             ng-container(*ngIf="uploadedFiles && uploadedFiles.length > 0")
-                .bx--tag.bx--tag--warm-gray(*ngFor="let file of uploadedFiles")
+                .cds--tag.cds--tag--warm-gray(*ngFor="let file of uploadedFiles")
                     i(aria-hidden="true", [ngClass]="question.iconClass")
                     span.mgr-10([innerHTML]="file.name")
                     i.fa.fa-times.pointer(
@@ -390,7 +390,7 @@ ng-template(#fileViewer="")
             span([innerHTML]="file.name")
 
 ng-template(#text="")
-    label.bx--label(
+    label.cds--label(
         *ngIf='question.label',
         [ngStyle]='question.labelStyle',
         [attr.for]='question.key'
@@ -425,7 +425,7 @@ ng-template(#text="")
 
 
 ng-template(#readrepeater="")
-    label.bx--label(
+    label.cds--label(
         *ngIf='question.label',
         [ngStyle]='question.labelStyle',
         [attr.for]='question.key'
@@ -456,7 +456,7 @@ ng-template(#table="")
         )
 
 ng-template(#codeeditor="")
-    label.bx--label(
+    label.cds--label(
         *ngIf='question.label',
         [ngStyle]='question.labelStyle',
         [attr.for]='question.key'
@@ -474,7 +474,7 @@ ng-template(#codeeditor="")
             )
 
 ng-template(#mermaid="")
-    label.bx--label(
+    label.cds--label(
         *ngIf='question.label',
         [ngStyle]='question.labelStyle',
         [attr.for]='question.key'
@@ -495,10 +495,10 @@ ng-template(#tooltip="")
             [ngClass]="tooltip.data.typeClass",
             [innerHTML]="tooltip.data.value",
         )
-        button.bx--btn.bx--btn--primary((click)="tooltip.doClose()")
+        button.cds--btn.cds--btn--primary((click)="tooltip.doClose()")
             | Close
 
-    .bx--tooltip__label(
+    .cds--tooltip__label(
         [ngClass]="question.class",
         [ngStyle]="question.style",
         )
@@ -524,8 +524,8 @@ ng-template(#overflow="")
         [placement]="question.placement",
     )
         ng-container(*ngFor="let button of question.buttons")
-            li.bx--overflow-menu-options__option(*ngIf="evalStr(button.visible)")
-                button.bx--overflow-menu-options__btn(
+            li.cds--overflow-menu-options__option(*ngIf="evalStr(button.visible)")
+                button.cds--overflow-menu-options__btn(
                     (click)="onAction(button.action)",
                     [ngClass]='button.typeClass',
                     )

@@ -2,10 +2,10 @@ ibm-header(
     name="Help and Documentation",
     [route]="['']",
     )
-    a.bx--header__name(role='menuitem', routerLink="")
+    a.cds--header__name(role='menuitem', routerLink="")
         img(src="./diem-help/public/images/diem_logo.svg", alt="Diem Logo", height="25", width="100")
-    a.bx--header__name
-        span.bx--header__name--prefix Help and Documentation
+    a.cds--header__name
+        span.cds--header__name--prefix Help and Documentation
     ibm-header-navigation.ex--header_global
 
         ibm-header-action(
@@ -18,18 +18,18 @@ ibm-header(
 
 ibm-panel(id="appPanel",[expanded]="appPanel")
     ng-template
-        ul.bx--switcher
-            li.bx--switcher__item(*ngFor="let menu of menus")
-                a.bx--switcher__item-link(
+        ul.cds--switcher
+            li.cds--switcher__item(*ngFor="let menu of menus")
+                a.cds--switcher__item-link(
                     routerLink="{{menu.value}}",
                     (click)="openPanel('appPanel',false)"
                     ) {{menu.name}}
 
-            li.bx--switcher__item-divider.bx--switcher__item
-                span.bx--switcher__item-link Other Links
+            li.cds--switcher__item-divider.cds--switcher__item
+                span.cds--switcher__item-link Other Links
 
-            li.bx--switcher__item(*ngFor="let menu of subMenus")
-                a.bx--switcher__item-link(
+            li.cds--switcher__item(*ngFor="let menu of subMenus")
+                a.cds--switcher__item-link(
                     routerLink="{{menu.value}}",
                     (click)="openPanel('appPanel',false)"
                     ) {{menu.name}}
