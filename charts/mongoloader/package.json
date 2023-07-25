@@ -4,7 +4,7 @@
   "description": "load mongo data for diem",
   "main": "index.mjs",
   "dependencies": {
-    "mongoose": "^6.5.1"
+    "mongoose": "^7.4.1"
   },
   "scripts": {
     "build": "docker build -t quay.io/diem/mongoloader:$npm_package_version ."
