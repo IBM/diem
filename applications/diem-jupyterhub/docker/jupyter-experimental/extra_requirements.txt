@@ -1,2 +1,5 @@
-openai==0.27.4
-git+https://github.ibm.com/ai-foundation/bampy.git
+openai==0.27.8
+chromadb==0.3.27
+ibm-generative-ai==0.2.2
+sentence-transformers==2.2.2
+llama-index==0.7.5

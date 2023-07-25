@@ -15,9 +15,9 @@ RUN apt-get update && \
 USER jovyan
 
 COPY docker/jupyter-experimental/local/jars/* /usr/local/spark/jars/
-COPY docker/jupyter-experimental/extra_jars/* /usr/local/spark/jars/
+#COPY docker/jupyter-experimental/extra_jars/* /usr/local/spark/jars/
 COPY docker/jupyter-experimental/local/requirements.txt /tmp/requirements.txt
-#COPY docker/jupyter-experimental/extra_requirements.txt /tmp/extra_requirements.txt
+COPY docker/jupyter-experimental/extra_requirements.txt /tmp/extra_requirements.txt
 COPY docker/jupyter-experimental/local/extra_requirements.txt /tmp/extra_requirements.txt
 
 WORKDIR /tmp
