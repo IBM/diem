@@ -18,6 +18,7 @@ RUN dnf --disableplugin=subscription-manager --allowerasing -y update &&\
     dnf --disableplugin=subscription-manager -y clean all
 
 RUN dnf --disableplugin=subscription-manager install -y java-11-openjdk-headless.x86_64 &&\
+    dnf --disableplugin=subscription-manager -y install tzdata-java && \
     rm -rf /var/lib/apt/lists/*;
 
 WORKDIR /
