@@ -1,7 +1,7 @@
 # v3.2.0_rhel_2023-07-25
 FROM quay.io/diem/base-spark:3.4.0_rhel as base_spark
 
-FROM registry.access.redhat.com/ubi8/python-39 as base
+FROM registry.access.redhat.com/ubi9/python-39 as base
 
 WORKDIR /
 
@@ -24,7 +24,7 @@ RUN [ ! -d ${install_dir} ] || rm -rf ${install_dir}
 WORKDIR /opt/spark/work-dir
 RUN chmod g+w /opt/spark/work-dir && chmod a+x /opt/decom.sh
 
-FROM registry.access.redhat.com/ubi8/python-39
+FROM registry.access.redhat.com/ubi9/python-39
 
 USER root
 
@@ -32,7 +32,9 @@ COPY --from=base /opt /opt
 
 #WORKDIR /
 
-RUN dnf -y upgrade && dnf install -y java-11-openjdk-headless.x86_64 && \
+RUN dnf --disableplugin=subscription-manager -y upgrade && \
+    dnf --disableplugin=subscription-manager install -y java-11-openjdk-headless.x86_64 && \
+    dnf --disableplugin=subscription-manager -y install tzdata-java && \
     rm -rf /var/lib/apt/lists/* && \
     dnf clean all && [ ! -d /var/cache/dnf ] || rm -rf /var/cache/dnf
 

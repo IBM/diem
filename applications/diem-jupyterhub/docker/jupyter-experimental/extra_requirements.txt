@@ -1,5 +1,6 @@
+pysqlite3-binary==0.5.1
 openai==0.27.8
-chromadb==0.3.27
-ibm-generative-ai==0.2.2
+chromadb==0.4.4
+ibm-generative-ai==0.2.3
 sentence-transformers==2.2.2
 llama-index==0.7.5
