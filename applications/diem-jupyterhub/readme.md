@@ -61,7 +61,7 @@ helm repo update
 specify name, namespace version and add the values file
 
 ```cmd
-helm upgrade --install --cleanup-on-fail diem-jupyterhub jupyterhub/jupyterhub --namespace default --create-namespace --version=1.0.1 --values values.yaml
+helm upgrade --install --cleanup-on-fail diem-jupyterhub jupyterhub/jupyterhub --namespace default --create-namespace  --values values.yaml
 ```
 
 Possible return
