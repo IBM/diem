@@ -135,6 +135,7 @@ export interface INatsCredentials {
     token?: string;
     user?: string;
     seed?: string;
+    port?: string;
 }
 
 export interface IError extends Error {

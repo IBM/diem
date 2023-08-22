@@ -73,14 +73,14 @@ class Mongo {
         let options: Partial<mongoose.ConnectOptions> = {};
 
         if (this.credentials.ca) {
-            const sslCA: string = Buffer.from(this.credentials.ca, 'base64').toString();
+            const tlsCAFile: string = Buffer.from(this.credentials.ca, 'base64').toString();
             const fn = 'ssl.pem';
-            writeFileSync(fn, sslCA);
+            writeFileSync(fn, tlsCAFile);
             options = {
                 connectTimeoutMS: 10000,
                 ssl: true,
-                sslCA: fn,
-                sslValidate: false,
+                tlsCAFile: fn,
+                tlsAllowInvalidCertificates: true,
             };
             utils.logInfo(`$mongo (connect): connecting to the Mongo Service using SSL - pid: ${process.pid}`);
         } else {

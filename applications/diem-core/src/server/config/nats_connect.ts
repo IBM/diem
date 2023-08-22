@@ -53,14 +53,14 @@ class NCConnection {
             if (credentials.seed) {
                 console.info('$nats_connect (connect): connecting using seed...');
                 this.nc = await connect({
-                    servers: `${credentials.ip}:4222`,
+                    servers: `${credentials.ip}:${credentials.port || '4222'}`,
                     authenticator: nkeyAuthenticator(Buffer.from(credentials.seed)),
                     name: 'Diem Nodepy',
                 });
             } else if (credentials.user && credentials.password) {
                 console.info('$nats_connect (connect): connecting using user & pass...');
                 this.nc = await connect({
-                    servers: `${credentials.ip}:4222`,
+                    servers: `${credentials.ip}:${credentials.port || '4222'}`,
                     user: credentials.user,
                     pass: credentials.password,
                     name: 'Diem Nodepy',
