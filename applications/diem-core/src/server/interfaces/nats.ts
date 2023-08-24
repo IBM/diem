@@ -22,6 +22,7 @@ export interface INatsCredentials {
     token?: string;
     user?: string;
     seed?: string;
+    port?: string;
 }
 
 export interface INatsMessage {

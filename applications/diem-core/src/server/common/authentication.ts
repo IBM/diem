@@ -1,5 +1,5 @@
 import { OICUser } from '@interfaces';
-import { Issuer, Strategy as OpenIdStrategy, BaseClient } from 'openid-client';
+import { Issuer, Strategy as OpenIdStrategy, BaseClient, custom } from 'openid-client';
 import { Credentials } from './cfenv';
 
 interface ISSO {
@@ -15,6 +15,10 @@ const clientSecret = process.env.CLIENT_SECRET;
 const callbackUrl = process.env.CALLBACK_URL;
 
 const sso_credentials: ISSO = Credentials('sso');
+
+custom.setHttpOptionsDefaults({
+    timeout: 15000,
+});
 
 let discovery_endpoint = process.env.DISCOVERY_URL;
 if (discovery_endpoint?.includes('/.well-known/')) {
