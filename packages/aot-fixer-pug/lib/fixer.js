@@ -11,7 +11,7 @@ var generateCode = require('pug-code-gen');
 var walk = require('pug-walk');
 var hash = require("shorthash");
 
-var glob = require("glob");
+var { glob } = require("glob");
 
 // Generate a string of HTML from a pug file's content
 var pugToHtml = function (pugSource, fileName, localScope) {
@@ -28,8 +28,8 @@ var pugToHtml = function (pugSource, fileName, localScope) {
         node.attrs.push({ name: uniq, val: "1", mustEscape: false });
       }
     }, {
-        includeDependencies: false
-      });
+      includeDependencies: false
+    });
   }
 
   var funcStr = generateCode(pugAst, {
