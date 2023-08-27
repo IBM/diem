@@ -43,15 +43,14 @@ var pugToHtml = function (pugSource, fileName, localScope) {
   return func();
 };
 
-var fixer = function (options) {
-  glob(options.srcPath + "/**/*.pug", {}, function (err, files) {
-    files.forEach(function (fileName) {
-      var pugContent = pugToHtml(fs.readFileSync(fileName, {
-        encoding: 'utf8'
-      }), fileName, options.localScope);
-      var fileContent = "export const tmpl: string = `" + pugContent + "`;\n";
-      fs.writeFileSync(fileName + ".tmpl.ts", fileContent);
-    });
+var fixer = async (options) => {
+  const files = await glob(options.srcPath + "/**/*.pug")
+  files.forEach((fileName) => {
+    var pugContent = pugToHtml(fs.readFileSync(fileName, {
+      encoding: 'utf8'
+    }), fileName, options.localScope);
+    var fileContent = "export const tmpl: string = `" + pugContent + "`;\n";
+    fs.writeFileSync(fileName + ".tmpl.ts", fileContent);
   });
 };
 
