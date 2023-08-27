@@ -7,7 +7,7 @@ ibm-modal(
     [hasScrollingContent] = "modal.options.hasScrollingContent",
     )
     ibm-modal-header((closeSelect)="onHide()")
-        p.bx--modal-header__heading {{modal.options.header}}
+        p.cds--modal-header__heading {{modal.options.header}}
     ng-container(*ngIf='modal.template')
         ng-template(
             [ngTemplateOutlet]="modal.template",
@@ -24,5 +24,5 @@ ng-template(#errorTemplate="")
     p.ibm-h3.pd-20
         i.fas.fa-exclamation.fa-3x.mgr-10
         span   {{modal.message}}
-    .bx--modal-footer
-        button.bx--btn.bx--btn--secondary((click)='close()') Close
+    .cds--modal-footer
+        button.cds--btn.cds--btn--secondary((click)='close()') Close

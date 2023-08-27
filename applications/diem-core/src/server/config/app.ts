@@ -15,7 +15,7 @@ import { getOrg, getRole, getRoleNbr, addTrace } from '@functions';
 import { jwtCheck } from '../routes/webapikeys/webapikeys.jwtcheck';
 import * as routes from '../routes/routes';
 import { toMQ } from '../routes/logger/logger';
-import { NC } from './nats_connect';
+//import { NC } from './nats_connect';
 import { css, expressConfig } from './config';
 import { login } from './authorization';
 import assets from './assets.json';
@@ -164,7 +164,7 @@ class App {
                     'resource',
                     undefined,
                     hrstart,
-                    this.pack
+                    this.pack,
                 );
             })
             .all('*', this.secAuth, (req: IRequest, res: IResponse) => {
@@ -176,7 +176,7 @@ class App {
                     'resource',
                     undefined,
                     hrstart,
-                    this.pack
+                    this.pack,
                 );
 
                 return res.status(400).json({ message: 'Not allowed Path' });
@@ -196,6 +196,7 @@ class App {
 
         await WSS.start(httpServer);
 
+        /*
         try {
             await NC.connect().catch(async (err) => {
                 void utils.logError('$server (start): failed to connect to nats', err);
@@ -203,6 +204,7 @@ class App {
         } catch (err) {
             return console.error(err);
         }
+        */
     };
 
     private api = async (req: IRequest, res: IResponse): Promise<any> => {
@@ -270,7 +272,7 @@ class App {
                     'api',
                     undefined,
                     hrstart,
-                    this.pack
+                    this.pack,
                 );
             } catch (err) {
                 const msg: IError = {
@@ -305,7 +307,7 @@ class App {
                         'error',
                         msg,
                         hrstart,
-                        this.pack
+                        this.pack,
                     );
 
                     res.status(err && err.status && typeof err.status === 'number' ? err.status : 500).json({
@@ -321,7 +323,7 @@ class App {
                 'error',
                 undefined,
                 hrstart,
-                this.pack
+                this.pack,
             );
 
             return res.status(404).send({ message: 'resouce cannot be found' });
@@ -333,7 +335,7 @@ class App {
         let token: string | undefined;
 
         if (!req.isAuthenticated()) {
-            req.session.originalUrl = req.originalUrl;
+            (req as IRequest).session.originalUrl = (req as IRequest).originalUrl;
 
             return res.redirect('/login');
         }
@@ -366,11 +368,11 @@ class App {
                         'login',
                         undefined,
                         hrstart,
-                        this.pack
+                        this.pack,
                     );
 
                     utils.logInfo(
-                        `$server (secAuth): aquired profile - email: ${email} - name: ${name} - ti: ${req.transid}`
+                        `$server (secAuth): aquired profile - email: ${email} - name: ${name} - ti: ${req.transid}`,
                     );
 
                     next();
@@ -380,7 +382,7 @@ class App {
                     err.trace = addTrace(err.trace, '@at $server (login)');
                     void utils.logError(
                         `$server (secAuth): requiring profile error - email: ${email} - name: ${name} - ti: ${req.transid}`,
-                        err
+                        err,
                     );
                     void toMQ(req, 401, `$server : failed login by ${email}`, 'error', err, hrstart, this.pack);
 
@@ -390,7 +392,7 @@ class App {
 
         if (!token) {
             utils.logInfo(
-                `$server (secAuth): no token - logging in - email: ${email} - name: ${name} - ti: ${req.transid}`
+                `$server (secAuth): no token - logging in - email: ${email} - name: ${name} - ti: ${req.transid}`,
             );
 
             return Login();
@@ -423,7 +425,7 @@ class App {
 
             if (!role) {
                 utils.logInfo(
-                    `$server (secAuth): rederecting user without role - email: ${email} - ti: ${req.transid}`
+                    `$server (secAuth): rederecting user without role - email: ${email} - ti: ${req.transid}`,
                 );
 
                 return next();
@@ -435,13 +437,13 @@ class App {
             req.token = profile; /** For easy access */
 
             utils.logCyan(
-                `$server (secAuth): ok - email: ${email} (${name}) - org: ${req.user.org} - role: ${req.user.role} (${req.user.rolenbr}) - method: ${method} - ti: ${req.transid}`
+                `$server (secAuth): ok - email: ${email} (${name}) - org: ${req.user.org} - role: ${req.user.role} (${req.user.rolenbr}) - method: ${method} - ti: ${req.transid}`,
             );
 
             return next();
         } catch (err) {
             utils.logInfo(
-                `$server (secAuth): verification error - email: ${email} - name: ${name} - method: ${method} - ti: ${req.transid}`
+                `$server (secAuth): verification error - email: ${email} - name: ${name} - method: ${method} - ti: ${req.transid}`,
             );
 
             removeToken(req);
@@ -454,7 +456,7 @@ class App {
         err: IError,
         req: IRequest,
         res: IResponse,
-        next: (err: IError) => any
+        next: (err: IError) => any,
     ): Promise<void> => {
         if (!req.transid) {
             req.transid = utils.guid();

@@ -1,12 +1,12 @@
-.bx--content.ex--content.h-100(*ngIf="fatal")
+.cds--content.ex--content.h-100(*ngIf="fatal")
     ex-app-error([error]="errormsg")
 
-.bx--content.ex--content.h-100(@fadeInAnimation="", *ngIf="! loaded && ! fatal")
-        span.bx--loading--title
-            .bx--loading.bx--loading--small
-                svg.bx--loading__svg(viewBox="-75 -75 150 150")
+.cds--content.ex--content.h-100(@fadeInAnimation="", *ngIf="! loaded && ! fatal")
+        span.cds--loading--title
+            .cds--loading.cds--loading--small
+                svg.cds--loading__svg(viewBox="-75 -75 150 150")
                     title Loading...
-                    circle.bx--loading__stroke(cx="0", cy="0", r="37.5")
+                    circle.cds--loading__stroke(cx="0", cy="0", r="37.5")
             span Loading...
 
 ng-container(*ngIf="loaded && ! fatal")
@@ -15,11 +15,11 @@ ng-container(*ngIf="loaded && ! fatal")
 
             .ex--panel(*ngIf="data && data.modules")
                 .ex--panel-nav
-                    nav.bx--side-nav__navigation(role="navigation")
+                    nav.cds--side-nav__navigation(role="navigation")
                         .ex--menu-panel-title
                             i([ngClass]="data.titleicon")
                             div([innerHTML]="data.title")
-                        ul.bx--side-nav__items
+                        ul.cds--side-nav__items
                             ng-template(
                                 ngFor='',
                                 let-module='',
@@ -38,7 +38,7 @@ ng-container(*ngIf="loaded && ! fatal")
                         .ex--panel-icon-slide-right((click)="navClass = ''")
                                 svg(appIcon="chevron--right", size='20')
 
-                .bx--content.ex--panel-form
+                .cds--content.ex--panel-form
                     ng-container
                         ng-template(
                             [ngTemplateOutlet]="contentTmpl",
@@ -71,7 +71,7 @@ ng-template(#contentTemplate="")
         )
 
 ng-template(#noAccessTemplate="")
-    .bx--content.h-100
+    .cds--content.h-100
         <h3>
             <i class="fas fa-3x fa-ban" style="color: #8d8d8d;"></i>
             <span style="margin: 1rem;">You don't have enough access rights to view this content.</span>

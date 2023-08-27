@@ -37,7 +37,7 @@ export class JobDetailRoutingGuard implements CanActivate {
         router: Router,
         MCF: MainCommonFunctions,
         httpService: HttpService,
-        store: Store<any>
+        store: Store<any>,
     ) {
         this.env = env;
         this.router = router;
@@ -61,7 +61,7 @@ export class JobDetailRoutingGuard implements CanActivate {
         }
     };
 
-    private verifyjobdetail = async (route: any): Promise<boolean> =>
+    private verifyjobdetail = async (route: ActivatedRouteSnapshot): Promise<boolean> =>
         new Promise<boolean>(async (resolve) => {
             console.info('$jobdetail.routing.guard (canActivate): Allowed activation as user is allowed');
             const id: string = route.params.id;
@@ -70,7 +70,7 @@ export class JobDetailRoutingGuard implements CanActivate {
 
             await this.MCF.loadConfig(module, true)
                 .then(async (config: IConfig) => {
-                    const storeName = `${config.store}.${r_getStore(route._urlSegment.segments)}`;
+                    const storeName = `${config.store}.${r_getStore(route.url)}`;
 
                     return this.getData(storeName)
                         .then(async (data: any) => {
@@ -106,7 +106,7 @@ export class JobDetailRoutingGuard implements CanActivate {
                     this.router
                         .navigate(['/500'])
                         .catch((err: Error) =>
-                            console.error('$jobdetail.routing.guard (verify jobdetail): error', err)
+                            console.error('$jobdetail.routing.guard (verify jobdetail): error', err),
                         );
 
                     resolve(false);
@@ -200,7 +200,7 @@ export class JobDetailRoutingGuard implements CanActivate {
 
                         return reject(err);
                     }),
-                    take(1)
+                    take(1),
                 )
                 // eslint-disable-next-line @typescript-eslint/promise-function-async
                 .subscribe((data: any) => {
@@ -226,6 +226,6 @@ export class JobDetailRoutingGuard implements CanActivate {
                     } else {
                         return resolve(false);
                     }
-                })
+                }),
         );
 }

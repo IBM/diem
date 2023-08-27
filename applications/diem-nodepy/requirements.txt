@@ -7,7 +7,7 @@ chardet==5.2.0
 diemlib==1.1.4
 graphviz==0.20.1
 ibm-cos-sdk==2.13.1
-ibm_db==3.1.4
+ibm_db==3.2.0
 ibmcloudant==0.4.4
 jaydebeapi==1.2.3
 jinja2==3.1.2
@@ -16,7 +16,6 @@ matplotlib==3.7.2
 numpy==1.25.2
 openpyxl==3.1.2
 pandas==2.0.3
-pyarrow==13.0.0
 pymongo==4.5.0
 pynpm==0.1.2
 redis==5.0.0
@@ -29,4 +28,4 @@ statsmodels==0.14.0
 tabulate==0.9.0
 ibm-db-sa== 0.4.0
 jira== 3.5.2
-langchain== 0.0.271
+langchain== 0.0.273

@@ -1,8 +1,8 @@
 ng-container(*ngIf="loaded; else elseBlock")
     ng-container(*ngIf="! error; else errorBlock")
 
-        .ex--band.bx--content([ngClass]="config.header.headerColor",*ngIf="config")
-            .bx--row
+        .ex--band.cds--content([ngClass]="config.header.headerColor",*ngIf="config")
+            .cds--row
                 ng-template(
                     [ngTemplateOutlet]="headerTmpl",
                     [ngTemplateOutletContext]="{ $implicit: config}"
@@ -29,21 +29,21 @@ ng-container(*ngIf="loaded; else elseBlock")
                 )
 
     ng-template(#errorBlock="")
-        .bx--content.ex--content.h-100(@fadeInAnimation="")
+        .cds--content.ex--content.h-100(@fadeInAnimation="")
             ex-app-error(
                 [error]="error"
                 )
 
 ng-template(#elseBlock="")
-    span.bx--loading--title
-        .bx--loading.bx--loading--small
-            svg.bx--loading__svg(viewBox="-75 -75 150 150")
+    span.cds--loading--title
+        .cds--loading.cds--loading--small
+            svg.cds--loading__svg(viewBox="-75 -75 150 150")
                 title Loading...
-                circle.bx--loading__stroke(cx="0", cy="0", r="37.5")
+                circle.cds--loading__stroke(cx="0", cy="0", r="37.5")
         span Loading...
 
 ng-template(#header="")
-    .bx--col-lg-11(*ngIf="config && config.header")
+    .cds--col-lg-11(*ngIf="config && config.header")
         i([ngClass]="config.header.headerIcon")
         .productive-heading-04.ex--header Job: {{records.name}}
             .productive-heading-01
@@ -51,7 +51,7 @@ ng-template(#header="")
                 ng-container(*ngIf='records.schedule__nextExecutionTime')
                     i.fa.fa-clock([ngStyle]="{'margin-left':'3rem','margin-right':'0.625rem'}")
                     span Next Run: {{records.schedule__nextExecutionTime | date:'yyyy-MM-dd HH:mm'}}
-    .bx--col-lg-5
+    .cds--col-lg-5
         .productive-heading-03
             div.statfa
                 span([ngClass]="records.statusicon || 'fa fa-question c-gray'")

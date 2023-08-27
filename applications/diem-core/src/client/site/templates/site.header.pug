@@ -3,22 +3,22 @@ ibm-header(
     *ngIf="env.user.authorized",
     [route]="['home']",
     )
-    a.bx--header__name(routerLink="home")
+    a.cds--header__name(routerLink="home")
         img(src="./etl-mgr/public/images/diem_logo.svg", alt="Diem Logo", height="25", width="100")
     ibm-header-navigation
         ng-container(*ngFor="let menu of menus")
             li.h-100(role='menuitem',*ngIf="evalStr(menu.visible)")
-                a.bx--header__menu-item(
+                a.cds--header__menu-item(
                     [ngClass]="{'bx--header__menu-item--current' : menu.name === component}",
                     routerLink="{{menu.value}}") {{menu.name}}
     ibm-header-global
         ibm-header-navigation.disabled
             li(role="menuitem",aria-label="Socket")
-                a.bx--header__menu-item
+                a.cds--header__menu-item
                     svg.socketfa(appIcon='data--connected', size='20')
 
-            li.bx--header__submenu(role="menuitem", style="height: 100%", #orgmenu="")
-                a.bx--header__menu-item.bx--header__menu-title(
+            li.cds--header__submenu(role="menuitem", style="height: 100%", #orgmenu="")
+                a.cds--header__menu-item.cds--header__menu-title(
                     tabindex="0",
                     aria-haspopup="true",
                     [attr.aria-expanded]="mexpanded",
@@ -28,7 +28,7 @@ ibm-header(
                     <svg class="bx--header__menu-arrow" width="12" height="7" aria-hidden="true">
                         <path d="M6.002 5.55L11.27 0l.726.685L6.003 7 0 .685.726 0z" />
                     </svg>
-                ul.bx--header__menu(role="menu",[attr.aria-label]="userorg")
+                ul.cds--header__menu(role="menu",[attr.aria-label]="userorg")
                     ibm-header-item(
                         *ngFor="let org of orgs",
                         (click)="setOrg(org)",
@@ -77,18 +77,18 @@ ibm-panel(id="userPanel", role="menu", [expanded]="userPanel")
 
 ibm-panel(id="appPanel",[expanded]="appPanel")
     ng-template([ngIf]="env.user.authorized")
-        ul.bx--switcher
-            li.bx--switcher__item(*ngFor="let menu of menus")
-                a.bx--switcher__item-link(
+        ul.cds--switcher
+            li.cds--switcher__item(*ngFor="let menu of menus")
+                a.cds--switcher__item-link(
                     routerLink="{{menu.value}}",
                     (click)="openPanel('appPanel',false)"
                     ) {{menu.name}}
 
-            li.bx--switcher__item-divider.bx--switcher__item
-                span.bx--switcher__item-link Other Links
+            li.cds--switcher__item-divider.cds--switcher__item
+                span.cds--switcher__item-link Other Links
 
-            li.bx--switcher__item(*ngFor="let menu of subMenus")
-                a.bx--switcher__item-link(
+            li.cds--switcher__item(*ngFor="let menu of subMenus")
+                a.cds--switcher__item-link(
                     routerLink="{{menu.value}}",
                     (click)="openPanel('appPanel',false)"
                     ) {{menu.name}}

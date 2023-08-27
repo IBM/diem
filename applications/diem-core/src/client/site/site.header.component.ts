@@ -15,7 +15,7 @@ import { SiteService } from './site.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    selector: 'app-header',
+    selector: 'site-header',
     template: tmpl,
 })
 export class SiteHeaderComponent {
