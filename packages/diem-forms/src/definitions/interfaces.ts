@@ -10,6 +10,7 @@ import { IDropdownQuestion } from './question-dropdown';
 import { ITextboxQuestion } from './question-textbox';
 import { IUploadQuestion } from './question-upload';
 import { ICodeEditorQuestion } from './question-codeeditor';
+import { IEditorQuestion } from './question-editor';
 import { ICheckboxQuestion } from './question-checkbox';
 import { IChipsQuestion } from './question-chips';
 import { IButtonQuestion } from './question-button';
@@ -17,7 +18,6 @@ import { IToggleQuestion } from './question-toggle';
 import { ITableQuestion } from './question-table';
 import { ITextareaQuestion } from './question-textarea';
 import { IRadioQuestion } from './question-radio';
-import { ITooltipQuestion } from './question-tooltip';
 import { IOverflowQuestion } from './question-overflow';
 
 export interface IQuestion
@@ -28,6 +28,7 @@ export interface IQuestion
         ICheckboxQuestion,
         IChipsQuestion,
         ICodeEditorQuestion,
+        IEditorQuestion,
         IDropdownQuestion,
         INumberQuestion,
         IRadioQuestion,
@@ -35,7 +36,6 @@ export interface IQuestion
         ITextareaQuestion,
         ITextboxQuestion,
         IToggleQuestion,
-        ITooltipQuestion,
         IUploadQuestion,
         IOverflowQuestion,
         IDFQuestionTableListComponent {

@@ -21,5 +21,4 @@ export { TextareaQuestion } from './question-textarea';
 export { TextboxQuestion } from './question-textbox';
 export { ToggleQuestion } from './question-toggle';
 export { UploadQuestion } from './question-upload';
-export { TooltipQuestion } from './question-tooltip';
 export { OverflowQuestion } from './question-overflow';

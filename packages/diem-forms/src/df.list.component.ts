@@ -461,7 +461,7 @@ export class DFListComponent implements OnDestroy, OnInit {
         });
     };
 
-    public onRowSelect = (row: any, e: { checked: boolean; source: any }) => {
+    public onRowSelect = (_row: any, checked: boolean) => {
         /** this is a little function to get the action from the config definition for that column
          * it can only be radio or checkbox
          *
@@ -469,6 +469,8 @@ export class DFListComponent implements OnDestroy, OnInit {
          *
          * Attention filter returns an array when filtering an array
          */
+
+        const row = structuredClone(_row);
 
         const colVal: any[] =
             this.tableSpecs.columns.filter((col: any) =>
@@ -481,7 +483,7 @@ export class DFListComponent implements OnDestroy, OnInit {
             if (colVal[0].specs.radio) {
                 this.DFCS.formChanged({ ...col.action, values: row });
             } else {
-                this.updateSelectedItems(row, e, col);
+                this.updateSelectedItems(row, checked, col);
 
                 this.DFCS.formChanged({ ...col.action, values: { records: [...this.selectedItems] } });
             }
@@ -489,7 +491,7 @@ export class DFListComponent implements OnDestroy, OnInit {
     };
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public onHeaderCheckboxToggle = () => {
+    public onHeaderCheckboxToggle = (e: boolean) => {
         /** this is a little function to get the action from the config definition for that column
          * it can only be radio or checkbox
          *
@@ -504,7 +506,7 @@ export class DFListComponent implements OnDestroy, OnInit {
 
         if (colVal.length > 0) {
             const col: ITableColumn = colVal[0];
-            this.updateAllSelectedItems(col);
+            this.updateAllSelectedItems(col, e);
             this.DFCS.formChanged({ ...colVal[0].action, values: { records: [...this.selectedItems] } });
         }
     };
@@ -651,9 +653,7 @@ export class DFListComponent implements OnDestroy, OnInit {
         console.info(`$df.list.component (ngOnDestroy) => destroying store ${this.storeName}`);
     }
 
-    private updateSelectedItems = (row: any, e: { checked: boolean; source: any }, col: ITableColumn): void => {
-        const checked: boolean = e.checked;
-
+    private updateSelectedItems = (row: any, checked: boolean, col: ITableColumn): void => {
         const key: string = col.specs && col.specs.datakey ? col.specs.datakey : row.id;
 
         if (!key) {
@@ -671,8 +671,10 @@ export class DFListComponent implements OnDestroy, OnInit {
         }
     };
 
-    private updateAllSelectedItems = (col: ITableColumn): void => {
-        if (this.selectedItems.length === 0) {
+    private updateAllSelectedItems = (col: ITableColumn, checked: boolean): void => {
+        this.selectedItems = structuredClone(this.selectedItems);
+
+        if (checked) {
             this.storeData.records.forEach((row: any) => {
                 row.selected = true;
                 const key: string = col.specs && col.specs.datakey ? col.specs.datakey : row.id;

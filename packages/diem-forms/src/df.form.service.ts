@@ -131,9 +131,6 @@ export class DFFormService {
                 case 'toggle':
                     questions.push(new def.ToggleQuestion(question));
                     break;
-                case 'tooltip':
-                    questions.push(new def.TooltipQuestion(question));
-                    break;
                 case 'number':
                     questions.push(new def.NumberQuestion(question));
                     break;
