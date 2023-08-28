@@ -8,14 +8,20 @@
         "rootDir": "./src/",
         "stripInternal": true,
         "importHelpers": false,
-        "lib": ["es2020", "dom"]
+        "lib": [
+            "es2020",
+            "dom"
+        ]
     },
-    "include": ["./src/**/*"],
-    "exclude": ["node_modules"],
+    "include": [
+        "./src/**/*"
+    ],
+    "exclude": [
+        "node_modules"
+    ],
     "angularCompilerOptions": {
         "skipTemplateCodegen": true,
-        "disableTypeScriptVersionCheck": false,
-        "fullTemplateTypeCheck": false,
-        "enableIvy": true
+        "disableTypeScriptVersionCheck": true,
+        "fullTemplateTypeCheck": true
     }
 }

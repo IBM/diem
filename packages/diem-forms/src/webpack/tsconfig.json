@@ -1,11 +1,14 @@
 {
     "extends": "./tsconfig.base.json",
     "compilerOptions": {
+        "skipLibCheck": true,
         "declaration": true,
         "outDir": "../webpack/lib",
         "pretty": true,
         "rootDir": "../webpack/src",
         "stripInternal": true
     },
-    "includes": ["../webpack/src/**/*.ts"]
+    "includes": [
+        "../webpack/src/**/*.ts"
+    ]
 }

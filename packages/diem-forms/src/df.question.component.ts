@@ -75,7 +75,6 @@ export class DFQuestionComponent implements OnDestroy, OnInit {
     @ViewChild('readtextbox', { static: true }) public readtextbox!: TemplateRef<any>; /** ! Will come later */
     @ViewChild('table', { static: true }) public table!: TemplateRef<any>; /** ! Will come later */
     @ViewChild('text', { static: true }) public text!: TemplateRef<any>; /** ! Will come later */
-    @ViewChild('tooltip', { static: true }) public tooltip!: TemplateRef<any>; /** ! Will come later */
     @ViewChild('overflow', { static: true }) public overflow!: TemplateRef<any>; /** ! Will come later */
     @ViewChild('mermaid', { static: true }) public mermaid!: TemplateRef<any>; /** ! Will come later */
 
@@ -115,7 +114,7 @@ export class DFQuestionComponent implements OnDestroy, OnInit {
         httpService: HttpService,
         qcs: DFQuestionControlService,
         store: Store<any>,
-        sanitizer: DomSanitizer
+        sanitizer: DomSanitizer,
     ) {
         this.env = env;
         this.DFCS = DFCS;
@@ -247,7 +246,7 @@ export class DFQuestionComponent implements OnDestroy, OnInit {
             this.fieldsToWatch = this.qcs.getDependents(
                 this.question,
                 this.fieldsToWatch,
-                this.questionGroup.questions
+                this.questionGroup.questions,
             );
             this.watchDependents();
             this.onValueChanged(this.question.value); // initital check
@@ -487,7 +486,7 @@ export class DFQuestionComponent implements OnDestroy, OnInit {
         }
 
         const obj: { content: string; id: any } = question.items.filter(
-            (option: { content: string; id: any }) => option.id && option.id === value
+            (option: { content: string; id: any }) => option.id && option.id === value,
         )[0]; /** only the first one */
 
         if (obj && obj.content) {
@@ -620,7 +619,7 @@ export class DFQuestionComponent implements OnDestroy, OnInit {
     public arrayHasNot: (array: any[], field: string[]) => boolean = (array: any[], field: string[]): boolean =>
         array.some((row: { [index: string]: any }) => {
             const l: any[] = Object.keys(row).filter(
-                (elem: string) => field.indexOf(elem) > -1 && row[elem] !== undefined
+                (elem: string) => field.indexOf(elem) > -1 && row[elem] !== undefined,
             );
 
             return l.length === 0 ? true : false;
@@ -699,7 +698,7 @@ export class DFQuestionComponent implements OnDestroy, OnInit {
                     this.question.items = result;
                     this.question.cacheValues = result;
                     this.check('loadItems');
-                })
+                }),
         );
     };
 
@@ -790,11 +789,11 @@ export class DFQuestionComponent implements OnDestroy, OnInit {
                             this.question.items = this.formService.filterOptions(
                                 this.question.optionsInfo,
                                 watchFldValue[0],
-                                this.question.placeHolder
+                                this.question.placeHolder,
                             );
 
                             const idx: number = this.question.items.findIndex(
-                                (x: { content: string }) => x.content === this.question.value
+                                (x: { content: string }) => x.content === this.question.value,
                             );
 
                             if (idx === -1 && this.question.key) {
@@ -947,7 +946,7 @@ export class DFQuestionComponent implements OnDestroy, OnInit {
             this.subscriptions.push(
                 this.form.controls[field.watch].valueChanges
                     .pipe(debounceTime(200) /** changed to 200 */)
-                    .subscribe((data: any) => this.onValueChanged(data))
+                    .subscribe((data: any) => this.onValueChanged(data)),
             );
         });
     }
@@ -963,7 +962,7 @@ export class DFQuestionComponent implements OnDestroy, OnInit {
     private check = (from: string) => {
         console.info(
             `%c$df.question.component (check): called by => ${from} for: ${this.question.key || 'na'}`,
-            'color:red'
+            'color:red',
         );
         this.cd.markForCheck();
     };
