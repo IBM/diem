@@ -27,7 +27,6 @@
         "@types/core-js": "^2.5.5",
         "@types/file-loader": "^5.0.1",
         "@types/lodash-es": "^4.17.8",
-        "@types/lodash-es": "^4.17.8",
         "@types/mermaid": "^9.2.0",
         "@types/node": "^20.5.7",
         "@types/prismjs": "^1.26.0",
@@ -48,7 +47,6 @@
         "eslint-plugin-rxjs": "^5.0.3",
         "eslint-plugin-sonarjs": "^0.21.0",
         "file-loader": "6.2.0",
-        "fullcalendar": "^6.1.8",
         "fullcalendar": "^6.1.8",
         "lodash-es": "^4.17.21",
         "mermaid": "^10.4.0",
@@ -73,7 +71,6 @@
         "url": "https://github.ibm.com/CIO-SETSt/leap"
     },
     "scripts": {
-        "build": "rm -rf lib && npm run pug:aot-ts && node_modules/.bin/ngc -p ./tsconfig.json",
         "build": "rm -rf lib && npm run pug:aot-ts && node_modules/.bin/ngc -p ./tsconfig.json",
         "pug:aot-ts": "aot-fixer-pug --src-path src",
         "pug:watch": "nodemon --watch './src/**/*' -e pug --exec npm run pug:aot-ts",
