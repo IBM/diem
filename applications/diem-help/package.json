@@ -23,6 +23,7 @@
         "markdown-it-imsize": "^2.0.1",
         "moment": "^2.29.4",
         "nocache": "^4.0.0",
+        "nocache": "^4.0.0",
         "print-hrtime": "^2.2.0",
         "pug": "^3.0.2"
     },
@@ -82,6 +83,7 @@
         "cross-env": "^7.0.3",
         "css-loader": "^6.8.1",
         "css-minimizer-webpack-plugin": "^5.0.1",
+        "css-minimizer-webpack-plugin": "^5.0.1",
         "del": "^7.0.0",
         "eslint": "^8.48.0",
         "eslint-config-prettier": "^9.0.0",
@@ -94,6 +96,7 @@
         "lodash-es": "^4.17.21",
         "mermaid": "^10.4.0",
         "mini-css-extract-plugin": "^2.7.6",
+        "nodemon": "^3.0.1",
         "nodemon": "^3.0.1",
         "nodemon-webpack-plugin": "^4.8.1",
         "npm-run-all": "^4.1.5",
@@ -111,10 +114,15 @@
         "typescript": "^5.2.2",
         "url-loader": "^4.1.1",
         "webpack": "^5.88.2",
+        "webpack": "^5.88.2",
         "webpack-assets-manifest": "^5.1.0",
         "webpack-bundle-analyzer": "^4.9.0",
         "webpack-cli": "^5.1.4",
+        "webpack-bundle-analyzer": "^4.9.0",
+        "webpack-cli": "^5.1.4",
         "webpack-node-externals": "^3.0.0",
+        "workbox-webpack-plugin": "^7.0.0",
+        "zone.js": "^0.13.1"
         "workbox-webpack-plugin": "^7.0.0",
         "zone.js": "^0.13.1"
     },
@@ -124,6 +132,7 @@
     "license": "ISC",
     "private": true,
     "scripts": {
+        "build": "./node_modules/.bin/npm-run-all clean clean:front lock pug:aot-ts webpack:build webpack:front webpack:node",
         "build": "./node_modules/.bin/npm-run-all clean clean:front lock pug:aot-ts webpack:build webpack:front webpack:node",
         "clean": "rimraf server",
         "clean:front": "rimraf public/js public/assets public/fonts public/skins public/css ",
@@ -156,6 +165,7 @@
         "eslint:node-fix": "eslint -c ./src/server/.eslintrc.js ./src/server/ --fix --ext .ts",
         "eslint:front-fix": "eslint -c ./src/client/.eslintrc.js ./src/client/ --fix --ext .ts --ignore-pattern *.pug.tmpl.ts",
         "eslint-fix": "npm-run-all eslint:node-fix eslint:front-fix",
+        "depcheck": "npx depcheck .  --specials=eslint,tslint,ttypescript,webpack,prettier"
         "depcheck": "npx depcheck .  --specials=eslint,tslint,ttypescript,webpack,prettier"
     }
 }
