@@ -52,7 +52,7 @@ module.exports = {
         assetModuleFilename: assets,
     },
 
-    devtool: 'eval-cheap-module-source-map',
+    devtool: 'eval',
 
     optimization: {
         runtimeChunk: 'single',

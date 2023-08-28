@@ -32,7 +32,7 @@ $fa-font-path: '~@fortawesome/fontawesome-free/webfonts/';
     --panel-overlay-close: colors.$gray-80;
     --cds-background: #262626;
     --cds-text-secondary: #525252; //#c6c6c6;
-    --cds-background-hover: #f4f4f4;
+    --cds-background-hover: colors.$gray-10;
     --cds-field: #fff;
 }
 
@@ -98,6 +98,7 @@ df-standard-form {
     display: flex;
     flex-direction: column;
     padding-top: 1rem;
+    bottom: auto;
 
     df-buttons {
         padding-bottom: 1rem;
@@ -124,6 +125,12 @@ fieldset {
     a {
         color: colors.$white;
         cursor: pointer;
+        font-size: 14px;
+        svg {
+            width: 12px;
+            height: 12px;
+            margin-right: 0.5rem;
+        }
     }
     .ui-fieldset-content-wrapper-overflown {
         overflow: hidden;
@@ -159,6 +166,7 @@ fieldset {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    background-color: colors.$gray-10;
 }
 
 body.editmode {
@@ -297,10 +305,7 @@ df-panel,
     &.ex--hasheader {
         .cds--side-nav__navigation {
             top: 9.375rem;
-            height: 100%;
-        }
-        .ex--panel-icon-slide-right {
-            margin-bottom: 9rem;
+            height: calc(100% - 9.375rem);
         }
     }
     .cds--side-nav__navigation {
@@ -310,7 +315,7 @@ df-panel,
         background-color: #262626;
         transition: width 0.1s ease;
         width: 12rem;
-        height: 100%;
+        height: calc(100% - 3rem);
     }
 }
 
@@ -337,7 +342,6 @@ df-panel,
     cursor: pointer;
     display: none;
     margin-top: auto;
-    margin-bottom: 3rem;
     background: #393939;
     padding: 0.8125rem;
     svg {

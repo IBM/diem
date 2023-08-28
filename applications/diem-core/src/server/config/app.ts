@@ -15,7 +15,7 @@ import { getOrg, getRole, getRoleNbr, addTrace } from '@functions';
 import { jwtCheck } from '../routes/webapikeys/webapikeys.jwtcheck';
 import * as routes from '../routes/routes';
 import { toMQ } from '../routes/logger/logger';
-//import { NC } from './nats_connect';
+import { NC } from './nats_connect';
 import { css, expressConfig } from './config';
 import { login } from './authorization';
 import assets from './assets.json';
@@ -196,7 +196,6 @@ class App {
 
         await WSS.start(httpServer);
 
-        /*
         try {
             await NC.connect().catch(async (err) => {
                 void utils.logError('$server (start): failed to connect to nats', err);
@@ -204,7 +203,6 @@ class App {
         } catch (err) {
             return console.error(err);
         }
-        */
     };
 
     private api = async (req: IRequest, res: IResponse): Promise<any> => {
