@@ -56,15 +56,14 @@ table(
                 ng-container(*ngIf="col.specs && col.specs.checkbox; then colCheckbox else colStandard")
 
                 ng-template(#colCheckbox="")
-                    th(
-                        ibmTableHeadCheckbox="",
-                        [skeleton]= 'loading',
-                        ariaLabel="Select All Rows",
-                        [checked]="allchecked",
-                        size="sm",
-                        style="width: 2.25em",
-                        (change)="onHeaderCheckboxToggle()"
-                    )
+                    th.cds--table-column-checkbox([style.width]="col.width || '2.25em'")
+                        ibm-checkbox(
+                            inline="true",
+                            aria-label="Select Row",
+                            size="sm",
+                            [checked]="allchecked",
+                            (checkedChange)="onHeaderCheckboxToggle($event)",
+                        )
 
                 ng-template(#colStandard="")
                     th(
@@ -102,15 +101,15 @@ table(
                     [class]="col.class || ''",
                     [style.width]="col.width",
                     [ngStyle]='col.style')
-
+ 
             tr(
                 ibmTableRow='',
                 *ngIf="row.expanded && tableSpecs.template",
                 [ngClass]="{'ex--table-row-expanded' : row.expanded }",
                 )
-
+ 
                 td([attr.colspan]="tableSpecs.columns.length + 1")
-
+ 
                     df-standard-form(
                         [locals]='tableSpecs.template.locals',
                         [values]='row',
@@ -134,7 +133,6 @@ ng-template(let-col="data", #colheader="")
 
 ng-template(let-col="data.col", let-row="data.row", #colcell="", let-i="index")
 
-
     ng-container(*ngIf="! col.specs && row[col.field]")
         div([innerHTML]='row[col.field]')
 
@@ -156,7 +154,7 @@ ng-template(let-col="data.col", let-row="data.row", #colcell="", let-i="index")
                 size="sm",
                 [checked]="row.selected",
                 [disabled]="row.disabled",
-                (change)="onRowSelect(row, $event)",
+                (checkedChange)="onRowSelect(row, $event)",
             )
 
         ng-container(*ngIf='col.specs.rowIndex')
@@ -186,7 +184,6 @@ ng-template(let-col="data.col", let-row="data.row", #colcell="", let-i="index")
                 rel="noopener",
                 [innerText] = "row[col.field]",
             )
-
 
         ng-container(*ngIf="col.specs.button && evalStr(col.specs.visible)" )
             button(
@@ -251,5 +248,3 @@ ng-template(let-col="data.col", let-row="data.row", #colcell="", let-i="index")
                 div(
                     *ngIf="! row.special",
                     [innerHTML]='row[col.field]')
-
-

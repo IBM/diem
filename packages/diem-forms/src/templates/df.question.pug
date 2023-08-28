@@ -487,35 +487,6 @@ ng-template(#mermaid="")
            [formControlName]='question.key',
         )
 
-ng-template(#tooltip="")
-
-    ng-template(#tooltiptemplate="", let-tooltip="tooltip")
-        div(
-            *ngIf="tooltip.data",
-            [ngClass]="tooltip.data.typeClass",
-            [innerHTML]="tooltip.data.value",
-        )
-        button.cds--btn.cds--btn--primary((click)="tooltip.doClose()")
-            | Close
-
-    .cds--tooltip__label(
-        [ngClass]="question.class",
-        [ngStyle]="question.style",
-        )
-        span([innerHTML]= "question.text")
-        span(
-            [ibmTooltip]="tooltiptemplate",
-            [offset]="question.offset",
-            [isOpen]="question.isOpen",
-            [data]="question",
-            trigger="click",
-            [placement]="question.placement",
-        )
-            div(role="button")
-                ibm-icon-information-filled([size]="question.size")
-    ibm-placeholder
-
-
 ng-template(#overflow="")
     ibm-overflow-menu(
         [flip]="question.flip",
