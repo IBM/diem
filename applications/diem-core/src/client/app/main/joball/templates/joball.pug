@@ -1,16 +1,16 @@
 ng-container(*ngIf="loaded; else elseBlock")
     ng-container(*ngIf="! error; else errorBlock")
 
-        .ex--band.bx--content(
+        .ex--band.cds--content(
             *ngIf="config.header",
             [ngClass]="config.header.headerColor")
-            .bx--row
+            .cds--row
                 ng-template(
                     [ngTemplateOutlet]="headerTmpl",
                     [ngTemplateOutletContext]="{ $implicit: config}"
                 )
 
-        .bx--content.ex--content.h-100(@fadeInAnimation="")
+        .cds--content.ex--content.h-100(@fadeInAnimation="")
 
             df-standard-form(
                 *ngIf="config.filter",
@@ -30,24 +30,24 @@ ng-template(#modalViewChild="", let-config="")
         )
 
 ng-template(#errorBlock="")
-    .bx--content.ex--content.h-100(@fadeInAnimation="")
+    .cds--content.ex--content.h-100(@fadeInAnimation="")
         ex-app-error(
             [error]="error"
             )
 
 ng-template(#elseBlock="")
-    span.bx--loading--title
-        .bx--loading.bx--loading--small
-            svg.bx--loading__svg(viewBox="-75 -75 150 150")
+    span.cds--loading--title
+        .cds--loading.cds--loading--small
+            svg.cds--loading__svg(viewBox="-75 -75 150 150")
                 title Loading...
-                circle.bx--loading__stroke(cx="0", cy="0", r="37.5")
+                circle.cds--loading__stroke(cx="0", cy="0", r="37.5")
         span Loading...
 
 ng-template(#header="")
-    .bx--col-lg-13
+    .cds--col-lg-13
         i([ngClass]="config.header.headerIcon")
         h3.ex--header([innerHTML]="config.header.title")
-    .bx--col-lg-3
+    .cds--col-lg-3
         p(
             *ngIf="config.header && config.header.button && MCF.evalStr(config.header.button.visible)"
             )

@@ -52,7 +52,7 @@ module.exports = {
         assetModuleFilename: assets,
     },
 
-    devtool: 'eval-cheap-module-source-map',
+    devtool: 'eval',
 
     optimization: {
         runtimeChunk: 'single',
@@ -76,6 +76,9 @@ module.exports = {
                         compact: false,
                         plugins: ['@angular/compiler-cli/linker/babel'],
                     },
+                },
+                resolve: {
+                    fullySpecified: false,
                 },
             },
             {

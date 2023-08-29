@@ -8,8 +8,8 @@
     "aot-fixer-pug": "./bin/cli.js"
   },
   "dependencies": {
-    "commander": "^11.0.0",
     "glob": "^10.3.3",
+    "commander": "^11.0.0",
     "pug-code-gen": "^3.0.2",
     "pug-lexer": "^5.0.1",
     "pug-parser": "^6.0.0",
