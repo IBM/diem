@@ -23,14 +23,6 @@ RUN dnf --disableplugin=subscription-manager install -y java-11-openjdk-headless
 
 WORKDIR /
 
-RUN mkdir /src
-ADD https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/2.47.3/graphviz-2.47.3.tar.gz /src
-RUN tar xzf /src/graphviz-2.47.3.tar.gz -C /src
-
-WORKDIR /src/graphviz-2.47.3
-RUN ./configure --with-gts --prefix=/usr
-RUN make && make install
-
 # copy the spark jars over
 COPY jars/* /opt/spark/jars/
 
@@ -48,19 +40,7 @@ RUN npm ci --production
 
 COPY server $HOME/server
 
-RUN dot -c
-
-RUN rm -r /src
-
-RUN dnf clean all
-
 RUN chmod -R 775 .
-
-FROM scratch
-
-COPY --from=base / /
-
-ENV LANG=en_US.UTF-8 HOME=/home/app NODE_ENV=production
 
 WORKDIR $HOME
 
