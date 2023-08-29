@@ -1,6 +1,6 @@
 {
   "name": "@mydiem/aot-fixer-pug",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "author": {
     "name": "Guy Huinen (clone from Team Sofa)"
   },
@@ -8,6 +8,8 @@
     "aot-fixer-pug": "./bin/cli.js"
   },
   "dependencies": {
+    "commander": "^11.0.0",
+    "glob": "^10.3.3",
     "commander": "^11.0.0",
     "glob": "^10.3.3",
     "pug-code-gen": "^3.0.2",

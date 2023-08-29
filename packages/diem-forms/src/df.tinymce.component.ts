@@ -78,7 +78,7 @@ export class TinyEditorComponent implements AfterViewInit, ControlValueAccessor,
                     menubar: false,
                     min_height: 250,
                     paste_data_images: true,
-                    plugins: ['link', 'paste', 'table', 'hr', 'paste', 'lists'],
+                    plugins: ['link', 'lists', 'table'],
                     relative_urls: false,
                     remove_script_host: false,
                     schema: 'html5',
@@ -149,12 +149,19 @@ export class TinyEditorComponent implements AfterViewInit, ControlValueAccessor,
                         });
                     },
                     theme: this.theme,
-                    toolbar: `undo redo | insert | styleselect | fontselect fontsizeselect | bold italic | forecolor | hr |
-                    alignleft aligncenter alignright alignjustify | table | bullist numlist outdent indent | link`,
+                    toolbar: `styles fontsize bold italic  hr bullist numlist forecolor backcolor | link | outdent indent | table`,
                     init_instance_callback: (editor: any) => {
                         if (this.value) {
                             editor.setContent(this.value, { format: 'raw' });
                         }
+                    },
+                    paste_preprocess: (_plugin: unknown, args: any) => {
+                        let content = args.content;
+
+                        // Remove font-size and font-family styles from the pasted content
+                        content = content.replace(/(<[a-z][a-z0-9]*\s*[^>]*?(font-size|font-family)[^>]*?>)/gi, '');
+
+                        args.content = content;
                     },
                 });
             })

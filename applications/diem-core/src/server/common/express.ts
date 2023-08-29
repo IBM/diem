@@ -154,9 +154,10 @@ export class Express {
                 .use(`${utils.Env.apppath}/public`, express.static('./public'))
                 .use(
                     `${utils.Env.apppath}/ace-builds/src-min-noconflict`,
-                    express.static('./node_modules/ace-builds/src-min-noconflict')
+                    express.static('./node_modules/ace-builds/src-min-noconflict'),
                 )
                 .use(`${utils.Env.apppath}/501`, express.static('./public/501.html'))
+                .use(`${utils.Env.apppath}/tinymce/models`, express.static('./node_modules/tinymce/models'))
                 .use(`${utils.Env.apppath}/tinymce/skins`, express.static('./node_modules/tinymce/skins'))
                 .use(`${utils.Env.apppath}/tinymce/icons`, express.static('./node_modules/tinymce/icons'))
                 .use(`${utils.Env.apppath}/tinymce/skins`, express.static('./node_modules/tinymce/skins'))
@@ -192,7 +193,7 @@ export class Express {
                             // maybe an old sso callback, let's return to the login
                             return res.redirect('/login');
                         }
-                    }
+                    },
                 )
                 .get(`${utils.Env.apppath}/service-worker.js`, limiter, (_req: IRequest, res: IResponse) => {
                     res.sendFile('/public/js/service-worker.js', { root: path.resolve() });
@@ -204,22 +205,22 @@ export class Express {
                     res.sendFile('/public/DomainVerification.html', { root: path.resolve() });
                 })
                 .use((req, res, next) =>
-                    !hasSome(req, this.config ? this.config.cspExcluded : []) ? csp(req, res, next) : next()
+                    !hasSome(req, this.config ? this.config.cspExcluded : []) ? csp(req, res, next) : next(),
                 )
                 .use((req, res, next) =>
-                    hasSome(req, this.config ? this.config.cspApiIncluded : []) ? cspApi(req, res, next) : next()
+                    hasSome(req, this.config ? this.config.cspApiIncluded : []) ? cspApi(req, res, next) : next(),
                 )
                 .use((req, res, next) =>
                     hasSome(req, this.config ? this.config.featurePolicyApiIncluded : [])
                         ? this.featurePolicyApi(req, res, next)
-                        : this.featurePolicy(req, res, next)
+                        : this.featurePolicy(req, res, next),
                 )
                 .use(cookieParser())
                 .use(
                     express.urlencoded({
                         limit: this.config ? this.config.BODYPARSER_URLENCODED_LIMIT : '15mb',
                         extended: false,
-                    })
+                    }),
                 )
                 .use(
                     express.json({
@@ -227,7 +228,7 @@ export class Express {
                             this.config && this.config.BODYPARSER_JSON_LIMIT
                                 ? this.config.BODYPARSER_JSON_LIMIT
                                 : '15mb',
-                    })
+                    }),
                 )
                 .use(nocache())
                 .use(requestid)
