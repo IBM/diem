@@ -19,10 +19,9 @@ import * as ace from 'ace-builds';
 
 const acePath: string = 'ace-builds/src-min-noconflict/';
 ace.config.set('basePath', `${process.env.APPPATH}/${acePath}`);
-ace.config.setModuleUrl('ace/mode/python', `${process.env.APPPATH}/${acePath}mode-python.js`);
-ace.config.setModuleUrl('ace/mode/json', `${process.env.APPPATH}/${acePath}mode-json.js`);
-ace.config.setModuleUrl('ace/mode/sql', `${process.env.APPPATH}/${acePath}mode-sql.js`);
-ace.config.setModuleUrl('ace/mode/text', `${process.env.APPPATH}/${acePath}mode-text.js`);
+ace.config.set('modePath', `${process.env.APPPATH}/${acePath}`);
+ace.config.set('themePath', `${process.env.APPPATH}/${acePath}`);
+ace.config.set('workerPath', `${process.env.APPPATH}/${acePath}`);
 ace.config.set('loadWorkerFromBlob', false);
 
 interface IStyle {
@@ -111,6 +110,12 @@ export class AceCodeEditorComponent implements OnInit, ControlValueAccessor, OnC
         this.zone.runOutsideAngular(() => {
             this.codeEditor = ace.edit(element, this.codeoptions);
         });
+
+        /*
+            this disables code validation, in order to get this to work
+            checkout https://github.com/ajaxorg/ace/wiki/Syntax-validation
+        */
+        this.codeEditor.setOption('useWorker', false);
 
         this.codeEditor.getSession().setMode(`ace/mode/${this.calcMode(this.key)}`);
         this.codeEditor.setTheme(`ace/theme/${this.theme || 'chrome'}`);
