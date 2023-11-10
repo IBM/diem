@@ -248,7 +248,7 @@ export default class Operator {
     public async handleResourceFinalizer(
         event: ResourceEvent,
         finalizer: string,
-        deleteAction: (event: ResourceEvent) => Promise<void>
+        deleteAction: (event: ResourceEvent) => Promise<void>,
     ): Promise<boolean> {
         const metadata = event.object.metadata;
         if (!metadata || (event.type !== ResourceEventType.Added && event.type !== ResourceEventType.Modified)) {
@@ -313,7 +313,7 @@ export default class Operator {
      */
     private async applyAxiosKubeConfigAuth(request: AxiosRequestConfig): Promise<void> {
         const opts: https.RequestOptions = {};
-        await this.kc.applytoHTTPSOptions(opts);
+        await this.kc.applyToHTTPSOptions(opts);
         if (opts.headers?.Authorization && typeof opts.headers.Authorization === 'string') {
             request.headers = request.headers ?? {};
             request.headers.Authorization = opts.headers.Authorization;
@@ -337,7 +337,7 @@ export default class Operator {
     private async resourceStatusRequest(
         method: HttpMethod,
         meta: ResourceMeta,
-        status: unknown
+        status: unknown,
     ): Promise<ResourceMeta | null> {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const body: any = {

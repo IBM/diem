@@ -3,7 +3,7 @@ import { parse } from 'yaml';
 import { IArgsBody, EComponents, IError } from '@interfaces';
 import { slackDebug } from '@common/slack/slack.debug';
 import { api, thisbot } from '../routes';
-import { reloadServiceDoc, services } from '../service.doc';
+import { reloadServiceDoc, getServices } from '../service.doc';
 import { serviceHandler } from './service.handler';
 import { payloads } from './home.handler';
 
@@ -32,25 +32,33 @@ const argsParser: (event: any) => IArgsBody = (event: any): IArgsBody => {
     action = args_array[2];
     args = args_array.slice(3);
 
+    const services = getServices();
+
     if (services) {
+        utils.logInfo('$message.handler (argsParser): services retrieved');
         for (const service of services) {
             if (service.name === id) {
+                utils.logInfo(`$message.handler (argsParser): id found: ${service.id}`);
                 id = service.id;
                 action = args_array[1];
                 args = args_array.slice(2);
             }
         }
+    } else {
+        utils.logInfo('$message.handler (argsParser): no services retrieved');
     }
 
     if (event.blocks) {
         const code_base = event.blocks[0].elements.find((el: any) => el.type === 'rich_text_preformatted');
         if (code_base) {
+            console.debug(code_base);
             const params_tmp: string = code_base.elements[0].text || code_base.elements[0].url;
 
             payload = params_tmp;
 
             try {
                 params = parse(params_tmp);
+                console.debug('params debug', params);
                 if (params?.payload) {
                     payload = params.payload;
                 }
@@ -152,7 +160,7 @@ export const messageHandler: (event: any) => Promise<boolean | any> = async (eve
                 event,
                 body,
                 'Sorry, but an error happened',
-                `Sorry, but an error happened\nReason of there error: ${err.err}`
+                `Sorry, but an error happened\nReason of there error: ${err.err}`,
             );
 
             return Promise.reject(err);
@@ -173,7 +181,7 @@ const helpMethod = async (event: any, _args: string[]): Promise<any> => {
         payloads.help_message({
             thread_ts: event.thread_ts ? event.thread_ts : event.event_ts,
             channel: event.channel,
-        })
+        }),
     );
 };
 
@@ -185,7 +193,7 @@ const otherMethod = async (event: any, body: IArgsBody): Promise<any> => {
             thread_ts: event.thread_ts ? event.thread_ts : event.event_ts,
             channel: event.channel,
             text: ':questions123: Sorry, but this is a command i do not understand, try: @Diem Bot help',
-        }
+        },
     );
 
     utils.logInfo(`$event.handler (handleMessages): Invalid method called - method: ${body.id} - user: ${event.user}`);
@@ -209,7 +217,7 @@ export const replyMethod = async (event: any, body: IArgsBody, text: string, dat
                     },
                 },
             ],
-        }
+        },
     );
 
     utils.logInfo(`$event.handler (handleMessages): Invalid method called - method: ${body.id} - user: ${event.user}`);
