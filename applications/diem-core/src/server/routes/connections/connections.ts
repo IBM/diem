@@ -116,7 +116,7 @@ export const connections: (req: IRequest) => Promise<any> = async (req: IRequest
         utils.logInfo(
             `$connections (connections): not allowed - email: ${req.user.email} - role: ${req.user.role} - org: ${req.user.org}`,
             req.transid,
-            process.hrtime(hrstart)
+            process.hrtime(hrstart),
         );
 
         return Promise.resolve({});
@@ -162,23 +162,23 @@ export const connections: (req: IRequest) => Promise<any> = async (req: IRequest
  */
 
 export const getconnections: (req: IRequest) => Promise<IConnModel[]> = async (
-    req: IRequest
+    req: IRequest,
 ): Promise<IConnModel[]> => {
     const hrstart: [number, number] = process.hrtime();
 
-    let docs: IConnModel[];
+    const docs = (await ConnModel.find({ 'project.org': req.user.org })
+        .collation({ locale: 'en' }) // insensitive sorting
+        .distinct('alias')
+        .exec()
+        .catch(async (err: any) => {
+            err.trace = addTrace(err.trace, '@at $connections (getconnections)');
+            err.return = {};
 
-    try {
-        docs = await ConnModel.find({ 'project.org': req.user.org })
-            .collation({ locale: 'en' }) // insensitive sorting
-            .distinct('alias')
-            .exec();
+            return Promise.reject(err);
+        })) as IConnModel[];
+
+    if (docs.length) {
         docs.sort();
-    } catch (err) {
-        err.trace = addTrace(err.trace, '@at $connections (getconnections)');
-        err.return = {};
-
-        return Promise.reject(err);
     }
 
     utils.logInfo('$connections (getconnections)', req.transid, process.hrtime(hrstart));

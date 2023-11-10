@@ -15,7 +15,7 @@ const bot_token: string | undefined = process.env.bot_token;
 
 export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean | any> = async (
     payload: any,
-    body: IArgsBody
+    body: IArgsBody,
     // eslint-disable-next-line sonarjs/cognitive-complexity
 ): Promise<boolean | any> => {
     if (!services_url) {
@@ -24,7 +24,7 @@ export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean 
             payload,
             body,
             'Sorry, something went wrong',
-            'Sorry, something went wrongPlese try later again'
+            'Sorry, something went wrongPlese try later again',
         );
 
         return Promise.resolve(null);
@@ -36,7 +36,7 @@ export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean 
             payload,
             body,
             'Sorry, something went wrong',
-            'Sorry, something went wrongPlese try later again'
+            'Sorry, something went wrongPlese try later again',
         );
 
         return Promise.resolve(null);
@@ -45,6 +45,8 @@ export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean 
     // if it's not a mongoose id, the reply to the user that it's not a valid id
     if (!body.id?.match(/^[0-9a-fA-F]{24}$/)) {
         void replyMethod(payload, body, 'Sorry, this is an invalid id', `Sorry, but this is an invalid id: ${body.id}`);
+
+        console.info('Invalid id', body);
 
         return Promise.resolve(null);
     }
@@ -171,7 +173,7 @@ export const serviceHandler: (payload: any, body: IArgsBody) => Promise<boolean 
             block_id: body.id,
             text,
             blocks,
-        }
+        },
     );
 
     return Promise.resolve(null);

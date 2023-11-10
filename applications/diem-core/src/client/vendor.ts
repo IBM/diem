@@ -1,4 +1,4 @@
-import 'zone.js/dist/zone';
+import 'zone.js';
 
 /*
 to solve the error  TypeError: Object doesn't support property or method 'matches' ",
