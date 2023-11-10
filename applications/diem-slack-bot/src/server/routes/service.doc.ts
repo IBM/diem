@@ -7,7 +7,9 @@ const services_url: string | undefined = process.env.services_url;
 const service_doc: string | undefined = process.env.service_doc;
 const token: string | undefined = process.env.diem_token;
 
-export let services: [{ id: string; name: string }] | null = null;
+let services: [{ id: string; name: string }] | null = null;
+
+export const getServices = () => services;
 
 export const loadServiceDoc = async () => {
     if (!services_url) {
@@ -40,7 +42,8 @@ export const loadServiceDoc = async () => {
             { id: service_doc },
             {
                 headers: { 'x-api-key': token },
-            }
+                timeout: 900,
+            },
         )
         .catch(async (err: IError) => {
             const error: any = {
@@ -57,6 +60,8 @@ export const loadServiceDoc = async () => {
     if (response?.data?.out) {
         void slackDebug('$service.doc (loadServiceDoc): response', response.data);
         services = response.data.out;
+    } else {
+        console.debug('response.data', response?.data);
     }
 
     utils.logInfo(`$service.doc (loadServiceDoc) - service doc: ${service_doc} - service url: ${services_url}`);
