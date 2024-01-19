@@ -35,7 +35,7 @@ jobs:
 
       - name: get-npm-version
         id: package-version
-        run: echo "::set-output name=current-version::$(cat ${1-.}/package.json | jq '.version' | tr -d '"')"
+        run: echo "current-version=$(cat ${1-.}/package.json | jq '.version' | tr -d '"')" >> "$GITHUB_OUTPUT"
 
       - name: Use Node.js
         uses: actions/setup-node@v1
